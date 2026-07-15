@@ -1,0 +1,1036 @@
+:root {
+  /* Marca */
+  --color-mar-claro: #0fa3b1; /* decorativo: degradados, acentos grandes */
+  --color-mar: #0b7a85; /* texto/botones/enlaces sobre fondo claro */
+  --color-mar-oscuro: #08616b; /* fondos oscuros (footer, degradado hero) */
+  --color-arena: #f7f1e5;
+  --color-arena-oscura: #ecdfc4;
+  --color-texto: #1e2a32;
+  --color-texto-suave: #4a5a60;
+  --color-blanco: #ffffff;
+  --color-borde: #e1d7c0;
+
+  /* Acentos */
+  --color-coral-claro: #ff7a59; /* decorativo: degradados, acentos grandes */
+  --color-coral: #c44a2e; /* texto/badges/botones sobre fondo claro */
+  --color-whatsapp: #157a3d;
+  --color-whatsapp-oscuro: #0f5c2e;
+  --color-foco: #ffb020;
+
+  --radio: 16px;
+  --radio-chico: 10px;
+  --sombra: 0 4px 20px rgba(30, 42, 50, 0.1);
+  --sombra-hover: 0 12px 28px rgba(30, 42, 50, 0.16);
+  --ancho-maximo: 1120px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--color-texto);
+  background: var(--color-blanco);
+  line-height: 1.55;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-mar);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.3px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 2px;
+}
+
+.contenedor {
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* ---------- Header ---------- */
+.encabezado {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-borde);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.encabezado__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.encabezado__marca {
+  color: var(--color-mar);
+  font-weight: 800;
+  font-size: 1.25rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.encabezado__marca span {
+  color: var(--color-coral);
+}
+
+.encabezado__toggle {
+  display: none;
+  background: none;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 0.35rem 0.6rem;
+  color: var(--color-texto);
+  cursor: pointer;
+}
+
+.encabezado__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 1.25rem;
+}
+
+.encabezado__nav a {
+  color: var(--color-texto-suave);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.1rem;
+  border-bottom: 2px solid transparent;
+}
+
+.encabezado__nav a:hover,
+.encabezado__nav a[aria-current='page'] {
+  color: var(--color-mar);
+  border-bottom-color: var(--color-mar);
+}
+
+.encabezado__anunciate {
+  background: var(--color-mar);
+  color: var(--color-blanco) !important;
+  padding: 0.5rem 1.1rem !important;
+  border-radius: 999px;
+  border-bottom: none !important;
+}
+
+.encabezado__anunciate:hover {
+  background: var(--color-mar-oscuro);
+  color: var(--color-blanco) !important;
+}
+
+/* ---------- Hero (Home) ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  color: var(--color-blanco);
+  padding: 4rem 0 6rem;
+  background: linear-gradient(160deg, var(--color-mar-claro) 0%, var(--color-mar) 55%, var(--color-mar-oscuro) 100%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--color-blanco);
+  border-radius: 100% 100% 0 0;
+}
+
+.hero__puntos {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background: radial-gradient(circle at 15% 20%, #fff 0 2px, transparent 3px),
+    radial-gradient(circle at 45% 60%, #fff 0 2px, transparent 3px),
+    radial-gradient(circle at 80% 30%, #fff 0 2px, transparent 3px),
+    radial-gradient(circle at 65% 80%, #fff 0 2px, transparent 3px);
+  background-size: 280px 280px;
+}
+
+.hero__interior {
+  position: relative;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.hero__antetitulo {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+
+.hero h1 {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+}
+
+.hero__subtitulo {
+  font-size: 1.05rem;
+  opacity: 0.94;
+  margin: 0 0 2rem;
+}
+
+.hero__categorias {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero__categorias a {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-blanco);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero__categorias a:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ---------- Cabecera de categoría ---------- */
+.cabecera-categoria {
+  position: relative;
+  overflow: hidden;
+  color: var(--color-blanco);
+  padding: 3rem 0 3.5rem;
+}
+
+.cabecera-categoria::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: var(--color-blanco);
+  border-radius: 100% 100% 0 0;
+}
+
+.cabecera-categoria .contenedor {
+  position: relative;
+}
+
+.cabecera-categoria__icono {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cabecera-categoria h1 {
+  color: var(--color-blanco);
+  margin: 0 0 0.5rem;
+}
+
+.cabecera-categoria p {
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 65ch;
+  margin: 0;
+}
+
+/* ---------- Barra de confianza ---------- */
+.confianza {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 1.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.confianza__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.confianza__item b {
+  color: var(--color-texto);
+}
+
+/* ---------- Secciones generales ---------- */
+.seccion {
+  padding: 2.75rem 0;
+}
+
+.seccion--arena {
+  background: var(--color-arena);
+}
+
+.seccion__encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.titulo-pagina {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 0 0 0.5rem;
+}
+
+.titulo-seccion {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subtitulo {
+  color: var(--color-texto-suave);
+  max-width: 65ch;
+  margin: 0 0 2rem;
+}
+
+.seccion__encabezado .subtitulo {
+  margin: 0.25rem 0 0;
+}
+
+.ver-todo {
+  color: var(--color-mar);
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ver-todo:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Grid de tarjetas ---------- */
+.rejilla-negocios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ---------- Tarjeta de negocio ---------- */
+.tarjeta {
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-hover);
+}
+
+.tarjeta__foto {
+  position: relative;
+}
+
+.tarjeta__imagen {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+.tarjeta__insignias {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.tarjeta__cuerpo {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex-grow: 1;
+}
+
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  color: var(--color-blanco);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+}
+
+.insignia--destacado {
+  background: var(--color-coral);
+}
+
+.insignia--verificado {
+  background: var(--color-texto);
+}
+
+.insignia--dato {
+  background: rgba(30, 42, 50, 0.72);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tarjeta__datos {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.tarjeta__titulo {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.tarjeta__titulo a {
+  text-decoration: none;
+  color: var(--color-texto);
+}
+
+.tarjeta__titulo a:hover {
+  color: var(--color-mar);
+}
+
+.tarjeta__descripcion {
+  color: var(--color-texto-suave);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.tarjeta__amenidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip-amenidad {
+  background: var(--color-arena);
+  color: var(--color-texto-suave);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.tarjeta__precio {
+  margin-top: auto;
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.tarjeta__precio b {
+  font-size: 1.05rem;
+  color: var(--color-texto);
+}
+
+.tarjeta__acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-block;
+  background: var(--color-mar);
+  color: var(--color-blanco);
+  padding: 0.7rem 1.3rem;
+  border-radius: var(--radio-chico);
+  text-decoration: none;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.boton:hover {
+  background: var(--color-mar-oscuro);
+}
+
+.boton--destacado {
+  background: var(--color-coral);
+}
+
+.boton--destacado:hover {
+  background: #9c3a22;
+}
+
+.boton--whatsapp {
+  background: var(--color-whatsapp);
+}
+
+.boton--whatsapp:hover {
+  background: var(--color-whatsapp-oscuro);
+}
+
+.boton--secundario {
+  background: var(--color-blanco);
+  color: var(--color-texto);
+  border: 1.5px solid var(--color-borde);
+}
+
+.boton--secundario:hover {
+  border-color: var(--color-mar);
+  color: var(--color-mar);
+  background: var(--color-blanco);
+}
+
+.boton--chico {
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- Tiles de categoría ---------- */
+.rejilla-categorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.1rem;
+}
+
+.tile-categoria {
+  position: relative;
+  border-radius: var(--radio);
+  padding: 1.4rem 1.2rem;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  color: var(--color-blanco);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+.tile-categoria::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 20, 25, 0.65), rgba(8, 20, 25, 0));
+}
+
+.tile-categoria:hover {
+  transform: translateY(-3px);
+}
+
+.tile-categoria__icono {
+  font-size: 1.6rem;
+  position: relative;
+}
+
+.tile-categoria__texto {
+  position: relative;
+}
+
+.tile-categoria__titulo {
+  font-weight: 800;
+  font-size: 1.05rem;
+  display: block;
+}
+
+.tile-categoria__descripcion {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.tile--hospedaje {
+  background: linear-gradient(135deg, var(--color-mar), var(--color-mar-claro));
+}
+
+.tile--gastronomia {
+  background: linear-gradient(135deg, #d9862a, var(--color-coral-claro));
+}
+
+.tile--actividades {
+  background: linear-gradient(135deg, #2e7d6b, #67b99a);
+}
+
+.tile--servicios {
+  background: linear-gradient(135deg, #4a6fa5, #7a94c4);
+}
+
+/* ---------- Tarjetas de guía / informativas ---------- */
+.tarjeta-guia {
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.4rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tarjeta-guia:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra-hover);
+}
+
+.tarjeta-guia__icono {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.tarjeta-guia h3 {
+  font-size: 1.02rem;
+  font-weight: 800;
+  margin: 0 0 0.3rem;
+  color: var(--color-texto);
+}
+
+.tarjeta-guia p {
+  font-size: 0.88rem;
+  color: var(--color-texto-suave);
+  margin: 0;
+}
+
+/* ---------- CTA para negocios ---------- */
+.cta-negocio {
+  background: var(--color-texto);
+  border-radius: 20px;
+  color: var(--color-blanco);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cta-negocio h2 {
+  color: var(--color-blanco);
+  margin: 0 0 0.4rem;
+}
+
+.cta-negocio p {
+  color: #b9c4cc;
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ---------- Formulario ---------- */
+.campo {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo .ayuda {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.campo input,
+.campo textarea,
+.campo select {
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--color-blanco);
+  color: var(--color-texto);
+}
+
+/* ---------- Ficha de negocio ---------- */
+.ficha__encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.ficha__galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem 1.25rem;
+  margin: 2rem 0;
+}
+
+.ficha__foto {
+  display: block;
+  width: 100%;
+  border: none;
+  background: var(--color-blanco);
+  padding: 0.5rem 0.5rem 0.9rem;
+  border-radius: var(--radio-chico);
+  box-shadow: var(--sombra);
+  cursor: pointer;
+  transform: rotate(var(--giro, 0deg));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ficha__foto:hover,
+.ficha__foto:focus-visible {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: var(--sombra-hover);
+  z-index: 1;
+}
+
+.ficha__galeria img {
+  border-radius: calc(var(--radio-chico) - 4px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 20, 24, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 200;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox__imagen {
+  max-width: 100%;
+  max-height: 90vh;
+  border-radius: var(--radio-chico);
+  box-shadow: var(--sombra-hover);
+}
+
+.lightbox__cerrar {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: var(--color-blanco);
+  border: none;
+  border-radius: 999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+}
+
+.ficha__datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.ficha__bloque {
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.1rem 1.25rem;
+  border-top: 5px solid var(--color-borde);
+}
+
+.ficha__bloque h2 {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.ficha__bloque--contacto {
+  border-top-color: var(--color-mar);
+  background: color-mix(in srgb, var(--color-mar) 6%, white);
+}
+.ficha__bloque--contacto h2 {
+  color: var(--color-mar);
+}
+
+.ficha__bloque--disponibilidad {
+  border-top-color: var(--color-coral);
+  background: color-mix(in srgb, var(--color-coral) 6%, white);
+}
+.ficha__bloque--disponibilidad h2 {
+  color: var(--color-coral);
+}
+
+.ficha__bloque--precio {
+  border-top-color: var(--color-whatsapp);
+  background: color-mix(in srgb, var(--color-whatsapp) 6%, white);
+}
+.ficha__bloque--precio h2 {
+  color: var(--color-whatsapp-oscuro);
+}
+
+.ficha__bloque--servicios {
+  border-top-color: var(--color-foco);
+  background: color-mix(in srgb, var(--color-foco) 8%, white);
+}
+.ficha__bloque--servicios h2 {
+  color: var(--color-texto);
+}
+
+.ficha__bloque--mapa {
+  border-top-color: var(--color-mar-oscuro);
+}
+
+.ficha__bloque--resenas {
+  border-top-color: var(--color-coral-claro);
+}
+
+.ficha__amenidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ficha__amenidades li {
+  background: var(--color-arena-oscura);
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.resena {
+  border-top: 1px solid var(--color-borde);
+  padding: 0.8rem 0;
+}
+
+.resena:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.resena__calificacion {
+  color: var(--color-coral);
+  font-weight: 700;
+}
+
+.mapa-embed {
+  border: 0;
+  border-radius: var(--radio);
+  width: 100%;
+  height: 320px;
+}
+
+/* ---------- Footer ---------- */
+.pie {
+  background: var(--color-mar-oscuro);
+  color: var(--color-arena);
+  margin-top: 3rem;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.pie__columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pie h2 {
+  font-size: 1rem;
+  margin: 0 0 0.6rem;
+  color: var(--color-blanco);
+}
+
+.pie ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pie a {
+  color: var(--color-arena);
+  text-decoration: none;
+}
+
+.pie a:hover {
+  text-decoration: underline;
+}
+
+.pie__legal {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* ---------- Ajustes para celular ---------- */
+/* En celular mostramos 2 columnas compactas (como la competencia),
+   en vez de 1 tarjeta gigante por pantalla. Este bloque va al final del
+   archivo a propósito: en CSS, con la misma especificidad, la regla que
+   aparece después en el archivo gana, sin importar el media query. */
+@media (max-width: 640px) {
+  .rejilla-negocios {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .tarjeta__imagen {
+    aspect-ratio: 3 / 2;
+  }
+
+  .tarjeta__cuerpo {
+    padding: 0.4rem;
+    gap: 0.15rem;
+  }
+
+  .tarjeta__titulo {
+    font-size: 0.82rem;
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Sin descripción ni amenidades en la vista compacta de celular —
+     igual que la competencia, para que quepan más tarjetas por pantalla.
+     La descripción completa sigue disponible en la ficha del negocio. */
+  .tarjeta__descripcion,
+  .tarjeta__amenidades {
+    display: none;
+  }
+
+  .tarjeta__precio {
+    font-size: 0.7rem;
+  }
+
+  .tarjeta__precio b {
+    font-size: 0.8rem;
+  }
+
+  .tarjeta__acciones {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  .tarjeta__acciones .boton {
+    padding: 0.28rem 0.3rem;
+    font-size: 0.65rem;
+  }
+
+  .insignia {
+    font-size: 0.62rem;
+    padding: 0.18rem 0.45rem;
+  }
+
+  /* Menú hamburguesa: el header pasa a ocupar solo 1 renglón (logo + botón),
+     el menú completo se oculta hasta que se abre. */
+  .encabezado__barra {
+    flex-wrap: nowrap;
+  }
+
+  .encabezado__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .encabezado__nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--color-blanco);
+    border-bottom: 1px solid var(--color-borde);
+    padding: 0.5rem 1.25rem 1rem;
+    box-shadow: var(--sombra);
+  }
+
+  .encabezado__nav--abierto {
+    display: flex;
+  }
+
+  .encabezado__nav a {
+    width: 100%;
+    padding: 0.6rem 0;
+  }
+
+  .encabezado__anunciate {
+    width: auto;
+    align-self: flex-start;
+    margin-top: 0.3rem;
+  }
+
+  /* Sin giro tipo polaroid en móvil: en una sola columna a ancho completo,
+     la inclinación solo provoca un pequeño desbordamiento horizontal. */
+  .ficha__foto {
+    transform: none;
+  }
+
+  .ficha__foto:hover,
+  .ficha__foto:focus-visible {
+    transform: scale(1.02);
+  }
+}

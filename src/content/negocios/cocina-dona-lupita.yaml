@@ -1,0 +1,24 @@
+# NEGOCIO FICTICIO DE EJEMPLO
+nombre: Cocina Doña Lupita
+categoria: gastronomia
+descripcionCorta: Comida casera veracruzana a precio accesible, famosa por sus tamales y su café de olla.
+direccion: Calle Morelos s/n, Centro, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4855
+  lng: -97.0122
+telefono: "+52 235 100 0004"
+fotos:
+  - src: /fotos/placeholder.svg
+    alt: Foto de Cocina Doña Lupita próximamente — fachada
+  - src: /fotos/placeholder.svg
+    alt: Foto de Cocina Doña Lupita próximamente — tamales
+  - src: /fotos/placeholder.svg
+    alt: Foto de Cocina Doña Lupita próximamente — interior
+fechaActualizacion: 2026-05-30
+disponible: true
+servicios:
+  - Comida para llevar
+  - Precios accesibles
+verificado: false
+resenas: []
+destacado: false

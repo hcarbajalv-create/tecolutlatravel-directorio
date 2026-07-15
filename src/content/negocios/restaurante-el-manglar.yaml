@@ -1,0 +1,28 @@
+# NEGOCIO FICTICIO DE EJEMPLO
+nombre: Restaurante El Manglar
+categoria: gastronomia
+descripcionCorta: Cocina veracruzana de mariscos frente al río, especialidad en pescado a la veracruzana y camarones al coco.
+direccion: Malecón s/n, Centro, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4822
+  lng: -97.0091
+telefono: "+52 235 100 0003"
+fotos:
+  - src: /fotos/placeholder.svg
+    alt: Foto de Restaurante El Manglar próximamente — terraza
+  - src: /fotos/placeholder.svg
+    alt: Foto de Restaurante El Manglar próximamente — pescado a la veracruzana
+  - src: /fotos/placeholder.svg
+    alt: Foto de Restaurante El Manglar próximamente — camarones al coco
+fechaActualizacion: 2026-06-15
+disponible: true
+servicios:
+  - Terraza al aire libre
+  - Estacionamiento
+  - Música en vivo los fines de semana
+verificado: false
+resenas:
+  - autor: Carlos M.
+    calificacion: 5
+    comentario: El mejor pescado a la veracruzana que he probado en la zona.
+destacado: false

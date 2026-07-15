@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NegocioCard from './NegocioCard.astro';
+
+interface Props {
+  categoria: 'hospedaje' | 'gastronomia' | 'actividades' | 'servicios';
+  icono: string;
+  claseColor: string;
+  titulo: string;
+  descripcionSeo: string;
+  introduccion: string;
+}
+
+const { categoria, icono, claseColor, titulo, descripcionSeo, introduccion } = Astro.props;
+
+const todos = await getCollection('negocios');
+const negociosCategoria = todos
+  .filter((n) => n.data.categoria === categoria)
+  .sort((a, b) => Number(b.data.destacado) - Number(a.data.destacado));
+---
+
+<BaseLayout titulo={titulo} descripcion={descripcionSeo}>
+  <section class={`cabecera-categoria ${claseColor}`}>
+    <div class="contenedor">
+      <div class="cabecera-categoria__icono">{icono}</div>
+      <h1>{titulo}</h1>
+      <p>{introduccion}</p>
+    </div>
+  </section>
+
+  <section class="seccion contenedor">
+    <h2 class="titulo-seccion" style="margin-bottom:1.25rem;">Negocios en esta categoría</h2>
+    {
+      negociosCategoria.length === 0 ? (
+        <p>
+          Todavía no hay negocios publicados en esta categoría.{' '}
+          <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
+        </p>
+      ) : (
+        <div class="rejilla-negocios">
+          {negociosCategoria.map((negocio) => (
+            <NegocioCard negocio={negocio} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

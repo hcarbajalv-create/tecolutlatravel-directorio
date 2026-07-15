@@ -1,0 +1,106 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  negocio: CollectionEntry<'negocios'>;
+}
+
+const { negocio } = Astro.props;
+const {
+  categoria,
+  nombre,
+  descripcionCorta,
+  fotos,
+  destacado,
+  verificado,
+  servicios,
+  precioTemporada,
+  telefono,
+  numeroHabitaciones,
+  capacidadMaxima,
+  petFriendly,
+  distanciaPlayaMetros,
+} = negocio.data;
+const portada = fotos[0];
+const enlace = `/${categoria}/${negocio.id}`;
+const amenidadesVisibles = servicios.slice(0, 3);
+
+const precioDesde =
+  precioTemporada && precioTemporada.length > 0
+    ? Math.min(...precioTemporada.map((p) => p.precio))
+    : undefined;
+
+const telefonoDigitos = telefono.replace(/[^\d]/g, '');
+const enlaceWhatsapp = `https://wa.me/${telefonoDigitos}?text=${encodeURIComponent(
+  `Hola, vi ${nombre} en el directorio de Tecolutla y me gustaría más información.`,
+)}`;
+---
+
+<article class="tarjeta">
+  <div class="tarjeta__foto">
+    <a href={enlace} tabindex="-1" aria-hidden="true">
+      <img
+        class="tarjeta__imagen"
+        src={portada.src}
+        alt={portada.alt}
+        loading="lazy"
+        width="400"
+        height="300"
+      />
+    </a>
+    {
+      (destacado || verificado || distanciaPlayaMetros !== undefined) && (
+        <div class="tarjeta__insignias">
+          {destacado && <span class="insignia insignia--destacado">Destacado</span>}
+          {verificado && <span class="insignia insignia--verificado">Verificado</span>}
+          {distanciaPlayaMetros !== undefined && (
+            <span class="insignia insignia--dato">🏖️ {distanciaPlayaMetros}m</span>
+          )}
+        </div>
+      )
+    }
+    {
+      (capacidadMaxima !== undefined || numeroHabitaciones !== undefined || petFriendly) && (
+        <div class="tarjeta__datos">
+          {capacidadMaxima !== undefined ? (
+            <span class="insignia insignia--dato">👥 Hasta {capacidadMaxima} personas</span>
+          ) : (
+            numeroHabitaciones !== undefined && (
+              <span class="insignia insignia--dato">
+                🛏️ {numeroHabitaciones} {numeroHabitaciones === 1 ? 'habitación' : 'habitaciones'}
+              </span>
+            )
+          )}
+          {petFriendly && <span class="insignia insignia--dato">🐾 Pet friendly</span>}
+        </div>
+      )
+    }
+  </div>
+  <div class="tarjeta__cuerpo">
+    <h3 class="tarjeta__titulo"><a href={enlace}>{nombre}</a></h3>
+    <p class="tarjeta__descripcion">{descripcionCorta}</p>
+
+    {
+      amenidadesVisibles.length > 0 && (
+        <div class="tarjeta__amenidades">
+          {amenidadesVisibles.map((servicio) => (
+            <span class="chip-amenidad">{servicio}</span>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      precioDesde !== undefined && (
+        <p class="tarjeta__precio">
+          desde <b>${precioDesde.toLocaleString('es-MX')} MXN</b>
+        </p>
+      )
+    }
+
+    <div class="tarjeta__acciones">
+      <a class="boton boton--whatsapp boton--chico" href={enlaceWhatsapp}>WhatsApp</a>
+      <a class="boton boton--secundario boton--chico" href={enlace}>Ver ficha</a>
+    </div>
+  </div>
+</article>

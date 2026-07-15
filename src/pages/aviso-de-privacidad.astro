@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const fechaActualizacion = new Intl.DateTimeFormat('es-MX', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date('2026-07-14'));
+---
+
+<BaseLayout
+  titulo="Aviso de Privacidad"
+  descripcion="Aviso de Privacidad de TecolutlaTravel: qué datos personales recabamos, para qué los usamos y cómo puedes ejercer tus derechos."
+>
+  <section class="seccion contenedor">
+    <h1 class="titulo-pagina">Aviso de Privacidad</h1>
+    <p class="subtitulo">Última actualización: {fechaActualizacion}</p>
+
+    <div class="ficha__bloque">
+      <h2>1. Identidad y domicilio del responsable</h2>
+      <!-- PENDIENTE: definir la identidad legal del responsable (persona física/moral, RFC, domicilio) antes de publicar este aviso -->
+      <p>
+        <strong>[Pendiente de definir]</strong>: esta sección debe indicar el nombre legal o razón
+        social, y el domicilio, de quien es responsable del tratamiento de los datos personales
+        recabados a través de TecolutlaTravel. Esta página no debe publicarse hasta completar este
+        dato.
+      </p>
+    </div>
+
+    <div class="ficha__bloque" style="margin-top:1.5rem;">
+      <h2>2. Datos personales que recabamos</h2>
+      <p>Recabamos los siguientes datos, únicamente cuando tú nos los proporcionas directamente:</p>
+      <ul class="ficha__amenidades">
+        <li>Nombre de contacto</li>
+        <li>Correo electrónico</li>
+        <li>Teléfono / WhatsApp</li>
+        <li>Datos del negocio (si solicitas tu alta en el directorio)</li>
+      </ul>
+      <p>No recabamos datos personales sensibles.</p>
+    </div>
+
+    <div class="ficha__bloque" style="margin-top:1.5rem;">
+      <h2>3. Finalidades del tratamiento</h2>
+      <p>Usamos tus datos para:</p>
+      <ul class="ficha__amenidades">
+        <li>Revisar y dar seguimiento a solicitudes de alta de negocios en el directorio</li>
+        <li>Contactarte respecto a tu solicitud</li>
+        <li>Fines estadísticos internos sobre el uso del sitio</li>
+      </ul>
+      <p>No vendemos ni compartimos tus datos con fines publicitarios de terceros.</p>
+    </div>
+
+    <div class="ficha__bloque" style="margin-top:1.5rem;">
+      <h2>4. Transferencia de datos</h2>
+      <p>
+        No transferimos tus datos personales a terceros, salvo cuando exista una obligación legal
+        que nos requiera hacerlo.
+      </p>
+    </div>
+
+    <div class="ficha__bloque" style="margin-top:1.5rem;">
+      <h2>5. Derechos ARCO (Acceso, Rectificación, Cancelación y Oposición)</h2>
+      <p>
+        Puedes solicitar acceder, rectificar, cancelar u oponerte al uso de tus datos personales
+        en cualquier momento, escribiendo a
+        <a href="mailto:admin@tecolutlatravel.mx">admin@tecolutlatravel.mx</a>.
+      </p>
+    </div>
+
+    <div class="ficha__bloque" style="margin-top:1.5rem;">
+      <h2>6. Cambios a este aviso</h2>
+      <p>
+        Cualquier cambio a este Aviso de Privacidad se publicará en esta misma página, indicando
+        la fecha de la actualización más reciente.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

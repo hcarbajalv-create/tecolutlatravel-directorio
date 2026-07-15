@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#ecdfc4"/>
+  <g transform="translate(200,128)" fill="none" stroke="#4a5a60" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="-42" y="-26" width="84" height="60" rx="6"/>
+    <path d="M -18 -26 L -10 -38 L 10 -38 L 18 -26"/>
+    <circle cx="0" cy="6" r="16"/>
+  </g>
+  <text x="200" y="200" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif" font-size="16" font-weight="700" fill="#4a5a60" text-anchor="middle">Foto próximamente</text>
+</svg>

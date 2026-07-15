@@ -1,0 +1,66 @@
+---
+interface Props {
+  rutaActual: string;
+}
+
+const { rutaActual } = Astro.props;
+
+const enlaces = [
+  { href: '/hospedaje', texto: 'Hospedaje' },
+  { href: '/gastronomia', texto: 'Gastronomía' },
+  { href: '/actividades', texto: 'Actividades ecoturísticas' },
+  { href: '/servicios', texto: 'Servicios' },
+  { href: '/tips-para-tu-viaje', texto: 'Tips para tu viaje' },
+  { href: '/descubre-tecolutla', texto: 'Descubre Tecolutla' },
+];
+
+function esActiva(href: string) {
+  return rutaActual === href || rutaActual.startsWith(`${href}/`);
+}
+---
+
+<header class="encabezado">
+  <div class="encabezado__barra">
+    <a href="/" class="encabezado__marca">Tecolutla<span>Travel</span></a>
+    <button
+      class="encabezado__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      aria-label="Abrir menú de navegación"
+    >
+      ☰
+    </button>
+    <nav class="encabezado__nav" id="menu-principal" aria-label="Navegación principal">
+      {
+        enlaces.map((enlace) => (
+          <a href={enlace.href} aria-current={esActiva(enlace.href) ? 'page' : undefined}>
+            {enlace.texto}
+          </a>
+        ))
+      }
+      <a href="/anunciate" class="encabezado__anunciate">Anúnciate</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const boton = document.querySelector<HTMLButtonElement>('.encabezado__toggle');
+  const nav = document.getElementById('menu-principal');
+
+  boton?.addEventListener('click', () => {
+    const abierto = nav?.classList.toggle('encabezado__nav--abierto');
+    boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    boton.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+  });
+
+  // Si la pantalla crece a tamaño de escritorio, aseguramos que el menú
+  // quede visible y el botón refleje el estado correcto.
+  const media = window.matchMedia('(min-width: 641px)');
+  media.addEventListener('change', (e) => {
+    if (e.matches) {
+      nav?.classList.remove('encabezado__nav--abierto');
+      boton?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

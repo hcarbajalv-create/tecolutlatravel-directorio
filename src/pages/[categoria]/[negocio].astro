@@ -1,0 +1,296 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const negocios = await getCollection('negocios');
+  return negocios.map((negocio) => ({
+    params: { categoria: negocio.data.categoria, negocio: negocio.id },
+    props: { negocio },
+  }));
+}
+
+const { negocio } = Astro.props;
+const {
+  nombre,
+  categoria,
+  descripcionCorta,
+  direccion,
+  coordenadas,
+  telefono,
+  fotos,
+  precioTemporada,
+  fechaActualizacion,
+  disponible,
+  servicios,
+  numeroHabitaciones,
+  capacidadMaxima,
+  petFriendly,
+  distanciaPlayaMetros,
+  checkIn,
+  checkOut,
+  verificado,
+  resenas,
+  destacado,
+} = negocio.data;
+
+const telefonoDigitos = telefono.replace(/[^\d]/g, '');
+const enlaceWhatsapp = `https://wa.me/${telefonoDigitos}?text=${encodeURIComponent(
+  `Hola, vi ${nombre} en el directorio de Tecolutla y me gustaría más información.`,
+)}`;
+const enlaceComoLlegar = `https://www.google.com/maps/dir/?api=1&destination=${coordenadas.lat},${coordenadas.lng}`;
+const mapaEmbed = `https://www.google.com/maps?q=${coordenadas.lat},${coordenadas.lng}&output=embed`;
+
+const fechaFormateada = new Intl.DateTimeFormat('es-MX', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(fechaActualizacion);
+
+const nombreCategoria: Record<string, string> = {
+  hospedaje: 'Hospedaje',
+  gastronomia: 'Gastronomía',
+  actividades: 'Actividades ecoturísticas',
+  servicios: 'Servicios',
+};
+
+const iconoCategoria: Record<string, string> = {
+  hospedaje: '🏡',
+  gastronomia: '🍤',
+  actividades: '🛶',
+  servicios: '🚲',
+};
+
+const claseColorCategoria: Record<string, string> = {
+  hospedaje: 'tile--hospedaje',
+  gastronomia: 'tile--gastronomia',
+  actividades: 'tile--actividades',
+  servicios: 'tile--servicios',
+};
+
+const calificacionPromedio =
+  resenas.length > 0
+    ? resenas.reduce((suma, r) => suma + r.calificacion, 0) / resenas.length
+    : undefined;
+
+const esquemaLodging =
+  categoria === 'hospedaje'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'LodgingBusiness',
+        name: nombre,
+        description: descripcionCorta,
+        telephone: telefono,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: direccion,
+          addressLocality: 'Tecolutla',
+          addressRegion: 'Veracruz',
+          addressCountry: 'MX',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: coordenadas.lat,
+          longitude: coordenadas.lng,
+        },
+        image: fotos.map((f) => f.src),
+        amenityFeature: servicios.map((s) => ({
+          '@type': 'LocationFeatureSpecification',
+          name: s,
+        })),
+        ...(numeroHabitaciones
+          ? { numberOfRooms: numeroHabitaciones }
+          : {}),
+        ...(petFriendly !== undefined ? { petsAllowed: petFriendly } : {}),
+        ...(checkIn ? { checkinTime: checkIn } : {}),
+        ...(checkOut ? { checkoutTime: checkOut } : {}),
+        ...(calificacionPromedio
+          ? {
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: calificacionPromedio.toFixed(1),
+                reviewCount: resenas.length,
+              },
+            }
+          : {}),
+      }
+    : null;
+---
+
+<BaseLayout
+  titulo={`${nombre} — ${nombreCategoria[categoria]} en Tecolutla`}
+  descripcion={descripcionCorta}
+>
+  {
+    esquemaLodging && (
+      <script type="application/ld+json" set:html={JSON.stringify(esquemaLodging)} />
+    )
+  }
+
+  <section class={`cabecera-categoria ${claseColorCategoria[categoria]}`}>
+    <div class="contenedor">
+      <p><a href={`/${categoria}`} style="color: #fff;">&larr; Volver a {nombreCategoria[categoria]}</a></p>
+      <div class="ficha__encabezado">
+        {destacado && <span class="insignia insignia--destacado">Destacado</span>}
+        {verificado && <span class="insignia insignia--verificado">Verificado</span>}
+      </div>
+      <div class="cabecera-categoria__icono">{iconoCategoria[categoria]}</div>
+      <h1>{nombre}</h1>
+      <p>{descripcionCorta}</p>
+    </div>
+  </section>
+
+  <section class="seccion contenedor">
+    <div class="ficha__galeria">
+      {
+        fotos.map((foto, i) => (
+          <button
+            type="button"
+            class="ficha__foto"
+            style={`--giro: ${i % 2 === 0 ? '-2deg' : '2deg'}`}
+            data-lightbox-abrir
+            data-src={foto.src}
+            data-alt={foto.alt}
+            aria-label={`Ampliar foto: ${foto.alt}`}
+          >
+            <img src={foto.src} alt={foto.alt} loading="lazy" width="400" height="300" />
+          </button>
+        ))
+      }
+    </div>
+
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Foto ampliada"
+      hidden
+    >
+      <button type="button" class="lightbox__cerrar" data-lightbox-cerrar aria-label="Cerrar foto ampliada">
+        ✕
+      </button>
+      <img src="" alt="" class="lightbox__imagen" id="lightbox-imagen" />
+    </div>
+
+    <div class="ficha__datos">
+      <div class="ficha__bloque ficha__bloque--contacto">
+        <h2>Contacto y ubicación</h2>
+        <p>{direccion}</p>
+        <p>
+          Teléfono: <a href={`tel:${telefonoDigitos}`}>{telefono}</a>
+        </p>
+        <p><a class="boton boton--whatsapp" href={enlaceWhatsapp}>Escribir por WhatsApp</a></p>
+        <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
+      </div>
+
+      <div class="ficha__bloque ficha__bloque--disponibilidad">
+        <h2>Disponibilidad y actualización</h2>
+        <p>Disponibilidad: {disponible ? 'Disponible' : 'No disponible por ahora'}</p>
+        <p>Última actualización: {fechaFormateada}</p>
+        {numeroHabitaciones && <p>Habitaciones: {numeroHabitaciones}</p>}
+        {capacidadMaxima !== undefined && <p>Capacidad máxima: hasta {capacidadMaxima} personas</p>}
+        {petFriendly !== undefined && (
+          <p>Mascotas: {petFriendly ? 'Sí se aceptan' : 'No se aceptan'}</p>
+        )}
+        {distanciaPlayaMetros !== undefined && <p>Distancia a la playa: {distanciaPlayaMetros} metros</p>}
+        {checkIn && <p>Check-in: {checkIn}</p>}
+        {checkOut && <p>Check-out: {checkOut}</p>}
+      </div>
+
+      {
+        precioTemporada && precioTemporada.length > 0 && (
+          <div class="ficha__bloque ficha__bloque--precio">
+            <h2>Precio por temporada</h2>
+            <ul>
+              {precioTemporada.map((p) => (
+                <li>
+                  {p.temporada}: ${p.precio.toLocaleString('es-MX')} MXN
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        servicios.length > 0 && (
+          <div class="ficha__bloque ficha__bloque--servicios">
+            <h2>Servicios y amenidades</h2>
+            <ul class="ficha__amenidades">
+              {servicios.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="ficha__bloque ficha__bloque--mapa">
+      <h2>Ubicación en el mapa</h2>
+      <iframe
+        class="mapa-embed"
+        src={mapaEmbed}
+        loading="lazy"
+        title={`Mapa de ubicación de ${nombre}`}
+      />
+    </div>
+
+    <div class="ficha__bloque ficha__bloque--resenas" style="margin-top: 1.5rem;">
+      <h2>Reseñas</h2>
+      {
+        resenas.length === 0 ? (
+          <p>Este negocio todavía no tiene reseñas.</p>
+        ) : (
+          resenas.map((r) => (
+            <div class="resena">
+              <p class="resena__calificacion">
+                {'★'.repeat(r.calificacion)}
+                {'☆'.repeat(5 - r.calificacion)} — {r.autor}
+              </p>
+              <p>{r.comentario}</p>
+            </div>
+          ))
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const lightbox = document.getElementById('lightbox') as HTMLElement;
+  const lightboxImagen = document.getElementById('lightbox-imagen') as HTMLImageElement;
+
+  function abrirLightbox(src: string, alt: string) {
+    lightboxImagen.src = src;
+    lightboxImagen.alt = alt;
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cerrarLightbox() {
+    lightbox.hidden = true;
+    lightboxImagen.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-lightbox-abrir]').forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const src = boton.getAttribute('data-src') ?? '';
+      const alt = boton.getAttribute('data-alt') ?? '';
+      abrirLightbox(src, alt);
+    });
+  });
+
+  document.querySelector('[data-lightbox-cerrar]')?.addEventListener('click', cerrarLightbox);
+
+  lightbox.addEventListener('click', (evento) => {
+    if (evento.target === lightbox) cerrarLightbox();
+  });
+
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && !lightbox.hidden) cerrarLightbox();
+  });
+</script>

@@ -1,0 +1,50 @@
+# Datos reales confirmados vía tecolutlaveracruz.mx (listado como "Aldea Mandala") — 2026-07-15
+# PENDIENTE: telefono/WhatsApp real (no se pudo extraer de la competencia, pídelo directo)
+nombre: Casa Mandala
+categoria: hospedaje
+descripcionCorta: Casa de descanso con decoración rústica y jardín amplio, a 247 metros de la playa de Tecolutla.
+direccion: Av. Niños Héroes s/n, Col. Centro, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.47906705
+  lng: -97.00952410
+telefono: "+52 235 100 0002"
+fotos:
+  - src: /fotos/casa-mandala/01-entrada.jpg
+    alt: Entrada techada de Casa Mandala
+  - src: /fotos/casa-mandala/02-jardin-fuente.jpg
+    alt: Jardín de Casa Mandala con fuente y área de mesas
+  - src: /fotos/casa-mandala/03-patio-exterior.jpg
+    alt: Patio exterior de Casa Mandala
+  - src: /fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
+    alt: Jardín de Casa Mandala con fuente decorativa tipo pozo
+  - src: /fotos/casa-mandala/05-recamara-cocineta.jpg
+    alt: Recámara de Casa Mandala con cocineta
+  - src: /fotos/casa-mandala/06-recamara.jpg
+    alt: Recámara de Casa Mandala
+  - src: /fotos/casa-mandala/07-cocina.jpg
+    alt: Área de cocina de Casa Mandala
+  - src: /fotos/casa-mandala/08-patio-asador.jpg
+    alt: Patio de Casa Mandala con asador
+precioTemporada:
+  - temporada: Temporada baja (entre semana)
+    precio: 2200
+  - temporada: Temporada alta (fines de semana y vacaciones)
+    precio: 3500
+fechaActualizacion: 2026-06-20
+disponible: true
+servicios:
+  - Wifi
+  - Alberca y chapoteadero
+  - Estacionamiento
+  - Jardín privado
+  - Asador
+  - Cocina equipada
+numeroHabitaciones: 3
+capacidadMaxima: 15
+petFriendly: true
+distanciaPlayaMetros: 247
+checkIn: "15:00"
+checkOut: "12:00"
+verificado: true
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: true

@@ -1,0 +1,186 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NegocioCard from '../components/NegocioCard.astro';
+
+const negocios = await getCollection('negocios');
+const destacados = negocios.filter((n) => n.data.destacado);
+
+const categorias = [
+  {
+    href: '/hospedaje',
+    clase: 'tile--hospedaje',
+    icono: '🏡',
+    titulo: 'Hospedaje',
+    descripcion: 'Casas y espacios para quedarte',
+  },
+  {
+    href: '/gastronomia',
+    clase: 'tile--gastronomia',
+    icono: '🍤',
+    titulo: 'Gastronomía',
+    descripcion: 'Cocina veracruzana y mariscos',
+  },
+  {
+    href: '/actividades',
+    clase: 'tile--actividades',
+    icono: '🛶',
+    titulo: 'Actividades ecoturísticas',
+    descripcion: 'Manglares, río y naturaleza',
+  },
+  {
+    href: '/servicios',
+    clase: 'tile--servicios',
+    icono: '🚲',
+    titulo: 'Servicios',
+    descripcion: 'Todo para tu estancia',
+  },
+];
+
+// Un ejemplo de cada categoría distinta a hospedaje, para que las 4 categorías
+// tengan el mismo peso visual en el Home (no solo hospedaje).
+const otrasCategorias = ['gastronomia', 'actividades', 'servicios'] as const;
+const tambienEnTecolutla = otrasCategorias
+  .map((cat) => negocios.find((n) => n.data.categoria === cat))
+  .filter((n): n is NonNullable<typeof n> => Boolean(n));
+
+const guias = [
+  {
+    href: '/tips-para-tu-viaje',
+    icono: '🧳',
+    titulo: 'Tips para tu viaje',
+    descripcion: 'Cómo llegar, cuándo visitar y qué llevar.',
+  },
+  {
+    href: '/descubre-tecolutla',
+    icono: '🌴',
+    titulo: 'Descubre Tecolutla',
+    descripcion: 'El río, la playa y la cultura del pueblo.',
+  },
+  {
+    href: '/anunciate',
+    icono: '📣',
+    titulo: 'Anuncia tu negocio',
+    descripcion: 'Alta gratuita, revisión manual antes de publicar.',
+  },
+];
+---
+
+<BaseLayout
+  titulo="Directorio turístico de Tecolutla, Veracruz"
+  descripcion="Encuentra hospedaje, restaurantes, actividades ecoturísticas y servicios en Tecolutla, Veracruz. Directorio local con negocios verificados."
+>
+  <section class="hero">
+    <div class="hero__puntos"></div>
+    <div class="contenedor hero__interior">
+      <span class="hero__antetitulo">🐢 Playa · Río · Costa de Veracruz</span>
+      <h1>Descubre Tecolutla, Veracruz</h1>
+      <p class="hero__subtitulo">
+        El directorio turístico local para planear tu visita: hospedaje, gastronomía, actividades
+        ecoturísticas y servicios, en un solo lugar.
+      </p>
+      <nav class="hero__categorias" aria-label="Categorías del directorio">
+        {categorias.map((cat) => <a href={cat.href}>{cat.icono} {cat.titulo}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <div class="confianza contenedor">
+    <div class="confianza__item">✅ <b>Alta gratuita</b>&nbsp;para negocios</div>
+    <div class="confianza__item">🔍 <b>Revisión manual</b>&nbsp;antes de publicar</div>
+    <div class="confianza__item">💬 <b>Contacto directo</b>&nbsp;por WhatsApp</div>
+    <div class="confianza__item">📍 <b>Guía local</b>&nbsp;de Tecolutla</div>
+  </div>
+
+  {
+    destacados.length > 0 && (
+      <section class="seccion contenedor">
+        <div class="seccion__encabezado">
+          <div>
+            <h2 class="titulo-seccion">Negocios destacados</h2>
+            <p class="subtitulo">Negocios con posicionamiento destacado en el directorio.</p>
+          </div>
+        </div>
+        <div class="rejilla-negocios">
+          {destacados.map((negocio) => (
+            <NegocioCard negocio={negocio} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion seccion--arena">
+    <div class="contenedor">
+      <div class="seccion__encabezado">
+        <div>
+          <h2 class="titulo-seccion">Explora por categoría</h2>
+          <p class="subtitulo">Las 4 categorías del directorio de Tecolutla.</p>
+        </div>
+      </div>
+      <div class="rejilla-categorias">
+        {
+          categorias.map((cat) => (
+            <a class={`tile-categoria ${cat.clase}`} href={cat.href}>
+              <span class="tile-categoria__icono">{cat.icono}</span>
+              <span class="tile-categoria__texto">
+                <span class="tile-categoria__titulo">{cat.titulo}</span>
+                <span class="tile-categoria__descripcion">{cat.descripcion}</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    tambienEnTecolutla.length > 0 && (
+      <section class="seccion contenedor">
+        <div class="seccion__encabezado">
+          <div>
+            <h2 class="titulo-seccion">También en Tecolutla</h2>
+            <p class="subtitulo">Gastronomía, actividades y servicios que puedes encontrar.</p>
+          </div>
+        </div>
+        <div class="rejilla-negocios">
+          {tambienEnTecolutla.map((negocio) => (
+            <NegocioCard negocio={negocio} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion contenedor">
+    <div class="seccion__encabezado">
+      <div>
+        <h2 class="titulo-seccion">Antes de viajar</h2>
+      </div>
+    </div>
+    <div class="rejilla-categorias">
+      {
+        guias.map((guia) => (
+          <a class="tarjeta-guia" href={guia.href}>
+            <div class="tarjeta-guia__icono">{guia.icono}</div>
+            <h3>{guia.titulo}</h3>
+            <p>{guia.descripcion}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="seccion contenedor">
+    <div class="cta-negocio">
+      <div>
+        <h2>¿Tienes un negocio en Tecolutla?</h2>
+        <p>
+          Publica tu ficha gratis en el directorio: fotos, ubicación y contacto directo por
+          WhatsApp. La alta siempre es gratuita.
+        </p>
+      </div>
+      <a class="boton boton--whatsapp" href="/anunciate">Anúnciate gratis</a>
+    </div>
+  </section>
+</BaseLayout>

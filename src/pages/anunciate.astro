@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const tiposAceptados = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime';
+const tamanoMaximoMb = 8;
+---
+
+<BaseLayout
+  titulo="Anúnciate en el directorio"
+  descripcion="Da de alta tu negocio de Tecolutla en el directorio de forma gratuita. Revisión manual antes de publicar."
+>
+  <section class="seccion contenedor">
+    <h1 class="titulo-pagina">Anuncia tu negocio en Tecolutla</h1>
+    <p class="subtitulo">
+      La alta de tu negocio en este directorio es <strong>gratuita</strong>. Revisamos cada
+      solicitud manualmente antes de publicarla, así que puede tomar unos días en aparecer.
+    </p>
+
+    <form
+      name="alta-negocio"
+      method="POST"
+      data-netlify="true"
+      enctype="multipart/form-data"
+      action="/anunciate/gracias"
+    >
+      <input type="hidden" name="form-name" value="alta-negocio" />
+
+      <div class="campo">
+        <label for="nombreNegocio">Nombre del negocio *</label>
+        <input type="text" id="nombreNegocio" name="nombreNegocio" required />
+      </div>
+
+      <div class="campo">
+        <label for="categoria">Categoría *</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Selecciona una categoría</option>
+          <option value="hospedaje">Hospedaje</option>
+          <option value="gastronomia">Gastronomía</option>
+          <option value="actividades">Actividades ecoturísticas</option>
+          <option value="servicios">Servicios</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="descripcionCorta">Descripción corta de tu negocio *</label>
+        <textarea id="descripcionCorta" name="descripcionCorta" rows="3" required></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="direccion">Dirección en Tecolutla *</label>
+        <input type="text" id="direccion" name="direccion" required />
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono / WhatsApp de contacto para clientes *</label>
+        <input type="tel" id="telefono" name="telefono" required />
+      </div>
+
+      <div class="campo">
+        <label for="precioAproximado">Precio aproximado (opcional)</label>
+        <input type="text" id="precioAproximado" name="precioAproximado" />
+      </div>
+
+      <div class="campo">
+        <label for="numeroHabitaciones">Número de habitaciones (si aplica)</label>
+        <input type="number" id="numeroHabitaciones" name="numeroHabitaciones" min="0" />
+      </div>
+
+      <div class="campo">
+        <label for="serviciosAmenidades">Servicios o amenidades (opcional)</label>
+        <span class="ayuda">Sepáralos por comas, por ejemplo: wifi, estacionamiento, alberca</span>
+        <textarea id="serviciosAmenidades" name="serviciosAmenidades" rows="2"></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="foto1">Foto o video de muestra 1 (opcional)</label>
+        <span class="ayuda">
+          Solo imágenes o video, máximo {tamanoMaximoMb} MB por archivo.
+        </span>
+        <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto2">Foto o video de muestra 2 (opcional)</label>
+        <input type="file" id="foto2" name="foto2" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto3">Foto o video de muestra 3 (opcional)</label>
+        <input type="file" id="foto3" name="foto3" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="enlaceFotos">Enlace con más fotos o video (opcional)</label>
+        <span class="ayuda">
+          Si tienes más de 3 fotos, comparte un enlace (Google Drive, WeTransfer, etc.) en vez de
+          adjuntarlas todas aquí.
+        </span>
+        <input type="url" id="enlaceFotos" name="enlaceFotos" placeholder="https://" />
+      </div>
+
+      <div class="campo">
+        <label for="nombreContacto">Tu nombre (para dar seguimiento a la solicitud) *</label>
+        <input type="text" id="nombreContacto" name="nombreContacto" required />
+      </div>
+
+      <div class="campo">
+        <label for="correoContacto">Tu correo electrónico *</label>
+        <input type="email" id="correoContacto" name="correoContacto" required />
+      </div>
+
+      <div class="campo">
+        <label for="comentarios">Comentarios adicionales (opcional)</label>
+        <textarea id="comentarios" name="comentarios" rows="3"></textarea>
+      </div>
+
+      <div class="campo">
+        <label>
+          <input type="checkbox" name="aceptaRevision" required />
+          Entiendo que mi negocio será revisado manualmente antes de publicarse y que la alta
+          en el directorio es gratuita. *
+        </label>
+      </div>
+
+      <p class="ayuda">
+        Al enviar este formulario aceptas nuestro <a href="/aviso-de-privacidad">Aviso de Privacidad</a>.
+      </p>
+
+      <button type="submit" class="boton">Enviar solicitud</button>
+    </form>
+  </section>
+</BaseLayout>

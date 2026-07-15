@@ -1,0 +1,51 @@
+# Datos reales confirmados vía prompt_maestro_xanath.md y Google Maps (2026-07-15)
+nombre: Casa Xanat
+categoria: hospedaje
+descripcionCorta: Casa de hospedaje a 1.5 cuadras de la playa y del centro de Tecolutla, con alberca y terraza techada, ideal para familias y grupos que buscan tranquilidad.
+direccion: Av Niños Héroes, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4783245
+  lng: -97.0095681
+telefono: "+52 55 6243 7116"
+fotos:
+  - src: /fotos/casa-xanat/01-alberca-jardin.jpg
+    alt: Alberca y jardín de Casa Xanat
+  - src: /fotos/casa-xanat/02-alberca-palapa.jpg
+    alt: Área de alberca de Casa Xanat con sombrillas y mesas
+  - src: /fotos/casa-xanat/03-patio-casa.jpg
+    alt: Vista del patio y el jardín de Casa Xanat
+  - src: /fotos/casa-xanat/04-recamara-acceso-alberca.jpg
+    alt: Recámara de Casa Xanat con acceso directo a la alberca
+  - src: /fotos/casa-xanat/05-recamara-dos-camas.jpg
+    alt: Recámara de Casa Xanat con dos camas
+  - src: /fotos/casa-xanat/06-recamara-tocador.jpg
+    alt: Recámara de Casa Xanat con tocador
+  - src: /fotos/casa-xanat/07-cocina-comedor.jpg
+    alt: Área de cocina y comedor de Casa Xanat
+  - src: /fotos/casa-xanat/08-vista-general-patio.jpg
+    alt: Vista general del patio de Casa Xanat
+precioTemporada:
+  - temporada: Entre semana (domingo a miércoles)
+    precio: 4500
+  - temporada: Fin de semana (jueves a sábado)
+    precio: 5500
+fechaActualizacion: 2026-07-15
+disponible: true
+servicios:
+  - Alberca privada
+  - Chapoteadero
+  - Estacionamiento dentro de las instalaciones
+  - Aire acondicionado
+  - Cocina equipada
+  - Asador
+  - Wifi de alta velocidad
+  - Comedor para 10 personas
+numeroHabitaciones: 4
+capacidadMaxima: 16
+petFriendly: true
+distanciaPlayaMetros: 318
+checkIn: "15:00"
+checkOut: "12:00"
+verificado: true
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: true

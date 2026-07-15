@@ -1,0 +1,28 @@
+# NEGOCIO FICTICIO DE EJEMPLO
+nombre: Tour Manglares Tecolutla
+categoria: actividades
+descripcionCorta: Recorridos en lancha por los manglares del río Tecolutla, con avistamiento de aves y fauna local.
+direccion: Embarcadero municipal, Centro, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4813
+  lng: -97.0078
+telefono: "+52 235 100 0005"
+fotos:
+  - src: /fotos/placeholder.svg
+    alt: Foto de Tour Manglares Tecolutla próximamente — lancha
+  - src: /fotos/placeholder.svg
+    alt: Foto de Tour Manglares Tecolutla próximamente — aves
+  - src: /fotos/placeholder.svg
+    alt: Foto de Tour Manglares Tecolutla próximamente — recorrido
+fechaActualizacion: 2026-06-10
+disponible: true
+servicios:
+  - Guía certificado
+  - Chalecos salvavidas incluidos
+  - Duración aproximada de 1.5 horas
+verificado: false
+resenas:
+  - autor: Ana P.
+    calificacion: 5
+    comentario: Una experiencia hermosa, el guía sabía mucho sobre la zona.
+destacado: false
