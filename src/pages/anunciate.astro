@@ -20,10 +20,15 @@ const tamanoMaximoMb = 8;
       name="alta-negocio"
       method="POST"
       data-netlify="true"
+      data-netlify-honeypot="alta-negocio-web"
       enctype="multipart/form-data"
       action="/anunciate/gracias"
     >
       <input type="hidden" name="form-name" value="alta-negocio" />
+      <p class="campo-oculto" aria-hidden="true">
+        <label for="alta-negocio-web">No llenes este campo</label>
+        <input type="text" id="alta-negocio-web" name="alta-negocio-web" tabindex="-1" autocomplete="off" />
+      </p>
 
       <div class="campo">
         <label for="nombreNegocio">Nombre del negocio *</label>

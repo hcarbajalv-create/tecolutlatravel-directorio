@@ -687,6 +687,16 @@ select:focus-visible {
   color: var(--color-texto-suave);
 }
 
+/* Campo trampa anti-spam (honeypot): invisible para personas, pero
+   presente en el DOM para que los bots automáticos lo llenen y así
+   Netlify Forms descarte el envío. No usar display:none — algunos
+   bots lo detectan y lo evitan. */
+.campo-oculto {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
 .campo input,
 .campo textarea,
 .campo select {

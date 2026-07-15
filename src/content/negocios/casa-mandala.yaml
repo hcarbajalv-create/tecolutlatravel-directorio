@@ -1,5 +1,5 @@
 # Datos reales confirmados vía tecolutlaveracruz.mx (listado como "Aldea Mandala") — 2026-07-15
-# PENDIENTE: telefono/WhatsApp real (no se pudo extraer de la competencia, pídelo directo)
+# Teléfono real proporcionado directamente por el usuario — 2026-07-15
 nombre: Casa Mandala
 categoria: hospedaje
 descripcionCorta: Casa de descanso con decoración rústica y jardín amplio, a 247 metros de la playa de Tecolutla.
@@ -7,7 +7,7 @@ direccion: Av. Niños Héroes s/n, Col. Centro, 93570 Tecolutla, Veracruz
 coordenadas:
   lat: 20.47906705
   lng: -97.00952410
-telefono: "+52 235 100 0002"
+telefono: "+52 55 7805 7546"
 fotos:
   - src: /fotos/casa-mandala/01-entrada.jpg
     alt: Entrada techada de Casa Mandala
