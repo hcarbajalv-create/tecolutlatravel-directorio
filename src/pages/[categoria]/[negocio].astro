@@ -135,8 +135,10 @@ const esquemaLodging =
         {destacado && <span class="insignia insignia--destacado">Destacado</span>}
         {verificado && <span class="insignia insignia--verificado">Verificado</span>}
       </div>
-      <div class="cabecera-categoria__icono">{iconoCategoria[categoria]}</div>
-      <h1>{nombre}</h1>
+      <div class="cabecera-categoria__titulo">
+        <span class="cabecera-categoria__icono">{iconoCategoria[categoria]}</span>
+        <h1>{nombre}</h1>
+      </div>
       <p>{descripcionCorta}</p>
     </div>
   </section>

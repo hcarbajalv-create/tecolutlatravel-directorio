@@ -262,14 +262,21 @@ select:focus-visible {
   position: relative;
 }
 
+.cabecera-categoria__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
 .cabecera-categoria__icono {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  line-height: 1;
 }
 
 .cabecera-categoria h1 {
   color: var(--color-blanco);
-  margin: 0 0 0.5rem;
+  margin: 0;
 }
 
 .cabecera-categoria p {

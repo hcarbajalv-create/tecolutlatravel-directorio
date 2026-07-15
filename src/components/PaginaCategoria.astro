@@ -23,8 +23,10 @@ const negociosCategoria = todos
 <BaseLayout titulo={titulo} descripcion={descripcionSeo}>
   <section class={`cabecera-categoria ${claseColor}`}>
     <div class="contenedor">
-      <div class="cabecera-categoria__icono">{icono}</div>
-      <h1>{titulo}</h1>
+      <div class="cabecera-categoria__titulo">
+        <span class="cabecera-categoria__icono">{icono}</span>
+        <h1>{titulo}</h1>
+      </div>
       <p>{introduccion}</p>
     </div>
   </section>

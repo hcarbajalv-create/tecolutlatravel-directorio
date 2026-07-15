@@ -112,7 +112,9 @@
       "Bash(curl -sI https://tecolutla-travel.netlify.app/)",
       "Bash(npm audit *)",
       "Bash(gh --version)",
-      "Bash(gh auth *)"
+      "Bash(gh auth *)",
+      "Bash(mv public/fotos/casa-xanat public/fotos/casa-xanath)",
+      "Bash(mv src/content/negocios/casa-xanat.yaml src/content/negocios/casa-xanath.yaml)"
     ]
   }
 }
