@@ -25,6 +25,16 @@ const portada = fotos[0];
 const enlace = `/${categoria}/${negocio.id}`;
 const amenidadesVisibles = servicios.slice(0, 3);
 
+const datosExtra: string[] = [];
+if (capacidadMaxima !== undefined) {
+  datosExtra.push(`👥 Hasta ${capacidadMaxima} personas`);
+} else if (numeroHabitaciones !== undefined) {
+  datosExtra.push(
+    `🛏️ ${numeroHabitaciones} ${numeroHabitaciones === 1 ? 'habitación' : 'habitaciones'}`,
+  );
+}
+if (petFriendly) datosExtra.push('🐾 Pet friendly');
+
 const precioDesde =
   precioTemporada && precioTemporada.length > 0
     ? Math.min(...precioTemporada.map((p) => p.precio))
@@ -49,29 +59,17 @@ const enlaceWhatsapp = `https://wa.me/${telefonoDigitos}?text=${encodeURICompone
       />
     </a>
     {
-      (destacado || verificado || distanciaPlayaMetros !== undefined) && (
+      (destacado || verificado) && (
         <div class="tarjeta__insignias">
           {destacado && <span class="insignia insignia--destacado">Destacado</span>}
           {verificado && <span class="insignia insignia--verificado">Verificado</span>}
-          {distanciaPlayaMetros !== undefined && (
-            <span class="insignia insignia--dato">🏖️ {distanciaPlayaMetros}m</span>
-          )}
         </div>
       )
     }
     {
-      (capacidadMaxima !== undefined || numeroHabitaciones !== undefined || petFriendly) && (
+      distanciaPlayaMetros !== undefined && (
         <div class="tarjeta__datos">
-          {capacidadMaxima !== undefined ? (
-            <span class="insignia insignia--dato">👥 Hasta {capacidadMaxima} personas</span>
-          ) : (
-            numeroHabitaciones !== undefined && (
-              <span class="insignia insignia--dato">
-                🛏️ {numeroHabitaciones} {numeroHabitaciones === 1 ? 'habitación' : 'habitaciones'}
-              </span>
-            )
-          )}
-          {petFriendly && <span class="insignia insignia--dato">🐾 Pet friendly</span>}
+          <span class="insignia insignia--dato">🏖️ {distanciaPlayaMetros}m</span>
         </div>
       )
     }
@@ -81,8 +79,11 @@ const enlaceWhatsapp = `https://wa.me/${telefonoDigitos}?text=${encodeURICompone
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
     {
-      amenidadesVisibles.length > 0 && (
+      (datosExtra.length > 0 || amenidadesVisibles.length > 0) && (
         <div class="tarjeta__amenidades">
+          {datosExtra.map((dato) => (
+            <span class="chip-amenidad">{dato}</span>
+          ))}
           {amenidadesVisibles.map((servicio) => (
             <span class="chip-amenidad">{servicio}</span>
           ))}
