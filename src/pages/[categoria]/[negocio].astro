@@ -288,31 +288,26 @@ const esquemaLodging =
     document.body.style.overflow = '';
   }
 
+  // Precarga solo la foto grande que el usuario está a punto de abrir
+  // (al pasar el mouse o tocarla), no las 8 de golpe — en celular con
+  // datos limitados, precargar todas de una sería peor que no precargar nada.
+  const yaPrecargadas = new Set<string>();
+  function precargarUna(src: string | null) {
+    if (!src || yaPrecargadas.has(src)) return;
+    yaPrecargadas.add(src);
+    const precarga = new Image();
+    precarga.src = src;
+  }
+
   document.querySelectorAll('[data-lightbox-abrir]').forEach((boton) => {
+    const src = boton.getAttribute('data-src');
+    boton.addEventListener('mouseenter', () => precargarUna(src));
+    boton.addEventListener('touchstart', () => precargarUna(src), { passive: true });
     boton.addEventListener('click', () => {
-      const src = boton.getAttribute('data-src') ?? '';
       const alt = boton.getAttribute('data-alt') ?? '';
-      abrirLightbox(src, alt);
+      abrirLightbox(src ?? '', alt);
     });
   });
-
-  // Precarga en segundo plano las fotos grandes del lightbox (separadas
-  // de la miniatura desde la optimización de imágenes) para que el clic
-  // de "ampliar" se sienta instantáneo en vez de esperar una descarga nueva.
-  function precargarFotosGrandes() {
-    document.querySelectorAll('[data-lightbox-abrir]').forEach((boton) => {
-      const src = boton.getAttribute('data-src');
-      if (!src) return;
-      const precarga = new Image();
-      precarga.src = src;
-    });
-  }
-
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(precargarFotosGrandes);
-  } else {
-    setTimeout(precargarFotosGrandes, 1500);
-  }
 
   document.querySelector('[data-lightbox-cerrar]')?.addEventListener('click', cerrarLightbox);
 
