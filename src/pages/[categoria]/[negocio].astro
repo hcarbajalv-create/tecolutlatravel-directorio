@@ -296,6 +296,24 @@ const esquemaLodging =
     });
   });
 
+  // Precarga en segundo plano las fotos grandes del lightbox (separadas
+  // de la miniatura desde la optimización de imágenes) para que el clic
+  // de "ampliar" se sienta instantáneo en vez de esperar una descarga nueva.
+  function precargarFotosGrandes() {
+    document.querySelectorAll('[data-lightbox-abrir]').forEach((boton) => {
+      const src = boton.getAttribute('data-src');
+      if (!src) return;
+      const precarga = new Image();
+      precarga.src = src;
+    });
+  }
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(precargarFotosGrandes);
+  } else {
+    setTimeout(precargarFotosGrandes, 1500);
+  }
+
   document.querySelector('[data-lightbox-cerrar]')?.addEventListener('click', cerrarLightbox);
 
   lightbox.addEventListener('click', (evento) => {
