@@ -118,7 +118,13 @@
       "Bash(timeout 8 bash -c ' *)",
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4321/hospedaje --max-time 5)",
       "Bash(curl -s https://tecolutla-travel.netlify.app/hospedaje)",
-      "Bash(pandoc -t markdown \"analisis_competencia_tecolutla_4.docx\" -o \"/c/Users/hcarb/AppData/Local/Temp/claude/C--Users-hcarb-Documents-Publicidad-Xanath-Code-pagina-WEB/ee991794-0f3a-4960-b70b-34f7003cb0c8/scratchpad/plan_v4.md\")"
+      "Bash(pandoc -t markdown \"analisis_competencia_tecolutla_4.docx\" -o \"/c/Users/hcarb/AppData/Local/Temp/claude/C--Users-hcarb-Documents-Publicidad-Xanath-Code-pagina-WEB/ee991794-0f3a-4960-b70b-34f7003cb0c8/scratchpad/plan_v4.md\")",
+      "Bash(netlify env:list)",
+      "Bash(netlify env:set PUBLIC_GA_MEASUREMENT_ID \"G-93G9NCE6ME\" --context production)",
+      "Bash(netlify env:get PUBLIC_GA_MEASUREMENT_ID --context production)",
+      "Bash(rm -rf dist)",
+      "Bash(curl -s \"https://tecolutla-travel.netlify.app/hospedaje/casa-xanath\")",
+      "Bash(curl -s \"https://tecolutla-travel.netlify.app/\")"
     ]
   }
 }

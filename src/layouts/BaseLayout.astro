@@ -11,6 +11,11 @@ interface Props {
 
 const { titulo, descripcion, noindex = false } = Astro.props;
 const urlCanonica = new URL(Astro.url.pathname, Astro.site);
+
+// GA4 solo se activa cuando existe un ID de medición real (variable de
+// entorno PUBLIC_GA_MEASUREMENT_ID) — evita mandar datos a una propiedad
+// inventada mientras el usuario no haya creado la suya.
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
 
 <!doctype html>
@@ -27,6 +32,21 @@ const urlCanonica = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlCanonica} />
+    {
+      gaMeasurementId && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
+          <script define:vars={{ gaMeasurementId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', gaMeasurementId);
+          </script>
+        </>
+      )
+    }
   </head>
   <body>
     <a class="saltar-enlace" href="#contenido-principal">Saltar al contenido principal</a>
