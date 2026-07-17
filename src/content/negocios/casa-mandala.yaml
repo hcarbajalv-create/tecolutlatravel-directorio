@@ -9,21 +9,21 @@ coordenadas:
   lng: -97.00952410
 telefono: "+52 55 7805 7546"
 fotos:
-  - src: /fotos/casa-mandala/01-entrada.jpg
+  - src: ../../assets/fotos/casa-mandala/01-entrada.jpg
     alt: Entrada techada de Casa Mandala
-  - src: /fotos/casa-mandala/02-jardin-fuente.jpg
+  - src: ../../assets/fotos/casa-mandala/02-jardin-fuente.jpg
     alt: Jardín de Casa Mandala con fuente y área de mesas
-  - src: /fotos/casa-mandala/03-patio-exterior.jpg
+  - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
     alt: Patio exterior de Casa Mandala
-  - src: /fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
+  - src: ../../assets/fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
     alt: Jardín de Casa Mandala con fuente decorativa tipo pozo
-  - src: /fotos/casa-mandala/05-recamara-cocineta.jpg
+  - src: ../../assets/fotos/casa-mandala/05-recamara-cocineta.jpg
     alt: Recámara de Casa Mandala con cocineta
-  - src: /fotos/casa-mandala/06-recamara.jpg
+  - src: ../../assets/fotos/casa-mandala/06-recamara.jpg
     alt: Recámara de Casa Mandala
-  - src: /fotos/casa-mandala/07-cocina.jpg
+  - src: ../../assets/fotos/casa-mandala/07-cocina.jpg
     alt: Área de cocina de Casa Mandala
-  - src: /fotos/casa-mandala/08-patio-asador.jpg
+  - src: ../../assets/fotos/casa-mandala/08-patio-asador.jpg
     alt: Patio de Casa Mandala con asador
 precioTemporada:
   - temporada: Temporada baja (entre semana)

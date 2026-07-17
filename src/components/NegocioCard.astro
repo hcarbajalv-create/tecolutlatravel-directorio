@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 
 interface Props {
   negocio: CollectionEntry<'negocios'>;
@@ -52,13 +53,13 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
 <article class="tarjeta">
   <div class="tarjeta__foto">
     <a href={enlace} tabindex="-1" aria-hidden="true">
-      <img
+      <Image
         class="tarjeta__imagen"
         src={portada.src}
         alt={portada.alt}
         loading="lazy"
-        width="400"
-        height="300"
+        width={500}
+        height={375}
       />
     </a>
     {

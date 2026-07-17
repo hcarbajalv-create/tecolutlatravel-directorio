@@ -8,11 +8,11 @@ coordenadas:
   lng: -97.0091
 telefono: "+52 235 100 0003"
 fotos:
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Restaurante El Manglar próximamente — terraza
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Restaurante El Manglar próximamente — pescado a la veracruzana
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Restaurante El Manglar próximamente — camarones al coco
 fechaActualizacion: 2026-06-15
 disponible: true

@@ -8,11 +8,11 @@ coordenadas:
   lng: -97.0113
 telefono: "+52 235 100 0006"
 fotos:
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Renta de Bicicletas Tecolutla próximamente — bicicletas
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Renta de Bicicletas Tecolutla próximamente — local
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Renta de Bicicletas Tecolutla próximamente — malecón
 fechaActualizacion: 2026-06-05
 disponible: true

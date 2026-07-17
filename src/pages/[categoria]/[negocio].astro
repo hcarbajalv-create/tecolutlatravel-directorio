@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -43,6 +44,12 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
 )}`;
 const enlaceComoLlegar = `https://www.google.com/maps/dir/?api=1&destination=${coordenadas.lat},${coordenadas.lng}`;
 const mapaEmbed = `https://www.google.com/maps?q=${coordenadas.lat},${coordenadas.lng}&output=embed`;
+
+// Versión más grande de cada foto para el lightbox (el thumbnail de la
+// galería usa una versión chica; ampliar esa se vería pixelada).
+const fotosGrandes = await Promise.all(
+  fotos.map((foto) => getImage({ src: foto.src, width: 1000 })),
+);
 
 const fechaFormateada = new Intl.DateTimeFormat('es-MX', {
   day: 'numeric',
@@ -97,7 +104,7 @@ const esquemaLodging =
           latitude: coordenadas.lat,
           longitude: coordenadas.lng,
         },
-        image: fotos.map((f) => f.src),
+        image: fotos.map((f) => f.src.src),
         amenityFeature: servicios.map((s) => ({
           '@type': 'LocationFeatureSpecification',
           name: s,
@@ -155,11 +162,11 @@ const esquemaLodging =
             class="ficha__foto"
             style={`--giro: ${i % 2 === 0 ? '-2deg' : '2deg'}`}
             data-lightbox-abrir
-            data-src={foto.src}
+            data-src={fotosGrandes[i].src}
             data-alt={foto.alt}
             aria-label={`Ampliar foto: ${foto.alt}`}
           >
-            <img src={foto.src} alt={foto.alt} loading="lazy" width="400" height="300" />
+            <Image src={foto.src} alt={foto.alt} loading="lazy" width={400} height={300} />
           </button>
         ))
       }

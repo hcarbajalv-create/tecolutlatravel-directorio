@@ -8,11 +8,11 @@ coordenadas:
   lng: -97.0078
 telefono: "+52 235 100 0005"
 fotos:
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Tour Manglares Tecolutla próximamente — lancha
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Tour Manglares Tecolutla próximamente — aves
-  - src: /fotos/placeholder.svg
+  - src: ../../assets/fotos/placeholder.svg
     alt: Foto de Tour Manglares Tecolutla próximamente — recorrido
 fechaActualizacion: 2026-06-10
 disponible: true

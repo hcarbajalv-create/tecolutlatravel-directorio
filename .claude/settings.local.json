@@ -124,7 +124,14 @@
       "Bash(netlify env:get PUBLIC_GA_MEASUREMENT_ID --context production)",
       "Bash(rm -rf dist)",
       "Bash(curl -s \"https://tecolutla-travel.netlify.app/hospedaje/casa-xanath\")",
-      "Bash(curl -s \"https://tecolutla-travel.netlify.app/\")"
+      "Bash(curl -s \"https://tecolutla-travel.netlify.app/\")",
+      "Bash(mkdir -p src/assets/fotos)",
+      "Bash(mv public/fotos/casa-xanath src/assets/fotos/casa-xanath)",
+      "Bash(mv public/fotos/casa-mandala src/assets/fotos/casa-mandala)",
+      "Bash(mv public/fotos/placeholder.svg src/assets/fotos/placeholder.svg)",
+      "Bash(rm -rf dist .astro)",
+      "Bash(awk '{sum+=$1} {print}')",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} - %{size_download} bytes\\\\n\" \"http://localhost:4322/_image?href=%2F%40fs%2FC%3A%2FUsers%2Fhcarb%2FDocuments%2FPublicidad+Xanath%2FCode+pagina+WEB%2Fsrc%2Fassets%2Ffotos%2Fcasa-xanath%2F01-alberca-jardin.jpg%3ForigWidth%3D1200%26origHeight%3D1600%26origFormat%3Djpg&w=400&h=300&f=webp\")"
     ]
   }
 }
