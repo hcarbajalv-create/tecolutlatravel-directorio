@@ -78,9 +78,18 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
-        <label for="foto1">Foto o video de muestra 1 (opcional)</label>
+        <label for="fotosVarias">¿Prefieres subir varias fotos de una sola vez? (opcional)</label>
         <span class="ayuda">
-          Solo imágenes o video, máximo {tamanoMaximoMb} MB por archivo.
+          Selecciona todas las que quieras aquí — no hace falta que también llenes las casillas de
+          abajo. Solo imágenes o video, máximo {tamanoMaximoMb} MB por archivo.
+        </span>
+        <input type="file" id="fotosVarias" name="fotosVarias" accept={tiposAceptados} multiple />
+      </div>
+
+      <div class="campo">
+        <label for="foto1">O sube tus fotos una por una: Foto/video 1 (opcional)</label>
+        <span class="ayuda">
+          Usa esto si prefieres ir de una en una en vez del campo de arriba.
         </span>
         <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
       </div>
@@ -96,10 +105,45 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
+        <label for="foto4">Foto o video de muestra 4 (opcional)</label>
+        <input type="file" id="foto4" name="foto4" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto5">Foto o video de muestra 5 (opcional)</label>
+        <input type="file" id="foto5" name="foto5" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto6">Foto o video de muestra 6 (opcional)</label>
+        <input type="file" id="foto6" name="foto6" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto7">Foto o video de muestra 7 (opcional)</label>
+        <input type="file" id="foto7" name="foto7" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto8">Foto o video de muestra 8 (opcional)</label>
+        <input type="file" id="foto8" name="foto8" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto9">Foto o video de muestra 9 (opcional)</label>
+        <input type="file" id="foto9" name="foto9" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
+        <label for="foto10">Foto o video de muestra 10 (opcional)</label>
+        <input type="file" id="foto10" name="foto10" accept={tiposAceptados} />
+      </div>
+
+      <div class="campo">
         <label for="enlaceFotos">Enlace con más fotos o video (opcional)</label>
         <span class="ayuda">
-          Si tienes más de 3 fotos, comparte un enlace (Google Drive, WeTransfer, etc.) en vez de
-          adjuntarlas todas aquí.
+          Si tienes más de 10 fotos, o algún video pesado, comparte un enlace (Google Drive,
+          WeTransfer, etc.) en vez de adjuntarlo aquí.
         </span>
         <input type="url" id="enlaceFotos" name="enlaceFotos" placeholder="https://" />
       </div>
