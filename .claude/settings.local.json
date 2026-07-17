@@ -116,7 +116,9 @@
       "Bash(mv public/fotos/casa-xanat public/fotos/casa-xanath)",
       "Bash(mv src/content/negocios/casa-xanat.yaml src/content/negocios/casa-xanath.yaml)",
       "Bash(timeout 8 bash -c ' *)",
-      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4321/hospedaje --max-time 5)"
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4321/hospedaje --max-time 5)",
+      "Bash(curl -s https://tecolutla-travel.netlify.app/hospedaje)",
+      "Bash(pandoc -t markdown \"analisis_competencia_tecolutla_4.docx\" -o \"/c/Users/hcarb/AppData/Local/Temp/claude/C--Users-hcarb-Documents-Publicidad-Xanath-Code-pagina-WEB/ee991794-0f3a-4960-b70b-34f7003cb0c8/scratchpad/plan_v4.md\")"
     ]
   }
 }
