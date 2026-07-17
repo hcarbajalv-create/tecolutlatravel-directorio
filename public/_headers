@@ -3,3 +3,8 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()
+
+# Archivos de _astro/ llevan un hash de contenido en el nombre — si el
+# archivo cambia, la URL cambia. Son seguros de cachear "para siempre".
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
