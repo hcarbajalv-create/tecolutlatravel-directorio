@@ -139,7 +139,12 @@
       "Bash(curl -s \"https://tecolutla-travel.netlify.app/hospedaje/casa-xanath\" -o /tmp/pagina.html)",
       "Bash(curl -s https://tecolutla-travel.netlify.app/hospedaje/casa-xanath -o /c/Users/hcarb/AppData/Local/Temp/claude/C--Users-hcarb-Documents-Publicidad-Xanath-Code-pagina-WEB/ee991794-0f3a-4960-b70b-34f7003cb0c8/scratchpad/pagina.html)",
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4322/anunciate --max-time 5)",
-      "Bash(curl -s \"https://tecolutla-travel.netlify.app/anunciate\")"
+      "Bash(curl -s \"https://tecolutla-travel.netlify.app/anunciate\")",
+      "mcp__visualize__read_me",
+      "mcp__visualize__show_widget",
+      "Bash(npm install *)",
+      "Bash(node --check netlify/functions/actualizar-negocio.mjs)",
+      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -d '{\"telefono\":\"5215578057546\"}' -w \"\\\\nHTTP %{http_code}\\\\n\")"
     ]
   }
 }
