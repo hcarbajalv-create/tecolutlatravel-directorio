@@ -32,7 +32,7 @@ precioTemporada:
   - temporada: Temporada alta (fines de semana y vacaciones)
     precio: 3500
 fechaActualizacion: 2026-07-18
-disponible: false
+disponible: true
 servicios:
   - Wifi
   - Alberca y chapoteadero
