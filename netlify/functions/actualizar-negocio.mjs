@@ -43,15 +43,24 @@ async function encontrarNegocioPorTelefono(telefonoDigitos) {
   return null;
 }
 
-function aplicarCambios(documento, cambios) {
-  if (cambios.precioTemporada) {
-    documento.set('precioTemporada', cambios.precioTemporada);
+// Alcance autorizado de V2 (2026-07-17): SOLO disponibilidad y fotos.
+// Precio sigue en pausa (sección 7 del plan) y descripción es un campo fijo
+// desde el alta (sección 8, "Alta (fijo)") — no editable después. No agregar
+// ninguno de los dos aquí sin autorización explícita.
+const CAMPOS_PROHIBIDOS = ['precioTemporada', 'descripcionCorta'];
+const CAMPOS_PERMITIDOS = ['disponible'];
+
+function validarCampos(cambios) {
+  const prohibidoEncontrado = CAMPOS_PROHIBIDOS.find((campo) => campo in cambios);
+  if (prohibidoEncontrado) {
+    return `Campo no autorizado en V2: ${prohibidoEncontrado}`;
   }
+  return null;
+}
+
+function aplicarCambios(documento, cambios) {
   if (typeof cambios.disponible === 'boolean') {
     documento.set('disponible', cambios.disponible);
-  }
-  if (cambios.descripcionCorta) {
-    documento.set('descripcionCorta', cambios.descripcionCorta);
   }
   documento.set('fechaActualizacion', new Date().toISOString().slice(0, 10));
   return documento;
@@ -81,6 +90,11 @@ export default async (request) => {
     return new Response(JSON.stringify({ ok: false, error: 'Falta el teléfono' }), {
       status: 400,
     });
+  }
+
+  const errorValidacion = validarCampos(cambios);
+  if (errorValidacion) {
+    return new Response(JSON.stringify({ ok: false, error: errorValidacion }), { status: 400 });
   }
 
   try {
