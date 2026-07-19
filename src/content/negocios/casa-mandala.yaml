@@ -2,7 +2,8 @@
 # Teléfono real proporcionado directamente por el usuario — 2026-07-15
 nombre: Casa Mandala
 categoria: hospedaje
-descripcionCorta: Casa de descanso con decoración rústica y jardín amplio, a 247 metros de la playa de Tecolutla.
+descripcionCorta: Casa de descanso con decoración rústica y jardín amplio, a 247
+  metros de la playa de Tecolutla.
 direccion: Av. Niños Héroes s/n, Col. Centro, 93570 Tecolutla, Veracruz
 coordenadas:
   lat: 20.47906705
@@ -30,7 +31,7 @@ precioTemporada:
     precio: 2200
   - temporada: Temporada alta (fines de semana y vacaciones)
     precio: 3500
-fechaActualizacion: 2026-06-20
+fechaActualizacion: 2026-07-18
 disponible: true
 servicios:
   - Wifi
