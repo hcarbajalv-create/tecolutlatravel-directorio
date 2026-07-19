@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# secretos locales fuera del sitio (nunca deben subirse)
+.make-token
+
 # macOS-specific files
 .DS_Store
 

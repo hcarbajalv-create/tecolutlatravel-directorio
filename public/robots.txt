@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tecolutla-travel.netlify.app/sitemap-index.xml
+Sitemap: https://tecolutlatravel.mx/sitemap-index.xml

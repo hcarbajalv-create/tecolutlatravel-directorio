@@ -144,7 +144,24 @@
       "mcp__visualize__show_widget",
       "Bash(npm install *)",
       "Bash(node --check netlify/functions/actualizar-negocio.mjs)",
-      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -d '{\"telefono\":\"5215578057546\"}' -w \"\\\\nHTTP %{http_code}\\\\n\")"
+      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -d '{\"telefono\":\"5215578057546\"}' -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -d '{\"telefono\":\"5215578057546\",\"disponible\":false}' -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -H \"x-webhook-secret: secreto-inventado-incorrecto\" -d '{\"telefono\":\"5215578057546\",\"disponible\":false}' -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -X POST \"https://tecolutla-travel.netlify.app/.netlify/functions/actualizar-negocio\" -H \"Content-Type: application/json\" -d '{\"telefono\":\"5215578057546\",\"disponible\":false}' -w \"\\\\nHTTP %{http_code}\\\\n\" -v)",
+      "Bash(xxd)",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__tabs_create_mcp",
+      "mcp__claude-in-chrome__navigate",
+      "mcp__claude-in-chrome__get_page_text",
+      "WebFetch(domain:developers.make.com)",
+      "PowerShell(if \\($env:MAKE_API_TOKEN\\) { Write-Output \"Variable encontrada, longitud: $\\($env:MAKE_API_TOKEN.Length\\) caracteres\" } else { Write-Output \"NO se encontro la variable\" })",
+      "Bash(curl -s -o /dev/null -w \"tecolutlatravel.mx: %{http_code}\\\\n\" https://tecolutlatravel.mx/ --max-time 8)",
+      "Bash(curl -s -o /dev/null -w \"www.tecolutlatravel.mx: %{http_code}\\\\n\" https://www.tecolutlatravel.mx/ --max-time 8)",
+      "Bash(curl -s -o /dev/null -w \"Home limpia: %{http_code}\\\\n\" https://tecolutlatravel.mx/)",
+      "Bash(curl -s -o /dev/null -w \"Ficha limpia: %{http_code}\\\\n\" https://tecolutlatravel.mx/hospedaje/casa-xanath)",
+      "Bash(curl -s -o /dev/null -w \"Ficha con .html: %{http_code}\\\\n\" https://tecolutlatravel.mx/hospedaje/casa-xanath.html)",
+      "Bash(curl -s https://tecolutlatravel.mx/sitemap-index.xml)",
+      "Bash(curl -s https://tecolutlatravel.mx/)"
     ]
   }
 }

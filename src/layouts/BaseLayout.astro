@@ -10,7 +10,12 @@ interface Props {
 }
 
 const { titulo, descripcion, noindex = false } = Astro.props;
-const urlCanonica = new URL(Astro.url.pathname, Astro.site);
+// El build usa format:'file' (paginas.html planas) para evitar redirects de
+// Netlify, pero eso deja el .html en Astro.url.pathname durante el build.
+// El canonico debe reflejar la URL limpia real (sin .html), igual que el
+// sitemap y los enlaces internos — si no, quedan inconsistentes entre si.
+const rutaCanonica = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+const urlCanonica = new URL(rutaCanonica, Astro.site);
 
 // GA4 solo se activa cuando existe un ID de medición real (variable de
 // entorno PUBLIC_GA_MEASUREMENT_ID) — evita mandar datos a una propiedad
