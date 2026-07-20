@@ -10,6 +10,7 @@ const enlaces = [
   { href: '/gastronomia', texto: 'Gastronomía' },
   { href: '/actividades', texto: 'Actividades ecoturísticas' },
   { href: '/servicios', texto: 'Servicios' },
+  { href: '/reportajes-y-noticias', texto: 'Reportajes y noticias' },
   { href: '/tips-para-tu-viaje', texto: 'Tips para tu viaje' },
   { href: '/descubre-tecolutla', texto: 'Descubre Tecolutla' },
 ];
@@ -21,7 +22,20 @@ function esActiva(href: string) {
 
 <header class="encabezado">
   <div class="encabezado__barra">
-    <a href="/" class="encabezado__marca">Tecolutla<span>Travel</span></a>
+    <a href="/" class="encabezado__marca">
+      <svg class="encabezado__marca-icono" viewBox="0 0 100 100" aria-hidden="true">
+        <mask id="tt-ola-header" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+          <rect x="0" y="0" width="100" height="100" fill="#fff" />
+          <path d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z" fill="#000" />
+        </mask>
+        <path
+          d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z"
+          fill="#FF7A5C"
+          mask="url(#tt-ola-header)"
+        />
+      </svg>
+      Tecolutla<span>.Travel</span>
+    </a>
     <button
       class="encabezado__toggle"
       type="button"

@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+
+interface Props {
+  reportaje: CollectionEntry<'reportajes'>;
+}
+
+const { reportaje } = Astro.props;
+const { titulo, categoria, video, descripcionCorta, negocioRelacionado } = reportaje.data;
+
+const etiquetas: Record<typeof categoria, string> = {
+  reportaje: 'Reportaje',
+  noticia: 'Noticia',
+  tip: 'Tip',
+};
+
+const negocio = negocioRelacionado ? await getEntry(negocioRelacionado) : undefined;
+const enlaceNegocio = negocio ? `/${negocio.data.categoria}/${negocio.id}` : undefined;
+---
+
+<article class={`tarjeta-reportaje tarjeta-reportaje--${categoria}`} data-categoria={categoria}>
+  <div class="tarjeta-reportaje__video">
+    {
+      video ? (
+        <a
+          href={video}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tarjeta-reportaje__video-enlace"
+        >
+          <span class="tarjeta-reportaje__play" aria-hidden="true">
+            ▶
+          </span>
+          <span class="tarjeta-reportaje__video-texto">{titulo}</span>
+        </a>
+      ) : (
+        <span class="tarjeta-reportaje__video-texto tarjeta-reportaje__video-texto--pendiente">
+          Video próximamente
+        </span>
+      )
+    }
+  </div>
+  <div class="tarjeta-reportaje__cuerpo">
+    <span class="etiqueta-categoria">{etiquetas[categoria]}</span>
+    <h3 class="tarjeta-reportaje__titulo">{titulo}</h3>
+    <p class="tarjeta-reportaje__descripcion">{descripcionCorta}</p>
+    {enlaceNegocio && (
+      <a class="tarjeta-reportaje__ver-ficha" href={enlaceNegocio}>
+        Ver ficha →
+      </a>
+    )}
+  </div>
+</article>

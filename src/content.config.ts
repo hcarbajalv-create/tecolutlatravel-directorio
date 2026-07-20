@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const negocios = defineCollection({
@@ -54,4 +54,19 @@ const negocios = defineCollection({
     }),
 });
 
-export const collections = { negocios };
+const reportajes = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/reportajes' }),
+  schema: z.object({
+    titulo: z.string(),
+    categoria: z.enum(['reportaje', 'noticia', 'tip']),
+    fecha: z.coerce.date(),
+    // URL del video (YouTube/TikTok/Instagram). Opcional: si aún no se ha
+    // grabado, la tarjeta muestra "Video próximamente" en vez de inventar un enlace.
+    video: z.string().url().optional(),
+    descripcionCorta: z.string(),
+    // Solo aplica a categoria: 'reportaje' — enlaza de vuelta a la ficha del negocio.
+    negocioRelacionado: reference('negocios').optional(),
+  }),
+});
+
+export const collections = { negocios, reportajes };

@@ -1,18 +1,24 @@
 :root {
-  /* Marca */
-  --color-mar-claro: #0fa3b1; /* decorativo: degradados, acentos grandes */
-  --color-mar: #0b7a85; /* texto/botones/enlaces sobre fondo claro */
-  --color-mar-oscuro: #08616b; /* fondos oscuros (footer, degradado hero) */
-  --color-arena: #f7f1e5;
+  /* Identidad de marca — manual de marca Tecolutla.Travel */
+  --color-turquesa-claro: #4fd2c8; /* acentos, hover, decorativo */
+  --color-turquesa: #0b6f7a; /* color primario: marca, navegación, enlaces */
+  --color-tinta: #0c2b2e; /* texto oscuro y fondos oscuros (footer, hover) */
+  --color-arena: #f4e9d1; /* fondos claros/neutros */
   --color-arena-oscura: #ecdfc4;
-  --color-texto: #1e2a32;
+  --color-texto: var(--color-tinta);
   --color-texto-suave: #4a5a60;
   --color-blanco: #ffffff;
   --color-borde: #e1d7c0;
 
+  /* Alias: nombres usados en el resto de la hoja de estilos */
+  --color-mar-claro: var(--color-turquesa-claro);
+  --color-mar: var(--color-turquesa);
+  --color-mar-oscuro: var(--color-tinta);
+
   /* Acentos */
-  --color-coral-claro: #ff7a59; /* decorativo: degradados, acentos grandes */
-  --color-coral: #c44a2e; /* texto/badges/botones sobre fondo claro */
+  --color-coral-claro: #ff9478; /* acentos secundarios, decorativo */
+  --color-coral: #ff7a5c; /* color secundario / CTA — solo fondos, nunca texto suelto */
+  --color-coral-texto: #a64f3c; /* variante seguro AA de coral: texto y hover de botones coral */
   --color-whatsapp: #157a3d;
   --color-whatsapp-oscuro: #0f5c2e;
   --color-foco: #ffb020;
@@ -22,6 +28,10 @@
   --sombra: 0 4px 20px rgba(30, 42, 50, 0.1);
   --sombra-hover: 0 12px 28px rgba(30, 42, 50, 0.16);
   --ancho-maximo: 1120px;
+
+  /* Tipografía — manual de marca */
+  --fuente-titulos: 'Nunito', sans-serif;
+  --fuente-cuerpo: 'Work Sans', sans-serif;
 }
 
 *,
@@ -36,7 +46,8 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--fuente-cuerpo);
+  font-weight: 500;
   color: var(--color-texto);
   background: var(--color-blanco);
   line-height: 1.55;
@@ -54,7 +65,14 @@ a {
 h1,
 h2,
 h3 {
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
   letter-spacing: -0.3px;
+}
+
+b,
+strong {
+  font-weight: 600;
 }
 
 a:focus-visible,
@@ -95,11 +113,21 @@ select:focus-visible {
 }
 
 .encabezado__marca {
-  color: var(--color-mar);
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-tinta);
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
   font-size: 1.25rem;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.encabezado__marca-icono {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
 }
 
 .encabezado__marca span {
@@ -198,7 +226,7 @@ select:focus-visible {
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 1.1rem;
@@ -206,7 +234,7 @@ select:focus-visible {
 
 .hero h1 {
   font-size: clamp(1.9rem, 5vw, 3rem);
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.15;
   margin: 0 0 0.9rem;
 }
@@ -332,7 +360,7 @@ select:focus-visible {
 
 .titulo-seccion {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 900;
   margin: 0;
 }
 
@@ -414,7 +442,7 @@ select:focus-visible {
   align-items: center;
   gap: 0.3rem;
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
   color: var(--color-blanco);
@@ -423,6 +451,8 @@ select:focus-visible {
 
 .insignia--destacado {
   background: var(--color-coral);
+  color: var(--color-tinta);
+  border-color: rgba(12, 43, 46, 0.25);
 }
 
 .insignia--verificado {
@@ -446,7 +476,8 @@ select:focus-visible {
 .tarjeta__titulo {
   margin: 0;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
 }
 
 .tarjeta__titulo a {
@@ -474,7 +505,7 @@ select:focus-visible {
   background: var(--color-arena);
   color: var(--color-texto-suave);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
 }
@@ -504,7 +535,7 @@ select:focus-visible {
   padding: 0.7rem 1.3rem;
   border-radius: var(--radio-chico);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   font-size: 1rem;
@@ -517,10 +548,12 @@ select:focus-visible {
 
 .boton--destacado {
   background: var(--color-coral);
+  color: var(--color-tinta);
 }
 
 .boton--destacado:hover {
-  background: #9c3a22;
+  background: var(--color-coral-texto);
+  color: var(--color-blanco);
 }
 
 .boton--whatsapp {
@@ -591,7 +624,8 @@ select:focus-visible {
 }
 
 .tile-categoria__titulo {
-  font-weight: 800;
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
   font-size: 1.05rem;
   display: block;
 }
@@ -602,19 +636,19 @@ select:focus-visible {
 }
 
 .tile--hospedaje {
-  background: linear-gradient(135deg, var(--color-mar), var(--color-mar-claro));
+  background: linear-gradient(135deg, var(--color-turquesa), var(--color-turquesa-claro));
 }
 
 .tile--gastronomia {
-  background: linear-gradient(135deg, #d9862a, var(--color-coral-claro));
+  background: linear-gradient(135deg, var(--color-coral), var(--color-coral-claro));
 }
 
 .tile--actividades {
-  background: linear-gradient(135deg, #2e7d6b, #67b99a);
+  background: linear-gradient(135deg, var(--color-tinta), var(--color-turquesa));
 }
 
 .tile--servicios {
-  background: linear-gradient(135deg, #4a6fa5, #7a94c4);
+  background: linear-gradient(135deg, var(--color-turquesa-claro), var(--color-coral-claro));
 }
 
 /* ---------- Tarjetas de guía / informativas ---------- */
@@ -641,7 +675,7 @@ select:focus-visible {
 
 .tarjeta-guia h3 {
   font-size: 1.02rem;
-  font-weight: 800;
+  font-weight: 900;
   margin: 0 0 0.3rem;
   color: var(--color-texto);
 }
@@ -830,7 +864,7 @@ select:focus-visible {
   background: color-mix(in srgb, var(--color-coral) 6%, white);
 }
 .ficha__bloque--disponibilidad h2 {
-  color: var(--color-coral);
+  color: var(--color-coral-texto);
 }
 
 .ficha__bloque--precio {
@@ -842,8 +876,8 @@ select:focus-visible {
 }
 
 .ficha__bloque--servicios {
-  border-top-color: var(--color-foco);
-  background: color-mix(in srgb, var(--color-foco) 8%, white);
+  border-top-color: var(--color-turquesa-claro);
+  background: color-mix(in srgb, var(--color-turquesa-claro) 10%, white);
 }
 .ficha__bloque--servicios h2 {
   color: var(--color-texto);
@@ -884,8 +918,8 @@ select:focus-visible {
 }
 
 .resena__calificacion {
-  color: var(--color-coral);
-  font-weight: 700;
+  color: var(--color-coral-texto);
+  font-weight: 600;
 }
 
 .mapa-embed {
@@ -1050,4 +1084,277 @@ select:focus-visible {
   .ficha__foto:focus-visible {
     transform: scale(1.02);
   }
+}
+
+/* ---------- Reportajes y noticias ---------- */
+.perfil-anfitriona {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.1rem 1.25rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.perfil-anfitriona__foto {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.perfil-anfitriona__info {
+  flex: 1;
+  min-width: 220px;
+}
+
+.perfil-anfitriona__nombre {
+  margin: 0 0 0.3rem;
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.insignia--anfitriona {
+  background: var(--color-turquesa);
+  color: var(--color-blanco);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.perfil-anfitriona__descripcion {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  max-width: 60ch;
+}
+
+.perfil-anfitriona__stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.perfil-anfitriona__stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfil-anfitriona__stats b {
+  font-size: 1.2rem;
+  color: var(--color-turquesa);
+  font-family: var(--fuente-titulos);
+}
+
+.perfil-anfitriona__stats span {
+  font-size: 0.7rem;
+  color: var(--color-texto-suave);
+}
+
+.filtros-categoria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtro-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-blanco);
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filtro-pill[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+.filtros-categoria[data-algun-activo='true'] .filtro-pill[aria-pressed='false'] {
+  opacity: 0.45;
+}
+
+.filtro-pill--reportaje {
+  background: var(--color-turquesa);
+}
+
+.filtro-pill--noticia {
+  background: var(--color-coral);
+  color: var(--color-tinta);
+}
+
+.filtro-pill--tip {
+  background: var(--color-foco);
+  color: var(--color-tinta);
+}
+
+.rejilla-reportajes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.tarjeta-reportaje {
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  border-top: 4px solid var(--color-borde);
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-reportaje--reportaje {
+  border-top-color: var(--color-turquesa);
+}
+
+.tarjeta-reportaje--noticia {
+  border-top-color: var(--color-coral);
+}
+
+.tarjeta-reportaje--tip {
+  border-top-color: var(--color-foco);
+}
+
+.tarjeta-reportaje__video {
+  aspect-ratio: 9 / 16;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--color-turquesa-claro), var(--color-turquesa));
+}
+
+.tarjeta-reportaje--noticia .tarjeta-reportaje__video {
+  background: linear-gradient(160deg, var(--color-coral-claro), var(--color-coral));
+}
+
+.tarjeta-reportaje--tip .tarjeta-reportaje__video {
+  background: linear-gradient(160deg, #ffd98a, var(--color-foco));
+}
+
+.tarjeta-reportaje__video::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 20, 25, 0.75), rgba(8, 20, 25, 0) 55%);
+}
+
+.tarjeta-reportaje__video-enlace {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding: 0.75rem;
+  color: var(--color-blanco);
+  text-decoration: none;
+}
+
+.tarjeta-reportaje__play {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-tinta);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.tarjeta-reportaje__video-texto {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tarjeta-reportaje__video-texto--pendiente {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 0.75rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+}
+
+.tarjeta-reportaje__cuerpo {
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.etiqueta-categoria {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  color: var(--color-blanco);
+}
+
+.tarjeta-reportaje--reportaje .etiqueta-categoria {
+  background: var(--color-turquesa);
+}
+
+.tarjeta-reportaje--noticia .etiqueta-categoria {
+  background: var(--color-coral);
+  color: var(--color-tinta);
+}
+
+.tarjeta-reportaje--tip .etiqueta-categoria {
+  background: var(--color-foco);
+  color: var(--color-tinta);
+}
+
+.tarjeta-reportaje__titulo {
+  margin: 0;
+  font-size: 1rem;
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
+}
+
+.tarjeta-reportaje__descripcion {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.tarjeta-reportaje__ver-ficha {
+  align-self: flex-start;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-turquesa);
+  text-decoration: none;
+  border: 1.5px solid var(--color-turquesa);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  margin-top: 0.2rem;
+}
+
+.tarjeta-reportaje__ver-ficha:hover {
+  background: var(--color-turquesa);
+  color: var(--color-blanco);
 }

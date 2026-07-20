@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TarjetaReportaje from '../components/TarjetaReportaje.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import placeholderPaloma from '../assets/fotos/placeholder.svg';
+
+const reportajes = (await getCollection('reportajes')).sort(
+  (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf(),
+);
+
+const totalVideos = reportajes.length;
+const negociosCubiertos = new Set(
+  reportajes.map((r) => r.data.negocioRelacionado?.id).filter((id): id is string => Boolean(id)),
+).size;
+
+const filtros = [
+  { categoria: 'reportaje', texto: 'Reportajes de negocios', icono: '📍' },
+  { categoria: 'noticia', texto: 'Noticias locales', icono: '📰' },
+  { categoria: 'tip', texto: 'Tips de viajero', icono: '💡' },
+] as const;
+---
+
+<BaseLayout
+  titulo="Reportajes y noticias"
+  descripcion="Recorridos, novedades y tips de Tecolutla, contados por Paloma — cada semana, en video."
+>
+  <section class="seccion-reportajes seccion--arena">
+    <div class="contenedor">
+      <h1 class="titulo-pagina">Reportajes y noticias</h1>
+      <p class="subtitulo">
+        Recorridos, novedades y tips de Tecolutla, contados por Paloma — cada semana, en video.
+      </p>
+
+      <div class="perfil-anfitriona">
+        <Image
+          src={placeholderPaloma}
+          alt="Foto de Paloma, anfitriona del canal"
+          width={64}
+          height={64}
+          class="perfil-anfitriona__foto"
+        />
+        <div class="perfil-anfitriona__info">
+          <p class="perfil-anfitriona__nombre">
+            Paloma <span class="insignia insignia--anfitriona">Anfitriona</span>
+          </p>
+          <p class="perfil-anfitriona__descripcion">
+            Tu guía en cámara: visita hospedajes y restaurantes del directorio, cubre eventos del
+            pueblo y comparte tips para tu viaje.
+          </p>
+        </div>
+        <div class="perfil-anfitriona__stats">
+          <div>
+            <b>{totalVideos}</b>
+            <span>videos</span>
+          </div>
+          <div>
+            <b>{negociosCubiertos}</b>
+            <span>negocios</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filtros-categoria" role="group" aria-label="Filtrar por categoría">
+        {
+          filtros.map((f) => (
+            <button
+              type="button"
+              class={`filtro-pill filtro-pill--${f.categoria}`}
+              data-filtro={f.categoria}
+              aria-pressed="false"
+            >
+              {f.icono} {f.texto}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        reportajes.length === 0 ? (
+          <p>Todavía no hay videos publicados.</p>
+        ) : (
+          <div class="rejilla-reportajes">
+            {reportajes.map((r) => (
+              <TarjetaReportaje reportaje={r} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const contenedorFiltros = document.querySelector<HTMLElement>('.filtros-categoria');
+  const botones = document.querySelectorAll<HTMLButtonElement>('.filtro-pill');
+  const tarjetas = document.querySelectorAll<HTMLElement>('[data-categoria]');
+
+  function aplicarFiltros() {
+    const activos = Array.from(botones)
+      .filter((b) => b.getAttribute('aria-pressed') === 'true')
+      .map((b) => b.dataset.filtro);
+
+    contenedorFiltros?.setAttribute('data-algun-activo', activos.length > 0 ? 'true' : 'false');
+
+    tarjetas.forEach((tarjeta) => {
+      const visible = activos.length === 0 || activos.includes(tarjeta.dataset.categoria ?? '');
+      tarjeta.style.display = visible ? '' : 'none';
+    });
+  }
+
+  botones.forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const activo = boton.getAttribute('aria-pressed') === 'true';
+      boton.setAttribute('aria-pressed', activo ? 'false' : 'true');
+      aplicarFiltros();
+    });
+  });
+</script>
