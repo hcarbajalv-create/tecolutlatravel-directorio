@@ -1,98 +1,13 @@
-import { parseDocument } from 'yaml';
 import { getStore } from '@netlify/blobs';
-import { calcularPuntaje } from '../../src/utils/puntajeCompletitud.ts';
-
-const GITHUB_API = 'https://api.github.com';
-const OWNER = 'hcarbajalv-create';
-const REPO = 'tecolutlatravel-directorio';
-const RUTA_NEGOCIOS = 'src/content/negocios';
-
-const NOMBRES_CANAL = {
-  google: 'Google',
-  instagram: 'Instagram',
-  facebook: 'Facebook',
-  directo: 'directo',
-  interno: 'el sitio',
-  otro: 'otros canales',
-};
-
-function soloDigitos(telefono) {
-  return (telefono || '').replace(/[^\d]/g, '');
-}
-
-async function githubFetch(path, opciones = {}) {
-  const respuesta = await fetch(`${GITHUB_API}${path}`, {
-    ...opciones,
-    headers: {
-      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...opciones.headers,
-    },
-  });
-  if (!respuesta.ok) {
-    const texto = await respuesta.text();
-    throw new Error(`GitHub API ${respuesta.status}: ${texto}`);
-  }
-  return respuesta.json();
-}
-
-async function encontrarNegocioPorTelefono(telefonoDigitos) {
-  const archivos = await githubFetch(`/repos/${OWNER}/${REPO}/contents/${RUTA_NEGOCIOS}`);
-  for (const archivo of archivos) {
-    if (!archivo.name.endsWith('.yaml')) continue;
-    const detalle = await githubFetch(
-      `/repos/${OWNER}/${REPO}/contents/${RUTA_NEGOCIOS}/${archivo.name}`,
-    );
-    const contenido = Buffer.from(detalle.content, 'base64').toString('utf-8');
-    const documento = parseDocument(contenido);
-    const telefonoActual = documento.get('telefono');
-    if (soloDigitos(telefonoActual) === telefonoDigitos) {
-      return { archivo: archivo.name, documento };
-    }
-  }
-  return null;
-}
-
-function nombreMes(clave) {
-  const [anio, mes] = clave.split('-').map(Number);
-  return new Date(anio, mes - 1, 1).toLocaleDateString('es-MX', { month: 'long' });
-}
-
-function claveMesAnterior(clave) {
-  const [anio, mes] = clave.split('-').map(Number);
-  const fecha = new Date(anio, mes - 2, 1);
-  return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-}
-
-function canalPrincipal(canales) {
-  const entradas = Object.entries(canales || {});
-  if (entradas.length === 0) return null;
-  entradas.sort((a, b) => b[1] - a[1]);
-  return entradas[0][0];
-}
-
-function generarRecomendaciones(datos) {
-  const recomendaciones = [];
-  const totalFotos = datos.fotos?.length ?? 0;
-
-  if (totalFotos < 6) {
-    recomendaciones.push(`📸 Sube ${6 - totalFotos} foto(s) más (tienes ${totalFotos}) → +10 pts`);
-  }
-  if (!datos.video) {
-    recomendaciones.push('🎥 Agrega un video corto → +15 pts');
-  }
-  if (!datos.precioTemporada || datos.precioTemporada.length === 0) {
-    recomendaciones.push('💰 Publica tu precio de temporada → +20 pts');
-  }
-  if (!datos.servicios || datos.servicios.length === 0) {
-    recomendaciones.push('🏷️ Marca tus servicios y amenidades → +10 pts');
-  }
-  if (!datos.destacado) {
-    recomendaciones.push('⭐ Con Destacado tu ficha sube al top de tu categoría');
-  }
-  return recomendaciones;
-}
+import { calcularPuntaje, generarRecomendaciones } from '../../src/utils/puntajeCompletitud.ts';
+import { soloDigitos, encontrarNegocioPorTelefono } from './_compartido/github.mjs';
+import {
+  NOMBRES_CANAL,
+  claveMesActual,
+  nombreMes,
+  claveMesAnterior,
+  entradaPrincipal,
+} from './_compartido/formato.mjs';
 
 export default async (request) => {
   if (request.method !== 'POST') {
@@ -138,9 +53,13 @@ export default async (request) => {
     const recomendaciones = generarRecomendaciones(datos);
 
     const store = getStore('estadisticas-negocios');
-    const stats = (await store.get(slug, { type: 'json' })) || { vistasTotal: 0, clicsTotal: 0, porMes: {} };
+    const stats = (await store.get(slug, { type: 'json' })) || {
+      vistasTotal: 0,
+      clicsTotal: 0,
+      porMes: {},
+    };
 
-    const mesClave = new Date().toISOString().slice(0, 7);
+    const mesClave = claveMesActual();
     const statsMes = stats.porMes[mesClave] || { vistas: 0, clics: 0, canales: {}, dispositivos: {} };
     const statsMesAnterior = stats.porMes[claveMesAnterior(mesClave)];
 
@@ -154,7 +73,15 @@ export default async (request) => {
           : `📉 ${porcentaje}% menos vistas que el mes pasado`;
     }
 
-    const canalTop = canalPrincipal(statsMes.canales);
+    // canales guarda { vistas, clics } por canal — el "principal" se mide
+    // por volumen de vistas, no de clics.
+    const vistasPorCanal = Object.fromEntries(
+      Object.entries(statsMes.canales || {}).map(([canal, valores]) => [
+        canal,
+        valores?.vistas ?? 0,
+      ]),
+    );
+    const canalTop = entradaPrincipal(vistasPorCanal);
     const movil = statsMes.dispositivos?.movil ?? 0;
     const escritorio = statsMes.dispositivos?.escritorio ?? 0;
     const totalDispositivos = movil + escritorio;

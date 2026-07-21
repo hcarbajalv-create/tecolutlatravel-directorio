@@ -1,0 +1,852 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  titulo="Panel interno"
+  descripcion="Panel interno de resultados — acceso restringido, no público."
+  noindex
+>
+  <section class="panel">
+    <div class="panel__login" id="panel-login">
+      <div class="panel__login-card">
+        <svg class="panel__login-icono" viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="4" y="4" width="92" height="92" rx="22" fill="#0B6F7A"></rect>
+          <mask id="panel-ola-login" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+            <rect x="0" y="0" width="100" height="100" fill="#fff"></rect>
+            <path
+              d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z"
+              fill="#000"
+            ></path>
+          </mask>
+          <path
+            d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z"
+            fill="#FF7A5C"
+            mask="url(#panel-ola-login)"
+          ></path>
+        </svg>
+        <h1 class="panel__login-titulo">Panel interno</h1>
+        <p class="panel__login-subtitulo">Acceso restringido — solo para uso interno.</p>
+        <form id="form-login">
+          <input
+            type="password"
+            id="input-clave"
+            placeholder="Contraseña"
+            required
+            autocomplete="current-password"
+          />
+          <button type="submit" class="boton">Entrar</button>
+        </form>
+        <p class="panel__login-error" id="login-error" hidden></p>
+      </div>
+    </div>
+
+    <div class="panel__dashboard" id="panel-dashboard" hidden>
+      <header class="panel__encabezado">
+        <div class="panel__marca">
+          <svg class="panel__marca-icono" viewBox="0 0 100 100" aria-hidden="true">
+            <mask id="panel-ola-header" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+              <rect x="0" y="0" width="100" height="100" fill="#fff"></rect>
+              <path
+                d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z"
+                fill="#000"
+              ></path>
+            </mask>
+            <path
+              d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z"
+              fill="#FF7A5C"
+              mask="url(#panel-ola-header)"
+            ></path>
+          </svg>
+          <span>Tecolutla<em>.Travel</em> — Panel interno</span>
+        </div>
+        <button type="button" class="boton boton--secundario boton--chico" id="boton-salir">Salir</button>
+      </header>
+
+      <nav class="panel__tabs">
+        <button type="button" class="panel__tab" data-vista="individual" aria-pressed="true">
+          Por negocio
+        </button>
+        <button type="button" class="panel__tab" data-vista="comparativa" aria-pressed="false">
+          Comparativa
+        </button>
+      </nav>
+
+      <div class="panel__vista" id="vista-individual">
+        <div class="panel__controles">
+          <select id="selector-negocio"></select>
+          <button type="button" class="boton boton--destacado boton--chico" id="boton-pdf-individual">
+            Exportar PDF
+          </button>
+        </div>
+        <div id="contenido-individual"></div>
+      </div>
+
+      <div class="panel__vista" id="vista-comparativa" hidden>
+        <div class="panel__controles panel__controles--fin">
+          <button type="button" class="boton boton--destacado boton--chico" id="boton-pdf-comparativa">
+            Exportar PDF
+          </button>
+        </div>
+        <div id="contenido-comparativa"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="reporte-pdf-contenedor" class="panel__pdf-oculto"></div>
+</BaseLayout>
+
+<style is:global>
+  /* Estilos del panel interno — is:global a propósito: buena parte de este
+     contenido se genera en JS vía innerHTML (tarjetas, gráficas, tablas), y
+     esas plantillas se reutilizan tal cual para el PDF exportado. El
+     scoping de Astro no alcanza a elementos inyectados así, por eso el
+     bloque va global (con el prefijo panel__ para no chocar con el resto
+     del sitio). */
+  .panel {
+    padding: 2rem 1.25rem 4rem;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .panel__login {
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
+  }
+
+  .panel__login-card {
+    background: var(--color-blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  .panel__login-icono {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+  }
+
+  .panel__login-titulo {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    color: var(--color-tinta);
+    margin: 0 0 0.4rem;
+  }
+
+  .panel__login-subtitulo {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+  }
+
+  #form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  #input-clave {
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-chico);
+    font-size: 1rem;
+  }
+
+  .panel__login-error {
+    color: var(--color-coral-texto);
+    font-size: 0.85rem;
+    margin: 1rem 0 0;
+  }
+
+  .panel__encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel__marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--color-tinta);
+  }
+
+  .panel__marca-icono {
+    width: 28px;
+    height: 28px;
+  }
+
+  .panel__marca em {
+    font-style: normal;
+    color: var(--color-coral);
+  }
+
+  .panel__tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-borde);
+  }
+
+  .panel__tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.6rem 0.2rem;
+    margin-right: 1.25rem;
+    font-family: var(--fuente-cuerpo);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-texto-suave);
+    cursor: pointer;
+  }
+
+  .panel__tab[aria-pressed='true'] {
+    color: var(--color-turquesa);
+    border-bottom-color: var(--color-turquesa);
+  }
+
+  .panel__controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .panel__controles--fin {
+    justify-content: flex-end;
+  }
+
+  #selector-negocio {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-chico);
+    font-size: 0.95rem;
+    min-width: 220px;
+  }
+
+  .panel__nombre-negocio {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    color: var(--color-tinta);
+    margin: 0 0 1rem;
+  }
+
+  .panel__tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .panel__tarjeta {
+    background: var(--color-blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    border-top: 4px solid var(--color-turquesa);
+    padding: 1.1rem 1.25rem;
+  }
+
+  .panel__tarjeta-valor {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    font-size: 1.9rem;
+    color: var(--color-tinta);
+    margin: 0;
+  }
+
+  .panel__tarjeta-etiqueta {
+    font-size: 0.82rem;
+    color: var(--color-texto-suave);
+    margin: 0.2rem 0 0;
+  }
+
+  .panel__seccion {
+    background: var(--color-blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel__seccion h3 {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--color-tinta);
+    margin: 0 0 1rem;
+  }
+
+  .panel__fila-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .panel__fila-2 .panel__seccion {
+    margin-bottom: 0;
+  }
+
+  .panel__leyenda {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.82rem;
+    color: var(--color-texto-suave);
+    margin-bottom: 0.75rem;
+  }
+
+  .panel__leyenda .punto {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.35rem;
+  }
+
+  .panel__tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .panel__tabla th {
+    text-align: left;
+    background: var(--color-arena);
+    color: var(--color-tinta);
+    padding: 0.5rem 0.6rem;
+    font-weight: 600;
+  }
+
+  .panel__tabla td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--color-borde);
+  }
+
+  .panel__mini-badge {
+    display: inline-block;
+    background: var(--color-coral);
+    color: var(--color-tinta);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    margin-left: 0.35rem;
+  }
+
+  .panel__recomendaciones {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .panel__recomendaciones li {
+    margin-bottom: 0.4rem;
+    font-size: 0.92rem;
+  }
+
+  .panel__vacio {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+  }
+
+  .panel__pdf-oculto {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+  }
+
+  @media (max-width: 640px) {
+    .panel__tarjetas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import { jsPDF } from 'jspdf';
+  import html2canvas from 'html2canvas';
+
+  const CLAVE_SESSION = 'panel-tt-clave';
+  const ORDEN_DIAS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+  const NOMBRES_CANAL: Record<string, string> = {
+    google: 'Google',
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    directo: 'Directo',
+    interno: 'El sitio',
+    otro: 'Otros',
+  };
+
+  const el = {
+    login: document.getElementById('panel-login') as HTMLElement,
+    dashboard: document.getElementById('panel-dashboard') as HTMLElement,
+    formLogin: document.getElementById('form-login') as HTMLFormElement,
+    inputClave: document.getElementById('input-clave') as HTMLInputElement,
+    loginError: document.getElementById('login-error') as HTMLElement,
+    botonSalir: document.getElementById('boton-salir') as HTMLButtonElement,
+    tabs: document.querySelectorAll<HTMLButtonElement>('.panel__tab'),
+    vistaIndividual: document.getElementById('vista-individual') as HTMLElement,
+    vistaComparativa: document.getElementById('vista-comparativa') as HTMLElement,
+    selectorNegocio: document.getElementById('selector-negocio') as HTMLSelectElement,
+    contenidoIndividual: document.getElementById('contenido-individual') as HTMLElement,
+    contenidoComparativa: document.getElementById('contenido-comparativa') as HTMLElement,
+    botonPdfIndividual: document.getElementById('boton-pdf-individual') as HTMLButtonElement,
+    botonPdfComparativa: document.getElementById('boton-pdf-comparativa') as HTMLButtonElement,
+    reportePdf: document.getElementById('reporte-pdf-contenedor') as HTMLElement,
+  };
+
+  interface DatosNegocio {
+    slug: string;
+    nombre: string;
+    categoria: string;
+    destacado: boolean;
+    puntaje: number;
+    recomendaciones: string[];
+    stats: {
+      vistasTotal: number;
+      clicsTotal: number;
+      porMes: Record<string, any>;
+    };
+  }
+
+  let negociosData: DatosNegocio[] = [];
+
+  // ---------- Autenticación ----------
+  // dashboard-datos.mjs valida el mismo DASHBOARD_SECRET en cada llamada
+  // (no solo aquí en el login), así que aunque alguien se salte esta
+  // pantalla no puede obtener datos sin la clave correcta.
+
+  async function validarClave(clave: string): Promise<boolean> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clave }),
+      });
+      if (!respuesta.ok) return false;
+      const datos = await respuesta.json();
+      return datos.ok === true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function obtenerNegocios(clave: string): Promise<DatosNegocio[] | null> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-datos', {
+        method: 'POST',
+        headers: { 'x-dashboard-secret': clave },
+      });
+      if (!respuesta.ok) return null;
+      const datos = await respuesta.json();
+      return datos.ok ? datos.negocios : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function iniciarSesion(clave: string, opciones: { silencioso?: boolean } = {}) {
+    const claveValida = await validarClave(clave);
+    if (!claveValida) {
+      if (!opciones.silencioso) {
+        el.loginError.textContent = 'Contraseña incorrecta.';
+        el.loginError.hidden = false;
+      }
+      sessionStorage.removeItem(CLAVE_SESSION);
+      return;
+    }
+
+    const negocios = await obtenerNegocios(clave);
+    if (!negocios) {
+      el.loginError.textContent = 'No se pudieron cargar los datos. Intenta de nuevo.';
+      el.loginError.hidden = false;
+      return;
+    }
+
+    sessionStorage.setItem(CLAVE_SESSION, clave);
+    negociosData = negocios;
+    el.login.hidden = true;
+    el.dashboard.hidden = false;
+    poblarSelectorNegocios();
+    if (el.selectorNegocio.value) renderizarVistaIndividual(el.selectorNegocio.value);
+    renderizarVistaComparativa();
+  }
+
+  el.formLogin.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    el.loginError.hidden = true;
+    iniciarSesion(el.inputClave.value);
+  });
+
+  el.botonSalir.addEventListener('click', () => {
+    sessionStorage.removeItem(CLAVE_SESSION);
+    location.reload();
+  });
+
+  const claveGuardada = sessionStorage.getItem(CLAVE_SESSION);
+  if (claveGuardada) iniciarSesion(claveGuardada, { silencioso: true });
+
+  // ---------- Utilidades de datos ----------
+
+  function mesesOrdenados(porMes: Record<string, any>): string[] {
+    return Object.keys(porMes || {}).sort();
+  }
+
+  function nombreMesCorto(clave: string): string {
+    const [anio, mes] = clave.split('-').map(Number);
+    return new Date(anio, mes - 1, 1).toLocaleDateString('es-MX', { month: 'short', year: '2-digit' });
+  }
+
+  function combinarCampo(porMes: Record<string, any>, campo: string): Record<string, number> {
+    const combinado: Record<string, number> = {};
+    Object.values(porMes || {}).forEach((mes: any) => {
+      Object.entries(mes[campo] || {}).forEach(([clave, valor]) => {
+        combinado[clave] = (combinado[clave] || 0) + (valor as number);
+      });
+    });
+    return combinado;
+  }
+
+  function obtenerNegocio(slug: string): DatosNegocio | undefined {
+    return negociosData.find((n) => n.slug === slug);
+  }
+
+  function claveMesActual(): string {
+    return new Date().toISOString().slice(0, 7);
+  }
+
+  // ---------- Gráficas SVG simples ----------
+
+  interface ItemGrafica {
+    etiqueta: string;
+    valor: number;
+    valorSecundario?: number;
+  }
+
+  function graficaBarras(
+    items: ItemGrafica[],
+    opciones: { color?: string; colorSecundario?: string } = {},
+  ): string {
+    if (items.length === 0 || items.every((i) => i.valor === 0 && !i.valorSecundario)) {
+      return '<p class="panel__vacio">Todavía no hay datos suficientes.</p>';
+    }
+    const color = opciones.color || '#0B6F7A';
+    const colorSecundario = opciones.colorSecundario;
+    const ancho = 640;
+    const alto = 160;
+    const margenInferior = 30;
+    const margenSuperior = 18;
+    const altoUtil = alto - margenInferior - margenSuperior;
+    const conSecundario = colorSecundario !== undefined;
+    const maximo = Math.max(1, ...items.map((i) => Math.max(i.valor, i.valorSecundario ?? 0)));
+    const anchoGrupo = ancho / items.length;
+    const anchoBarra = conSecundario ? anchoGrupo * 0.3 : anchoGrupo * 0.5;
+
+    const barras = items
+      .map((item, i) => {
+        const xGrupo = i * anchoGrupo;
+        const alturaPrincipal = (item.valor / maximo) * altoUtil;
+        const yPrincipal = margenSuperior + (altoUtil - alturaPrincipal);
+        const xPrincipal = conSecundario
+          ? xGrupo + anchoGrupo * 0.15
+          : xGrupo + (anchoGrupo - anchoBarra) / 2;
+
+        let barraSecundaria = '';
+        if (conSecundario) {
+          const alturaSecundaria = ((item.valorSecundario ?? 0) / maximo) * altoUtil;
+          const ySecundaria = margenSuperior + (altoUtil - alturaSecundaria);
+          const xSecundaria = xGrupo + anchoGrupo * 0.55;
+          barraSecundaria = `<rect x="${xSecundaria.toFixed(1)}" y="${ySecundaria.toFixed(1)}" width="${anchoBarra.toFixed(1)}" height="${Math.max(0, alturaSecundaria).toFixed(1)}" fill="${colorSecundario}" rx="2"/>`;
+        }
+
+        return `
+          <rect x="${xPrincipal.toFixed(1)}" y="${yPrincipal.toFixed(1)}" width="${anchoBarra.toFixed(1)}" height="${Math.max(0, alturaPrincipal).toFixed(1)}" fill="${color}" rx="2"/>
+          ${barraSecundaria}
+          <text x="${(xGrupo + anchoGrupo / 2).toFixed(1)}" y="${alto - 8}" text-anchor="middle" font-size="11" fill="#4a5a60">${item.etiqueta}</text>
+        `;
+      })
+      .join('');
+
+    return `<svg viewBox="0 0 ${ancho} ${alto}" width="100%" style="max-width:${ancho}px">${barras}</svg>`;
+  }
+
+  // ---------- Renderizado ----------
+
+  function poblarSelectorNegocios() {
+    el.selectorNegocio.innerHTML = negociosData
+      .map((n) => `<option value="${n.slug}">${n.nombre}</option>`)
+      .join('');
+  }
+
+  el.selectorNegocio.addEventListener('change', () => {
+    renderizarVistaIndividual(el.selectorNegocio.value);
+  });
+
+  function tarjetaStat(etiqueta: string, valor: string | number, color: string): string {
+    return `
+      <div class="panel__tarjeta" style="border-top-color:${color}">
+        <p class="panel__tarjeta-valor">${valor}</p>
+        <p class="panel__tarjeta-etiqueta">${etiqueta}</p>
+      </div>
+    `;
+  }
+
+  function renderizarVistaIndividual(slug: string) {
+    const negocio = obtenerNegocio(slug);
+    if (!negocio) return;
+    const { stats } = negocio;
+    const meses = mesesOrdenados(stats.porMes);
+    const mesActualClave = claveMesActual();
+    const datosMesActual = stats.porMes[mesActualClave] || {
+      vistas: 0,
+      clics: 0,
+      canales: {},
+      dispositivos: {},
+    };
+
+    const conversionGeneral =
+      stats.vistasTotal > 0 ? Math.round((stats.clicsTotal / stats.vistasTotal) * 100) : 0;
+
+    const graficaMensual = graficaBarras(
+      meses.map((clave) => ({
+        etiqueta: nombreMesCorto(clave),
+        valor: stats.porMes[clave].vistas || 0,
+        valorSecundario: stats.porMes[clave].clics || 0,
+      })),
+      { color: '#0B6F7A', colorSecundario: '#FF7A5C' },
+    );
+
+    const horaCombinada = combinarCampo(stats.porMes, 'hora');
+    const graficaHora = graficaBarras(
+      Array.from({ length: 24 }, (_, h) => ({
+        etiqueta: String(h),
+        valor: horaCombinada[String(h)] || 0,
+      })),
+      { color: '#4FD2C8' },
+    );
+
+    const diaCombinado = combinarCampo(stats.porMes, 'diaSemana');
+    const graficaDia = graficaBarras(
+      ORDEN_DIAS.map((d) => ({ etiqueta: d.slice(0, 3), valor: diaCombinado[d] || 0 })),
+      { color: '#4FD2C8' },
+    );
+
+    const estadosCombinados = combinarCampo(stats.porMes, 'estados');
+    const filasEstados =
+      Object.entries(estadosCombinados)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .map(([lugar, cantidad]) => `<tr><td>${lugar}</td><td>${cantidad}</td></tr>`)
+        .join('') || '<tr><td colspan="2">Sin datos todavía</td></tr>';
+
+    const canales = datosMesActual.canales || {};
+    const filasCanales =
+      Object.entries(canales)
+        .map(([canal, valores]: [string, any]) => {
+          const conv = valores.vistas > 0 ? Math.round((valores.clics / valores.vistas) * 100) : 0;
+          return `<tr><td>${NOMBRES_CANAL[canal] || canal}</td><td>${valores.vistas}</td><td>${valores.clics}</td><td>${conv}%</td></tr>`;
+        })
+        .join('') || '<tr><td colspan="4">Sin datos todavía</td></tr>';
+
+    const movil = datosMesActual.dispositivos?.movil ?? 0;
+    const escritorio = datosMesActual.dispositivos?.escritorio ?? 0;
+    const totalDisp = movil + escritorio;
+    const pctMovil = totalDisp > 0 ? Math.round((movil / totalDisp) * 100) : 0;
+
+    const recomendacionesHtml =
+      negocio.recomendaciones.length > 0
+        ? `<ul class="panel__recomendaciones">${negocio.recomendaciones.map((r) => `<li>${r}</li>`).join('')}</ul>`
+        : '<p>Ficha completa — no hay recomendaciones pendientes.</p>';
+
+    el.contenidoIndividual.innerHTML = `
+      <h2 class="panel__nombre-negocio">${negocio.nombre}</h2>
+      <div class="panel__tarjetas">
+        ${tarjetaStat('Vistas totales', stats.vistasTotal, '#0B6F7A')}
+        ${tarjetaStat('Clics a WhatsApp', stats.clicsTotal, '#FF7A5C')}
+        ${tarjetaStat('Tasa de conversión', conversionGeneral + '%', '#4FD2C8')}
+        ${tarjetaStat('Puntaje de completitud', negocio.puntaje + '/100', '#0C2B2E')}
+      </div>
+
+      <div class="panel__seccion">
+        <h3>Vistas y clics por mes</h3>
+        <div class="panel__leyenda">
+          <span><span class="punto" style="background:#0B6F7A"></span>Vistas</span>
+          <span><span class="punto" style="background:#FF7A5C"></span>Clics</span>
+        </div>
+        ${graficaMensual}
+      </div>
+
+      <div class="panel__fila-2">
+        <div class="panel__seccion">
+          <h3>Tráfico por hora del día</h3>
+          ${graficaHora}
+        </div>
+        <div class="panel__seccion">
+          <h3>Tráfico por día de la semana</h3>
+          ${graficaDia}
+        </div>
+      </div>
+
+      <div class="panel__fila-2">
+        <div class="panel__seccion">
+          <h3>Canal de origen (mes actual)</h3>
+          <table class="panel__tabla">
+            <thead><tr><th>Canal</th><th>Vistas</th><th>Clics</th><th>Conversión</th></tr></thead>
+            <tbody>${filasCanales}</tbody>
+          </table>
+        </div>
+        <div class="panel__seccion">
+          <h3>Origen geográfico</h3>
+          <p style="font-size:0.88rem;color:#4a5a60;margin:0 0 0.75rem;">
+            ${pctMovil}% desde celular · ${100 - pctMovil}% desde computadora (mes actual)
+          </p>
+          <table class="panel__tabla">
+            <thead><tr><th>Ciudad / Estado</th><th>Vistas</th></tr></thead>
+            <tbody>${filasEstados}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel__seccion">
+        <h3>Cómo subir el puntaje</h3>
+        ${recomendacionesHtml}
+      </div>
+    `;
+  }
+
+  function renderizarVistaComparativa() {
+    const mesClave = claveMesActual();
+    const filas = negociosData
+      .slice()
+      .sort((a, b) => b.puntaje - a.puntaje)
+      .map((n) => {
+        const datosMes = n.stats.porMes[mesClave] || { vistas: 0, clics: 0 };
+        const conv = datosMes.vistas > 0 ? Math.round((datosMes.clics / datosMes.vistas) * 100) : 0;
+        return `
+          <tr>
+            <td>${n.nombre}${n.destacado ? '<span class="panel__mini-badge">Destacado</span>' : ''}</td>
+            <td>${datosMes.vistas || 0}</td>
+            <td>${datosMes.clics || 0}</td>
+            <td>${conv}%</td>
+            <td>${n.puntaje}/100</td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    el.contenidoComparativa.innerHTML = `
+      <div class="panel__seccion">
+        <h3>Todos los negocios — mes actual</h3>
+        <table class="panel__tabla">
+          <thead>
+            <tr><th>Negocio</th><th>Vistas</th><th>Clics</th><th>Conversión</th><th>Puntaje</th></tr>
+          </thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  // ---------- Tabs ----------
+
+  el.tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      el.tabs.forEach((t) => t.setAttribute('aria-pressed', 'false'));
+      tab.setAttribute('aria-pressed', 'true');
+      const vista = tab.dataset.vista;
+      el.vistaIndividual.hidden = vista !== 'individual';
+      el.vistaComparativa.hidden = vista !== 'comparativa';
+    });
+  });
+
+  // ---------- Exportación a PDF ----------
+
+  function plantillaEncabezadoPdf(subtitulo: string): string {
+    return `
+      <div style="display:flex;align-items:center;gap:12px;border-bottom:4px solid #0B6F7A;padding-bottom:16px;margin-bottom:24px;">
+        <svg width="48" height="48" viewBox="0 0 100 100">
+          <rect x="4" y="4" width="92" height="92" rx="22" fill="#0B6F7A"></rect>
+          <mask id="pdf-ola-encabezado">
+            <rect width="100" height="100" fill="#fff"></rect>
+            <path d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z" fill="#000"></path>
+          </mask>
+          <path d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z" fill="#FF7A5C" mask="url(#pdf-ola-encabezado)"></path>
+        </svg>
+        <div>
+          <p style="font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;margin:0;color:#0C2B2E;">
+            Tecolutla<span style="color:#FF7A5C;">.Travel</span>
+          </p>
+          <p style="font-family:'Work Sans',sans-serif;font-size:13px;color:#4a5a60;margin:2px 0 0;">
+            ${subtitulo}
+          </p>
+        </div>
+      </div>
+    `;
+  }
+
+  async function exportarPdf(html: string, nombreArchivo: string) {
+    el.reportePdf.innerHTML = html;
+    await new Promise((r) => setTimeout(r, 80));
+
+    const canvas = await html2canvas(el.reportePdf, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      windowWidth: 800,
+    });
+    const imagenUrl = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF({ unit: 'px', format: [canvas.width, canvas.height] });
+    pdf.addImage(imagenUrl, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save(nombreArchivo);
+
+    el.reportePdf.innerHTML = '';
+  }
+
+  async function exportarIndividual() {
+    const slug = el.selectorNegocio.value;
+    const negocio = obtenerNegocio(slug);
+    if (!negocio) return;
+    const fecha = new Date().toLocaleDateString('es-MX', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    const html = `
+      <div style="width:760px;padding:32px;background:#fff;font-family:'Work Sans',sans-serif;color:#0C2B2E;">
+        ${plantillaEncabezadoPdf(`Reporte de resultados de ${negocio.nombre} — ${fecha}`)}
+        ${el.contenidoIndividual.innerHTML}
+      </div>
+    `;
+    await exportarPdf(html, `resultados-${slug}-${fecha.replace(/\s/g, '-')}.pdf`);
+  }
+
+  async function exportarComparativa() {
+    const fecha = new Date().toLocaleDateString('es-MX', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    const html = `
+      <div style="width:760px;padding:32px;background:#fff;font-family:'Work Sans',sans-serif;color:#0C2B2E;">
+        ${plantillaEncabezadoPdf(`Comparativa de negocios — ${fecha}`)}
+        ${el.contenidoComparativa.innerHTML}
+      </div>
+    `;
+    await exportarPdf(html, `comparativa-negocios-${fecha.replace(/\s/g, '-')}.pdf`);
+  }
+
+  el.botonPdfIndividual.addEventListener('click', exportarIndividual);
+  el.botonPdfComparativa.addEventListener('click', exportarComparativa);
+</script>

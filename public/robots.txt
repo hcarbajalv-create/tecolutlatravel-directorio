@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /panel-interno-tt
 
 Sitemap: https://tecolutlatravel.mx/sitemap-index.xml

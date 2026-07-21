@@ -13,6 +13,7 @@ export interface DatosPuntajeNegocio {
   precioTemporada?: unknown[];
   servicios: string[];
   resenas: unknown[];
+  destacado?: boolean;
 }
 
 export function calcularPuntaje(negocio: DatosPuntajeNegocio): number {
@@ -30,6 +31,33 @@ export function calcularPuntaje(negocio: DatosPuntajeNegocio): number {
   if (negocio.resenas && negocio.resenas.length > 0) puntaje += 5;
 
   return puntaje;
+}
+
+/**
+ * Recomendaciones automáticas basadas en qué le falta a la ficha para subir
+ * de puntaje — compartida entre el reporte de WhatsApp (resultados-negocio)
+ * y el dashboard interno.
+ */
+export function generarRecomendaciones(negocio: DatosPuntajeNegocio): string[] {
+  const recomendaciones: string[] = [];
+  const totalFotos = negocio.fotos?.length ?? 0;
+
+  if (totalFotos < 6) {
+    recomendaciones.push(`📸 Sube ${6 - totalFotos} foto(s) más (tienes ${totalFotos}) → +10 pts`);
+  }
+  if (!negocio.video) {
+    recomendaciones.push('🎥 Agrega un video corto → +15 pts');
+  }
+  if (!negocio.precioTemporada || negocio.precioTemporada.length === 0) {
+    recomendaciones.push('💰 Publica tu precio de temporada → +20 pts');
+  }
+  if (!negocio.servicios || negocio.servicios.length === 0) {
+    recomendaciones.push('🏷️ Marca tus servicios y amenidades → +10 pts');
+  }
+  if (!negocio.destacado) {
+    recomendaciones.push('⭐ Con Destacado tu ficha sube al top de tu categoría');
+  }
+  return recomendaciones;
 }
 
 // Hash determinista simple (djb2) — no necesita ser criptográfico, solo
