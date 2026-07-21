@@ -17,21 +17,9 @@ export default async (request) => {
 
   const { clave } = cuerpo;
   if (!process.env.DASHBOARD_SECRET || clave !== process.env.DASHBOARD_SECRET) {
-    // DIAGNOSTICO TEMPORAL — no revela el valor, solo longitudes y si un
-    // trim() arregla la comparacion (espacios extra al copiar/pegar).
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        error: 'Contraseña incorrecta',
-        diagnostico: {
-          variableConfigurada: Boolean(process.env.DASHBOARD_SECRET),
-          longitudEsperada: process.env.DASHBOARD_SECRET?.length ?? 0,
-          longitudRecibida: clave?.length ?? 0,
-          coincideConTrim: clave?.trim() === process.env.DASHBOARD_SECRET?.trim(),
-        },
-      }),
-      { status: 401 },
-    );
+    return new Response(JSON.stringify({ ok: false, error: 'Contraseña incorrecta' }), {
+      status: 401,
+    });
   }
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
