@@ -51,6 +51,13 @@ const negocios = defineCollection({
         )
         .default([]),
       destacado: z.boolean().default(false),
+      // URL del video del negocio (recorrido, reportaje, etc.) — cuenta para
+      // el puntaje de completitud (sección 8.1 del análisis de competencia).
+      video: z.string().url().optional(),
+      // Override manual del orden dentro de su grupo (destacado / no
+      // destacado): si está presente, gana siempre sobre el puntaje
+      // calculado. Menor número = aparece primero.
+      ordenManual: z.number().optional(),
     }),
 });
 

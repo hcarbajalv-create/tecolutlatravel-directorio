@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from './NegocioCard.astro';
+import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 
 interface Props {
   categoria: 'hospedaje' | 'gastronomia' | 'actividades' | 'servicios';
@@ -17,7 +18,13 @@ const { categoria, icono, claseColor, titulo, descripcionSeo, introduccion } = A
 const todos = await getCollection('negocios');
 const negociosCategoria = todos
   .filter((n) => n.data.categoria === categoria)
-  .sort((a, b) => Number(b.data.destacado) - Number(a.data.destacado));
+  .sort((a, b) => {
+    // Los destacados (pago) siempre van primero, como grupo completo.
+    const diferenciaDestacado = Number(b.data.destacado) - Number(a.data.destacado);
+    if (diferenciaDestacado !== 0) return diferenciaDestacado;
+    // Dentro de cada grupo: orden manual si existe, si no, puntaje de completitud.
+    return compararDentroDeGrupo(a, b);
+  });
 ---
 
 <BaseLayout titulo={titulo} descripcion={descripcionSeo}>
