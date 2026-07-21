@@ -28,3 +28,7 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Bundles generados por "netlify functions:build" en local
+netlify/functions/*.zip
+netlify/functions/manifest.json

@@ -319,3 +319,47 @@ const esquemaLodging =
     if (evento.key === 'Escape' && !lightbox.hidden) cerrarLightbox();
   });
 </script>
+
+<script define:vars={{ slugNegocio: negocio.id }}>
+  // Captura pasiva de vistas y clics (sección 12.1): sin cookies ni datos
+  // personales, solo conteo de eventos con fecha, negocio, canal de origen
+  // (referrer) y tipo de dispositivo. Es "best effort" — si falla, no
+  // interrumpe la navegación del visitante.
+  function detectarCanal() {
+    const referencia = document.referrer;
+    if (!referencia) return 'directo';
+    try {
+      const host = new URL(referencia).hostname.replace(/^www\./, '');
+      if (host.includes('google')) return 'google';
+      if (host.includes('instagram')) return 'instagram';
+      if (host.includes('facebook') || host === 'fb.com') return 'facebook';
+      if (host.includes('tecolutlatravel.mx')) return 'interno';
+      return 'otro';
+    } catch {
+      return 'otro';
+    }
+  }
+
+  function detectarDispositivo() {
+    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'movil' : 'escritorio';
+  }
+
+  function registrarEvento(tipo) {
+    fetch('/.netlify/functions/registrar-evento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        slug: slugNegocio,
+        tipo,
+        canal: detectarCanal(),
+        dispositivo: detectarDispositivo(),
+      }),
+    }).catch(() => {
+      // Sin bloquear al visitante si falla (red caída, función no disponible, etc.).
+    });
+  }
+
+  registrarEvento('vista');
+  document.querySelector('.boton--whatsapp')?.addEventListener('click', () => registrarEvento('clic'));
+</script>
