@@ -428,18 +428,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   // (no solo aquí en el login), así que aunque alguien se salte esta
   // pantalla no puede obtener datos sin la clave correcta.
 
-  async function validarClave(clave: string): Promise<boolean> {
+  async function validarClave(clave: string): Promise<{ valida: boolean; diagnostico?: any }> {
     try {
       const respuesta = await fetch('/.netlify/functions/dashboard-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clave }),
       });
-      if (!respuesta.ok) return false;
       const datos = await respuesta.json();
-      return datos.ok === true;
+      return { valida: datos.ok === true, diagnostico: datos.diagnostico };
     } catch {
-      return false;
+      return { valida: false };
     }
   }
 
@@ -458,10 +457,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   async function iniciarSesion(clave: string, opciones: { silencioso?: boolean } = {}) {
-    const claveValida = await validarClave(clave);
-    if (!claveValida) {
+    const { valida, diagnostico } = await validarClave(clave);
+    if (!valida) {
       if (!opciones.silencioso) {
-        el.loginError.textContent = 'Contraseña incorrecta.';
+        // DIAGNOSTICO TEMPORAL — se quita en cuanto quede resuelto el login.
+        el.loginError.textContent = diagnostico
+          ? `Contraseña incorrecta. Diagnóstico: guardada=${diagnostico.longitudEsperada} caracteres, escribiste=${diagnostico.longitudRecibida} caracteres, coincide quitando espacios=${diagnostico.coincideConTrim}`
+          : 'Contraseña incorrecta.';
         el.loginError.hidden = false;
       }
       sessionStorage.removeItem(CLAVE_SESSION);
