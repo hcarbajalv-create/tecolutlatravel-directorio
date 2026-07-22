@@ -1,11 +1,12 @@
 import { verificarLimite, registrarIntentoFallido, limpiarIntentos } from './_compartido/rateLimiter.mjs';
 import { crearSesion } from './_compartido/sesiones.mjs';
 
-// Valida la contraseña del dashboard interno y, si es correcta, emite un
-// token de sesión de corta duración (el navegador ya no reenvía la
-// contraseña real en cada petición de datos). Variable separada de
-// WEBHOOK_SECRET a propósito, para no mezclar la credencial del bot de
-// WhatsApp con la del panel interno.
+// Login del panel de anuncios (/panel-anuncios): acepta la contraseña de
+// administrador (DASHBOARD_SECRET, la misma del panel de resultados) O la
+// de colaborador (DASHBOARD_SECRET_COLABORADOR, exclusiva de este panel).
+// La sesión emitida queda marcada con el rol correspondiente — la de
+// colaborador nunca sirve en dashboard-datos (panel-interno-tt), sin
+// importar qué token se use ahí, porque ese endpoint solo acepta rol "admin".
 export default async (request, context) => {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ ok: false, error: 'Método no permitido' }), {
@@ -13,8 +14,6 @@ export default async (request, context) => {
     });
   }
 
-  // Redundante con Netlify (ya fuerza HTTPS a nivel de plataforma antes de
-  // que la petición llegue aquí) — solo como respaldo explícito.
   const proto = request.headers.get('x-forwarded-proto');
   if (proto && proto !== 'https') {
     return new Response(JSON.stringify({ ok: false, error: 'HTTPS requerido' }), { status: 403 });
@@ -23,7 +22,7 @@ export default async (request, context) => {
   const { permitido, ip, minutosRestantes } = await verificarLimite(
     request,
     context,
-    'intentos-login-panel',
+    'intentos-login-anuncios',
   );
   if (!permitido) {
     return new Response(
@@ -43,17 +42,25 @@ export default async (request, context) => {
   }
 
   const { clave } = cuerpo;
-  if (!process.env.DASHBOARD_SECRET || clave !== process.env.DASHBOARD_SECRET) {
-    await registrarIntentoFallido(ip, 'intentos-login-panel');
+  let rol = null;
+  if (process.env.DASHBOARD_SECRET && clave === process.env.DASHBOARD_SECRET) {
+    rol = 'admin';
+  } else if (
+    process.env.DASHBOARD_SECRET_COLABORADOR &&
+    clave === process.env.DASHBOARD_SECRET_COLABORADOR
+  ) {
+    rol = 'colaborador';
+  }
+
+  if (!rol) {
+    await registrarIntentoFallido(ip, 'intentos-login-anuncios');
     return new Response(JSON.stringify({ ok: false, error: 'Contraseña incorrecta' }), {
       status: 401,
     });
   }
 
-  await limpiarIntentos(ip, 'intentos-login-panel');
-  // rol "admin" explícito: es el único que dashboard-datos acepta, incluso
-  // si en el futuro se emiten sesiones de otro rol desde otro panel.
-  const token = await crearSesion('admin');
+  await limpiarIntentos(ip, 'intentos-login-anuncios');
+  const token = await crearSesion(rol);
 
-  return new Response(JSON.stringify({ ok: true, token }), { status: 200 });
+  return new Response(JSON.stringify({ ok: true, token, rol }), { status: 200 });
 };

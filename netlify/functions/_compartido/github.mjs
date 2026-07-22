@@ -4,6 +4,7 @@ const GITHUB_API = 'https://api.github.com';
 const OWNER = 'hcarbajalv-create';
 const REPO = 'tecolutlatravel-directorio';
 const RUTA_NEGOCIOS = 'src/content/negocios';
+const RUTA_FOTOS = 'src/assets/fotos';
 
 export function soloDigitos(telefono) {
   return (telefono || '').replace(/[^\d]/g, '');
@@ -62,4 +63,41 @@ export async function obtenerTodosLosNegocios() {
     });
   }
   return resultado;
+}
+
+// Busca directo por nombre de archivo (slug) en vez de recorrer todos —
+// más rápido para el panel de anuncios, que ya sabe qué negocio se eligió.
+export async function obtenerNegocioPorSlug(slug) {
+  try {
+    const { documento, sha } = await obtenerDocumento(`${slug}.yaml`);
+    return { archivo: `${slug}.yaml`, documento, sha };
+  } catch (error) {
+    if (String(error.message).includes('404')) return null;
+    throw error;
+  }
+}
+
+export async function actualizarYaml(nombreArchivo, sha, nuevoContenidoYaml, mensaje) {
+  return githubFetch(`/repos/${OWNER}/${REPO}/contents/${RUTA_NEGOCIOS}/${nombreArchivo}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: mensaje,
+      content: Buffer.from(nuevoContenidoYaml, 'utf-8').toString('base64'),
+      sha,
+    }),
+  });
+}
+
+// Sube una foto binaria (ya en base64) a src/assets/fotos/{slug}/{nombreArchivo}.
+// Devuelve la ruta relativa a usar en el campo "src" del yaml del negocio.
+export async function subirFoto(slug, nombreArchivo, base64Contenido, mensaje) {
+  const rutaRelativa = `${RUTA_FOTOS}/${slug}/${nombreArchivo}`;
+  await githubFetch(`/repos/${OWNER}/${REPO}/contents/${rutaRelativa}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: mensaje,
+      content: base64Contenido,
+    }),
+  });
+  return `../../assets/fotos/${slug}/${nombreArchivo}`;
 }

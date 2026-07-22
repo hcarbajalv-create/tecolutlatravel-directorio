@@ -1,0 +1,634 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  titulo="Panel de anuncios"
+  descripcion="Panel de subida de fotos y video — acceso restringido, no público."
+  noindex
+>
+  <section class="panel">
+    <div class="panel__login" id="panel-login">
+      <div class="panel__login-card">
+        <svg class="panel__login-icono" viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="4" y="4" width="92" height="92" rx="22" fill="#0B6F7A"></rect>
+          <mask id="anuncios-ola-login" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+            <rect x="0" y="0" width="100" height="100" fill="#fff"></rect>
+            <path
+              d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z"
+              fill="#000"
+            ></path>
+          </mask>
+          <path
+            d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z"
+            fill="#FF7A5C"
+            mask="url(#anuncios-ola-login)"
+          ></path>
+        </svg>
+        <h1 class="panel__login-titulo">Panel de anuncios</h1>
+        <p class="panel__login-subtitulo">Acceso restringido — solo para uso interno.</p>
+        <form id="form-login">
+          <input
+            type="password"
+            id="input-clave"
+            placeholder="Contraseña"
+            required
+            autocomplete="current-password"
+          />
+          <button type="submit" class="boton">Entrar</button>
+        </form>
+        <p class="panel__login-error" id="login-error" hidden></p>
+      </div>
+    </div>
+
+    <div class="panel__dashboard" id="panel-dashboard" hidden>
+      <header class="panel__encabezado">
+        <div class="panel__marca">
+          <svg class="panel__marca-icono" viewBox="0 0 100 100" aria-hidden="true">
+            <mask id="anuncios-ola-header" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+              <rect x="0" y="0" width="100" height="100" fill="#fff"></rect>
+              <path
+                d="M14,36 Q26,24 38,36 Q50,48 62,36 Q74,24 86,36 L86,46 Q74,58 62,46 Q50,34 38,46 Q26,58 14,46 Z"
+                fill="#000"
+              ></path>
+            </mask>
+            <path
+              d="M50,10 C67,10 80,24 80,42 C80,55 71,68 59,82 C55,86.5 51,90 50,93 C49,90 45,86.5 41,82 C29,68 20,55 20,42 C20,24 33,10 50,10 Z"
+              fill="#FF7A5C"
+              mask="url(#anuncios-ola-header)"
+            ></path>
+          </svg>
+          <span>Tecolutla<em>.Travel</em> — Panel de anuncios <span id="etiqueta-rol" class="anuncios__rol"></span></span>
+        </div>
+        <button type="button" class="boton boton--secundario boton--chico" id="boton-salir">Salir</button>
+      </header>
+
+      <div class="panel__seccion">
+        <label for="selector-negocio-anuncios" style="display:block; font-weight:600; margin-bottom:0.5rem;">
+          Negocio
+        </label>
+        <select id="selector-negocio-anuncios"></select>
+        <div id="info-negocio" class="anuncios__info-negocio"></div>
+      </div>
+
+      <div class="panel__seccion" id="zona-edicion" hidden>
+        <h3>Fotos (mínimo 3, máximo 16) — esto reemplaza todas las fotos actuales de la ficha</h3>
+        <input
+          type="file"
+          id="input-fotos"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+        />
+        <p class="anuncios__ayuda">JPG, PNG o WEBP, máximo 4MB por foto.</p>
+        <div id="previsualizacion" class="anuncios__previsualizacion"></div>
+
+        <h3>Video (YouTube o Vimeo, opcional)</h3>
+        <input type="url" id="input-video" placeholder="https://www.youtube.com/watch?v=..." />
+        <p id="video-estado" class="anuncios__ayuda"></p>
+
+        <button type="button" id="boton-guardar" class="boton boton--destacado" disabled>
+          Guardar
+        </button>
+        <p id="guardar-estado" class="anuncios__ayuda"></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  /* Reutiliza las mismas clases visuales de panel-interno-tt.astro — se
+     redeclaran aquí porque cada página de Astro empaqueta su propio CSS
+     (is:global no comparte estilos entre archivos .astro distintos). */
+  .panel {
+    padding: 2rem 1.25rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .panel__login {
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
+  }
+
+  .panel__login-card {
+    background: var(--color-blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  .panel__login-icono {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+  }
+
+  .panel__login-titulo {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    color: var(--color-tinta);
+    margin: 0 0 0.4rem;
+  }
+
+  .panel__login-subtitulo {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+  }
+
+  #form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  #input-clave {
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-chico);
+    font-size: 1rem;
+  }
+
+  .panel__login-error {
+    color: var(--color-coral-texto);
+    font-size: 0.85rem;
+    margin: 1rem 0 0;
+  }
+
+  .panel__encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel__marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--color-tinta);
+  }
+
+  .panel__marca-icono {
+    width: 28px;
+    height: 28px;
+  }
+
+  .panel__marca em {
+    font-style: normal;
+    color: var(--color-coral);
+  }
+
+  .anuncios__rol {
+    font-family: var(--fuente-cuerpo);
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    background: var(--color-arena);
+    color: var(--color-tinta);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    margin-left: 0.4rem;
+  }
+
+  .panel__seccion {
+    background: var(--color-blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel__seccion h3 {
+    font-family: var(--fuente-titulos);
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--color-tinta);
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  .panel__seccion h3:first-child {
+    margin-top: 0;
+  }
+
+  #selector-negocio-anuncios,
+  #input-video {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-chico);
+    font-size: 0.95rem;
+  }
+
+  .anuncios__info-negocio {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-texto-suave);
+  }
+
+  .anuncios__aviso-gratuito {
+    background: color-mix(in srgb, var(--color-coral) 10%, white);
+    border: 1.5px solid var(--color-coral);
+    color: var(--color-coral-texto);
+    padding: 0.8rem 1rem;
+    border-radius: var(--radio-chico);
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+  }
+
+  .anuncios__ayuda {
+    font-size: 0.8rem;
+    color: var(--color-texto-suave);
+    margin: 0.4rem 0 0;
+  }
+
+  .anuncios__previsualizacion {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .anuncios__foto {
+    background: var(--color-arena);
+    border-radius: var(--radio-chico);
+    overflow: hidden;
+    padding-bottom: 0.5rem;
+  }
+
+  .anuncios__foto img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .anuncios__foto input[type='text'] {
+    width: calc(100% - 1rem);
+    margin: 0.4rem 0.5rem 0.3rem;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.78rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+  }
+
+  .anuncios__foto button {
+    margin: 0 0.5rem;
+    background: none;
+    border: none;
+    color: var(--color-coral-texto);
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  #boton-guardar {
+    margin-top: 1.25rem;
+  }
+
+  #boton-guardar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  import { extraerInfoVideo } from '../utils/embedVideo';
+
+  const TOKEN_SESSION = 'anuncios-tt-token';
+  const ROL_SESSION = 'anuncios-tt-rol';
+
+  const el = {
+    login: document.getElementById('panel-login') as HTMLElement,
+    dashboard: document.getElementById('panel-dashboard') as HTMLElement,
+    formLogin: document.getElementById('form-login') as HTMLFormElement,
+    inputClave: document.getElementById('input-clave') as HTMLInputElement,
+    loginError: document.getElementById('login-error') as HTMLElement,
+    botonSalir: document.getElementById('boton-salir') as HTMLButtonElement,
+    etiquetaRol: document.getElementById('etiqueta-rol') as HTMLElement,
+    selector: document.getElementById('selector-negocio-anuncios') as HTMLSelectElement,
+    infoNegocio: document.getElementById('info-negocio') as HTMLElement,
+    zonaEdicion: document.getElementById('zona-edicion') as HTMLElement,
+    inputFotos: document.getElementById('input-fotos') as HTMLInputElement,
+    previsualizacion: document.getElementById('previsualizacion') as HTMLElement,
+    inputVideo: document.getElementById('input-video') as HTMLInputElement,
+    videoEstado: document.getElementById('video-estado') as HTMLElement,
+    botonGuardar: document.getElementById('boton-guardar') as HTMLButtonElement,
+    guardarEstado: document.getElementById('guardar-estado') as HTMLElement,
+  };
+
+  interface NegocioResumen {
+    slug: string;
+    nombre: string;
+    categoria: string;
+    plan: 'gratuito' | 'pago';
+    totalFotos: number;
+    video: string | null;
+  }
+
+  interface FotoPendiente {
+    id: string;
+    archivo: File;
+    alt: string;
+    previewUrl: string;
+  }
+
+  let negocios: NegocioResumen[] = [];
+  let fotosPendientes: FotoPendiente[] = [];
+
+  // ---------- Autenticación (admin o colaborador) ----------
+
+  async function iniciarSesionConClave(
+    clave: string,
+  ): Promise<{ ok: true; token: string; rol: string } | { ok: false; error: string }> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/anuncios-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clave }),
+      });
+      const datos = await respuesta.json().catch(() => ({}));
+      if (!respuesta.ok || !datos.token) {
+        return { ok: false, error: datos.error || 'Contraseña incorrecta.' };
+      }
+      return { ok: true, token: datos.token, rol: datos.rol };
+    } catch {
+      return { ok: false, error: 'No se pudo conectar. Intenta de nuevo.' };
+    }
+  }
+
+  async function obtenerNegocios(token: string): Promise<NegocioResumen[] | null> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/anuncios-negocios', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      });
+      if (!respuesta.ok) return null;
+      const datos = await respuesta.json();
+      return datos.ok ? datos.negocios : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function entrarConToken(token: string, rol: string, opciones: { silencioso?: boolean } = {}) {
+    const lista = await obtenerNegocios(token);
+    if (!lista) {
+      sessionStorage.removeItem(TOKEN_SESSION);
+      sessionStorage.removeItem(ROL_SESSION);
+      if (!opciones.silencioso) {
+        el.loginError.textContent = 'Tu sesión venció. Vuelve a entrar con la contraseña.';
+        el.loginError.hidden = false;
+      }
+      return;
+    }
+
+    sessionStorage.setItem(TOKEN_SESSION, token);
+    sessionStorage.setItem(ROL_SESSION, rol);
+    negocios = lista;
+    el.etiquetaRol.textContent = rol === 'admin' ? 'admin' : 'colaborador';
+    el.login.hidden = true;
+    el.dashboard.hidden = false;
+    poblarSelector();
+  }
+
+  el.formLogin.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    el.loginError.hidden = true;
+    const resultado = await iniciarSesionConClave(el.inputClave.value);
+    if (!resultado.ok) {
+      el.loginError.textContent = resultado.error;
+      el.loginError.hidden = false;
+      return;
+    }
+    await entrarConToken(resultado.token, resultado.rol);
+  });
+
+  el.botonSalir.addEventListener('click', () => {
+    const token = sessionStorage.getItem(TOKEN_SESSION);
+    sessionStorage.removeItem(TOKEN_SESSION);
+    sessionStorage.removeItem(ROL_SESSION);
+    if (token) {
+      fetch('/.netlify/functions/dashboard-logout', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      }).catch(() => {});
+    }
+    location.reload();
+  });
+
+  const tokenGuardado = sessionStorage.getItem(TOKEN_SESSION);
+  const rolGuardado = sessionStorage.getItem(ROL_SESSION);
+  if (tokenGuardado && rolGuardado) {
+    entrarConToken(tokenGuardado, rolGuardado, { silencioso: true });
+  }
+
+  // ---------- Selector de negocio ----------
+
+  function poblarSelector() {
+    el.selector.innerHTML =
+      '<option value="">Selecciona un negocio…</option>' +
+      negocios.map((n) => `<option value="${n.slug}">${n.nombre}</option>`).join('');
+  }
+
+  function negocioSeleccionado(): NegocioResumen | undefined {
+    return negocios.find((n) => n.slug === el.selector.value);
+  }
+
+  el.selector.addEventListener('change', () => {
+    fotosPendientes = [];
+    renderizarPrevisualizacion();
+    el.inputVideo.value = '';
+    el.videoEstado.textContent = '';
+    el.guardarEstado.textContent = '';
+
+    const negocio = negocioSeleccionado();
+    if (!negocio) {
+      el.infoNegocio.innerHTML = '';
+      el.zonaEdicion.hidden = true;
+      return;
+    }
+
+    if (negocio.plan !== 'pago') {
+      el.infoNegocio.innerHTML = `
+        <p>Categoría: ${negocio.categoria} · ${negocio.totalFotos} foto(s) actuales</p>
+        <div class="anuncios__aviso-gratuito">
+          "${negocio.nombre}" está en plan <strong>gratuito</strong> — la subida de fotos y video por
+          este panel es exclusiva del plan de pago. Cambia el negocio a plan "pago" en su ficha antes
+          de usar este panel con él.
+        </div>
+      `;
+      el.zonaEdicion.hidden = true;
+      return;
+    }
+
+    el.infoNegocio.innerHTML = `
+      <p>Categoría: ${negocio.categoria} · Plan de pago · ${negocio.totalFotos} foto(s) actuales
+      ${negocio.video ? ' · ya tiene un video' : ' · sin video todavía'}</p>
+    `;
+    el.zonaEdicion.hidden = false;
+    actualizarEstadoBotonGuardar();
+  });
+
+  // ---------- Fotos: selección, preview, quitar ----------
+
+  el.inputFotos.addEventListener('change', () => {
+    const archivos = Array.from(el.inputFotos.files ?? []);
+    el.inputFotos.value = '';
+
+    for (const archivo of archivos) {
+      if (fotosPendientes.length >= 16) {
+        el.guardarEstado.textContent = 'Ya tienes 16 fotos — es el máximo del plan de pago.';
+        break;
+      }
+      if (archivo.size > 4 * 1024 * 1024) {
+        el.guardarEstado.textContent = `"${archivo.name}" pesa más de 4MB — no se agregó.`;
+        continue;
+      }
+      if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(archivo.type)) {
+        el.guardarEstado.textContent = `"${archivo.name}" no es JPG/PNG/WEBP — no se agregó.`;
+        continue;
+      }
+
+      const negocio = negocioSeleccionado();
+      fotosPendientes.push({
+        id: crypto.randomUUID(),
+        archivo,
+        alt: negocio ? negocio.nombre : '',
+        previewUrl: URL.createObjectURL(archivo),
+      });
+    }
+
+    renderizarPrevisualizacion();
+  });
+
+  function renderizarPrevisualizacion() {
+    el.previsualizacion.innerHTML = fotosPendientes
+      .map(
+        (f, i) => `
+          <div class="anuncios__foto" data-id="${f.id}">
+            <img src="${f.previewUrl}" alt="" />
+            <input type="text" value="${f.alt}" data-alt-de="${f.id}" placeholder="Descripción de la foto ${i + 1}" />
+            <button type="button" data-quitar="${f.id}">Quitar</button>
+          </div>
+        `,
+      )
+      .join('');
+
+    el.previsualizacion.querySelectorAll<HTMLInputElement>('[data-alt-de]').forEach((input) => {
+      input.addEventListener('input', () => {
+        const foto = fotosPendientes.find((f) => f.id === input.dataset.altDe);
+        if (foto) foto.alt = input.value;
+      });
+    });
+
+    el.previsualizacion.querySelectorAll<HTMLButtonElement>('[data-quitar]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        fotosPendientes = fotosPendientes.filter((f) => f.id !== boton.dataset.quitar);
+        renderizarPrevisualizacion();
+      });
+    });
+
+    actualizarEstadoBotonGuardar();
+  }
+
+  // ---------- Video ----------
+
+  el.inputVideo.addEventListener('input', () => {
+    const valor = el.inputVideo.value.trim();
+    if (!valor) {
+      el.videoEstado.textContent = '';
+      actualizarEstadoBotonGuardar();
+      return;
+    }
+    const info = extraerInfoVideo(valor);
+    el.videoEstado.textContent = info
+      ? `✓ Video de ${info.proveedor === 'youtube' ? 'YouTube' : 'Vimeo'} reconocido.`
+      : '✗ Debe ser un link de YouTube o Vimeo.';
+    actualizarEstadoBotonGuardar();
+  });
+
+  function videoValidoOVacio(): boolean {
+    const valor = el.inputVideo.value.trim();
+    return !valor || extraerInfoVideo(valor) !== null;
+  }
+
+  // ---------- Guardar ----------
+
+  function actualizarEstadoBotonGuardar() {
+    const cantidadValida = fotosPendientes.length >= 3 && fotosPendientes.length <= 16;
+    el.botonGuardar.disabled = !cantidadValida || !videoValidoOVacio();
+  }
+
+  function archivoABase64(archivo: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const lector = new FileReader();
+      lector.onload = () => {
+        const resultado = String(lector.result);
+        resolve(resultado.split(',')[1] ?? '');
+      };
+      lector.onerror = reject;
+      lector.readAsDataURL(archivo);
+    });
+  }
+
+  el.botonGuardar.addEventListener('click', async () => {
+    const negocio = negocioSeleccionado();
+    if (!negocio) return;
+    const token = sessionStorage.getItem(TOKEN_SESSION);
+    if (!token) return;
+
+    el.botonGuardar.disabled = true;
+    const fotosSubidas: { src: string; alt: string }[] = [];
+
+    try {
+      for (let i = 0; i < fotosPendientes.length; i++) {
+        const foto = fotosPendientes[i];
+        el.guardarEstado.textContent = `Subiendo foto ${i + 1} de ${fotosPendientes.length}…`;
+        const base64 = await archivoABase64(foto.archivo);
+        const respuesta = await fetch('/.netlify/functions/anuncios-subir-foto', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-session-token': token },
+          body: JSON.stringify({ slug: negocio.slug, tipoMime: foto.archivo.type, base64 }),
+        });
+        const datos = await respuesta.json();
+        if (!respuesta.ok || !datos.ok) {
+          throw new Error(datos.error || 'No se pudo subir una foto.');
+        }
+        fotosSubidas.push({ src: datos.src, alt: foto.alt || negocio.nombre });
+      }
+
+      el.guardarEstado.textContent = 'Guardando ficha…';
+      const respuestaGuardar = await fetch('/.netlify/functions/anuncios-guardar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-session-token': token },
+        body: JSON.stringify({
+          slug: negocio.slug,
+          fotos: fotosSubidas,
+          video: el.inputVideo.value.trim(),
+        }),
+      });
+      const datosGuardar = await respuestaGuardar.json();
+      if (!respuestaGuardar.ok || !datosGuardar.ok) {
+        throw new Error(datosGuardar.error || 'No se pudo guardar la ficha.');
+      }
+
+      el.guardarEstado.textContent = `Listo — ${datosGuardar.negocio} se actualizó correctamente.`;
+      fotosPendientes = [];
+      renderizarPrevisualizacion();
+    } catch (error) {
+      el.guardarEstado.textContent = `Error: ${error instanceof Error ? error.message : String(error)}`;
+    } finally {
+      actualizarEstadoBotonGuardar();
+    }
+  });
+</script>

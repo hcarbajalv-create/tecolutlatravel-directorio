@@ -22,7 +22,9 @@ export default async (request) => {
   }
 
   const token = request.headers.get('x-session-token');
-  const sesionValida = await validarSesion(token);
+  // Solo rol "admin" — una sesión de colaborador (panel-anuncios) nunca
+  // debe poder leer estos datos, aunque conozca este endpoint.
+  const sesionValida = await validarSesion(token, ['admin']);
   if (!sesionValida) {
     return new Response(JSON.stringify({ ok: false, error: 'Sesión inválida o vencida' }), {
       status: 401,

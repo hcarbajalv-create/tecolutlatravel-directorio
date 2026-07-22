@@ -10,7 +10,10 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/anunciate/gracias') && !page.includes('/panel-interno-tt'),
+      filter: (page) =>
+        !page.includes('/anunciate/gracias') &&
+        !page.includes('/panel-interno-tt') &&
+        !page.includes('/panel-anuncios'),
     }),
   ],
 });

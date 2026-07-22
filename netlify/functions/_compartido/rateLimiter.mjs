@@ -12,15 +12,20 @@ function obtenerIp(request, context) {
   );
 }
 
+function almacen(nombre) {
+  return getStore({ name: nombre, consistency: 'strong' });
+}
+
 /**
- * Protección contra fuerza bruta en el login del panel interno: máximo
+ * Protección contra fuerza bruta en logins de paneles internos: máximo
  * 5 intentos fallidos por IP cada 15 minutos. Se guarda en Netlify Blobs
  * (no hay estado persistente entre invocaciones de una función serverless).
+ * `nombreAlmacen` separa el conteo por endpoint (panel de resultados vs.
+ * panel de anuncios), para que no compartan el mismo contador.
  */
-export async function verificarLimite(request, context) {
+export async function verificarLimite(request, context, nombreAlmacen) {
   const ip = obtenerIp(request, context);
-  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
-  const registro = await store.get(ip, { type: 'json' });
+  const registro = await almacen(nombreAlmacen).get(ip, { type: 'json' });
 
   if (!registro) return { permitido: true, ip };
 
@@ -35,8 +40,8 @@ export async function verificarLimite(request, context) {
   return { permitido: true, ip };
 }
 
-export async function registrarIntentoFallido(ip) {
-  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
+export async function registrarIntentoFallido(ip, nombreAlmacen) {
+  const store = almacen(nombreAlmacen);
   const registro = await store.get(ip, { type: 'json' });
   const ahora = Date.now();
 
@@ -47,7 +52,6 @@ export async function registrarIntentoFallido(ip) {
   }
 }
 
-export async function limpiarIntentos(ip) {
-  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
-  await store.delete(ip);
+export async function limpiarIntentos(ip, nombreAlmacen) {
+  await almacen(nombreAlmacen).delete(ip);
 }
