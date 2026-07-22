@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
 
 export async function getStaticPaths() {
   const negocios = await getCollection('negocios');
@@ -33,6 +34,7 @@ const {
   verificado,
   resenas,
   destacado,
+  video,
 } = negocio.data;
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
@@ -185,6 +187,15 @@ const esquemaLodging =
       </button>
       <img src="" alt="" class="lightbox__imagen" id="lightbox-imagen" />
     </div>
+
+    {
+      video && (
+        <div class="ficha__seccion-video">
+          <h2>Video</h2>
+          <VideoEmbed url={video} titulo={nombre} />
+        </div>
+      )
+    }
 
     <div class="ficha__datos">
       <div class="ficha__bloque ficha__bloque--contacto">

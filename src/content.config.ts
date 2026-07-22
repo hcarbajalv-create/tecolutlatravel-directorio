@@ -1,5 +1,6 @@
 import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { esUrlVideoValida } from './utils/embedVideo';
 
 const negocios = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/negocios' }),
@@ -14,6 +15,11 @@ const negocios = defineCollection({
         lng: z.number(),
       }),
       telefono: z.string(),
+      // Plan gratuito: máximo 8 fotos, sin video. Plan de pago: hasta 16
+      // fotos y video propio habilitado. Límites exactos validados abajo
+      // en superRefine — el máximo de 16 aquí es el techo absoluto (plan
+      // de pago); el límite de 8 para gratuito se aplica ahí, no en .max().
+      plan: z.enum(['gratuito', 'pago']).default('gratuito'),
       fotos: z
         .array(
           z.object({
@@ -22,7 +28,7 @@ const negocios = defineCollection({
           }),
         )
         .min(3)
-        .max(10),
+        .max(16),
       precioTemporada: z
         .array(
           z.object({
@@ -51,13 +57,42 @@ const negocios = defineCollection({
         )
         .default([]),
       destacado: z.boolean().default(false),
-      // URL del video del negocio (recorrido, reportaje, etc.) — cuenta para
-      // el puntaje de completitud (sección 8.1 del análisis de competencia).
-      video: z.string().url().optional(),
+      // URL del video del negocio — solo YouTube/Vimeo embebido (nunca
+      // archivo subido directo, para no afectar la velocidad del sitio en
+      // móvil). Cuenta para el puntaje de completitud (sección 8.1).
+      video: z
+        .string()
+        .url()
+        .refine(esUrlVideoValida, {
+          message:
+            'El campo "video" debe ser un link de YouTube (youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/..., youtube.com/shorts/...) o Vimeo (vimeo.com/..., player.vimeo.com/video/...) — no se aceptan archivos subidos ni otras URLs.',
+        })
+        .optional(),
       // Override manual del orden dentro de su grupo (destacado / no
       // destacado): si está presente, gana siempre sobre el puntaje
       // calculado. Menor número = aparece primero.
       ordenManual: z.number().optional(),
+    })
+    .superRefine((datos, ctx) => {
+      // Límite de fotos por plan: gratuito 8, pago 16 (sección 7-8 del
+      // análisis de competencia). Error de build claro si un .yaml lo excede.
+      const limiteFotos = datos.plan === 'pago' ? 16 : 8;
+      if (datos.fotos.length > limiteFotos) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['fotos'],
+          message: `El plan "${datos.plan}" permite máximo ${limiteFotos} fotos, pero "${datos.nombre}" tiene ${datos.fotos.length}. Quita fotos o cambia el plan a "pago".`,
+        });
+      }
+
+      // El video propio es un beneficio exclusivo del plan de pago.
+      if (datos.plan === 'gratuito' && datos.video) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['video'],
+          message: `"${datos.nombre}" tiene el campo "video" pero está en plan "gratuito" — el video es exclusivo del plan "pago". Quita el video o cambia el plan.`,
+        });
+      }
     }),
 });
 

@@ -1,11 +1,13 @@
 import { getStore } from '@netlify/blobs';
 import { calcularPuntaje, generarRecomendaciones } from '../../src/utils/puntajeCompletitud.ts';
 import { obtenerTodosLosNegocios } from './_compartido/github.mjs';
+import { validarSesion } from './_compartido/sesiones.mjs';
 
-// Esta función es la protección real de los datos (no solo dashboard-auth):
-// valida el mismo DASHBOARD_SECRET en cada llamada, así que aunque alguien
-// se salte la pantalla de login y llame esta función directo, sin la clave
-// correcta no recibe ningún dato.
+// Protección real de los datos: valida un token de sesión de corta duración
+// (emitido por dashboard-auth al hacer login), no la contraseña en texto
+// plano — así el navegador no reenvía DASHBOARD_SECRET en cada petición.
+// Aunque alguien se salte la pantalla de login y llame esta función
+// directo, sin un token de sesión vigente no recibe ningún dato.
 export default async (request) => {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ ok: false, error: 'Método no permitido' }), {
@@ -13,9 +15,18 @@ export default async (request) => {
     });
   }
 
-  const secretoRecibido = request.headers.get('x-dashboard-secret');
-  if (!process.env.DASHBOARD_SECRET || secretoRecibido !== process.env.DASHBOARD_SECRET) {
-    return new Response(JSON.stringify({ ok: false, error: 'No autorizado' }), { status: 401 });
+  // Redundante con Netlify (ya fuerza HTTPS a nivel de plataforma) — respaldo.
+  const proto = request.headers.get('x-forwarded-proto');
+  if (proto && proto !== 'https') {
+    return new Response(JSON.stringify({ ok: false, error: 'HTTPS requerido' }), { status: 403 });
+  }
+
+  const token = request.headers.get('x-session-token');
+  const sesionValida = await validarSesion(token);
+  if (!sesionValida) {
+    return new Response(JSON.stringify({ ok: false, error: 'Sesión inválida o vencida' }), {
+      status: 401,
+    });
   }
 
   try {

@@ -378,7 +378,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   import { jsPDF } from 'jspdf';
   import html2canvas from 'html2canvas';
 
-  const CLAVE_SESSION = 'panel-tt-clave';
+  const TOKEN_SESSION = 'panel-tt-token';
   const ORDEN_DIAS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
   const NOMBRES_CANAL: Record<string, string> = {
     google: 'Google',
@@ -424,30 +424,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   let negociosData: DatosNegocio[] = [];
 
   // ---------- Autenticación ----------
-  // dashboard-datos.mjs valida el mismo DASHBOARD_SECRET en cada llamada
-  // (no solo aquí en el login), así que aunque alguien se salte esta
-  // pantalla no puede obtener datos sin la clave correcta.
+  // El login (dashboard-auth) valida la contraseña UNA vez y emite un
+  // token de sesión de corta duración (3h) — el navegador ya no reenvía
+  // la contraseña real en cada petición de datos, solo ese token.
+  // dashboard-datos vuelve a validar el token en cada llamada (no solo
+  // aquí), así que aunque alguien se salte esta pantalla no obtiene datos
+  // sin una sesión vigente. El login también tiene límite de intentos
+  // (5 cada 15 min por IP) contra fuerza bruta.
 
-  async function validarClave(clave: string): Promise<boolean> {
+  async function iniciarSesionConClave(
+    clave: string,
+  ): Promise<{ ok: true; token: string } | { ok: false; error: string }> {
     try {
       const respuesta = await fetch('/.netlify/functions/dashboard-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clave }),
       });
-      if (!respuesta.ok) return false;
-      const datos = await respuesta.json();
-      return datos.ok === true;
+      const datos = await respuesta.json().catch(() => ({}));
+      if (!respuesta.ok || !datos.token) {
+        return { ok: false, error: datos.error || 'Contraseña incorrecta.' };
+      }
+      return { ok: true, token: datos.token };
     } catch {
-      return false;
+      return { ok: false, error: 'No se pudo conectar. Intenta de nuevo.' };
     }
   }
 
-  async function obtenerNegocios(clave: string): Promise<DatosNegocio[] | null> {
+  async function obtenerNegocios(token: string): Promise<DatosNegocio[] | null> {
     try {
       const respuesta = await fetch('/.netlify/functions/dashboard-datos', {
         method: 'POST',
-        headers: { 'x-dashboard-secret': clave },
+        headers: { 'x-session-token': token },
       });
       if (!respuesta.ok) return null;
       const datos = await respuesta.json();
@@ -457,25 +465,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  async function iniciarSesion(clave: string, opciones: { silencioso?: boolean } = {}) {
-    const claveValida = await validarClave(clave);
-    if (!claveValida) {
+  async function entrarConToken(token: string, opciones: { silencioso?: boolean } = {}) {
+    const negocios = await obtenerNegocios(token);
+    if (!negocios) {
+      sessionStorage.removeItem(TOKEN_SESSION);
       if (!opciones.silencioso) {
-        el.loginError.textContent = 'Contraseña incorrecta.';
+        el.loginError.textContent = 'Tu sesión venció. Vuelve a entrar con la contraseña.';
         el.loginError.hidden = false;
       }
-      sessionStorage.removeItem(CLAVE_SESSION);
       return;
     }
 
-    const negocios = await obtenerNegocios(clave);
-    if (!negocios) {
-      el.loginError.textContent = 'No se pudieron cargar los datos. Intenta de nuevo.';
-      el.loginError.hidden = false;
-      return;
-    }
-
-    sessionStorage.setItem(CLAVE_SESSION, clave);
+    sessionStorage.setItem(TOKEN_SESSION, token);
     negociosData = negocios;
     el.login.hidden = true;
     el.dashboard.hidden = false;
@@ -484,19 +485,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     renderizarVistaComparativa();
   }
 
-  el.formLogin.addEventListener('submit', (evento) => {
+  el.formLogin.addEventListener('submit', async (evento) => {
     evento.preventDefault();
     el.loginError.hidden = true;
-    iniciarSesion(el.inputClave.value);
+    const resultado = await iniciarSesionConClave(el.inputClave.value);
+    if (!resultado.ok) {
+      el.loginError.textContent = resultado.error;
+      el.loginError.hidden = false;
+      return;
+    }
+    await entrarConToken(resultado.token);
   });
 
   el.botonSalir.addEventListener('click', () => {
-    sessionStorage.removeItem(CLAVE_SESSION);
+    const token = sessionStorage.getItem(TOKEN_SESSION);
+    sessionStorage.removeItem(TOKEN_SESSION);
+    if (token) {
+      fetch('/.netlify/functions/dashboard-logout', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      }).catch(() => {});
+    }
     location.reload();
   });
 
-  const claveGuardada = sessionStorage.getItem(CLAVE_SESSION);
-  if (claveGuardada) iniciarSesion(claveGuardada, { silencioso: true });
+  const tokenGuardado = sessionStorage.getItem(TOKEN_SESSION);
+  if (tokenGuardado) entrarConToken(tokenGuardado, { silencioso: true });
 
   // ---------- Utilidades de datos ----------
 

@@ -1,0 +1,76 @@
+---
+import { extraerInfoVideo } from '../utils/embedVideo';
+
+interface Props {
+  url: string;
+  titulo: string;
+}
+
+const { url, titulo } = Astro.props;
+const info = extraerInfoVideo(url);
+
+let miniatura = '';
+if (info?.proveedor === 'youtube') {
+  // Patrón predecible de miniatura de YouTube — sin llamada de red en build.
+  miniatura = `https://i.ytimg.com/vi/${info.id}/hqdefault.jpg`;
+} else if (info?.proveedor === 'vimeo') {
+  // Vimeo no tiene patrón predecible de miniatura — se pide vía oEmbed en
+  // build. Si falla (video privado, red caída), se usa un fondo de marca
+  // como respaldo en vez de romper el build de todo el sitio.
+  try {
+    const respuesta = await fetch(
+      `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(`https://vimeo.com/${info.id}`)}`,
+    );
+    if (respuesta.ok) {
+      const datos = await respuesta.json();
+      miniatura = typeof datos.thumbnail_url === 'string' ? datos.thumbnail_url : '';
+    }
+  } catch {
+    miniatura = '';
+  }
+}
+
+const srcEmbed =
+  info?.proveedor === 'youtube'
+    ? `https://www.youtube-nocookie.com/embed/${info.id}?autoplay=1`
+    : info?.proveedor === 'vimeo'
+      ? `https://player.vimeo.com/video/${info.id}?autoplay=1`
+      : '';
+---
+
+{
+  info && (
+    <div class="video-embed" data-embed-src={srcEmbed}>
+      <button type="button" class="video-embed__disparador" aria-label={`Reproducir video de ${titulo}`}>
+        {miniatura ? (
+          <img src={miniatura} alt="" loading="lazy" class="video-embed__miniatura" />
+        ) : (
+          <div class="video-embed__miniatura video-embed__miniatura--vacia" aria-hidden="true" />
+        )}
+        <span class="video-embed__play" aria-hidden="true">
+          ▶
+        </span>
+      </button>
+    </div>
+  )
+}
+
+<script>
+  // Carga diferida real: el iframe de YouTube/Vimeo (y su JS pesado) no
+  // existe en el DOM hasta que el visitante le da clic al play — antes de
+  // eso, solo se cargó una miniatura estática.
+  document.querySelectorAll<HTMLElement>('.video-embed').forEach((contenedor) => {
+    const boton = contenedor.querySelector('.video-embed__disparador');
+    boton?.addEventListener('click', () => {
+      const src = contenedor.dataset.embedSrc;
+      if (!src) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.title = 'Video del negocio';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'video-embed__iframe';
+      contenedor.replaceChildren(iframe);
+    });
+  });
+</script>
