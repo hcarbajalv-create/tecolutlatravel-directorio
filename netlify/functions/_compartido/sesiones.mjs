@@ -9,7 +9,7 @@ const DURACION_SESION_MS = 3 * 60 * 60 * 1000; // 3 horas
  */
 export async function crearSesion() {
   const token = crypto.randomUUID();
-  const store = getStore('sesiones-panel');
+  const store = getStore({ name: 'sesiones-panel', consistency: 'strong' });
   const ahora = Date.now();
   await store.setJSON(token, { creado: ahora, expira: ahora + DURACION_SESION_MS });
   return token;
@@ -17,7 +17,7 @@ export async function crearSesion() {
 
 export async function validarSesion(token) {
   if (!token) return false;
-  const store = getStore('sesiones-panel');
+  const store = getStore({ name: 'sesiones-panel', consistency: 'strong' });
   const sesion = await store.get(token, { type: 'json' });
   if (!sesion) return false;
 
@@ -31,6 +31,6 @@ export async function validarSesion(token) {
 
 export async function cerrarSesion(token) {
   if (!token) return;
-  const store = getStore('sesiones-panel');
+  const store = getStore({ name: 'sesiones-panel', consistency: 'strong' });
   await store.delete(token);
 }

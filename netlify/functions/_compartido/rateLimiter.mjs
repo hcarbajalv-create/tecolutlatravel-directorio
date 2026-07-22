@@ -19,7 +19,7 @@ function obtenerIp(request, context) {
  */
 export async function verificarLimite(request, context) {
   const ip = obtenerIp(request, context);
-  const store = getStore('intentos-login-panel');
+  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
   const registro = await store.get(ip, { type: 'json' });
 
   if (!registro) return { permitido: true, ip };
@@ -36,7 +36,7 @@ export async function verificarLimite(request, context) {
 }
 
 export async function registrarIntentoFallido(ip) {
-  const store = getStore('intentos-login-panel');
+  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
   const registro = await store.get(ip, { type: 'json' });
   const ahora = Date.now();
 
@@ -48,6 +48,6 @@ export async function registrarIntentoFallido(ip) {
 }
 
 export async function limpiarIntentos(ip) {
-  const store = getStore('intentos-login-panel');
+  const store = getStore({ name: 'intentos-login-panel', consistency: 'strong' });
   await store.delete(ip);
 }
