@@ -87,9 +87,13 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
-        <label for="foto1">O sube tus fotos una por una: Foto/video 1 (opcional)</label>
+        <label for="foto1">
+          O sube tus fotos una por una: Foto/video 1 (opcional)
+          <span class="etiqueta-portada">★ Foto de portada</span>
+        </label>
         <span class="ayuda">
-          Usa esto si prefieres ir de una en una en vez del campo de arriba.
+          Usa esto si prefieres ir de una en una en vez del campo de arriba. Esta primera foto es
+          la que se usa como portada de tu ficha en el directorio.
         </span>
         <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
       </div>

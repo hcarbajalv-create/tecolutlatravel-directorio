@@ -1431,3 +1431,16 @@ select:focus-visible {
   border: none;
   display: block;
 }
+
+/* ---------- Etiqueta "foto de portada" (formulario /anunciate) ---------- */
+.etiqueta-portada {
+  display: inline-block;
+  background: var(--color-turquesa);
+  color: var(--color-blanco);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
