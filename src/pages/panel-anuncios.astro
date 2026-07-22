@@ -259,6 +259,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .anuncios__foto {
+    position: relative;
     background: var(--color-arena);
     border-radius: var(--radio-chico);
     overflow: hidden;
@@ -272,6 +273,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     display: block;
   }
 
+  .anuncios__portada {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: var(--color-turquesa);
+    color: var(--color-blanco);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+
   .anuncios__foto input[type='text'] {
     width: calc(100% - 1rem);
     margin: 0.4rem 0.5rem 0.3rem;
@@ -281,14 +294,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-radius: 6px;
   }
 
-  .anuncios__foto button {
+  .anuncios__foto-acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin: 0 0.5rem;
+  }
+
+  .anuncios__foto-acciones button {
     background: none;
-    border: none;
-    color: var(--color-coral-texto);
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    color: var(--color-tinta);
     font-size: 0.78rem;
     cursor: pointer;
-    padding: 0;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .anuncios__foto-acciones button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .anuncios__foto-acciones button[data-quitar] {
+    margin-left: auto;
+    border-color: transparent;
+    color: var(--color-coral-texto);
+    padding: 0.15rem 0;
   }
 
   #boton-guardar {
@@ -512,13 +544,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   });
 
   function renderizarPrevisualizacion() {
+    const ultimo = fotosPendientes.length - 1;
     el.previsualizacion.innerHTML = fotosPendientes
       .map(
         (f, i) => `
           <div class="anuncios__foto" data-id="${f.id}">
+            ${i === 0 ? '<span class="anuncios__portada">★ Portada</span>' : ''}
             <img src="${f.previewUrl}" alt="" />
             <input type="text" value="${f.alt}" data-alt-de="${f.id}" placeholder="Descripción de la foto ${i + 1}" />
-            <button type="button" data-quitar="${f.id}">Quitar</button>
+            <div class="anuncios__foto-acciones">
+              <button type="button" data-subir="${f.id}" ${i === 0 ? 'disabled' : ''} aria-label="Mover arriba">▲</button>
+              <button type="button" data-bajar="${f.id}" ${i === ultimo ? 'disabled' : ''} aria-label="Mover abajo">▼</button>
+              <button type="button" data-quitar="${f.id}">Quitar</button>
+            </div>
           </div>
         `,
       )
@@ -536,6 +574,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         fotosPendientes = fotosPendientes.filter((f) => f.id !== boton.dataset.quitar);
         renderizarPrevisualizacion();
       });
+    });
+
+    function mover(id: string | undefined, direccion: -1 | 1) {
+      const indice = fotosPendientes.findIndex((f) => f.id === id);
+      const nuevoIndice = indice + direccion;
+      if (indice === -1 || nuevoIndice < 0 || nuevoIndice >= fotosPendientes.length) return;
+      [fotosPendientes[indice], fotosPendientes[nuevoIndice]] = [
+        fotosPendientes[nuevoIndice],
+        fotosPendientes[indice],
+      ];
+      renderizarPrevisualizacion();
+    }
+
+    el.previsualizacion.querySelectorAll<HTMLButtonElement>('[data-subir]').forEach((boton) => {
+      boton.addEventListener('click', () => mover(boton.dataset.subir, -1));
+    });
+
+    el.previsualizacion.querySelectorAll<HTMLButtonElement>('[data-bajar]').forEach((boton) => {
+      boton.addEventListener('click', () => mover(boton.dataset.bajar, 1));
     });
 
     actualizarEstadoBotonGuardar();
