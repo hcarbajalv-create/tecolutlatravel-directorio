@@ -27,11 +27,9 @@ fotos:
   - src: ../../assets/fotos/casa-mandala/08-patio-asador.jpg
     alt: Patio de Casa Mandala con asador
 precioTemporada:
-  - temporada: Temporada baja (entre semana)
-    precio: 2200
-  - temporada: Temporada alta (fines de semana y vacaciones)
-    precio: 3500
-fechaActualizacion: 2026-07-18
+  - temporada: Desde
+    precio: 3000
+fechaActualizacion: 2026-07-23
 disponible: true
 servicios:
   - Wifi
