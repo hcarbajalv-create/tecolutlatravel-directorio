@@ -59,15 +59,11 @@ const tamanoMaximoMb = 8;
 
       <div class="campo">
         <label for="telefono">Teléfono / WhatsApp de contacto para clientes *</label>
-        <span class="ayuda">Mínimo 10 dígitos, sin espacios ni guiones, ej: 5576612345</span>
-        <input
-          type="tel"
-          id="telefono"
-          name="telefono"
-          pattern="[0-9]{10,}"
-          title="Escribe al menos 10 dígitos, sin espacios ni guiones"
-          required
-        />
+        <span class="ayuda">Mínimo 10 dígitos, ej: 55 76612345</span>
+        <input type="tel" id="telefono" name="telefono" required />
+        <p id="aviso-telefono" class="aviso-envio" role="alert" hidden>
+          ⚠️ El teléfono debe tener al menos 10 dígitos.
+        </p>
       </div>
 
       <div class="campo">
@@ -207,6 +203,15 @@ const tamanoMaximoMb = 8;
     const fotoInputs = Array.from({ length: 8 }, (_, i) =>
       document.getElementById(`foto${i + 1}`),
     ) as (HTMLInputElement | null)[];
+    const telefono = document.getElementById('telefono') as HTMLInputElement | null;
+    const avisoTelefono = document.getElementById('aviso-telefono');
+
+    if (telefono && avisoTelefono) {
+      const telefonoValido = () => telefono.value.replace(/\D/g, '').length >= 10;
+      telefono.addEventListener('input', () => {
+        if (telefonoValido()) avisoTelefono.hidden = true;
+      });
+    }
 
     if (form && fotosVarias && enlaceFotos && contador && aviso) {
       const contarFotos = () => {
@@ -237,10 +242,18 @@ const tamanoMaximoMb = 8;
       form.addEventListener('submit', (evento) => {
         const total = contarFotos();
         const tieneEnlace = enlaceFotos.value.trim().length > 0;
-        if (!tieneEnlace && total < 3) {
+        const faltanFotos = !tieneEnlace && total < 3;
+        const faltaTelefono = telefono ? telefono.value.replace(/\D/g, '').length < 10 : false;
+
+        if (avisoTelefono) avisoTelefono.hidden = !faltaTelefono;
+        aviso.hidden = !faltanFotos;
+
+        if (faltanFotos || faltaTelefono) {
           evento.preventDefault();
-          aviso.hidden = false;
-          aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          (faltaTelefono ? avisoTelefono : aviso)?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
         }
       });
     }
