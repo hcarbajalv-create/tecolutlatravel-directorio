@@ -53,6 +53,7 @@ const tamanoMaximoMb = 8;
 
       <div class="campo">
         <label for="direccion">Dirección en Tecolutla *</label>
+        <span class="ayuda">Incluye número y colonia si los tienes, ej: Calle Girasol #12, Col. Centro</span>
         <input type="text" id="direccion" name="direccion" required />
       </div>
 
@@ -75,6 +76,17 @@ const tamanoMaximoMb = 8;
         <label for="serviciosAmenidades">Servicios o amenidades (opcional)</label>
         <span class="ayuda">Sepáralos por comas, por ejemplo: wifi, estacionamiento, alberca</span>
         <textarea id="serviciosAmenidades" name="serviciosAmenidades" rows="2"></textarea>
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta-seccion">Fotos y video de tu negocio *</span>
+        <span class="ayuda">
+          Sube al menos 3 fotos o video en total — puedes combinar el campo de varias fotos, las
+          casillas de una por una, o pegar un enlace con tus fotos más abajo.
+        </span>
+        <p id="contador-fotos" class="contador-fotos" aria-live="polite">
+          Fotos o video subidos: 0 / 3 mínimo
+        </p>
       </div>
 
       <div class="campo">
@@ -169,7 +181,59 @@ const tamanoMaximoMb = 8;
         Al enviar este formulario aceptas nuestro <a href="/aviso-de-privacidad">Aviso de Privacidad</a>.
       </p>
 
+      <p id="aviso-fotos" class="aviso-envio" role="alert" hidden>
+        ⚠️ Necesitas subir al menos 3 fotos o video (o un enlace con tus fotos) antes de enviar.
+      </p>
+
       <button type="submit" class="boton">Enviar solicitud</button>
     </form>
   </section>
+
+  <script>
+    const form = document.querySelector('form[name="alta-negocio"]') as HTMLFormElement | null;
+    const fotosVarias = document.getElementById('fotosVarias') as HTMLInputElement | null;
+    const enlaceFotos = document.getElementById('enlaceFotos') as HTMLInputElement | null;
+    const contador = document.getElementById('contador-fotos');
+    const aviso = document.getElementById('aviso-fotos');
+    const fotoInputs = Array.from({ length: 8 }, (_, i) =>
+      document.getElementById(`foto${i + 1}`),
+    ) as (HTMLInputElement | null)[];
+
+    if (form && fotosVarias && enlaceFotos && contador && aviso) {
+      const contarFotos = () => {
+        let total = fotosVarias.files?.length ?? 0;
+        for (const input of fotoInputs) {
+          if (input?.files?.length) total += 1;
+        }
+        return total;
+      };
+
+      const actualizarContador = () => {
+        const total = contarFotos();
+        const tieneEnlace = enlaceFotos.value.trim().length > 0;
+        const cumple = tieneEnlace || total >= 3;
+        contador.textContent = tieneEnlace
+          ? 'Enlace de fotos proporcionado ✓'
+          : `Fotos o video subidos: ${total} / 3 mínimo`;
+        contador.classList.toggle('contador-fotos--ok', cumple);
+        if (cumple) aviso.hidden = true;
+      };
+
+      for (const input of [fotosVarias, ...fotoInputs]) {
+        input?.addEventListener('change', actualizarContador);
+      }
+      enlaceFotos.addEventListener('input', actualizarContador);
+      actualizarContador();
+
+      form.addEventListener('submit', (evento) => {
+        const total = contarFotos();
+        const tieneEnlace = enlaceFotos.value.trim().length > 0;
+        if (!tieneEnlace && total < 3) {
+          evento.preventDefault();
+          aviso.hidden = false;
+          aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+  </script>
 </BaseLayout>

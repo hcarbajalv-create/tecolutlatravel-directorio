@@ -1444,3 +1444,33 @@ select:focus-visible {
   margin-left: 0.5rem;
   vertical-align: middle;
 }
+
+/* ---------- Mínimo de fotos y aviso de envío (formulario /anunciate) ---------- */
+.etiqueta-seccion {
+  font-weight: 600;
+}
+
+.contador-fotos {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  margin: 0;
+}
+
+.contador-fotos--ok {
+  color: var(--color-turquesa);
+}
+
+.aviso-envio {
+  background: rgba(255, 122, 92, 0.12);
+  border: 1px solid var(--color-coral);
+  color: var(--color-coral-texto);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radio-chico);
+  margin: -0.5rem 0 1rem;
+}
+
+.aviso-envio[hidden] {
+  display: none;
+}
