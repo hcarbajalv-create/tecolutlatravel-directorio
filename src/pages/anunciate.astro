@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const tiposAceptados = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime';
+const tiposAceptados = 'image/jpeg,image/png,image/webp';
 const tamanoMaximoMb = 8;
 ---
 
@@ -59,7 +59,15 @@ const tamanoMaximoMb = 8;
 
       <div class="campo">
         <label for="telefono">Teléfono / WhatsApp de contacto para clientes *</label>
-        <input type="tel" id="telefono" name="telefono" required />
+        <span class="ayuda">Mínimo 10 dígitos, sin espacios ni guiones, ej: 7661234567</span>
+        <input
+          type="tel"
+          id="telefono"
+          name="telefono"
+          pattern="[0-9]{10,}"
+          title="Escribe al menos 10 dígitos, sin espacios ni guiones"
+          required
+        />
       </div>
 
       <div class="campo">
@@ -79,13 +87,14 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
-        <span class="etiqueta-seccion">Fotos y video de tu negocio *</span>
+        <span class="etiqueta-seccion">Fotos de tu negocio *</span>
         <span class="ayuda">
-          Sube al menos 3 fotos o video en total — puedes combinar el campo de varias fotos, las
-          casillas de una por una, o pegar un enlace con tus fotos más abajo.
+          Sube al menos 3 fotos en total — puedes combinar el campo de varias fotos, las casillas
+          de una por una, o pegar un enlace con tus fotos más abajo. (El video es un beneficio del
+          plan de pago, se agrega después desde el panel de anuncios.)
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
-          Fotos o video subidos: 0 / 3 mínimo
+          Fotos subidas: 0 / 3 mínimo
         </p>
       </div>
 
@@ -93,14 +102,14 @@ const tamanoMaximoMb = 8;
         <label for="fotosVarias">¿Prefieres subir varias fotos de una sola vez? (opcional)</label>
         <span class="ayuda">
           Selecciona todas las que quieras aquí — no hace falta que también llenes las casillas de
-          abajo. Solo imágenes o video, máximo {tamanoMaximoMb} MB por archivo.
+          abajo. Solo imágenes, máximo {tamanoMaximoMb} MB por archivo.
         </span>
         <input type="file" id="fotosVarias" name="fotosVarias" accept={tiposAceptados} multiple />
       </div>
 
       <div class="campo">
         <label for="foto1">
-          O sube tus fotos una por una: Foto/video 1 (opcional)
+          O sube tus fotos una por una: Foto 1 (opcional)
           <span class="etiqueta-portada">★ Foto de portada</span>
         </label>
         <span class="ayuda">
@@ -111,45 +120,45 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
-        <label for="foto2">Foto o video de muestra 2 (opcional)</label>
+        <label for="foto2">Foto de muestra 2 (opcional)</label>
         <input type="file" id="foto2" name="foto2" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto3">Foto o video de muestra 3 (opcional)</label>
+        <label for="foto3">Foto de muestra 3 (opcional)</label>
         <input type="file" id="foto3" name="foto3" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto4">Foto o video de muestra 4 (opcional)</label>
+        <label for="foto4">Foto de muestra 4 (opcional)</label>
         <input type="file" id="foto4" name="foto4" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto5">Foto o video de muestra 5 (opcional)</label>
+        <label for="foto5">Foto de muestra 5 (opcional)</label>
         <input type="file" id="foto5" name="foto5" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto6">Foto o video de muestra 6 (opcional)</label>
+        <label for="foto6">Foto de muestra 6 (opcional)</label>
         <input type="file" id="foto6" name="foto6" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto7">Foto o video de muestra 7 (opcional)</label>
+        <label for="foto7">Foto de muestra 7 (opcional)</label>
         <input type="file" id="foto7" name="foto7" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="foto8">Foto o video de muestra 8 (opcional)</label>
+        <label for="foto8">Foto de muestra 8 (opcional)</label>
         <input type="file" id="foto8" name="foto8" accept={tiposAceptados} />
       </div>
 
       <div class="campo">
-        <label for="enlaceFotos">Enlace con más fotos o video (opcional)</label>
+        <label for="enlaceFotos">Enlace con más fotos (opcional)</label>
         <span class="ayuda">
-          Si tienes más de 8 fotos, o algún video pesado, comparte un enlace (Google Drive,
-          WeTransfer, etc.) en vez de adjuntarlo aquí.
+          Si tienes más de 8 fotos, comparte un enlace (Google Drive, WeTransfer, etc.) en vez de
+          adjuntarlas aquí.
         </span>
         <input type="url" id="enlaceFotos" name="enlaceFotos" placeholder="https://" />
       </div>
@@ -182,7 +191,7 @@ const tamanoMaximoMb = 8;
       </p>
 
       <p id="aviso-fotos" class="aviso-envio" role="alert" hidden>
-        ⚠️ Necesitas subir al menos 3 fotos o video (o un enlace con tus fotos) antes de enviar.
+        ⚠️ Necesitas subir al menos 3 fotos (o un enlace con tus fotos) antes de enviar.
       </p>
 
       <button type="submit" class="boton">Enviar solicitud</button>
@@ -214,7 +223,7 @@ const tamanoMaximoMb = 8;
         const cumple = tieneEnlace || total >= 3;
         contador.textContent = tieneEnlace
           ? 'Enlace de fotos proporcionado ✓'
-          : `Fotos o video subidos: ${total} / 3 mínimo`;
+          : `Fotos subidas: ${total} / 3 mínimo`;
         contador.classList.toggle('contador-fotos--ok', cumple);
         if (cumple) aviso.hidden = true;
       };
