@@ -1,7 +1,9 @@
 # Datos reales confirmados vía prompt_maestro_xanath.md y Google Maps (2026-07-15)
 nombre: Casa Xanath
 categoria: hospedaje
-descripcionCorta: Casa de hospedaje a 1.5 cuadras de la playa y del centro de Tecolutla, con alberca y terraza techada, ideal para familias y grupos que buscan tranquilidad.
+descripcionCorta: Casa de hospedaje a 1.5 cuadras de la playa y del centro de
+  Tecolutla, con alberca y terraza techada, ideal para familias y grupos que
+  buscan tranquilidad.
 direccion: Av Niños Héroes, 93570 Tecolutla, Veracruz
 coordenadas:
   lat: 20.4783245
@@ -29,7 +31,7 @@ precioTemporada:
     precio: 4500
   - temporada: Fin de semana (jueves a sábado)
     precio: 5500
-fechaActualizacion: 2026-07-15
+fechaActualizacion: 2026-07-27
 disponible: true
 servicios:
   - Alberca privada
@@ -49,3 +51,4 @@ checkOut: "12:00"
 verificado: true
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
+plan: pago
