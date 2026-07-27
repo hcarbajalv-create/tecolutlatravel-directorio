@@ -29,7 +29,7 @@ fotos:
 precioTemporada:
   - temporada: Desde
     precio: 3000
-fechaActualizacion: 2026-07-23
+fechaActualizacion: 2026-07-27
 disponible: true
 servicios:
   - Wifi
@@ -46,3 +46,4 @@ checkOut: "12:00"
 verificado: true
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
+plan: pago
