@@ -109,7 +109,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin: 0 auto;
   }
 
-  .panel__login {
+  .panel__login:not([hidden]) {
     display: flex;
     justify-content: center;
     padding-top: 3rem;
@@ -243,6 +243,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-weight: 900;
     color: var(--color-tinta);
     margin: 0 0 1rem;
+  }
+
+  .panel__plan-estado {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: -0.5rem 0 1.25rem;
+  }
+
+  .panel__plan-mensaje {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-turquesa);
+  }
+
+  .panel__plan-mensaje--error {
+    color: var(--color-coral-texto);
   }
 
   .panel__tarjetas {
@@ -412,6 +430,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     nombre: string;
     categoria: string;
     destacado: boolean;
+    plan: 'gratuito' | 'pago';
     puntaje: number;
     recomendaciones: string[];
     stats: {
@@ -686,6 +705,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     el.contenidoIndividual.innerHTML = `
       <h2 class="panel__nombre-negocio">${negocio.nombre}</h2>
+      <div class="panel__plan-estado">
+        <span>Plan actual: <strong>${negocio.plan === 'pago' ? 'Pago (destacado)' : 'Gratuito'}</strong></span>
+        <button
+          type="button"
+          class="boton boton--chico ${negocio.plan === 'pago' ? 'boton--secundario' : 'boton--destacado'}"
+          id="boton-cambiar-plan"
+        >
+          ${negocio.plan === 'pago' ? 'Bajar a plan gratuito' : 'Cambiar a plan de pago'}
+        </button>
+        <span id="mensaje-plan" class="panel__plan-mensaje" hidden></span>
+      </div>
       <div class="panel__tarjetas">
         ${tarjetaStat('Vistas totales', stats.vistasTotal, '#0B6F7A')}
         ${tarjetaStat('Clics a WhatsApp', stats.clicsTotal, '#FF7A5C')}
@@ -738,6 +768,66 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ${recomendacionesHtml}
       </div>
     `;
+
+    const botonPlan = document.getElementById('boton-cambiar-plan') as HTMLButtonElement | null;
+    const mensajePlan = document.getElementById('mensaje-plan') as HTMLElement | null;
+    botonPlan?.addEventListener('click', async () => {
+      const nuevoPlan = negocio.plan === 'pago' ? 'gratuito' : 'pago';
+      const confirmacion =
+        nuevoPlan === 'pago'
+          ? `¿Confirmar que "${negocio.nombre}" ya pagó y pasa a plan de pago (destacado)?`
+          : `¿Bajar a "${negocio.nombre}" a plan gratuito? Perderá el destacado y, si tiene video, se le quitará.`;
+      if (!window.confirm(confirmacion)) return;
+
+      botonPlan.disabled = true;
+      const resultado = await cambiarPlanNegocio(slug, nuevoPlan);
+
+      if (!resultado.ok) {
+        botonPlan.disabled = false;
+        if (mensajePlan) {
+          mensajePlan.hidden = false;
+          mensajePlan.textContent = resultado.error;
+          mensajePlan.classList.add('panel__plan-mensaje--error');
+        }
+        return;
+      }
+
+      // Re-renderizar reconstruye todo el bloque (incluido #mensaje-plan),
+      // así que el mensaje de éxito se aplica DESPUÉS, sobre el elemento
+      // nuevo — si se hiciera antes, el re-render lo borraría de inmediato.
+      negocio.plan = nuevoPlan;
+      negocio.destacado = nuevoPlan === 'pago';
+      renderizarVistaIndividual(slug);
+      renderizarVistaComparativa();
+
+      const mensajeNuevo = document.getElementById('mensaje-plan');
+      if (mensajeNuevo) {
+        mensajeNuevo.hidden = false;
+        mensajeNuevo.textContent = `Listo — "${negocio.nombre}" ahora está en plan ${nuevoPlan}.`;
+      }
+    });
+  }
+
+  async function cambiarPlanNegocio(
+    slug: string,
+    plan: 'gratuito' | 'pago',
+  ): Promise<{ ok: true } | { ok: false; error: string }> {
+    const token = sessionStorage.getItem(TOKEN_SESSION);
+    if (!token) return { ok: false, error: 'Sesión vencida, vuelve a entrar.' };
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-cambiar-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-session-token': token },
+        body: JSON.stringify({ slug, plan }),
+      });
+      const datos = await respuesta.json().catch(() => ({}));
+      if (!respuesta.ok || !datos.ok) {
+        return { ok: false, error: datos.error || 'No se pudo cambiar el plan.' };
+      }
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'No se pudo conectar. Intenta de nuevo.' };
+    }
   }
 
   function renderizarVistaComparativa() {

@@ -47,6 +47,7 @@ export default async (request) => {
           nombre: datos.nombre,
           categoria: datos.categoria,
           destacado: Boolean(datos.destacado),
+          plan: datos.plan || 'gratuito',
           puntaje: calcularPuntaje(datos),
           recomendaciones: generarRecomendaciones(datos),
           stats,
