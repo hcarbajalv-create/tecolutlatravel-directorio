@@ -16,15 +16,30 @@ interface Props {
 const { categoria, icono, claseColor, titulo, descripcionSeo, introduccion } = Astro.props;
 
 const todos = await getCollection('negocios');
-const negociosCategoria = todos
-  .filter((n) => n.data.categoria === categoria)
-  .sort((a, b) => {
-    // Los destacados (pago) siempre van primero, como grupo completo.
-    const diferenciaDestacado = Number(b.data.destacado) - Number(a.data.destacado);
-    if (diferenciaDestacado !== 0) return diferenciaDestacado;
-    // Dentro de cada grupo: orden manual si existe, si no, puntaje de completitud.
-    return compararDentroDeGrupo(a, b);
-  });
+const negociosFiltrados = todos.filter((n) => n.data.categoria === categoria);
+
+// Destacados: van primero como grupo, pero SIN ordenar por puntaje entre
+// ellos — todos pagan lo mismo, así que el orden entre ellos se decide en
+// el navegador (ver script abajo), rotando cada día, para que todos tengan
+// la misma oportunidad de aparecer arriba. El orden manual sigue ganando
+// sobre eso si el dueño del sitio lo define.
+const destacados = negociosFiltrados
+  .filter((n) => n.data.destacado)
+  .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
+
+// Gratuitos: sin cambios — se ordenan por puntaje de completitud (o manual).
+const gratuitos = negociosFiltrados
+  .filter((n) => !n.data.destacado)
+  .sort(compararDentroDeGrupo);
+
+const negociosCategoria = [...destacados, ...gratuitos];
+
+const mostrarFiltroTipo = categoria === 'hospedaje';
+const tiposFiltro: { valor: string; etiqueta: string }[] = [
+  { valor: 'casa', etiqueta: 'Casas completas' },
+  { valor: 'hotel', etiqueta: 'Hoteles' },
+  { valor: 'cuarto', etiqueta: 'Cuartos / habitaciones' },
+];
 ---
 
 <BaseLayout titulo={titulo} descripcion={descripcionSeo}>
@@ -41,18 +56,98 @@ const negociosCategoria = todos
   <section class="seccion contenedor">
     <h2 class="titulo-seccion" style="margin-bottom:1.25rem;">Negocios en esta categoría</h2>
     {
+      mostrarFiltroTipo && negociosCategoria.length > 0 && (
+        <div class="filtro-tipo" id="filtro-tipo">
+          <button type="button" class="pastilla pastilla--activa" data-tipo-filtro="todos">
+            Todos
+          </button>
+          {tiposFiltro.map((t) => (
+            <button type="button" class="pastilla" data-tipo-filtro={t.valor}>
+              {t.etiqueta}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    {
       negociosCategoria.length === 0 ? (
         <p>
           Todavía no hay negocios publicados en esta categoría.{' '}
           <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
         </p>
       ) : (
-        <div class="rejilla-negocios">
+        <div class="rejilla-negocios" id="rejilla-negocios">
           {negociosCategoria.map((negocio) => (
             <NegocioCard negocio={negocio} />
           ))}
         </div>
       )
     }
+    <p id="mensaje-filtro-vacio" class="filtro-tipo__vacio" hidden>
+      Todavía no hay negocios de este tipo.
+    </p>
   </section>
 </BaseLayout>
+
+<script>
+  function hashDiario(semilla: string): number {
+    let hash = 5381;
+    for (let i = 0; i < semilla.length; i++) {
+      hash = (hash * 33) ^ semilla.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  // Los destacados se muestran siempre primero como grupo, pero el orden
+  // entre ellos se decide aquí (no en el build) para que rote de verdad
+  // cada día calendario, sin depender de que el sitio se vuelva a publicar.
+  function rotarDestacados() {
+    const contenedor = document.getElementById('rejilla-negocios');
+    if (!contenedor) return;
+
+    const tarjetas = Array.from(contenedor.children) as HTMLElement[];
+    const destacadas = tarjetas.filter((t) => t.dataset.destacado === 'true');
+    const limite = tarjetas.find((t) => t.dataset.destacado === 'false') ?? null;
+
+    const hoy = new Date().toISOString().slice(0, 10);
+    const fijas = destacadas.filter((t) => t.dataset.ordenManual);
+    const aleatorias = destacadas.filter((t) => !t.dataset.ordenManual);
+    aleatorias.sort(
+      (a, b) =>
+        hashDiario(`${hoy}-${a.dataset.slug}`) - hashDiario(`${hoy}-${b.dataset.slug}`),
+    );
+
+    for (const tarjeta of [...fijas, ...aleatorias]) {
+      if (limite) contenedor.insertBefore(tarjeta, limite);
+      else contenedor.appendChild(tarjeta);
+    }
+  }
+
+  function activarFiltroTipo() {
+    const filtro = document.getElementById('filtro-tipo');
+    if (!filtro) return;
+    const contenedor = document.getElementById('rejilla-negocios');
+    const mensajeVacio = document.getElementById('mensaje-filtro-vacio');
+
+    filtro.querySelectorAll<HTMLButtonElement>('[data-tipo-filtro]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        filtro
+          .querySelectorAll('[data-tipo-filtro]')
+          .forEach((b) => b.classList.remove('pastilla--activa'));
+        boton.classList.add('pastilla--activa');
+
+        const valor = boton.dataset.tipoFiltro;
+        let visibles = 0;
+        contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
+          const mostrar = valor === 'todos' || tarjeta.dataset.tipo === valor;
+          tarjeta.style.display = mostrar ? '' : 'none';
+          if (mostrar) visibles++;
+        });
+        if (mensajeVacio) mensajeVacio.hidden = visibles > 0;
+      });
+    });
+  }
+
+  rotarDestacados();
+  activarFiltroTipo();
+</script>

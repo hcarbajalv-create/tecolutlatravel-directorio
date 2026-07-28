@@ -21,6 +21,8 @@ const {
   capacidadMaxima,
   petFriendly,
   distanciaPlayaMetros,
+  tipo,
+  ordenManual,
 } = negocio.data;
 const portada = fotos[0];
 const enlace = `/${categoria}/${negocio.id}`;
@@ -50,7 +52,13 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
 )}`;
 ---
 
-<article class="tarjeta">
+<article
+  class="tarjeta"
+  data-slug={negocio.id}
+  data-destacado={destacado ? 'true' : 'false'}
+  data-tipo={tipo ?? ''}
+  data-orden-manual={ordenManual ?? ''}
+>
   <div class="tarjeta__foto">
     <a href={enlace} tabindex="-1" aria-hidden="true">
       <Image

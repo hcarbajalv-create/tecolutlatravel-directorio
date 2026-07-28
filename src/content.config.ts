@@ -40,6 +40,9 @@ const negocios = defineCollection({
       fechaActualizacion: z.coerce.date(),
       disponible: z.boolean(),
       servicios: z.array(z.string()).default([]),
+      // Solo aplica a categoria: 'hospedaje' — habilita el filtro por tipo
+      // en /hospedaje (casas completas, hoteles, cuartos independientes).
+      tipo: z.enum(['casa', 'hotel', 'cuarto']).optional(),
       numeroHabitaciones: z.number().optional(),
       capacidadMaxima: z.number().optional(),
       petFriendly: z.boolean().optional(),

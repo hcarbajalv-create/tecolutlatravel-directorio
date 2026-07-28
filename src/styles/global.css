@@ -393,6 +393,41 @@ select:focus-visible {
   gap: 1.5rem;
 }
 
+/* ---------- Filtro por tipo (solo /hospedaje) ---------- */
+.filtro-tipo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pastilla {
+  border: 1px solid var(--color-turquesa);
+  background: var(--color-blanco);
+  color: var(--color-turquesa);
+  font-family: var(--fuente-cuerpo);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pastilla:hover {
+  background: var(--color-arena);
+}
+
+.pastilla--activa,
+.pastilla--activa:hover {
+  background: var(--color-turquesa);
+  color: var(--color-blanco);
+}
+
+.filtro-tipo__vacio {
+  color: var(--color-texto-suave);
+}
+
 /* ---------- Tarjeta de negocio ---------- */
 .tarjeta {
   background: var(--color-blanco);

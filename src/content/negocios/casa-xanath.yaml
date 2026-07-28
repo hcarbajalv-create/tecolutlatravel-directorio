@@ -9,6 +9,7 @@ coordenadas:
   lat: 20.4783245
   lng: -97.0095681
 telefono: "+52 56 2437 7116"
+tipo: casa
 fotos:
   - src: ../../assets/fotos/casa-xanath/01-alberca-jardin.jpg
     alt: Alberca y jardín de Casa Xanath
