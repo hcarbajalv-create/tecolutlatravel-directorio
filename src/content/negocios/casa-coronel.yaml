@@ -11,7 +11,7 @@ coordenadas:
   lat: 20.4751375
   lng: -97.0074844
 telefono: "+52 766 189 6443"
-plan: gratuito
+plan: pago
 fotos:
   - src: ../../assets/fotos/casa-coronel/01-foto.jpg
     alt: Terraza de Casa Coronel con vista al río Tecolutla
@@ -52,4 +52,4 @@ capacidadMaxima: 12
 tipo: casa
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
-destacado: false
+destacado: true
