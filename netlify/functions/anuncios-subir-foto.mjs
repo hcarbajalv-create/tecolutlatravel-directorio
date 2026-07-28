@@ -53,8 +53,12 @@ export default async (request) => {
   // El tamaño en bytes del original ≈ base64.length * 3/4.
   const tamanoAproximado = Math.floor((base64.length * 3) / 4);
   if (tamanoAproximado > TAMANO_MAXIMO_BYTES) {
+    const pesoMb = (tamanoAproximado / (1024 * 1024)).toFixed(1);
     return new Response(
-      JSON.stringify({ ok: false, error: 'Cada foto debe pesar máximo 4MB' }),
+      JSON.stringify({
+        ok: false,
+        error: `Esta foto pesa demasiado (${pesoMb} MB aprox.) — el límite es 4 MB. Comprímela o sube una más ligera.`,
+      }),
       { status: 400 },
     );
   }
