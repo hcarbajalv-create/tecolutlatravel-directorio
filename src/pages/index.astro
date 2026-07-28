@@ -4,7 +4,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
 
 const negocios = await getCollection('negocios');
-const destacados = negocios.filter((n) => n.data.destacado);
+// Orden manual primero (si se define); el resto se manda tal cual al
+// navegador, que rota el orden por día y limita a MAX_DESTACADOS_HOME
+// (ver script abajo) — así, aunque haya cientos de negocios pagando, la
+// portada no se vuelve una lista interminable, y todos rotan con el tiempo.
+const destacados = negocios
+  .filter((n) => n.data.destacado)
+  .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
 
 const categorias = [
   {
@@ -101,7 +107,7 @@ const guias = [
             <p class="subtitulo">Negocios con posicionamiento destacado en el directorio.</p>
           </div>
         </div>
-        <div class="rejilla-negocios">
+        <div class="rejilla-negocios" id="rejilla-destacados-home">
           {destacados.map((negocio) => (
             <NegocioCard negocio={negocio} />
           ))}
@@ -184,3 +190,41 @@ const guias = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const MAX_DESTACADOS_HOME = 8;
+
+  function hashDiario(semilla: string): number {
+    let hash = 5381;
+    for (let i = 0; i < semilla.length; i++) {
+      hash = (hash * 33) ^ semilla.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  // Igual que en /hospedaje: rota el orden por día calendario (calculado
+  // aquí en el navegador, no en el build) y limita cuántos se muestran en
+  // la portada — así, aunque haya cientos de negocios destacados, todos
+  // tienen oportunidad de aparecer con el tiempo, y la portada no se
+  // vuelve una lista interminable.
+  function rotarYLimitarDestacadosHome() {
+    const contenedor = document.getElementById('rejilla-destacados-home');
+    if (!contenedor) return;
+
+    const tarjetas = Array.from(contenedor.children) as HTMLElement[];
+    const hoy = new Date().toISOString().slice(0, 10);
+    const fijas = tarjetas.filter((t) => t.dataset.ordenManual);
+    const aleatorias = tarjetas.filter((t) => !t.dataset.ordenManual);
+    aleatorias.sort(
+      (a, b) => hashDiario(`${hoy}-${a.dataset.slug}`) - hashDiario(`${hoy}-${b.dataset.slug}`),
+    );
+
+    const ordenFinal = [...fijas, ...aleatorias];
+    ordenFinal.forEach((tarjeta) => contenedor.appendChild(tarjeta));
+    ordenFinal.forEach((tarjeta, i) => {
+      tarjeta.style.display = i < MAX_DESTACADOS_HOME ? '' : 'none';
+    });
+  }
+
+  rotarYLimitarDestacadosHome();
+</script>
