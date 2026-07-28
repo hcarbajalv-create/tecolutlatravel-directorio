@@ -1,0 +1,55 @@
+# Alta recibida vía /anunciate (Netlify Forms, reenvío completo del
+# 2026-07-28, Paloma Sanchez Uribe). Coordenadas obtenidas de un Plus Code
+# (FXPJ+G6R Tecolutla, Veracruz) que Paloma compartió directamente.
+# descripcionCorta ajustada por autocorrección del celular ("peajes seguro"
+# -> "posada segura"), confirmado con el usuario antes de publicar.
+nombre: Casa Ceci
+categoria: hospedaje
+descripcionCorta: Somos una posada segura a una cuadra de la playa, esperamos
+  que disfruten sus vacaciones con nosotros.
+direccion: Calle Girasol s/n, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4863625
+  lng: -97.0194844
+telefono: "+52 766 189 6443"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-ceci/01-foto.jpg
+    alt: Fachada de dos pisos de Casa Ceci con terraza techada
+  - src: ../../assets/fotos/casa-ceci/02-foto.jpg
+    alt: Jardín trasero de Casa Ceci con árbol y barda perimetral
+  - src: ../../assets/fotos/casa-ceci/03-foto.jpg
+    alt: Escalera interior y área de cocina de Casa Ceci
+  - src: ../../assets/fotos/casa-ceci/04-foto.jpg
+    alt: Sala comedor de Casa Ceci con televisión
+  - src: ../../assets/fotos/casa-ceci/05-foto.jpg
+    alt: Patio trasero de Casa Ceci con asador de tabique
+  - src: ../../assets/fotos/casa-ceci/06-foto.jpg
+    alt: Recámara de Casa Ceci con cama matrimonial y cama individual
+  - src: ../../assets/fotos/casa-ceci/07-foto.jpg
+    alt: Recámara de Casa Ceci con dos camas individuales
+  - src: ../../assets/fotos/casa-ceci/08-foto.jpg
+    alt: Terraza cubierta de Casa Ceci con hamaca colgante
+precioTemporada:
+  - temporada: Desde
+    precio: 3000
+fechaActualizacion: 2026-07-28
+disponible: true
+servicios:
+  - A una cuadra del mar
+  - A 5 minutos del centro
+  - Cocina totalmente equipada
+  - Aire acondicionado
+  - Sala comedor antecomedor
+  - Tres baños
+  - Zona de camping/jardín con asador
+  - Estacionamiento para tres carros
+  - Alberca montable (opcional)
+  - Wifi
+  - Cable
+numeroHabitaciones: 3
+capacidadMaxima: 12
+tipo: casa
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false

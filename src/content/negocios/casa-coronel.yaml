@@ -1,0 +1,55 @@
+# Alta recibida vía /anunciate (Netlify Forms, 2026-07-28, Paloma Sanchez
+# Uribe). Número de habitaciones confirmado directamente por el usuario
+# (3 recámaras, capacidad 12 personas — el formulario traía 12 en el campo
+# de habitaciones por error). Coordenadas obtenidas de un Plus Code
+# (FXGV+322 Tecolutla, Veracruz) que Paloma compartió directamente.
+nombre: Casa Coronel
+categoria: hospedaje
+descripcionCorta: Hospedaje de casa céntrico cerca de la playa y el río
+direccion: Calle Carlos Prieto #22, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4751375
+  lng: -97.0074844
+telefono: "+52 766 189 6443"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-coronel/01-foto.jpg
+    alt: Terraza de Casa Coronel con vista al río Tecolutla
+  - src: ../../assets/fotos/casa-coronel/02-foto.jpg
+    alt: Sala de Casa Coronel con sillones y ventilador
+  - src: ../../assets/fotos/casa-coronel/03-foto.jpg
+    alt: Comedor de Casa Coronel
+  - src: ../../assets/fotos/casa-coronel/04-foto.jpg
+    alt: Cocina y área de escaleras de Casa Coronel
+  - src: ../../assets/fotos/casa-coronel/05-foto.jpg
+    alt: Sala de estar de Casa Coronel con tapete y muebles de madera
+  - src: ../../assets/fotos/casa-coronel/06-foto.jpg
+    alt: Baño de Casa Coronel
+  - src: ../../assets/fotos/casa-coronel/07-foto.jpg
+    alt: Recámara de Casa Coronel con clóset integrado
+  - src: ../../assets/fotos/casa-coronel/08-foto.jpg
+    alt: Patio de entrada de Casa Coronel con escaleras y sillas
+precioTemporada:
+  - temporada: Desde (precio sube si son más de 12 personas)
+    precio: 3000
+fechaActualizacion: 2026-07-28
+disponible: true
+servicios:
+  - A 1 cuadra del río y de la playa
+  - A 1 cuadra del centro de Tecolutla
+  - Estudio con sofá cama matrimonial
+  - Ventiladores de techo
+  - 3 baños completos
+  - Sala, comedor y antecomedor
+  - Cocina totalmente equipada
+  - Terraza con vista al río
+  - Televisión
+  - Wifi
+  - Agua caliente
+  - Estacionamiento
+numeroHabitaciones: 3
+capacidadMaxima: 12
+tipo: casa
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
