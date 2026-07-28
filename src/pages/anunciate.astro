@@ -58,6 +58,21 @@ const tamanoMaximoMb = 8;
       </div>
 
       <div class="campo">
+        <label for="ubicacionMaps">Ubicación en Google Maps *</label>
+        <span class="ayuda">
+          Abre Google Maps, busca o marca dónde está tu negocio, toca "Compartir" y pega aquí el
+          enlace que te dé — así lo ubicamos exacto en el mapa de tu ficha.
+        </span>
+        <input
+          type="url"
+          id="ubicacionMaps"
+          name="ubicacionMaps"
+          placeholder="https://maps.app.goo.gl/..."
+          required
+        />
+      </div>
+
+      <div class="campo">
         <label for="telefono">Teléfono / WhatsApp de contacto para clientes *</label>
         <span class="ayuda">Mínimo 10 dígitos, ej: 55 76612345</span>
         <input type="tel" id="telefono" name="telefono" required />
