@@ -12,7 +12,7 @@ coordenadas:
   lat: 20.4863625
   lng: -97.0194844
 telefono: "+52 766 189 6443"
-plan: gratuito
+plan: pago
 fotos:
   - src: ../../assets/fotos/casa-ceci/01-foto.jpg
     alt: Fachada de dos pisos de Casa Ceci con terraza techada
@@ -52,4 +52,4 @@ capacidadMaxima: 12
 tipo: casa
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
-destacado: false
+destacado: true
