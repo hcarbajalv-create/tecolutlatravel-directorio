@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
+import { extraerInfoVideo } from '../utils/embedVideo';
 
 interface Props {
   reportaje: CollectionEntry<'reportajes'>;
@@ -17,10 +18,32 @@ const etiquetas: Record<typeof categoria, string> = {
 
 const negocio = negocioRelacionado ? await getEntry(negocioRelacionado) : undefined;
 const enlaceNegocio = negocio ? `/${negocio.data.categoria}/${negocio.id}` : undefined;
+
+// Miniatura real del video como fondo de la tarjeta — solo YouTube tiene
+// una URL de miniatura predecible sin llamar a su API; Vimeo/otros se
+// quedan con el color de fondo de su categoría. Se prueba primero la
+// miniatura de mayor calidad (maxresdefault, normalmente la que el propio
+// canal eligió como portada); si no existe para ese video, se usa la
+// miniatura estándar (hqdefault), que prácticamente siempre existe.
+async function obtenerMiniaturaYoutube(id: string): Promise<string> {
+  const maxima = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  try {
+    const respuesta = await fetch(maxima, { method: 'HEAD' });
+    if (respuesta.ok) return maxima;
+  } catch {
+    // Sin conexión al construir el sitio — se usa el respaldo de abajo.
+  }
+  return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+}
+
+const infoVideo = video ? extraerInfoVideo(video) : null;
+const miniatura =
+  infoVideo?.proveedor === 'youtube' ? await obtenerMiniaturaYoutube(infoVideo.id) : undefined;
 ---
 
 <article class={`tarjeta-reportaje tarjeta-reportaje--${categoria}`} data-categoria={categoria}>
   <div class="tarjeta-reportaje__video">
+    {miniatura && <img class="tarjeta-reportaje__miniatura" src={miniatura} alt="" loading="lazy" />}
     {
       video ? (
         <a

@@ -1281,16 +1281,26 @@ select:focus-visible {
   background: linear-gradient(160deg, #ffd98a, var(--color-foco));
 }
 
+.tarjeta-reportaje__miniatura {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
 .tarjeta-reportaje__video::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(to top, rgba(8, 20, 25, 0.75), rgba(8, 20, 25, 0) 55%);
 }
 
 .tarjeta-reportaje__video-enlace {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1322,7 +1332,7 @@ select:focus-visible {
 
 .tarjeta-reportaje__video-texto--pendiente {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
