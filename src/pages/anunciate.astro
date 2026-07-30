@@ -269,6 +269,17 @@ const tamanoMaximoMb = 8;
             behavior: 'smooth',
             block: 'center',
           });
+          return;
+        }
+
+        // La validación pasó: el formulario sí se va a enviar de verdad.
+        // Con fotos adjuntas puede tardar varios segundos en conexiones
+        // lentas, y sin este aviso la página se queda igual mientras tanto
+        // — el usuario no tiene forma de saber que ya se está enviando.
+        const boton = form.querySelector('button[type="submit"]');
+        if (boton instanceof HTMLButtonElement) {
+          boton.disabled = true;
+          boton.textContent = 'Enviando tu solicitud… no cierres esta página';
         }
       });
     }
