@@ -1,0 +1,51 @@
+# Alta recibida vía /anunciate (Netlify Forms, 2026-07-30, Julia Carro).
+# Dirección tomada del nombre oficial en el enlace de Google Maps que envió
+# ("Paseo de las Jacarandas", más preciso que "Calle Jacarandas"). Coordenadas
+# extraídas directo de ese mismo enlace. Sin número de habitaciones: el
+# formulario lo dejó vacío (son "dos villas", no se puede resumir en un solo
+# número sin preguntar) — no inventar.
+nombre: Villas Conchita De Mar
+categoria: hospedaje
+descripcionCorta: Dos villas a una cuadra del mar con todas las comodidades
+  para que pase unas vacaciones cómodamente.
+direccion: Paseo de las Jacarandas s/n, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4871781
+  lng: -97.0199903
+telefono: "+52 766 125 8590"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/villas-conchita-de-mar/01-foto.jpg
+    alt: Alberca principal y área de camastros de Villas Conchita De Mar
+  - src: ../../assets/fotos/villas-conchita-de-mar/02-foto.jpg
+    alt: Alberca de Villas Conchita De Mar iluminada de noche con palapa bar
+  - src: ../../assets/fotos/villas-conchita-de-mar/03-foto.jpg
+    alt: Sala comedor con cocina integrada de Villas Conchita De Mar
+  - src: ../../assets/fotos/villas-conchita-de-mar/04-foto.jpg
+    alt: Recámara de Villas Conchita De Mar con cama matrimonial y sofá cama
+  - src: ../../assets/fotos/villas-conchita-de-mar/05-foto.jpg
+    alt: Recámara de Villas Conchita De Mar con baño integrado
+  - src: ../../assets/fotos/villas-conchita-de-mar/06-foto.jpg
+    alt: Recámara de Villas Conchita De Mar con tres camas
+  - src: ../../assets/fotos/villas-conchita-de-mar/07-foto.jpg
+    alt: Recámara de Villas Conchita De Mar con dos camas y televisión
+  - src: ../../assets/fotos/villas-conchita-de-mar/08-foto.jpg
+    alt: Camastros junto a la alberca de Villas Conchita De Mar
+precioTemporada:
+  - temporada: Desde (varía según temporada y cantidad de personas)
+    precio: 4000
+fechaActualizacion: 2026-07-30
+disponible: true
+servicios:
+  - Estacionamiento
+  - Alberca
+  - Chapoteadero
+  - Palapa
+  - Asador
+  - Wifi
+  - Agua caliente
+  - Cocina totalmente equipada
+tipo: casa
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
