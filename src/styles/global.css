@@ -886,6 +886,11 @@ select:focus-visible {
   margin-top: 0;
 }
 
+.ficha__bloque h3 {
+  font-size: 0.9rem;
+  margin: 1rem 0 0.4rem;
+}
+
 .ficha__bloque--contacto {
   border-top-color: var(--color-mar);
   background: color-mix(in srgb, var(--color-mar) 6%, white);
