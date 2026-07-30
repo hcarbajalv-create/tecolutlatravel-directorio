@@ -545,18 +545,8 @@ select:focus-visible {
   border-radius: 999px;
 }
 
-.tarjeta__precio {
-  margin-top: auto;
-  font-size: 0.85rem;
-  color: var(--color-texto-suave);
-}
-
-.tarjeta__precio b {
-  font-size: 1.05rem;
-  color: var(--color-texto);
-}
-
 .tarjeta__acciones {
+  margin-top: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
@@ -1137,14 +1127,6 @@ select:focus-visible {
   .tarjeta__descripcion,
   .tarjeta__amenidades {
     display: none;
-  }
-
-  .tarjeta__precio {
-    font-size: 0.7rem;
-  }
-
-  .tarjeta__precio b {
-    font-size: 0.8rem;
   }
 
   .tarjeta__acciones {

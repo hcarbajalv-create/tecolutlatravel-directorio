@@ -15,7 +15,6 @@ const {
   destacado,
   verificado,
   servicios,
-  precioTemporada,
   telefono,
   numeroHabitaciones,
   capacidadMaxima,
@@ -37,11 +36,6 @@ if (capacidadMaxima !== undefined) {
   );
 }
 if (petFriendly) datosExtra.push('🐾 Pet friendly');
-
-const precioDesde =
-  precioTemporada && precioTemporada.length > 0
-    ? Math.min(...precioTemporada.map((p) => p.precio))
-    : undefined;
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
@@ -100,14 +94,6 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
             <span class="chip-amenidad">{servicio}</span>
           ))}
         </div>
-      )
-    }
-
-    {
-      precioDesde !== undefined && (
-        <p class="tarjeta__precio">
-          desde <b>${precioDesde.toLocaleString('es-MX')} MXN</b>
-        </p>
       )
     }
 
