@@ -899,12 +899,37 @@ select:focus-visible {
   color: var(--color-mar);
 }
 
-.ficha__bloque--disponibilidad {
-  border-top-color: var(--color-coral);
-  background: color-mix(in srgb, var(--color-coral) 6%, white);
+.ficha__fecha-actualizacion {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
 }
-.ficha__bloque--disponibilidad h2 {
-  color: var(--color-coral-texto);
+
+.ficha__fechas {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.ficha__fechas-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.ficha__fechas-campo label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.ficha__fechas-campo input[type='date'] {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: var(--color-blanco);
 }
 
 .ficha__bloque--precio {

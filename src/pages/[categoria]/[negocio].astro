@@ -20,6 +20,8 @@ const {
   direccion,
   coordenadas,
   telefono,
+  facebook,
+  messenger,
   fotos,
   precioTemporada,
   fechaActualizacion,
@@ -41,10 +43,15 @@ const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
 // aunque México ya no lo pida para llamadas normales desde el propio teléfono.
 const telefonoWhatsapp = `521${telefonoDigitos.replace(/^52/, '')}`;
+// Mensaje genérico de respaldo (se usa si el visitante no elige fechas, o
+// antes de que el script del cliente termine de correr). El mensaje real
+// con fechas/saludo según hora del día se arma en el navegador — ver script
+// al final del archivo — porque depende del momento exacto del clic.
 const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURIComponent(
   `Hola, vi ${nombre} en el directorio de Tecolutla y me gustaría más información.`,
 )}`;
 const enlaceComoLlegar = `https://www.google.com/maps/dir/?api=1&destination=${coordenadas.lat},${coordenadas.lng}`;
+const urlFichaAbsoluta = new URL(`/${categoria}/${negocio.id}`, Astro.site).toString();
 const mapaEmbed = `https://www.google.com/maps?q=${coordenadas.lat},${coordenadas.lng}&output=embed`;
 
 // Versión más grande de cada foto para el lightbox (el thumbnail de la
@@ -204,14 +211,8 @@ const esquemaLodging =
         <p>
           Teléfono: <a href={`tel:${telefonoDigitos}`}>{telefono}</a>
         </p>
-        <p><a class="boton boton--whatsapp" href={enlaceWhatsapp}>Escribir por WhatsApp</a></p>
-        <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
-      </div>
-
-      <div class="ficha__bloque ficha__bloque--disponibilidad">
-        <h2>Disponibilidad y actualización</h2>
         <p>Disponibilidad: {disponible ? 'Disponible' : 'No disponible por ahora'}</p>
-        <p>Última actualización: {fechaFormateada}</p>
+        <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {numeroHabitaciones && <p>Habitaciones: {numeroHabitaciones}</p>}
         {capacidadMaxima !== undefined && <p>Capacidad máxima: hasta {capacidadMaxima} personas</p>}
         {petFriendly !== undefined && (
@@ -220,6 +221,38 @@ const esquemaLodging =
         {distanciaPlayaMetros !== undefined && <p>Distancia a la playa: {distanciaPlayaMetros} metros</p>}
         {checkIn && <p>Check-in: {checkIn}</p>}
         {checkOut && <p>Check-out: {checkOut}</p>}
+
+        <div class="ficha__fechas">
+          <div class="ficha__fechas-campo">
+            <label for="fecha-entrada">Entrada</label>
+            <input type="date" id="fecha-entrada" />
+          </div>
+          <div class="ficha__fechas-campo">
+            <label for="fecha-salida">Salida</label>
+            <input type="date" id="fecha-salida" />
+          </div>
+        </div>
+
+        <p>
+          <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp">
+            Escribir por WhatsApp
+          </a>
+        </p>
+        {facebook && (
+          <p>
+            <a class="boton boton--secundario" href={facebook} target="_blank" rel="noopener noreferrer">
+              Facebook
+            </a>
+          </p>
+        )}
+        {messenger && (
+          <p>
+            <a class="boton boton--secundario" href={messenger} target="_blank" rel="noopener noreferrer">
+              Messenger
+            </a>
+          </p>
+        )}
+        <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
       </div>
 
       {
@@ -329,6 +362,71 @@ const esquemaLodging =
   document.addEventListener('keydown', (evento) => {
     if (evento.key === 'Escape' && !lightbox.hidden) cerrarLightbox();
   });
+</script>
+
+<script define:vars={{ nombreNegocio: nombre, urlFicha: urlFichaAbsoluta, numeroWhatsapp: telefonoWhatsapp }}>
+  // Arma el mensaje de WhatsApp en el navegador (no en el build) porque el
+  // saludo depende de la hora exacta en la que el visitante da clic, y las
+  // fechas dependen de lo que elija en los campos de entrada/salida.
+  const inputEntrada = document.getElementById('fecha-entrada');
+  const inputSalida = document.getElementById('fecha-salida');
+  const enlaceWhatsappEl = document.getElementById('enlace-whatsapp');
+
+  function saludoSegunHora() {
+    const hora = new Date().getHours();
+    if (hora < 12) return 'Buenos días';
+    if (hora < 19) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
+
+  function formatearFecha(valorInput) {
+    // <input type="date"> entrega "YYYY-MM-DD"; se arma en horario local
+    // para no perder un día por interpretación UTC.
+    const [anio, mes, dia] = valorInput.split('-').map(Number);
+    const fecha = new Date(anio, mes - 1, dia);
+    return new Intl.DateTimeFormat('es-MX', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(fecha);
+  }
+
+  function actualizarEnlaceWhatsapp() {
+    if (!enlaceWhatsappEl) return;
+    let mensaje = `¡${saludoSegunHora()}, ${nombreNegocio}! Los encontré gracias a Tecolutla.Travel ${urlFicha}.\n\n`;
+
+    const valorEntrada = inputEntrada && inputEntrada.value;
+    const valorSalida = inputSalida && inputSalida.value;
+
+    if (valorEntrada && valorSalida && valorSalida > valorEntrada) {
+      mensaje +=
+        'Me interesa consultar la disponibilidad de su hospedaje y el costo para las siguientes fechas:\n\n' +
+        `Fecha de entrada: ${formatearFecha(valorEntrada)}\n` +
+        `Fecha de salida: ${formatearFecha(valorSalida)}`;
+    } else {
+      mensaje += 'Me gustaría más información.';
+    }
+
+    enlaceWhatsappEl.setAttribute(
+      'href',
+      `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensaje)}`,
+    );
+  }
+
+  if (inputEntrada && inputSalida) {
+    const hoyISO = new Date().toISOString().slice(0, 10);
+    inputEntrada.min = hoyISO;
+    inputSalida.min = hoyISO;
+
+    inputEntrada.addEventListener('change', () => {
+      if (inputEntrada.value) inputSalida.min = inputEntrada.value;
+      actualizarEnlaceWhatsapp();
+    });
+    inputSalida.addEventListener('change', actualizarEnlaceWhatsapp);
+  }
+
+  actualizarEnlaceWhatsapp();
 </script>
 
 <script define:vars={{ slugNegocio: negocio.id }}>

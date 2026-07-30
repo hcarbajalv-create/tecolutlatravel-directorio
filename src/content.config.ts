@@ -15,6 +15,10 @@ const negocios = defineCollection({
         lng: z.number(),
       }),
       telefono: z.string(),
+      // Botones opcionales de contacto adicionales en la ficha — se
+      // muestran solo si el negocio los proporciona.
+      facebook: z.string().url().optional(),
+      messenger: z.string().url().optional(),
       // Plan gratuito: máximo 8 fotos, sin video. Plan de pago: hasta 16
       // fotos y video propio habilitado. Límites exactos validados abajo
       // en superRefine — el máximo de 16 aquí es el techo absoluto (plan
