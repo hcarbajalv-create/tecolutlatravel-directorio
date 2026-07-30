@@ -932,6 +932,53 @@ select:focus-visible {
   background: var(--color-blanco);
 }
 
+.ficha__fechas-campo--huespedes {
+  margin-bottom: 0.75rem;
+}
+
+.ficha__contador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ficha__contador-boton {
+  width: 2.2rem;
+  height: 2.2rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  background: var(--color-blanco);
+  color: var(--color-mar);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ficha__contador-boton:hover {
+  border-color: var(--color-mar);
+  background: var(--color-arena);
+}
+
+.ficha__contador input[type='number'] {
+  width: 3.5rem;
+  text-align: center;
+  padding: 0.5rem 0.3rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: var(--color-blanco);
+  -moz-appearance: textfield;
+}
+
+.ficha__contador input[type='number']::-webkit-outer-spin-button,
+.ficha__contador input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .ficha__bloque--precio {
   border-top-color: var(--color-whatsapp);
   background: color-mix(in srgb, var(--color-whatsapp) 6%, white);
@@ -954,6 +1001,20 @@ select:focus-visible {
 
 .ficha__bloque--resenas {
   border-top-color: var(--color-coral-claro);
+}
+
+.ficha__bloque--reserva {
+  border-top-color: var(--color-coral);
+  background: color-mix(in srgb, var(--color-coral) 6%, white);
+}
+.ficha__bloque--reserva h2 {
+  color: var(--color-coral-texto);
+}
+
+.ficha__columna-precio-servicios {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .ficha__amenidades {
@@ -992,6 +1053,10 @@ select:focus-visible {
   border-radius: var(--radio);
   width: 100%;
   height: 320px;
+}
+
+.ficha__mapa-boton {
+  margin: 1rem 0 0;
 }
 
 /* ---------- Footer ---------- */

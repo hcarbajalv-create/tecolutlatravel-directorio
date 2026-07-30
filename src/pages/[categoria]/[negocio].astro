@@ -219,69 +219,97 @@ const esquemaLodging =
           <p>Mascotas: {petFriendly ? 'Sí se aceptan' : 'No se aceptan'}</p>
         )}
         {distanciaPlayaMetros !== undefined && <p>Distancia a la playa: {distanciaPlayaMetros} metros</p>}
-        {checkIn && <p>Check-in: {checkIn}</p>}
-        {checkOut && <p>Check-out: {checkOut}</p>}
-
-        <div class="ficha__fechas">
-          <div class="ficha__fechas-campo">
-            <label for="fecha-entrada">Entrada</label>
-            <input type="date" id="fecha-entrada" />
-          </div>
-          <div class="ficha__fechas-campo">
-            <label for="fecha-salida">Salida</label>
-            <input type="date" id="fecha-salida" />
-          </div>
-        </div>
-
-        <p>
-          <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp">
-            Escribir por WhatsApp
-          </a>
-        </p>
-        {facebook && (
-          <p>
-            <a class="boton boton--secundario" href={facebook} target="_blank" rel="noopener noreferrer">
-              Facebook
-            </a>
-          </p>
-        )}
-        {messenger && (
-          <p>
-            <a class="boton boton--secundario" href={messenger} target="_blank" rel="noopener noreferrer">
-              Messenger
-            </a>
-          </p>
-        )}
         <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
       </div>
 
-      {
-        precioTemporada && precioTemporada.length > 0 && (
-          <div class="ficha__bloque ficha__bloque--precio">
-            <h2>Precio por temporada</h2>
-            <ul>
-              {precioTemporada.map((p) => (
-                <li>
-                  {p.temporada}: ${p.precio.toLocaleString('es-MX')} MXN
-                </li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
+      <div class="ficha__columna-precio-servicios">
+        {
+          (
+            // Regla temporal a nivel de todo el sitio: no se muestra ningún
+            // precio real todavía, exista o no el dato en el .yaml del
+            // negocio. Quitar este comentario y volver a la condición de
+            // precioTemporada cuando se levante la regla.
+            <div class="ficha__bloque ficha__bloque--precio">
+              <h2>Precio por temporada</h2>
+              <p>Próximamente</p>
+            </div>
+          )
+        }
 
-      {
-        servicios.length > 0 && (
-          <div class="ficha__bloque ficha__bloque--servicios">
-            <h2>Servicios y amenidades</h2>
-            <ul class="ficha__amenidades">
-              {servicios.map((s) => (
-                <li>{s}</li>
-              ))}
-            </ul>
+        {
+          servicios.length > 0 && (
+            <div class="ficha__bloque ficha__bloque--servicios">
+              <h2>Servicios y amenidades</h2>
+              <ul class="ficha__amenidades">
+                {servicios.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="ficha__bloque ficha__bloque--reserva">
+          <h2>Reserva</h2>
+          <div class="ficha__fechas">
+            <div class="ficha__fechas-campo">
+              <label for="fecha-entrada">Entrada</label>
+              <input type="date" id="fecha-entrada" />
+            </div>
+            <div class="ficha__fechas-campo">
+              <label for="fecha-salida">Salida</label>
+              <input type="date" id="fecha-salida" />
+            </div>
           </div>
-        )
-      }
+
+          <div class="ficha__fechas-campo ficha__fechas-campo--huespedes">
+            <label for="numero-huespedes">Número de huéspedes</label>
+            <div class="ficha__contador">
+              <button
+                type="button"
+                class="ficha__contador-boton"
+                id="huespedes-menos"
+                aria-label="Restar un huésped"
+              >
+                −
+              </button>
+              <input type="number" id="numero-huespedes" min="1" max="50" inputmode="numeric" placeholder="0" />
+              <button
+                type="button"
+                class="ficha__contador-boton"
+                id="huespedes-mas"
+                aria-label="Sumar un huésped"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <p id="aviso-fechas" class="aviso-envio" role="alert" hidden>
+            ⚠️ Elige tu fecha de entrada, salida y número de huéspedes antes de escribir por WhatsApp.
+          </p>
+
+          <p>
+            <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp">
+              Escribir por WhatsApp
+            </a>
+          </p>
+          {facebook && (
+            <p>
+              <a class="boton boton--secundario" href={facebook} target="_blank" rel="noopener noreferrer">
+                Facebook
+              </a>
+            </p>
+          )}
+          {messenger && (
+            <p>
+              <a class="boton boton--secundario" href={messenger} target="_blank" rel="noopener noreferrer">
+                Messenger
+              </a>
+            </p>
+          )}
+        </div>
     </div>
 
     <div class="ficha__bloque ficha__bloque--mapa">
@@ -292,6 +320,11 @@ const esquemaLodging =
         loading="lazy"
         title={`Mapa de ubicación de ${nombre}`}
       />
+      <p class="ficha__mapa-boton">
+        <a class="boton boton--secundario" href={enlaceComoLlegar} target="_blank" rel="noopener noreferrer">
+          Abrir en Google Maps
+        </a>
+      </p>
     </div>
 
     <div class="ficha__bloque ficha__bloque--resenas" style="margin-top: 1.5rem;">
@@ -370,7 +403,11 @@ const esquemaLodging =
   // fechas dependen de lo que elija en los campos de entrada/salida.
   const inputEntrada = document.getElementById('fecha-entrada');
   const inputSalida = document.getElementById('fecha-salida');
+  const inputHuespedes = document.getElementById('numero-huespedes');
+  const botonHuespedesMenos = document.getElementById('huespedes-menos');
+  const botonHuespedesMas = document.getElementById('huespedes-mas');
   const enlaceWhatsappEl = document.getElementById('enlace-whatsapp');
+  const avisoFechas = document.getElementById('aviso-fechas');
 
   function saludoSegunHora() {
     const hora = new Date().getHours();
@@ -398,12 +435,14 @@ const esquemaLodging =
 
     const valorEntrada = inputEntrada && inputEntrada.value;
     const valorSalida = inputSalida && inputSalida.value;
+    const valorHuespedes = inputHuespedes && inputHuespedes.value;
 
-    if (valorEntrada && valorSalida && valorSalida > valorEntrada) {
+    if (valorEntrada && valorSalida && valorSalida > valorEntrada && valorHuespedes) {
       mensaje +=
         'Me interesa consultar la disponibilidad de su hospedaje y el costo para las siguientes fechas:\n\n' +
         `Fecha de entrada: ${formatearFecha(valorEntrada)}\n` +
-        `Fecha de salida: ${formatearFecha(valorSalida)}`;
+        `Fecha de salida: ${formatearFecha(valorSalida)}\n` +
+        `Número de huéspedes: ${valorHuespedes}`;
     } else {
       mensaje += 'Me gustaría más información.';
     }
@@ -414,6 +453,21 @@ const esquemaLodging =
     );
   }
 
+  function fechasValidas() {
+    const valorEntrada = inputEntrada && inputEntrada.value;
+    const valorSalida = inputSalida && inputSalida.value;
+    return Boolean(valorEntrada && valorSalida && valorSalida > valorEntrada);
+  }
+
+  function huespedesValidos() {
+    const valor = inputHuespedes && Number(inputHuespedes.value);
+    return Boolean(valor && valor >= 1 && valor <= 50);
+  }
+
+  function datosCompletos() {
+    return fechasValidas() && huespedesValidos();
+  }
+
   if (inputEntrada && inputSalida) {
     const hoyISO = new Date().toISOString().slice(0, 10);
     inputEntrada.min = hoyISO;
@@ -421,9 +475,43 @@ const esquemaLodging =
 
     inputEntrada.addEventListener('change', () => {
       if (inputEntrada.value) inputSalida.min = inputEntrada.value;
+      if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
       actualizarEnlaceWhatsapp();
     });
-    inputSalida.addEventListener('change', actualizarEnlaceWhatsapp);
+    inputSalida.addEventListener('change', () => {
+      if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
+      actualizarEnlaceWhatsapp();
+    });
+  }
+
+  if (inputHuespedes) {
+    inputHuespedes.addEventListener('input', () => {
+      if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
+      actualizarEnlaceWhatsapp();
+    });
+    botonHuespedesMas?.addEventListener('click', () => {
+      const actual = Number(inputHuespedes.value) || 0;
+      inputHuespedes.value = String(Math.min(50, actual + 1));
+      inputHuespedes.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    botonHuespedesMenos?.addEventListener('click', () => {
+      const actual = Number(inputHuespedes.value) || 0;
+      if (actual <= 1) return;
+      inputHuespedes.value = String(actual - 1);
+      inputHuespedes.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  // El botón de WhatsApp exige elegir fechas y número de huéspedes antes de
+  // dejar pasar el clic — sin esto, se podía escribir sin completar nada.
+  if (enlaceWhatsappEl && avisoFechas) {
+    enlaceWhatsappEl.addEventListener('click', (evento) => {
+      if (!datosCompletos()) {
+        evento.preventDefault();
+        avisoFechas.hidden = false;
+        avisoFechas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
   }
 
   actualizarEnlaceWhatsapp();
