@@ -1,0 +1,52 @@
+# Alta recibida vía /anunciate (Netlify Forms, 2026-08-01, Elodia Trejo
+# Nuñez). Descripción corta redactada a partir del desglose de
+# habitaciones que mandó tal cual en el formulario (12 habitaciones: 4
+# sencillas, 5 dobles, 2 para 5 personas, 1 para 7 personas, capacidad
+# total 45 personas — dato dado así por el negocio, no recalculado).
+# Coordenadas extraídas del enlace de Google Maps compartido — el enlace
+# traía dos pares de coordenadas (una de la calle "Fernando López
+# Arias", otra del negocio "Hotel casa el pariente"); se usó la que
+# coincide con el centro del mapa al abrir el link.
+nombre: Hotel El Pariente
+categoria: hospedaje
+descripcionCorta: Hotel con 12 habitaciones de distintos tamaños (sencillas,
+  dobles y familiares) para hasta 45 personas, con alberca, chapoteadero y
+  aire acondicionado.
+direccion: Fernando López Arias, Colonia Rafael Hernández Ochoa, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4762593
+  lng: -97.0098952
+telefono: "+52 766 103 2965"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/hotel-el-pariente/01-foto.jpg
+    alt: Fachada de Hotel El Pariente, edificio de tres pisos color amarillo con balcones
+  - src: ../../assets/fotos/hotel-el-pariente/02-foto.jpg
+    alt: Habitación de Hotel El Pariente con dos camas y sillón
+  - src: ../../assets/fotos/hotel-el-pariente/03-foto.jpg
+    alt: Alberca techada de Hotel El Pariente con área de descanso
+  - src: ../../assets/fotos/hotel-el-pariente/04-foto.jpg
+    alt: Habitación de Hotel El Pariente con dos camas dobles
+  - src: ../../assets/fotos/hotel-el-pariente/05-foto.jpg
+    alt: Habitación de Hotel El Pariente con televisión y aire acondicionado
+  - src: ../../assets/fotos/hotel-el-pariente/06-foto.jpg
+    alt: Habitación de Hotel El Pariente con dos camas individuales
+  - src: ../../assets/fotos/hotel-el-pariente/07-foto.jpg
+    alt: Habitación de Hotel El Pariente con sofá cama
+  - src: ../../assets/fotos/hotel-el-pariente/08-foto.jpg
+    alt: Escalones de acceso a la alberca de Hotel El Pariente
+fechaActualizacion: 2026-08-01
+disponible: true
+servicios:
+  - Agua caliente
+  - Ventilador de techo
+  - Internet
+  - Televisión
+  - Aire acondicionado
+  - Alberca y chapoteadero
+numeroHabitaciones: 12
+capacidadMaxima: 45
+tipo: hotel
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
