@@ -99,10 +99,9 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <span class="etiqueta-seccion">Fotos de tu negocio *</span>
         <span class="ayuda">
-          Sube al menos 3 fotos en total. Usa <strong>una</strong> de estas 3 opciones — no hace
-          falta llenar las tres: varias fotos de una sola vez, tus fotos una por una, o un enlace
-          con tus fotos. No te preocupes por el tamaño: las comprimimos automáticamente antes de
-          enviarlas.
+          Sube al menos 3 fotos en total. Usa <strong>una</strong> de estas 2 opciones — no hace
+          falta llenar las dos: tus fotos una por una, o un enlace con tus fotos. No te preocupes
+          por el tamaño: las comprimimos automáticamente antes de enviarlas.
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
           Fotos subidas: 0 / 3 mínimo
@@ -111,22 +110,12 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </div>
 
       <div class="campo">
-        <label for="fotosVarias">¿Prefieres subir varias fotos de una sola vez? (opcional)</label>
-        <span class="ayuda">
-          Selecciona todas las que quieras aquí — no hace falta que también llenes las casillas de
-          abajo. Solo imágenes.
-        </span>
-        <input type="file" id="fotosVarias" name="fotosVarias" accept={tiposAceptados} multiple />
-      </div>
-
-      <div class="campo">
         <label for="foto1">
-          O sube tus fotos una por una: Foto 1 (opcional)
+          Sube tus fotos una por una: Foto 1 (opcional)
           <span class="etiqueta-portada">★ Foto de portada</span>
         </label>
         <span class="ayuda">
-          Usa esto si prefieres ir de una en una en vez del campo de arriba. Esta primera foto es
-          la que se usa como portada de tu ficha en el directorio.
+          Esta primera foto es la que se usa como portada de tu ficha en el directorio.
         </span>
         <div class="campo-foto-fila">
           <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
@@ -247,7 +236,6 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
     const TOPE_FOTO_BYTES = 900 * 1024;
 
     const form = document.querySelector('form[name="alta-negocio"]') as HTMLFormElement | null;
-    const fotosVarias = document.getElementById('fotosVarias') as HTMLInputElement | null;
     const enlaceFotos = document.getElementById('enlaceFotos') as HTMLInputElement | null;
     const contador = document.getElementById('contador-fotos');
     const estadoCompresion = document.getElementById('estado-compresion');
@@ -265,11 +253,11 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       });
     }
 
-    if (form && fotosVarias && enlaceFotos && contador && aviso) {
+    if (form && enlaceFotos && contador && aviso) {
       let comprimiendo = false;
 
       const contarFotos = () => {
-        let total = fotosVarias.files?.length ?? 0;
+        let total = 0;
         for (const input of fotoInputs) {
           if (input?.files?.length) total += 1;
         }
@@ -322,8 +310,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
 
       // Botón "×" para quitar una foto individual ya seleccionada (Foto 1 a
       // Foto 8) sin tener que reabrir el explorador de archivos y elegir
-      // otra encima. Solo aplica a estos 8 campos, no a "subir varias a la
-      // vez".
+      // otra encima.
       const botonesQuitarFoto = fotoInputs.map((input, indice) => {
         const boton = document.querySelector(
           `[data-quitar-foto="${indice + 1}"]`,
@@ -342,7 +329,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
         if (boton) boton.hidden = !(input.files && input.files.length > 0);
       };
 
-      for (const input of [fotosVarias, ...fotoInputs]) {
+      for (const input of fotoInputs) {
         input?.addEventListener('change', async () => {
           await comprimirSiHaceFalta(input);
           actualizarContador();
