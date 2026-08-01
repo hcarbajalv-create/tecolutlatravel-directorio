@@ -1583,6 +1583,58 @@ select:focus-visible {
   color: var(--color-turquesa);
 }
 
+.campo-foto-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.campo-foto-fila input[type='file'] {
+  flex: 1;
+  min-width: 0;
+}
+
+.campo-foto-quitar {
+  flex-shrink: 0;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  color: var(--color-coral-texto);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.campo-foto-quitar:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--color-turquesa);
+  outline-offset: 1px;
+}
+
+/* En pantallas con mouse real, la "x" solo aparece al pasar el cursor sobre
+   la fila. En pantallas táctiles (celular, donde llega la mayoría de las
+   solicitudes de /anunciate) no existe :hover confiable, así que se muestra
+   siempre que haya una foto seleccionada — quitarla no puede depender de un
+   gesto que el dispositivo no soporta. */
+@media (hover: hover) {
+  .campo-foto-fila:hover .campo-foto-quitar {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .campo-foto-quitar {
+    opacity: 1;
+  }
+}
+
 .aviso-envio {
   background: rgba(255, 122, 92, 0.12);
   border: 1px solid var(--color-coral);

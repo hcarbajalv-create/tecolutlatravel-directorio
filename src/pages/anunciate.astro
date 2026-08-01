@@ -128,42 +128,66 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
           Usa esto si prefieres ir de una en una en vez del campo de arriba. Esta primera foto es
           la que se usa como portada de tu ficha en el directorio.
         </span>
-        <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto1" name="foto1" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="1" aria-label="Quitar Foto 1" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto2">Foto de muestra 2 (opcional)</label>
-        <input type="file" id="foto2" name="foto2" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto2" name="foto2" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="2" aria-label="Quitar Foto 2" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto3">Foto de muestra 3 (opcional)</label>
-        <input type="file" id="foto3" name="foto3" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto3" name="foto3" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="3" aria-label="Quitar Foto 3" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto4">Foto de muestra 4 (opcional)</label>
-        <input type="file" id="foto4" name="foto4" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto4" name="foto4" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="4" aria-label="Quitar Foto 4" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto5">Foto de muestra 5 (opcional)</label>
-        <input type="file" id="foto5" name="foto5" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto5" name="foto5" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="5" aria-label="Quitar Foto 5" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto6">Foto de muestra 6 (opcional)</label>
-        <input type="file" id="foto6" name="foto6" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto6" name="foto6" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="6" aria-label="Quitar Foto 6" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto7">Foto de muestra 7 (opcional)</label>
-        <input type="file" id="foto7" name="foto7" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto7" name="foto7" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="7" aria-label="Quitar Foto 7" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
         <label for="foto8">Foto de muestra 8 (opcional)</label>
-        <input type="file" id="foto8" name="foto8" accept={tiposAceptados} />
+        <div class="campo-foto-fila">
+          <input type="file" id="foto8" name="foto8" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="8" aria-label="Quitar Foto 8" hidden>✕</button>
+        </div>
       </div>
 
       <div class="campo">
@@ -296,10 +320,33 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
         }
       }
 
+      // Botón "×" para quitar una foto individual ya seleccionada (Foto 1 a
+      // Foto 8) sin tener que reabrir el explorador de archivos y elegir
+      // otra encima. Solo aplica a estos 8 campos, no a "subir varias a la
+      // vez".
+      const botonesQuitarFoto = fotoInputs.map((input, indice) => {
+        const boton = document.querySelector(
+          `[data-quitar-foto="${indice + 1}"]`,
+        ) as HTMLButtonElement | null;
+        boton?.addEventListener('click', () => {
+          if (!input) return;
+          input.value = '';
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        return boton;
+      });
+
+      const actualizarBotonQuitar = (input: HTMLInputElement) => {
+        const indice = fotoInputs.indexOf(input);
+        const boton = indice === -1 ? undefined : botonesQuitarFoto[indice];
+        if (boton) boton.hidden = !(input.files && input.files.length > 0);
+      };
+
       for (const input of [fotosVarias, ...fotoInputs]) {
         input?.addEventListener('change', async () => {
           await comprimirSiHaceFalta(input);
           actualizarContador();
+          actualizarBotonQuitar(input);
         });
       }
       enlaceFotos.addEventListener('input', actualizarContador);
