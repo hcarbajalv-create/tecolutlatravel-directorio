@@ -1,4 +1,6 @@
 ---
+import { getCollection } from 'astro:content';
+
 interface Props {
   rutaActual: string;
 }
@@ -18,6 +20,16 @@ const enlaces = [
 function esActiva(href: string) {
   return rutaActual === href || rutaActual.startsWith(`${href}/`);
 }
+
+// Índice ligero (nombre + categoría + slug) para el buscador de negocios —
+// se resuelve en build time y se manda como JSON al cliente, que filtra ahí
+// mismo. El catálogo es estático, no hace falta backend para esto.
+const negocios = await getCollection('negocios');
+const indiceBuscador = negocios.map((negocio) => ({
+  nombre: negocio.data.nombre,
+  categoria: negocio.data.categoria,
+  slug: negocio.id,
+}));
 ---
 
 <header class="encabezado">
@@ -36,15 +48,45 @@ function esActiva(href: string) {
       </svg>
       Tecolutla<span>.Travel</span>
     </a>
-    <button
-      class="encabezado__toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="menu-principal"
-      aria-label="Abrir menú de navegación"
-    >
-      ☰
-    </button>
+    <div class="encabezado__derecha">
+      <div class="buscador">
+        <button
+          class="buscador__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="buscador-panel"
+          aria-label="Buscar un negocio"
+        >
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="8.5" cy="8.5" r="6" />
+            <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
+          </svg>
+        </button>
+        <div class="buscador__panel" id="buscador-panel" role="dialog" aria-label="Buscar un negocio" hidden>
+          <label for="buscador-input" class="sr-only">Buscar un negocio por nombre</label>
+          <input
+            type="search"
+            id="buscador-input"
+            class="buscador__input"
+            placeholder="Buscar un negocio…"
+            autocomplete="off"
+          />
+          <ul class="buscador__resultados" id="buscador-resultados" aria-live="polite"></ul>
+          <p class="buscador__sin-resultados" id="buscador-sin-resultados" hidden>
+            No encontramos negocios con ese nombre.
+          </p>
+        </div>
+      </div>
+      <button
+        class="encabezado__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu-principal"
+        aria-label="Abrir menú de navegación"
+      >
+        ☰
+      </button>
+    </div>
     <nav class="encabezado__nav" id="menu-principal" aria-label="Navegación principal">
       {
         enlaces.map((enlace) => (
@@ -58,6 +100,8 @@ function esActiva(href: string) {
   </div>
 </header>
 
+<script type="application/json" id="datos-buscador" set:html={JSON.stringify(indiceBuscador)} />
+
 <script>
   const boton = document.querySelector<HTMLButtonElement>('.encabezado__toggle');
   const nav = document.getElementById('menu-principal');
@@ -66,6 +110,9 @@ function esActiva(href: string) {
     const abierto = nav?.classList.toggle('encabezado__nav--abierto');
     boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
     boton.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    // Si se abre el menú, cierra el buscador para que no se encimen.
+    document.getElementById('buscador-panel')?.setAttribute('hidden', '');
+    document.querySelector('.buscador__toggle')?.setAttribute('aria-expanded', 'false');
   });
 
   // Si la pantalla crece a tamaño de escritorio, aseguramos que el menú
@@ -77,4 +124,121 @@ function esActiva(href: string) {
       boton?.setAttribute('aria-expanded', 'false');
     }
   });
+
+  // ---------- Buscador de negocios ----------
+  interface NegocioIndice {
+    nombre: string;
+    categoria: string;
+    slug: string;
+  }
+
+  const ETIQUETAS_CATEGORIA: Record<string, string> = {
+    hospedaje: 'Hospedaje',
+    gastronomia: 'Gastronomía',
+    actividades: 'Actividades',
+    servicios: 'Servicios',
+  };
+
+  const datosBuscadorEl = document.getElementById('datos-buscador');
+  const indiceNegocios: NegocioIndice[] = datosBuscadorEl
+    ? JSON.parse(datosBuscadorEl.textContent || '[]')
+    : [];
+
+  // Compara sin distinguir mayúsculas/minúsculas ni acentos, para que
+  // "mandala" encuentre "Casa Mandala" aunque no coincida el nombre exacto.
+  function normalizar(texto: string): string {
+    return texto
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
+  function escaparHtml(texto: string): string {
+    return texto.replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
+    );
+  }
+
+  const buscadorToggle = document.querySelector<HTMLButtonElement>('.buscador__toggle');
+  const buscadorPanel = document.getElementById('buscador-panel');
+  const buscadorInput = document.getElementById('buscador-input') as HTMLInputElement | null;
+  const buscadorResultados = document.getElementById('buscador-resultados');
+  const buscadorSinResultados = document.getElementById('buscador-sin-resultados');
+
+  function abrirBuscador() {
+    if (!buscadorPanel || !buscadorToggle) return;
+    buscadorPanel.hidden = false;
+    buscadorToggle.setAttribute('aria-expanded', 'true');
+    // Cierra el menú de navegación móvil si estaba abierto.
+    nav?.classList.remove('encabezado__nav--abierto');
+    boton?.setAttribute('aria-expanded', 'false');
+    buscadorInput?.focus();
+  }
+
+  function cerrarBuscador() {
+    if (!buscadorPanel || !buscadorToggle) return;
+    buscadorPanel.hidden = true;
+    buscadorToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  buscadorToggle?.addEventListener('click', () => {
+    if (buscadorPanel?.hidden === false) cerrarBuscador();
+    else abrirBuscador();
+  });
+
+  document.addEventListener('click', (evento) => {
+    if (!buscadorPanel || buscadorPanel.hidden) return;
+    const dentro =
+      evento.target instanceof Node &&
+      (buscadorPanel.contains(evento.target) || buscadorToggle?.contains(evento.target));
+    if (!dentro) cerrarBuscador();
+  });
+
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && buscadorPanel && !buscadorPanel.hidden) {
+      cerrarBuscador();
+      buscadorToggle?.focus();
+    }
+  });
+
+  function renderizarResultados(consulta: string) {
+    if (!buscadorResultados || !buscadorSinResultados) return;
+    const normalizada = normalizar(consulta);
+
+    if (!normalizada) {
+      buscadorResultados.innerHTML = '';
+      buscadorSinResultados.hidden = true;
+      return;
+    }
+
+    const coincidencias = indiceNegocios
+      .filter((negocio) => normalizar(negocio.nombre).includes(normalizada))
+      .slice(0, 8);
+
+    if (coincidencias.length === 0) {
+      buscadorResultados.innerHTML = '';
+      buscadorSinResultados.hidden = false;
+      return;
+    }
+
+    buscadorSinResultados.hidden = true;
+    buscadorResultados.innerHTML = coincidencias
+      .map(
+        (negocio) => `
+          <li class="buscador__resultado">
+            <a href="/${negocio.categoria}/${negocio.slug}">
+              <span>${escaparHtml(negocio.nombre)}</span>
+              <span class="buscador__resultado-categoria">${escaparHtml(
+                ETIQUETAS_CATEGORIA[negocio.categoria] ?? negocio.categoria,
+              )}</span>
+            </a>
+          </li>
+        `,
+      )
+      .join('');
+  }
+
+  buscadorInput?.addEventListener('input', () => renderizarResultados(buscadorInput.value));
 </script>
