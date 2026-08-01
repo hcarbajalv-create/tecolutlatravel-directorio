@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const tiposAceptados = 'image/jpeg,image/png,image/webp';
-const tamanoMaximoMb = 8;
 ---
 
 <BaseLayout
@@ -102,18 +101,20 @@ const tamanoMaximoMb = 8;
         <span class="ayuda">
           Sube al menos 3 fotos en total. Usa <strong>una</strong> de estas 3 opciones — no hace
           falta llenar las tres: varias fotos de una sola vez, tus fotos una por una, o un enlace
-          con tus fotos.
+          con tus fotos. No te preocupes por el tamaño: las comprimimos automáticamente antes de
+          enviarlas.
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
           Fotos subidas: 0 / 3 mínimo
         </p>
+        <p id="estado-compresion" class="ayuda" aria-live="polite"></p>
       </div>
 
       <div class="campo">
         <label for="fotosVarias">¿Prefieres subir varias fotos de una sola vez? (opcional)</label>
         <span class="ayuda">
           Selecciona todas las que quieras aquí — no hace falta que también llenes las casillas de
-          abajo. Solo imágenes, máximo {tamanoMaximoMb} MB por archivo.
+          abajo. Solo imágenes.
         </span>
         <input type="file" id="fotosVarias" name="fotosVarias" accept={tiposAceptados} multiple />
       </div>
@@ -210,10 +211,22 @@ const tamanoMaximoMb = 8;
   </section>
 
   <script>
+    import { comprimirImagen } from '../utils/comprimirImagen';
+
+    // Netlify Forms rechaza el envío completo (todos los campos + fotos
+    // juntos) si pasa de 8MB en total — no es un límite por archivo. Con 3-8
+    // fotos de celular reales (2-6MB cada una es normal hoy) casi cualquier
+    // envío completo lo superaba y Netlify lo tronaba sin explicación clara
+    // para quien llena el formulario. Se comprime cada foto a este tope
+    // antes de enviar: 8 fotos × 900KB = 7.2MB, con margen para los campos
+    // de texto y el overhead del multipart.
+    const TOPE_FOTO_BYTES = 900 * 1024;
+
     const form = document.querySelector('form[name="alta-negocio"]') as HTMLFormElement | null;
     const fotosVarias = document.getElementById('fotosVarias') as HTMLInputElement | null;
     const enlaceFotos = document.getElementById('enlaceFotos') as HTMLInputElement | null;
     const contador = document.getElementById('contador-fotos');
+    const estadoCompresion = document.getElementById('estado-compresion');
     const aviso = document.getElementById('aviso-fotos');
     const fotoInputs = Array.from({ length: 8 }, (_, i) =>
       document.getElementById(`foto${i + 1}`),
@@ -229,6 +242,8 @@ const tamanoMaximoMb = 8;
     }
 
     if (form && fotosVarias && enlaceFotos && contador && aviso) {
+      let comprimiendo = false;
+
       const contarFotos = () => {
         let total = fotosVarias.files?.length ?? 0;
         for (const input of fotoInputs) {
@@ -248,8 +263,44 @@ const tamanoMaximoMb = 8;
         if (cumple) aviso.hidden = true;
       };
 
+      // Comprime en el sitio cualquier foto de este input que pase del tope,
+      // y reemplaza el FileList del input con la(s) versión(es) comprimida(s)
+      // — así lo que realmente se envía ya pesa poco, sin que el usuario
+      // tenga que hacer nada distinto a solo elegir sus fotos normales.
+      async function comprimirSiHaceFalta(input: HTMLInputElement) {
+        const archivos = Array.from(input.files ?? []);
+        if (archivos.length === 0) return;
+        const pesados = archivos.filter((a) => a.size > TOPE_FOTO_BYTES);
+        if (pesados.length === 0) return;
+
+        comprimiendo = true;
+        if (estadoCompresion) estadoCompresion.textContent = 'Comprimiendo fotos…';
+
+        const resultado: File[] = [];
+        for (const archivo of archivos) {
+          if (archivo.size <= TOPE_FOTO_BYTES) {
+            resultado.push(archivo);
+            continue;
+          }
+          const comprimido = await comprimirImagen(archivo, TOPE_FOTO_BYTES);
+          resultado.push(comprimido ?? archivo);
+        }
+
+        const dt = new DataTransfer();
+        for (const archivo of resultado) dt.items.add(archivo);
+        input.files = dt.files;
+
+        comprimiendo = false;
+        if (estadoCompresion) {
+          estadoCompresion.textContent = `Fotos comprimidas y listas para enviar (${pesados.length}).`;
+        }
+      }
+
       for (const input of [fotosVarias, ...fotoInputs]) {
-        input?.addEventListener('change', actualizarContador);
+        input?.addEventListener('change', async () => {
+          await comprimirSiHaceFalta(input);
+          actualizarContador();
+        });
       }
       enlaceFotos.addEventListener('input', actualizarContador);
       actualizarContador();
@@ -263,12 +314,17 @@ const tamanoMaximoMb = 8;
         if (avisoTelefono) avisoTelefono.hidden = !faltaTelefono;
         aviso.hidden = !faltanFotos;
 
-        if (faltanFotos || faltaTelefono) {
+        if (faltanFotos || faltaTelefono || comprimiendo) {
           evento.preventDefault();
-          (faltaTelefono ? avisoTelefono : aviso)?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
+          if (comprimiendo && estadoCompresion) {
+            estadoCompresion.textContent = 'Espera, todavía estamos comprimiendo tus fotos…';
+            estadoCompresion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            (faltaTelefono ? avisoTelefono : aviso)?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+          }
           return;
         }
 
