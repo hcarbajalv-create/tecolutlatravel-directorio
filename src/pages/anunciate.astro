@@ -99,9 +99,8 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <span class="etiqueta-seccion">Fotos de tu negocio *</span>
         <span class="ayuda">
-          Sube al menos 3 fotos en total. Usa <strong>una</strong> de estas 2 opciones — no hace
-          falta llenar las dos: tus fotos una por una, o un enlace con tus fotos. No te preocupes
-          por el tamaño: las comprimimos automáticamente antes de enviarlas.
+          Sube al menos 3 fotos (máximo 8). No te preocupes por el tamaño: las comprimimos
+          automáticamente antes de enviarlas.
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
           Fotos subidas: 0 / 3 mínimo
@@ -110,8 +109,19 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </div>
 
       <div class="campo">
+        <label for="fotosVariasAyudante">Selecciona varias fotos a la vez (opcional)</label>
+        <span class="ayuda">
+          Elige hasta 8 fotos de un jalón y las acomodamos automáticamente abajo — la primera que
+          elijas queda como portada. También puedes seguir usando los campos de abajo uno por uno
+          si prefieres.
+        </span>
+        <input type="file" id="fotosVariasAyudante" accept={tiposAceptados} multiple />
+        <p id="estado-varias" class="ayuda" aria-live="polite"></p>
+      </div>
+
+      <div class="campo">
         <label for="foto1">
-          Sube tus fotos una por una: Foto 1 (opcional)
+          Foto 1 (opcional)
           <span class="etiqueta-portada">★ Foto de portada</span>
         </label>
         <span class="ayuda">
@@ -336,6 +346,42 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
           actualizarBotonQuitar(input);
         });
       }
+      // Selector de ayuda "varias a la vez": no tiene atributo "name", así
+      // que nunca se envía a Netlify ni cuenta como campo del formulario —
+      // solo reparte los archivos elegidos entre los 8 campos individuales
+      // (foto1-foto8), que son los que sí se envían y ya sabemos que
+      // funcionan. Netlify Forms no soporta <input multiple> bajo un solo
+      // campo (perdía las fotos en silencio), así que esto da la misma
+      // comodidad de elegir varias de un jalón sin depender de eso.
+      const fotosVariasAyudante = document.getElementById('fotosVariasAyudante') as HTMLInputElement | null;
+      const estadoVarias = document.getElementById('estado-varias');
+
+      fotosVariasAyudante?.addEventListener('change', () => {
+        const archivos = Array.from(fotosVariasAyudante.files ?? []);
+        fotosVariasAyudante.value = '';
+        if (archivos.length === 0) return;
+
+        const inputsVacios = fotoInputs.filter(
+          (input): input is HTMLInputElement => !!input && (input.files?.length ?? 0) === 0,
+        );
+
+        const aRepartir = archivos.slice(0, inputsVacios.length);
+        aRepartir.forEach((archivo, i) => {
+          const dt = new DataTransfer();
+          dt.items.add(archivo);
+          inputsVacios[i].files = dt.files;
+          inputsVacios[i].dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        if (estadoVarias) {
+          const sobrantes = archivos.length - aRepartir.length;
+          estadoVarias.textContent =
+            sobrantes > 0
+              ? `Se acomodaron ${aRepartir.length} fotos. ${sobrantes} no cupieron — el máximo es 8 fotos en total.`
+              : `Se acomodaron ${aRepartir.length} fotos en los campos de abajo.`;
+        }
+      });
+
       enlaceFotos.addEventListener('input', actualizarContador);
       actualizarContador();
 
