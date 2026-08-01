@@ -72,7 +72,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <div class="panel__seccion" id="zona-edicion" hidden>
-        <h3>Fotos (mínimo 3, máximo 16) — esto reemplaza todas las fotos actuales de la ficha</h3>
+        <h2>Fotos (mínimo 3, máximo 16) — esto reemplaza todas las fotos actuales de la ficha</h2>
         <input
           type="file"
           id="input-fotos"
@@ -82,7 +82,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <p class="anuncios__ayuda">JPG, PNG o WEBP, máximo 4MB por foto.</p>
         <div id="previsualizacion" class="anuncios__previsualizacion"></div>
 
-        <h3>Video (YouTube o Vimeo, opcional)</h3>
+        <h2>Video (YouTube o Vimeo, opcional)</h2>
         <input type="url" id="input-video" placeholder="https://www.youtube.com/watch?v=..." />
         <p id="video-estado" class="anuncios__ayuda"></p>
 
@@ -208,7 +208,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-bottom: 1.5rem;
   }
 
-  .panel__seccion h3 {
+  .panel__seccion h2 {
     font-family: var(--fuente-titulos);
     font-weight: 900;
     font-size: 1rem;
@@ -216,7 +216,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin: 1.25rem 0 0.5rem;
   }
 
-  .panel__seccion h3:first-child {
+  .panel__seccion h2:first-child {
     margin-top: 0;
   }
 
