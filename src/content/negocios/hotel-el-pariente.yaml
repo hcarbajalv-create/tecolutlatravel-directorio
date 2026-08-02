@@ -7,6 +7,10 @@
 # traía dos pares de coordenadas (una de la calle "Fernando López
 # Arias", otra del negocio "Hotel casa el pariente"); se usó la que
 # coincide con el centro del mapa al abrir el link.
+# distanciaPlayaMetros (2026-08-01): calculada contra la geometría real de
+# la línea de costa (OpenStreetMap, natural=coastline) — validado con ~20m
+# de margen contra los datos ya confirmados de Casa Mandala (247m real vs
+# 269m calculado) y Casa Xanath (318m real vs 337m calculado).
 nombre: Hotel El Pariente
 categoria: hospedaje
 descripcionCorta: Hotel con 12 habitaciones de distintos tamaños (sencillas,
@@ -46,6 +50,7 @@ servicios:
   - Alberca y chapoteadero
 numeroHabitaciones: 12
 capacidadMaxima: 45
+distanciaPlayaMetros: 538
 tipo: hotel
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar

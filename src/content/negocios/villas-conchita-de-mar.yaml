@@ -4,6 +4,11 @@
 # extraídas directo de ese mismo enlace. Sin número de habitaciones: el
 # formulario lo dejó vacío (son "dos villas", no se puede resumir en un solo
 # número sin preguntar) — no inventar.
+# distanciaPlayaMetros (2026-08-01): calculada contra la geometría real de
+# la línea de costa (OpenStreetMap, natural=coastline), no un solo punto de
+# playa — validado con ~20m de margen contra los datos ya confirmados de
+# Casa Mandala (247m real vs 269m calculado) y Casa Xanath (318m real vs
+# 337m calculado).
 nombre: Villas Conchita De Mar
 categoria: hospedaje
 descripcionCorta: Dos villas a una cuadra del mar con todas las comodidades
@@ -45,6 +50,7 @@ servicios:
   - Wifi
   - Agua caliente
   - Cocina totalmente equipada
+distanciaPlayaMetros: 274
 tipo: casa
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar

@@ -3,6 +3,11 @@
 # (3 recámaras, capacidad 12 personas — el formulario traía 12 en el campo
 # de habitaciones por error). Coordenadas obtenidas de un Plus Code
 # (FXGV+322 Tecolutla, Veracruz) que Paloma compartió directamente.
+# distanciaPlayaMetros (2026-08-01): calculada contra la geometría real de
+# la línea de costa (OpenStreetMap, natural=coastline) — validado con ~20m
+# de margen contra Mandala/Xanath. El negocio mencionó "a 1 cuadra del río
+# y de la playa" en servicios, pero esa cercanía parece ser al río, no al
+# mar abierto (478m calculado); se deja el texto de servicios sin tocar.
 nombre: Casa Coronel
 categoria: hospedaje
 descripcionCorta: Hospedaje de casa céntrico cerca de la playa y el río
@@ -49,6 +54,7 @@ servicios:
   - Estacionamiento
 numeroHabitaciones: 3
 capacidadMaxima: 12
+distanciaPlayaMetros: 478
 tipo: casa
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
