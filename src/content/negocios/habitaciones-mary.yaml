@@ -1,0 +1,55 @@
+# Alta recibida vía /anunciate (Netlify Forms, 2026-08-02, Mary Alejandre).
+# Coordenadas obtenidas resolviendo el enlace corto de Google Maps que envió
+# (apunta a "Av. Emilio Carranza 5, 93570 Tecolutla, Ver.", coincide con la
+# dirección dada en el formulario).
+# distanciaPlayaMetros: calculada contra la geometría real de la línea de
+# costa (OpenStreetMap, natural=coastline), mismo método usado en las altas
+# anteriores (validado con ~20m de margen contra Casa Mandala y Casa Xanath).
+# descripcionCorta y servicios "A unos pasos del centro" / "A 2 minutos de la
+# playa" tomados tal cual del campo "Comentarios adicionales" del formulario.
+nombre: Habitaciones Mary
+categoria: hospedaje
+descripcionCorta: Habitaciones independientes arriba de casa, a unos pasos del
+  centro y a 2 minutos de la playa.
+direccion: Av. Emilio Carranza 5, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4776142
+  lng: -97.0081903
+telefono: "+52 766 103 1723"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/habitaciones-mary/01-foto.jpg
+    alt: Fachada de Habitaciones Mary con ventana enrejada y puerta de acceso
+  - src: ../../assets/fotos/habitaciones-mary/02-foto.jpg
+    alt: Escalera de acceso a Habitaciones Mary con plantas en macetas
+  - src: ../../assets/fotos/habitaciones-mary/03-foto.jpg
+    alt: Pasillo de Habitaciones Mary con acceso a las habitaciones y balcón al fondo
+  - src: ../../assets/fotos/habitaciones-mary/04-foto.jpg
+    alt: Habitación de Habitaciones Mary con dos camas matrimoniales, ventilador de techo y televisión
+  - src: ../../assets/fotos/habitaciones-mary/05-foto.jpg
+    alt: Habitación de Habitaciones Mary con cama matrimonial, ventilador de techo y silla de madera
+  - src: ../../assets/fotos/habitaciones-mary/06-foto.jpg
+    alt: Habitación de Habitaciones Mary con dos camas, aire acondicionado y ventana con cortinas
+  - src: ../../assets/fotos/habitaciones-mary/07-foto.jpg
+    alt: Habitación de Habitaciones Mary con dos camas, aire acondicionado y clóset
+  - src: ../../assets/fotos/habitaciones-mary/08-foto.jpg
+    alt: Baño de Habitaciones Mary con lavabo, espejo y regadera
+precioTemporada:
+  - temporada: Desde
+    precio: 650
+fechaActualizacion: 2026-08-02
+disponible: true
+servicios:
+  - A unos pasos del centro
+  - A 2 minutos de la playa
+  - Aire acondicionado
+  - Baño propio
+  - Agua caliente
+  - Internet
+  - TV Roku
+numeroHabitaciones: 4
+distanciaPlayaMetros: 310
+tipo: cuarto
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
