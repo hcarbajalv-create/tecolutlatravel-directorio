@@ -40,6 +40,14 @@ const tiposFiltro: { valor: string; etiqueta: string }[] = [
   { valor: 'hotel', etiqueta: 'Hoteles' },
   { valor: 'cuarto', etiqueta: 'Cuartos / habitaciones' },
 ];
+
+const ETIQUETAS_BUSQUEDA: Record<typeof categoria, string> = {
+  hospedaje: 'hoteles y casas',
+  gastronomia: 'restaurantes',
+  actividades: 'actividades',
+  servicios: 'servicios',
+};
+const etiquetaBusqueda = ETIQUETAS_BUSQUEDA[categoria];
 ---
 
 <BaseLayout titulo={titulo} descripcion={descripcionSeo}>
@@ -56,16 +64,32 @@ const tiposFiltro: { valor: string; etiqueta: string }[] = [
   <section class="seccion contenedor">
     <h2 class="titulo-seccion" style="margin-bottom:1.25rem;">Negocios en esta categoría</h2>
     {
-      mostrarFiltroTipo && negociosCategoria.length > 0 && (
-        <div class="filtro-tipo" id="filtro-tipo">
-          <button type="button" class="pastilla pastilla--activa" data-tipo-filtro="todos">
-            Todos
-          </button>
-          {tiposFiltro.map((t) => (
-            <button type="button" class="pastilla" data-tipo-filtro={t.valor}>
-              {t.etiqueta}
-            </button>
-          ))}
+      negociosCategoria.length > 0 && (
+        <div class="negocios-controles">
+          {mostrarFiltroTipo && (
+            <div class="filtro-tipo" id="filtro-tipo">
+              <button type="button" class="pastilla pastilla--activa" data-tipo-filtro="todos">
+                Todos
+              </button>
+              {tiposFiltro.map((t) => (
+                <button type="button" class="pastilla" data-tipo-filtro={t.valor}>
+                  {t.etiqueta}
+                </button>
+              ))}
+            </div>
+          )}
+          <div class="buscador-categoria">
+            <label for="buscador-categoria-input" class="sr-only">
+              Buscar {etiquetaBusqueda} por nombre
+            </label>
+            <input
+              type="search"
+              id="buscador-categoria-input"
+              class="buscador-categoria__input"
+              placeholder={`Buscar ${etiquetaBusqueda}…`}
+              autocomplete="off"
+            />
+          </div>
         </div>
       )
     }
@@ -123,31 +147,66 @@ const tiposFiltro: { valor: string; etiqueta: string }[] = [
     }
   }
 
-  function activarFiltroTipo() {
-    const filtro = document.getElementById('filtro-tipo');
-    if (!filtro) return;
+  // Combina el filtro de tipo (pastillas, solo hospedaje) con la búsqueda
+  // por nombre (todas las categorías) — una tarjeta se muestra solo si
+  // cumple los dos a la vez.
+  function activarControles() {
     const contenedor = document.getElementById('rejilla-negocios');
+    if (!contenedor) return;
+    const filtro = document.getElementById('filtro-tipo');
     const mensajeVacio = document.getElementById('mensaje-filtro-vacio');
+    const buscadorInput = document.getElementById(
+      'buscador-categoria-input',
+    ) as HTMLInputElement | null;
 
-    filtro.querySelectorAll<HTMLButtonElement>('[data-tipo-filtro]').forEach((boton) => {
+    function normalizar(texto: string): string {
+      return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    }
+
+    function tipoActivo(): string {
+      return filtro?.querySelector('[data-tipo-filtro].pastilla--activa')
+        ?.getAttribute('data-tipo-filtro') ?? 'todos';
+    }
+
+    function aplicarFiltros() {
+      const tipo = tipoActivo();
+      const consulta = normalizar(buscadorInput?.value ?? '');
+      let visibles = 0;
+
+      contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
+        const coincideTipo = tipo === 'todos' || tarjeta.dataset.tipo === tipo;
+        const coincideBusqueda =
+          !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
+        const mostrar = coincideTipo && coincideBusqueda;
+        tarjeta.style.display = mostrar ? '' : 'none';
+        if (mostrar) visibles++;
+      });
+
+      if (mensajeVacio) {
+        mensajeVacio.hidden = visibles > 0;
+        mensajeVacio.textContent = consulta
+          ? 'No encontramos negocios con ese nombre.'
+          : 'Todavía no hay negocios de este tipo.';
+      }
+    }
+
+    filtro?.querySelectorAll<HTMLButtonElement>('[data-tipo-filtro]').forEach((boton) => {
       boton.addEventListener('click', () => {
         filtro
           .querySelectorAll('[data-tipo-filtro]')
           .forEach((b) => b.classList.remove('pastilla--activa'));
         boton.classList.add('pastilla--activa');
-
-        const valor = boton.dataset.tipoFiltro;
-        let visibles = 0;
-        contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
-          const mostrar = valor === 'todos' || tarjeta.dataset.tipo === valor;
-          tarjeta.style.display = mostrar ? '' : 'none';
-          if (mostrar) visibles++;
-        });
-        if (mensajeVacio) mensajeVacio.hidden = visibles > 0;
+        aplicarFiltros();
       });
     });
+
+    buscadorInput?.addEventListener('input', aplicarFiltros);
   }
 
   rotarDestacados();
-  activarFiltroTipo();
+  activarControles();
 </script>
