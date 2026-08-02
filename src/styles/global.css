@@ -503,7 +503,7 @@ select:focus-visible {
 .negocios-controles {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -513,6 +513,14 @@ select:focus-visible {
   margin-left: auto;
   flex: 0 1 280px;
   min-width: 200px;
+}
+
+.buscador-categoria__etiqueta {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  margin-bottom: 0.3rem;
 }
 
 .buscador-categoria__input {
