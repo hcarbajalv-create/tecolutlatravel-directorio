@@ -1,7 +1,8 @@
 /**
  * Sistema de puntaje de completitud del listado gratuito — sección 8.1 de
- * analisis_competencia_tecolutla.docx. Máximo 100 pts:
- *   20 datos básicos + 30 fotos + 15 video + 20 precio + 10 servicios + 5 reseñas.
+ * analisis_competencia_tecolutla.docx. Máximo 110 pts:
+ *   20 datos básicos + 30 fotos + 15 video + 20 precio + 10 servicios +
+ *   5 reseñas + 5 Facebook + 5 Messenger.
  *
  * Sin dependencias de Astro a propósito: este archivo también lo importa
  * netlify/functions/resultados-negocio.mjs (Node plano, fuera del pipeline
@@ -14,6 +15,8 @@ export interface DatosPuntajeNegocio {
   servicios: string[];
   resenas: unknown[];
   destacado?: boolean;
+  facebook?: string;
+  messenger?: string;
 }
 
 export function calcularPuntaje(negocio: DatosPuntajeNegocio): number {
@@ -29,6 +32,8 @@ export function calcularPuntaje(negocio: DatosPuntajeNegocio): number {
   if (negocio.precioTemporada && negocio.precioTemporada.length > 0) puntaje += 20;
   if (negocio.servicios && negocio.servicios.length > 0) puntaje += 10;
   if (negocio.resenas && negocio.resenas.length > 0) puntaje += 5;
+  if (negocio.facebook) puntaje += 5;
+  if (negocio.messenger) puntaje += 5;
 
   return puntaje;
 }
@@ -53,6 +58,12 @@ export function generarRecomendaciones(negocio: DatosPuntajeNegocio): string[] {
   }
   if (!negocio.servicios || negocio.servicios.length === 0) {
     recomendaciones.push('🏷️ Marca tus servicios y amenidades → +10 pts');
+  }
+  if (!negocio.facebook) {
+    recomendaciones.push('📘 Agrega el link de tu página de Facebook → +5 pts');
+  }
+  if (!negocio.messenger) {
+    recomendaciones.push('💬 Agrega tu Messenger → +5 pts');
   }
   if (!negocio.destacado) {
     recomendaciones.push('⭐ Con Destacado tu ficha sube al top de tu categoría');

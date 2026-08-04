@@ -1040,6 +1040,40 @@ select:focus-visible {
   color: var(--color-texto-suave);
 }
 
+.ficha__iconos-contacto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.ficha__icono-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: var(--color-blanco);
+  color: var(--color-mar);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.ficha__icono-boton:hover,
+.ficha__icono-boton:focus-visible {
+  background: var(--color-mar);
+  border-color: var(--color-mar);
+  color: var(--color-blanco);
+}
+
+.ficha__compartir-estado {
+  font-size: 0.8rem;
+  color: var(--color-turquesa);
+  font-weight: 600;
+}
+
 .ficha__fechas {
   display: flex;
   gap: 0.75rem;

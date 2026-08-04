@@ -210,6 +210,47 @@ const esquemaLodging =
         <p>
           Teléfono: <a href={`tel:${telefonoDigitos}`}>{telefono}</a>
         </p>
+        <div class="ficha__iconos-contacto">
+          {facebook && (
+            <a
+              href={facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ficha__icono-boton"
+              aria-label={`Facebook de ${nombre}`}
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
+              </svg>
+            </a>
+          )}
+          {messenger && (
+            <a
+              href={messenger}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ficha__icono-boton"
+              aria-label={`Messenger de ${nombre}`}
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.02 2 11c0 2.85 1.44 5.4 3.7 7.06V22l3.4-1.87c.93.26 1.92.4 2.9.4 5.52 0 10-4.02 10-9S17.52 2 12 2zm1.02 12.13l-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82z" />
+              </svg>
+            </a>
+          )}
+          <button
+            type="button"
+            class="ficha__icono-boton"
+            id="boton-compartir"
+            aria-label={`Compartir la ficha de ${nombre}`}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
+              <polyline points="16 6 12 2 8 6" />
+              <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+          </button>
+          <span id="estado-compartir" class="ficha__compartir-estado" role="status" aria-live="polite" />
+        </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {numeroHabitaciones && <p>Habitaciones: {numeroHabitaciones}</p>}
         {capacidadMaxima !== undefined && <p>Capacidad máxima: hasta {capacidadMaxima} personas</p>}
@@ -513,6 +554,36 @@ const esquemaLodging =
   }
 
   actualizarEnlaceWhatsapp();
+
+  // Botón "Compartir": usa la Web Share API nativa si el navegador la
+  // soporta (celular, sobre todo); si no, copia el enlace al portapapeles
+  // como respaldo — nunca deja el botón sin hacer nada al dar clic.
+  const botonCompartir = document.getElementById('boton-compartir');
+  const estadoCompartir = document.getElementById('estado-compartir');
+
+  botonCompartir?.addEventListener('click', async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: nombreNegocio, url: urlFicha });
+      } catch {
+        // El visitante cerró el diálogo de compartir sin elegir nada —
+        // no es un error real, no hace falta avisar nada.
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(urlFicha);
+      if (estadoCompartir) {
+        estadoCompartir.textContent = '¡Enlace copiado!';
+        setTimeout(() => {
+          estadoCompartir.textContent = '';
+        }, 2500);
+      }
+    } catch {
+      if (estadoCompartir) estadoCompartir.textContent = urlFicha;
+    }
+  });
 </script>
 
 <script define:vars={{ slugNegocio: negocio.id }}>
