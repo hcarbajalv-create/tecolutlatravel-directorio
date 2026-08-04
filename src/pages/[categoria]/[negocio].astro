@@ -556,14 +556,19 @@ const esquemaLodging =
 
   actualizarEnlaceWhatsapp();
 
-  // Botón "Compartir": usa la Web Share API nativa si el navegador la
-  // soporta (celular, sobre todo); si no, copia el enlace al portapapeles
-  // como respaldo — nunca deja el botón sin hacer nada al dar clic.
+  // Botón "Compartir": usa la Web Share API nativa solo en celular. En
+  // escritorio (sobre todo Windows) navigator.share SÍ existe pero abre el
+  // panel nativo del sistema operativo, que casi nunca tiene a dónde
+  // compartir ahí y muestra un error confuso ("Vuelve a intentarlo...") —
+  // no es una falla de nuestro código, es una limitación del propio
+  // Windows. En escritorio vamos directo al portapapeles, que sí funciona
+  // siempre.
+  const esMovilCompartir = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   const botonCompartir = document.getElementById('boton-compartir');
   const estadoCompartir = document.getElementById('estado-compartir');
 
   botonCompartir?.addEventListener('click', async () => {
-    if (navigator.share) {
+    if (esMovilCompartir && navigator.share) {
       try {
         await navigator.share({ title: nombreNegocio, url: urlFicha });
       } catch {
