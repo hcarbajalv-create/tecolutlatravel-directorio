@@ -81,6 +81,30 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </div>
 
       <div class="campo">
+        <label for="facebook">Link de tu página de Facebook (opcional)</label>
+        <input
+          type="url"
+          id="facebook"
+          name="facebook"
+          placeholder="https://facebook.com/tu-negocio"
+        />
+      </div>
+
+      <div class="campo">
+        <label for="messenger">Link de tu Messenger (opcional)</label>
+        <span class="ayuda">
+          Desde tu página de Facebook: Configuración → Mensajería → "Botón de Messenger" te da un
+          enlace tipo m.me/tu-negocio.
+        </span>
+        <input
+          type="url"
+          id="messenger"
+          name="messenger"
+          placeholder="https://m.me/tu-negocio"
+        />
+      </div>
+
+      <div class="campo">
         <label for="precioAproximado">Precio aproximado (opcional)</label>
         <input type="text" id="precioAproximado" name="precioAproximado" />
       </div>
