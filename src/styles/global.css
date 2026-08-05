@@ -517,26 +517,61 @@ select:focus-visible {
 
 .buscador-categoria__etiqueta {
   display: block;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-family: var(--fuente-titulos);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-turquesa);
+  margin-bottom: 0.45rem;
+}
+
+.buscador-categoria__campo {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.buscador-categoria__icono {
+  position: absolute;
+  left: 0.9rem;
   color: var(--color-texto-suave);
-  margin-bottom: 0.3rem;
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+.buscador-categoria__campo:focus-within .buscador-categoria__icono {
+  color: var(--color-turquesa);
 }
 
 .buscador-categoria__input {
   width: 100%;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid var(--color-borde);
+  padding: 0.7rem 1.1rem 0.7rem 2.4rem;
+  border: 1.5px solid color-mix(in srgb, var(--color-turquesa) 28%, var(--color-borde));
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-family: inherit;
   background: var(--color-blanco);
   color: var(--color-texto);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.buscador-categoria__input::placeholder {
+  color: var(--color-texto-suave);
+  opacity: 1;
 }
 
 .buscador-categoria__input:focus {
   outline: none;
   border-color: var(--color-turquesa);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-turquesa) 16%, transparent);
+}
+
+/* Quita la "x" nativa de Chrome/Edge para <input type="search"> — con el
+   ícono de lupa ya puesto a mano, la x nativa quedaba desalineada con el
+   nuevo padding y duplicaba el propósito del botón de limpiar del propio
+   sistema operativo en algunos navegadores. */
+.buscador-categoria__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* ---------- Filtro por tipo (solo /hospedaje) ---------- */

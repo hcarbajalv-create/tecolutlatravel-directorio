@@ -82,13 +82,28 @@ const etiquetaBusqueda = ETIQUETAS_BUSQUEDA[categoria];
             <label for="buscador-categoria-input" class="buscador-categoria__etiqueta">
               Buscar {etiquetaBusqueda} por nombre
             </label>
-            <input
-              type="search"
-              id="buscador-categoria-input"
-              class="buscador-categoria__input"
-              placeholder={`Buscar ${etiquetaBusqueda}…`}
-              autocomplete="off"
-            />
+            <div class="buscador-categoria__campo">
+              <svg
+                class="buscador-categoria__icono"
+                viewBox="0 0 20 20"
+                width="16"
+                height="16"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <circle cx="8.5" cy="8.5" r="6" />
+                <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
+              </svg>
+              <input
+                type="search"
+                id="buscador-categoria-input"
+                class="buscador-categoria__input"
+                placeholder={`Buscar ${etiquetaBusqueda}…`}
+                autocomplete="off"
+              />
+            </div>
           </div>
         </div>
       )
