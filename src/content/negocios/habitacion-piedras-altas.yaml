@@ -1,0 +1,61 @@
+# Alta recibida vía /anunciate (Netlify Forms, 2026-08-02, María Fernanda
+# Durán). descripcionCorta tomada tal cual del campo del formulario
+# (corrigiendo la errata "prqueña" → "pequeña"), con la cercanía al
+# centro y al río agregada del campo "Comentarios adicionales".
+# Coordenadas: el enlace de Maps que mandaron apunta al pin genérico de
+# "Playa Tecolutla" (no a la dirección real) — probablemente compartieron
+# el pin equivocado desde el celular. Como dirección solo dieron "Calle
+# Emilio Carranza sin número" (sin número exacto), se usa el punto de esa
+# misma calle en Google Maps — confirmada como la misma calle donde está
+# Habitaciones Mary (Av. Emilio Carranza 5, a solo ~40m de este punto).
+# Pendiente: pedirle a la dueña un pin exacto para afinar la ubicación.
+# distanciaPlayaMetros: se reutiliza el valor ya validado de Habitaciones
+# Mary (310m) por estar a ~40m de ese punto — diferencia despreciable a
+# esta escala.
+nombre: Habitación Piedras Altas
+categoria: hospedaje
+descripcionCorta: Habitación cómoda para pareja o familia pequeña, a una cuadra
+  del centro y a unos pasos del río.
+direccion: Calle Emilio Carranza sin número, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4772438
+  lng: -97.0082327
+telefono: "+52 766 102 5595"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/habitacion-piedras-altas/01-foto.jpg
+    alt: Calle de Tecolutla con puestos y banderas mexicanas
+  - src: ../../assets/fotos/habitacion-piedras-altas/02-foto.jpg
+    alt: Fachada con mural de tecolote y letrero "Tecolutla, Ver."
+  - src: ../../assets/fotos/habitacion-piedras-altas/03-foto.jpg
+    alt: Habitación de Habitación Piedras Altas con dos camas, aire acondicionado y ventilador
+  - src: ../../assets/fotos/habitacion-piedras-altas/04-foto.jpg
+    alt: Recámara de Habitación Piedras Altas con cama matrimonial y aire acondicionado
+  - src: ../../assets/fotos/habitacion-piedras-altas/05-foto.jpg
+    alt: Cama matrimonial de Habitación Piedras Altas con cabecera de madera
+  - src: ../../assets/fotos/habitacion-piedras-altas/06-foto.jpg
+    alt: Baño de Habitación Piedras Altas con lavabo y puerta corrediza
+  - src: ../../assets/fotos/habitacion-piedras-altas/07-foto.jpg
+    alt: Habitación de Habitación Piedras Altas con televisión de pantalla plana
+  - src: ../../assets/fotos/habitacion-piedras-altas/08-foto.jpg
+    alt: Vista general de la habitación con cama, ventilador y mueble de madera
+precioTemporada:
+  - temporada: Desde
+    precio: 650
+fechaActualizacion: 2026-08-02
+disponible: true
+servicios:
+  - Baño privado
+  - Agua caliente
+  - Aire acondicionado
+  - Ventilador
+  - Smart TV
+  - Dos camas matrimoniales
+  - Acepta pago con tarjeta
+  - Precio especial en paseo por los manglares
+numeroHabitaciones: 1
+distanciaPlayaMetros: 310
+tipo: cuarto
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
