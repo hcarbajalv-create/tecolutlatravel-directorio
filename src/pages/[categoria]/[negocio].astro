@@ -155,12 +155,12 @@ const esquemaLodging =
         {verificado && <span class="insignia insignia--verificado">Verificado</span>}
       </div>
       <div class="cabecera-categoria__titulo">
+        <h1>{nombre}</h1>
         {logo ? (
-          <Image src={logo} alt={`Logotipo de ${nombre}`} width={64} height={64} class="cabecera-categoria__logo" />
+          <Image src={logo} alt={`Logotipo de ${nombre}`} width={128} height={128} class="cabecera-categoria__logo" />
         ) : (
           <span class="cabecera-categoria__icono">{iconoCategoria[categoria]}</span>
         )}
-        <h1>{nombre}</h1>
       </div>
       <p>{descripcionCorta}</p>
     </div>
