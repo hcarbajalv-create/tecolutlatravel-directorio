@@ -492,6 +492,23 @@ select:focus-visible {
   margin: 0.25rem 0 0;
 }
 
+.subtitulo--resaltado {
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.seccion__fila-cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.seccion__fila-cta .subtitulo {
+  margin: 0;
+}
+
 .ver-todo {
   color: var(--color-mar);
   font-weight: 700;
@@ -803,9 +820,6 @@ select:focus-visible {
   border-radius: 999px;
 }
 
-.seccion__boton-cta {
-  margin-top: 1rem;
-}
 
 /* ---------- Tiles de categoría ---------- */
 .rejilla-categorias {
