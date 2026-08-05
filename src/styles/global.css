@@ -417,7 +417,7 @@ select:focus-visible {
   border: 3px solid var(--color-blanco);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   align-self: flex-start;
-  transform: translateY(-4.45rem);
+  transform: translateY(-0.4rem);
 }
 
 .cabecera-categoria h1 {
@@ -1396,7 +1396,7 @@ select:focus-visible {
   .cabecera-categoria__logo {
     width: 6rem;
     height: 6rem;
-    transform: translateY(-1.45rem);
+    transform: translateY(-0.4rem);
   }
 
   /* Menú hamburguesa: el header pasa a ocupar solo 1 renglón (logo + botón),
