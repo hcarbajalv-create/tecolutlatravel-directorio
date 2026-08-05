@@ -509,6 +509,12 @@ select:focus-visible {
   margin: 0;
 }
 
+@media (min-width: 641px) {
+  .seccion__fila-cta .boton {
+    transform: translateY(-2.89rem);
+  }
+}
+
 .ver-todo {
   color: var(--color-mar);
   font-weight: 700;
