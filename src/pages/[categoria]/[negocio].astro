@@ -22,6 +22,7 @@ const {
   telefono,
   facebook,
   messenger,
+  logo,
   fotos,
   precioTemporada,
   fechaActualizacion,
@@ -154,7 +155,11 @@ const esquemaLodging =
         {verificado && <span class="insignia insignia--verificado">Verificado</span>}
       </div>
       <div class="cabecera-categoria__titulo">
-        <span class="cabecera-categoria__icono">{iconoCategoria[categoria]}</span>
+        {logo ? (
+          <Image src={logo} alt={`Logotipo de ${nombre}`} width={64} height={64} class="cabecera-categoria__logo" />
+        ) : (
+          <span class="cabecera-categoria__icono">{iconoCategoria[categoria]}</span>
+        )}
         <h1>{nombre}</h1>
       </div>
       <p>{descripcionCorta}</p>

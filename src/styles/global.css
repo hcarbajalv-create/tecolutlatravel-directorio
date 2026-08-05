@@ -408,6 +408,16 @@ select:focus-visible {
   line-height: 1;
 }
 
+.cabecera-categoria__logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--color-blanco);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
 .cabecera-categoria h1 {
   color: var(--color-blanco);
   margin: 0;

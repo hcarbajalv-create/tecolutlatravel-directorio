@@ -19,6 +19,9 @@ const negocios = defineCollection({
       // muestran solo si el negocio los proporciona.
       facebook: z.string().url().optional(),
       messenger: z.string().url().optional(),
+      // Logo propio del negocio — opcional. Si no existe, la ficha sigue
+      // mostrando el ícono genérico de la categoría (sin inventar un logo).
+      logo: image().optional(),
       // Plan gratuito: máximo 8 fotos, sin video. Plan de pago: hasta 16
       // fotos y video propio habilitado. Límites exactos validados abajo
       // en superRefine — el máximo de 16 aquí es el techo absoluto (plan
