@@ -6,12 +6,12 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
 
 <BaseLayout
   titulo="Anúnciate en el directorio"
-  descripcion="Da de alta tu negocio de Tecolutla en el directorio de forma gratuita. Revisión manual antes de publicar."
+  descripcion="Da de alta tu negocio de Tecolutla en el directorio sin costo. Revisión manual antes de publicar."
 >
   <section class="seccion contenedor">
     <h1 class="titulo-pagina">Anuncia tu negocio en Tecolutla</h1>
     <p class="subtitulo">
-      La alta de tu negocio en este directorio es <strong>gratuita</strong>. Revisamos cada
+      Darte de alta en este directorio <strong>no tiene costo</strong>. Revisamos cada
       solicitud manualmente antes de publicarla, así que puede tomar unos días antes de ser
       publicado.
     </p>
@@ -124,10 +124,10 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <span class="etiqueta-seccion">Fotos de tu negocio *</span>
         <span class="ayuda">
-          Sube al menos 3 fotos (máximo 8). No te preocupes por el tamaño.
+          Sube al menos 4 fotos (máximo 12). No te preocupes por el tamaño.
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
-          Fotos subidas: 0 / 3 mínimo
+          Fotos subidas: 0 / 4 mínimo
         </p>
         <p id="estado-compresion" class="ayuda" aria-live="polite"></p>
       </div>
@@ -135,7 +135,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <label for="fotosVariasAyudante">Selecciona varias fotos a la vez (opcional)</label>
         <span class="ayuda">
-          Ahórrate trabajo: elige hasta 8 fotos de una sola vez y se acomodarán abajo en los campos
+          Ahórrate trabajo: elige hasta 12 fotos de una sola vez y se acomodarán abajo en los campos
           individuales automáticamente — ¡Ojo! la primera foto que pongas será la portada de tu
           ficha. Si prefieres, también puedes subirlas una por una.
         </span>
@@ -214,6 +214,38 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </div>
 
       <div class="campo">
+        <label for="foto9">Foto de muestra 9 (opcional)</label>
+        <div class="campo-foto-fila">
+          <input type="file" id="foto9" name="foto9" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="9" aria-label="Quitar Foto 9" hidden>✕</button>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="foto10">Foto de muestra 10 (opcional)</label>
+        <div class="campo-foto-fila">
+          <input type="file" id="foto10" name="foto10" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="10" aria-label="Quitar Foto 10" hidden>✕</button>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="foto11">Foto de muestra 11 (opcional)</label>
+        <div class="campo-foto-fila">
+          <input type="file" id="foto11" name="foto11" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="11" aria-label="Quitar Foto 11" hidden>✕</button>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="foto12">Foto de muestra 12 (opcional)</label>
+        <div class="campo-foto-fila">
+          <input type="file" id="foto12" name="foto12" accept={tiposAceptados} />
+          <button type="button" class="campo-foto-quitar" data-quitar-foto="12" aria-label="Quitar Foto 12" hidden>✕</button>
+        </div>
+      </div>
+
+      <div class="campo">
         <label for="nombreContacto">Tu nombre (para dar seguimiento a la solicitud) *</label>
         <input type="text" id="nombreContacto" name="nombreContacto" required />
       </div>
@@ -231,8 +263,8 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <label>
           <input type="checkbox" name="aceptaRevision" required />
-          Entiendo que mi negocio será revisado manualmente antes de publicarse y que la alta
-          en el directorio es gratuita. *
+          Entiendo que mi negocio será revisado manualmente antes de publicarse y que darme de
+          alta en el directorio no tiene costo. *
         </label>
       </div>
 
@@ -241,7 +273,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </p>
 
       <p id="aviso-fotos" class="aviso-envio" role="alert" hidden>
-        ⚠️ Necesitas subir al menos 3 fotos antes de enviar.
+        ⚠️ Necesitas subir al menos 4 fotos antes de enviar.
       </p>
 
       <button type="submit" class="boton">Enviar solicitud</button>
@@ -252,19 +284,19 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
     import { comprimirImagen } from '../utils/comprimirImagen';
 
     // Netlify Forms rechaza el envío completo (todos los campos + fotos
-    // juntos) si pasa de 8MB en total — no es un límite por archivo. Con 3-8
-    // fotos de celular reales (2-6MB cada una es normal hoy) casi cualquier
-    // envío completo lo superaba y Netlify lo tronaba sin explicación clara
-    // para quien llena el formulario. Se comprime cada foto a este tope
-    // antes de enviar: 8 fotos × 900KB = 7.2MB, con margen para los campos
-    // de texto y el overhead del multipart.
-    const TOPE_FOTO_BYTES = 900 * 1024;
+    // juntos) si pasa de 8MB en total — no es un límite por archivo. Con
+    // 4-12 fotos de celular reales (2-6MB cada una es normal hoy) casi
+    // cualquier envío completo lo superaba y Netlify lo tronaba sin
+    // explicación clara para quien llena el formulario. Se comprime cada
+    // foto a este tope antes de enviar: 12 fotos × 600KB = 7.2MB, con
+    // margen para los campos de texto y el overhead del multipart.
+    const TOPE_FOTO_BYTES = 600 * 1024;
 
     const form = document.querySelector('form[name="alta-negocio"]') as HTMLFormElement | null;
     const contador = document.getElementById('contador-fotos');
     const estadoCompresion = document.getElementById('estado-compresion');
     const aviso = document.getElementById('aviso-fotos');
-    const fotoInputs = Array.from({ length: 8 }, (_, i) =>
+    const fotoInputs = Array.from({ length: 12 }, (_, i) =>
       document.getElementById(`foto${i + 1}`),
     ) as (HTMLInputElement | null)[];
     const telefono = document.getElementById('telefono') as HTMLInputElement | null;
@@ -290,8 +322,8 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
 
       const actualizarContador = () => {
         const total = contarFotos();
-        const cumple = total >= 3;
-        contador.textContent = `Fotos subidas: ${total} / 3 mínimo`;
+        const cumple = total >= 4;
+        contador.textContent = `Fotos subidas: ${total} / 4 mínimo`;
         contador.classList.toggle('contador-fotos--ok', cumple);
         if (cumple) aviso.hidden = true;
       };
@@ -330,7 +362,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       }
 
       // Botón "×" para quitar una foto individual ya seleccionada (Foto 1 a
-      // Foto 8) sin tener que reabrir el explorador de archivos y elegir
+      // Foto 12) sin tener que reabrir el explorador de archivos y elegir
       // otra encima.
       const botonesQuitarFoto = fotoInputs.map((input, indice) => {
         const boton = document.querySelector(
@@ -359,8 +391,8 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       }
       // Selector de ayuda "varias a la vez": no tiene atributo "name", así
       // que nunca se envía a Netlify ni cuenta como campo del formulario —
-      // solo reparte los archivos elegidos entre los 8 campos individuales
-      // (foto1-foto8), que son los que sí se envían y ya sabemos que
+      // solo reparte los archivos elegidos entre los 12 campos individuales
+      // (foto1-foto12), que son los que sí se envían y ya sabemos que
       // funcionan. Netlify Forms no soporta <input multiple> bajo un solo
       // campo (perdía las fotos en silencio), así que esto da la misma
       // comodidad de elegir varias de un jalón sin depender de eso.
@@ -388,7 +420,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
           const sobrantes = archivos.length - aRepartir.length;
           estadoVarias.textContent =
             sobrantes > 0
-              ? `Se acomodaron ${aRepartir.length} fotos. ${sobrantes} no cupieron — el máximo es 8 fotos en total.`
+              ? `Se acomodaron ${aRepartir.length} fotos. ${sobrantes} no cupieron — el máximo es 12 fotos en total.`
               : `Se acomodaron ${aRepartir.length} fotos en los campos de abajo.`;
         }
       });
@@ -397,7 +429,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
 
       form.addEventListener('submit', (evento) => {
         const total = contarFotos();
-        const faltanFotos = total < 3;
+        const faltanFotos = total < 4;
         const faltaTelefono = telefono ? telefono.value.replace(/\D/g, '').length < 10 : false;
 
         if (avisoTelefono) avisoTelefono.hidden = !faltaTelefono;

@@ -22,10 +22,10 @@ const negocios = defineCollection({
       // Logo propio del negocio — opcional. Si no existe, la ficha sigue
       // mostrando el ícono genérico de la categoría (sin inventar un logo).
       logo: image().optional(),
-      // Plan gratuito: máximo 8 fotos, sin video. Plan de pago: hasta 16
+      // Plan gratuito: máximo 12 fotos, sin video. Plan de pago: hasta 16
       // fotos y video propio habilitado. Límites exactos validados abajo
       // en superRefine — el máximo de 16 aquí es el techo absoluto (plan
-      // de pago); el límite de 8 para gratuito se aplica ahí, no en .max().
+      // de pago); el límite de 12 para gratuito se aplica ahí, no en .max().
       plan: z.enum(['gratuito', 'pago']).default('gratuito'),
       fotos: z
         .array(
@@ -84,9 +84,9 @@ const negocios = defineCollection({
       ordenManual: z.number().optional(),
     })
     .superRefine((datos, ctx) => {
-      // Límite de fotos por plan: gratuito 8, pago 16 (sección 7-8 del
+      // Límite de fotos por plan: gratuito 12, pago 16 (sección 7-8 del
       // análisis de competencia). Error de build claro si un .yaml lo excede.
-      const limiteFotos = datos.plan === 'pago' ? 16 : 8;
+      const limiteFotos = datos.plan === 'pago' ? 16 : 12;
       if (datos.fotos.length > limiteFotos) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
