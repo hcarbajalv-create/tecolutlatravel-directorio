@@ -998,6 +998,12 @@ select:focus-visible {
   flex-shrink: 0;
 }
 
+.contacto__nota {
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+  margin: 0 0 2rem;
+}
+
 .contacto__correo {
   color: var(--color-texto-suave);
   font-size: 0.95rem;
