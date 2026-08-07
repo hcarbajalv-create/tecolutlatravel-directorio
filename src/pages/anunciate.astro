@@ -123,8 +123,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <span class="etiqueta-seccion">Fotos de tu negocio *</span>
         <span class="ayuda">
-          Sube al menos 3 fotos (máximo 8). No te preocupes por el tamaño: las comprimimos
-          automáticamente antes de enviarlas.
+          Sube al menos 3 fotos (máximo 8). No te preocupes por el tamaño.
         </span>
         <p id="contador-fotos" class="contador-fotos" aria-live="polite">
           Fotos subidas: 0 / 3 mínimo
@@ -214,15 +213,6 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </div>
 
       <div class="campo">
-        <label for="enlaceFotos">Enlace con más fotos (opcional)</label>
-        <span class="ayuda">
-          Si tienes más de 8 fotos, comparte un enlace (Google Drive, WeTransfer, etc.) en vez de
-          adjuntarlas aquí.
-        </span>
-        <input type="url" id="enlaceFotos" name="enlaceFotos" placeholder="https://" />
-      </div>
-
-      <div class="campo">
         <label for="nombreContacto">Tu nombre (para dar seguimiento a la solicitud) *</label>
         <input type="text" id="nombreContacto" name="nombreContacto" required />
       </div>
@@ -250,7 +240,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       </p>
 
       <p id="aviso-fotos" class="aviso-envio" role="alert" hidden>
-        ⚠️ Necesitas subir al menos 3 fotos (o un enlace con tus fotos) antes de enviar.
+        ⚠️ Necesitas subir al menos 3 fotos antes de enviar.
       </p>
 
       <button type="submit" class="boton">Enviar solicitud</button>
@@ -270,7 +260,6 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
     const TOPE_FOTO_BYTES = 900 * 1024;
 
     const form = document.querySelector('form[name="alta-negocio"]') as HTMLFormElement | null;
-    const enlaceFotos = document.getElementById('enlaceFotos') as HTMLInputElement | null;
     const contador = document.getElementById('contador-fotos');
     const estadoCompresion = document.getElementById('estado-compresion');
     const aviso = document.getElementById('aviso-fotos');
@@ -287,7 +276,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       });
     }
 
-    if (form && enlaceFotos && contador && aviso) {
+    if (form && contador && aviso) {
       let comprimiendo = false;
 
       const contarFotos = () => {
@@ -300,11 +289,8 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
 
       const actualizarContador = () => {
         const total = contarFotos();
-        const tieneEnlace = enlaceFotos.value.trim().length > 0;
-        const cumple = tieneEnlace || total >= 3;
-        contador.textContent = tieneEnlace
-          ? 'Enlace de fotos proporcionado ✓'
-          : `Fotos subidas: ${total} / 3 mínimo`;
+        const cumple = total >= 3;
+        contador.textContent = `Fotos subidas: ${total} / 3 mínimo`;
         contador.classList.toggle('contador-fotos--ok', cumple);
         if (cumple) aviso.hidden = true;
       };
@@ -406,13 +392,11 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
         }
       });
 
-      enlaceFotos.addEventListener('input', actualizarContador);
       actualizarContador();
 
       form.addEventListener('submit', (evento) => {
         const total = contarFotos();
-        const tieneEnlace = enlaceFotos.value.trim().length > 0;
-        const faltanFotos = !tieneEnlace && total < 3;
+        const faltanFotos = total < 3;
         const faltaTelefono = telefono ? telefono.value.replace(/\D/g, '').length < 10 : false;
 
         if (avisoTelefono) avisoTelefono.hidden = !faltaTelefono;
