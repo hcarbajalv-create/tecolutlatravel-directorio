@@ -5,13 +5,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 // 2026-08-06) — nunca se muestra como texto, solo va embebido en el enlace.
 const numeroWhatsapp = '5580572172';
 const whatsappDigitos = `521${numeroWhatsapp.replace(/^52/, '')}`;
-const mensaje = encodeURIComponent('Hola, tengo una pregunta para Tecolutla.Travel.');
+const mensaje = encodeURIComponent('Hola, tengo una pregunta para TecolutlaTravel.');
 const enlaceWhatsapp = `https://wa.me/${whatsappDigitos}?text=${mensaje}`;
 ---
 
 <BaseLayout
   titulo="Contáctanos"
-  descripcion="Comunícate con el equipo de Tecolutla.Travel por WhatsApp o correo electrónico para dudas sobre el directorio, negocios o colaboraciones."
+  descripcion="Comunícate con el equipo de TecolutlaTravel por WhatsApp o correo electrónico para dudas sobre el directorio, negocios o colaboraciones."
 >
   <section class="seccion contenedor contacto">
     <h1 class="titulo-pagina">Contáctanos</h1>
