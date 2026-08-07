@@ -957,6 +957,62 @@ select:focus-visible {
   max-width: 520px;
 }
 
+/* ---------- Página de Contáctanos ---------- */
+.contacto {
+  text-align: center;
+}
+
+.contacto__intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contacto__tarjeta {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 1.5rem;
+}
+
+.contacto__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-whatsapp);
+  color: var(--color-blanco);
+  font-family: var(--fuente-titulos);
+  font-weight: 800;
+  font-size: 1.15rem;
+  padding: 1.1rem 2.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-whatsapp) 35%, transparent);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.contacto__whatsapp:hover {
+  background: var(--color-whatsapp-oscuro);
+  transform: translateY(-1px);
+}
+
+.contacto__whatsapp svg {
+  flex-shrink: 0;
+}
+
+.contacto__correo {
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+}
+
+.contacto__correo a {
+  color: var(--color-turquesa);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contacto__correo a:hover {
+  text-decoration: underline;
+}
+
 /* ---------- Formulario ---------- */
 .campo {
   margin-bottom: 1.25rem;
