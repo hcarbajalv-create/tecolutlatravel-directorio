@@ -1,0 +1,46 @@
+# Alta recibida vía WhatsApp (2026-08-10) con flyer del negocio + fotos
+# reales del capitán. Capitán/dueño: Jorge Luis Pérez Trinidad.
+# Ubicación: el flyer da "C. Álvaro Obregón, orilla del río" como
+# dirección; las coordenadas se tomaron del pin que el negocio confirmó
+# en Google Maps ("Embarcaderos de Tecolutla", punto !3d!4d del enlace).
+# Fotos: se usaron solo las 4 fotos reales de recorridos (con turistas y
+# chalecos salvavidas a bordo); las dos imágenes tipo flyer publicitario
+# que también mandó el negocio (con ilustración de personaje y precios)
+# no se usaron como fotos de la ficha por no ser fotografías reales del
+# negocio.
+# Precios: no se publican por ahora, misma regla que Lancha Santy
+# (indicación explícita del usuario, 2026-08-10).
+nombre: Lancha "Mi Ángel IR"
+categoria: actividades
+descripcionCorta: Recorridos en lancha por los manglares y esteros de
+  Tecolutla, con capacidad para 10 personas, atendidos directamente por
+  el capitán Jorge Luis Pérez Trinidad.
+direccion: Embarcadero de la calle Álvaro Obregón, orilla del río, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4745909
+  lng: -97.0092252
+telefono: "+52 766 112 7453"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/lancha-mi-angel-ir/01-foto.jpg
+    alt: Turistas y su mascota a bordo de la Lancha Mi Ángel IR durante el recorrido
+  - src: ../../assets/fotos/lancha-mi-angel-ir/02-foto.jpg
+    alt: Grupo de turistas con chalecos salvavidas disfrutando el paseo en la Lancha Mi Ángel IR
+  - src: ../../assets/fotos/lancha-mi-angel-ir/03-foto.jpg
+    alt: Turistas con chalecos salvavidas marcados "Mi Ángel IR" navegando por el estero
+  - src: ../../assets/fotos/lancha-mi-angel-ir/04-foto.jpg
+    alt: Familia sonriente a bordo de la Lancha Mi Ángel IR en el embarcadero de Tecolutla
+fechaActualizacion: 2026-08-10
+disponible: true
+servicios:
+  - Recorrido al Santuario de las Aves
+  - Recorrido a la Cueva de la Mojarra
+  - Recorrido a la Cueva del Pirata
+  - Recorrido al Manglar del Silencio
+  - Paseos privados para tu grupo
+  - Horarios flexibles
+  - Chalecos salvavidas obligatorios
+capacidadMaxima: 10
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
