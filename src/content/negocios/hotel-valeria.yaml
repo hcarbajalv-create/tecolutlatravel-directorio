@@ -1,0 +1,57 @@
+# Alta recibida vía WhatsApp (2026-08-10, Susana Contreras Hermenegildo,
+# susanacontreras904@gmail.com), como parte del plan de contacto.
+# Dirección y coordenadas resueltas del enlace de Google Maps que mandó
+# el negocio (el nombre oficial de la calle es "Prolongación Girasol y
+# Arcadia", coincide con lo que describió el negocio: "calle Benito
+# Juárez frente a la telesecundaria" — Benito Juárez es la colonia).
+# Teléfono: encontrado en la ficha pública de Google Maps del hotel,
+# confirmado por el negocio como correcto.
+# distanciaPlayaMetros: calculada contra la geometría real de la línea de
+# costa (OpenStreetMap, natural=coastline), mismo método usado en las
+# altas anteriores.
+# Habitaciones (13: 3 triples, 9 dobles, 1 sencilla) y capacidad máxima
+# (45 personas) dadas directamente por el negocio.
+# Alberca, asador y aire acondicionado: visibles directamente en las
+# fotos que mandó el negocio.
+# Precio de la habitación sencilla: no lo dieron, pendiente.
+nombre: Hotel Valeria
+categoria: hospedaje
+descripcionCorta: Hotel con alberca y 13 habitaciones (dobles, triples y
+  sencilla), en la colonia Benito Juárez, frente a la telesecundaria.
+direccion: Prolongación Girasol y Arcadia S/N, Col. Benito Juárez, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4860005
+  lng: -97.0200203
+telefono: "+52 782 243 9629"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/hotel-valeria/01-foto.jpg
+    alt: Alberca de Hotel Valeria con palapa y sillas alrededor de las habitaciones
+  - src: ../../assets/fotos/hotel-valeria/02-foto.jpg
+    alt: Otra vista de la alberca de Hotel Valeria con sombrillas de colores
+  - src: ../../assets/fotos/hotel-valeria/03-foto.jpg
+    alt: Área de asador y jardín de Hotel Valeria
+  - src: ../../assets/fotos/hotel-valeria/04-foto.jpg
+    alt: Baño de Hotel Valeria con regadera, lavabo y espejo
+  - src: ../../assets/fotos/hotel-valeria/05-foto.jpg
+    alt: Habitación de Hotel Valeria con dos camas individuales
+  - src: ../../assets/fotos/hotel-valeria/06-foto.jpg
+    alt: Habitación de Hotel Valeria con dos camas y aire acondicionado
+precioTemporada:
+  - temporada: Habitación doble
+    precio: 750
+  - temporada: Habitación triple
+    precio: 900
+fechaActualizacion: 2026-08-10
+disponible: true
+servicios:
+  - Alberca
+  - Asador
+  - Aire acondicionado
+numeroHabitaciones: 13
+capacidadMaxima: 45
+distanciaPlayaMetros: 375
+tipo: hotel
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
