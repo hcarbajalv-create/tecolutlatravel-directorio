@@ -1,0 +1,40 @@
+# Alta recibida vía WhatsApp (2026-08-10, contacto de Paloma) como parte
+# del plan de contacto. Dueño: Moisés Corona Hernández.
+# Ubicación: el negocio solo dio "embarcadero de la calle Emilio
+# Carranza" — se usó el punto donde Google Maps ya tiene registrado
+# "Turismo en los Manglares de Tecolutla" en esa misma calle (enlace
+# que mandó el negocio).
+# Teléfono: dado directamente por el negocio, con código de país +1
+# (EUA/Canadá) — confirmado explícitamente que va así, completo.
+# Precios: no se publican por ahora (indicación explícita del usuario,
+# 2026-08-10), aunque el letrero de precios real quedó como foto 4.
+# Capacidad tomada del mismo letrero, no inventada.
+nombre: Lancha Santy
+categoria: actividades
+descripcionCorta: Recorridos en lancha por los esteros y manglares del río
+  Tecolutla, con capacidad para 10 personas.
+direccion: Embarcadero de la calle Emilio Carranza, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4745507
+  lng: -97.0086132
+telefono: "+1 (863) 373-9729"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/lancha-santy/01-foto.jpg
+    alt: Lancha Santy con su nombre y matrícula pintados en el casco
+  - src: ../../assets/fotos/lancha-santy/02-foto.jpg
+    alt: Lancha Santy de frente con su techo azul, lista para el recorrido
+  - src: ../../assets/fotos/lancha-santy/03-foto.jpg
+    alt: Vista superior de la lancha Santy con sus asientos y chaleco salvavidas
+  - src: ../../assets/fotos/lancha-santy/04-foto.jpg
+    alt: Letrero de precios de los recorridos turísticos por la zona de manglares
+fechaActualizacion: 2026-08-10
+disponible: true
+servicios:
+  - Recorrido por manglares y esteros
+  - Santuario de aves
+  - Chalecos salvavidas obligatorios
+capacidadMaxima: 10
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
