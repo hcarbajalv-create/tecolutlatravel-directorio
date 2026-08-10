@@ -3,11 +3,15 @@
 # Ubicación: el flyer da "C. Álvaro Obregón, orilla del río" como
 # dirección; las coordenadas se tomaron del pin que el negocio confirmó
 # en Google Maps ("Embarcaderos de Tecolutla", punto !3d!4d del enlace).
-# Fotos: se usaron las 3 fotos reales de recorridos (con turistas y
-# chalecos salvavidas a bordo); las imágenes tipo flyer publicitario que
-# también mandó el negocio (con ilustración de personaje y precios) no
-# se usaron como fotos de la ficha por no ser fotografías reales del
-# negocio.
+# Fotos: 4 fotos reales de recorridos (con turistas y chalecos
+# salvavidas a bordo) + el flyer publicitario del negocio (con
+# ilustración de personaje, sin precios). El flyer de precios NO se usó
+# (regla general: no se publican costos). El negocio pidió explícitamente
+# incluir el flyer ilustrado como una foto más — para la categoría
+# "actividades ecoturísticas" se admite este tipo de gráfico
+# promocional además de fotos reales, a diferencia de otras categorías
+# donde solo van fotografías reales (indicación explícita del usuario,
+# 2026-08-10).
 # Precios: no se publican por ahora, misma regla que Lancha Santy
 # (indicación explícita del usuario, 2026-08-10).
 nombre: Lancha "Mi Ángel IR"
@@ -28,6 +32,10 @@ fotos:
     alt: Grupo de turistas con chalecos salvavidas disfrutando el paseo en la Lancha Mi Ángel IR
   - src: ../../assets/fotos/lancha-mi-angel-ir/03-foto.jpg
     alt: Turistas con chalecos salvavidas marcados "Mi Ángel IR" navegando por el estero
+  - src: ../../assets/fotos/lancha-mi-angel-ir/04-foto.jpg
+    alt: Flyer promocional de Lancha Mi Ángel IR con el capitán Jorge Luis y la lancha
+  - src: ../../assets/fotos/lancha-mi-angel-ir/05-foto.jpg
+    alt: Grupo de turistas sonriendo y saludando a bordo de la Lancha Mi Ángel IR
 fechaActualizacion: 2026-08-10
 disponible: true
 servicios:
