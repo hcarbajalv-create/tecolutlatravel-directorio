@@ -7,8 +7,10 @@
 # Teléfono: dado directamente por el negocio, con código de país +1
 # (EUA/Canadá) — confirmado explícitamente que va así, completo.
 # Precios: no se publican por ahora (indicación explícita del usuario,
-# 2026-08-10), aunque el letrero de precios real quedó como foto 4.
-# Capacidad tomada del mismo letrero, no inventada.
+# 2026-08-10). Capacidad tomada del letrero real de precios, no inventada.
+# Se quitó la foto del letrero (fondo amarillo) a petición del usuario,
+# 2026-08-10 — quedan 3 fotos. Las reglas de mínimo de fotos para lanchas
+# quizá cambien más adelante, pendiente de decidir.
 nombre: Lancha Santy
 categoria: actividades
 descripcionCorta: Recorridos en lancha por los esteros y manglares del río
@@ -26,8 +28,6 @@ fotos:
     alt: Lancha Santy de frente con su techo azul, lista para el recorrido
   - src: ../../assets/fotos/lancha-santy/03-foto.jpg
     alt: Vista superior de la lancha Santy con sus asientos y chaleco salvavidas
-  - src: ../../assets/fotos/lancha-santy/04-foto.jpg
-    alt: Letrero de precios de los recorridos turísticos por la zona de manglares
 fechaActualizacion: 2026-08-10
 disponible: true
 servicios:
