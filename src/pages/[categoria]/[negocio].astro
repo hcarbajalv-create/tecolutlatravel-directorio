@@ -42,7 +42,11 @@ const {
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
 // aunque México ya no lo pida para llamadas normales desde el propio teléfono.
-const telefonoWhatsapp = `521${telefonoDigitos.replace(/^52/, '')}`;
+// Si el teléfono ya trae otro código de país (ej. "+1" de EUA/Canadá), se
+// respeta tal cual — no se le antepone el prefijo mexicano.
+const telefonoWhatsapp = telefono.trim().startsWith('+1')
+  ? telefonoDigitos
+  : `521${telefonoDigitos.replace(/^52/, '')}`;
 // Mensaje genérico de respaldo (se usa si el visitante no elige fechas, o
 // antes de que el script del cliente termine de correr). El mensaje real
 // con fechas/saludo según hora del día se arma en el navegador — ver script
