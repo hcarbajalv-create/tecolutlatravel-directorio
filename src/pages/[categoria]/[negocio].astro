@@ -311,10 +311,12 @@ const esquemaLodging =
               <label for="fecha-entrada">Entrada</label>
               <input type="date" id="fecha-entrada" />
             </div>
-            <div class="ficha__fechas-campo">
-              <label for="fecha-salida">Salida</label>
-              <input type="date" id="fecha-salida" />
-            </div>
+            {categoria !== 'actividades' && (
+              <div class="ficha__fechas-campo">
+                <label for="fecha-salida">Salida</label>
+                <input type="date" id="fecha-salida" />
+              </div>
+            )}
           </div>
 
           <div class="ficha__fechas-campo ficha__fechas-campo--huespedes">
@@ -341,7 +343,9 @@ const esquemaLodging =
           </div>
 
           <p id="aviso-fechas" class="aviso-envio" role="alert" hidden>
-            ⚠️ Elige tu fecha de entrada, salida y número de huéspedes antes de escribir por WhatsApp.
+            {categoria === 'actividades'
+              ? `⚠️ Elige tu fecha y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`
+              : `⚠️ Elige tu fecha de entrada, salida y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`}
           </p>
 
           <p>
@@ -499,12 +503,15 @@ const esquemaLodging =
     const valorSalida = inputSalida && inputSalida.value;
     const valorHuespedes = inputHuespedes && inputHuespedes.value;
 
-    if (valorEntrada && valorSalida && valorSalida > valorEntrada && valorHuespedes) {
-      mensaje +=
-        `Me interesa consultar la disponibilidad de ${etiquetaLoQueSeReserva} y el costo para las siguientes fechas:\n\n` +
-        `Fecha de entrada: ${formatearFecha(valorEntrada)}\n` +
-        `Fecha de salida: ${formatearFecha(valorSalida)}\n` +
-        `Número de ${etiquetaPersonas}: ${valorHuespedes}`;
+    if (fechasValidas() && valorHuespedes) {
+      mensaje += inputSalida
+        ? `Me interesa consultar la disponibilidad de ${etiquetaLoQueSeReserva} y el costo para las siguientes fechas:\n\n` +
+          `Fecha de entrada: ${formatearFecha(valorEntrada)}\n` +
+          `Fecha de salida: ${formatearFecha(valorSalida)}\n` +
+          `Número de ${etiquetaPersonas}: ${valorHuespedes}`
+        : `Me interesa consultar la disponibilidad de ${etiquetaLoQueSeReserva} y el costo para la siguiente fecha:\n\n` +
+          `Fecha: ${formatearFecha(valorEntrada)}\n` +
+          `Número de ${etiquetaPersonas}: ${valorHuespedes}`;
     } else {
       mensaje += 'Me gustaría más información.';
     }
@@ -517,7 +524,10 @@ const esquemaLodging =
 
   function fechasValidas() {
     const valorEntrada = inputEntrada && inputEntrada.value;
-    const valorSalida = inputSalida && inputSalida.value;
+    // La ficha de actividades no tiene campo de salida — basta con la
+    // fecha de entrada.
+    if (!inputSalida) return Boolean(valorEntrada);
+    const valorSalida = inputSalida.value;
     return Boolean(valorEntrada && valorSalida && valorSalida > valorEntrada);
   }
 
@@ -530,20 +540,22 @@ const esquemaLodging =
     return fechasValidas() && huespedesValidos();
   }
 
-  if (inputEntrada && inputSalida) {
+  if (inputEntrada) {
     const hoyISO = new Date().toISOString().slice(0, 10);
     inputEntrada.min = hoyISO;
-    inputSalida.min = hoyISO;
+    if (inputSalida) inputSalida.min = hoyISO;
 
     inputEntrada.addEventListener('change', () => {
-      if (inputEntrada.value) inputSalida.min = inputEntrada.value;
+      if (inputSalida && inputEntrada.value) inputSalida.min = inputEntrada.value;
       if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
       actualizarEnlaceWhatsapp();
     });
-    inputSalida.addEventListener('change', () => {
-      if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
-      actualizarEnlaceWhatsapp();
-    });
+    if (inputSalida) {
+      inputSalida.addEventListener('change', () => {
+        if (avisoFechas && datosCompletos()) avisoFechas.hidden = true;
+        actualizarEnlaceWhatsapp();
+      });
+    }
   }
 
   if (inputHuespedes) {
