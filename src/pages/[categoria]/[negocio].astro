@@ -308,7 +308,7 @@ const esquemaLodging =
           <h2>Reserva</h2>
           <div class="ficha__fechas">
             <div class="ficha__fechas-campo">
-              <label for="fecha-entrada">Entrada</label>
+              <label for="fecha-entrada">{categoria === 'actividades' ? 'Fecha del paseo' : 'Entrada'}</label>
               <input type="date" id="fecha-entrada" />
             </div>
             {categoria !== 'actividades' && (
