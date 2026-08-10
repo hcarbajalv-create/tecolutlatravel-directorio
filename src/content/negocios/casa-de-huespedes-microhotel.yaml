@@ -1,0 +1,70 @@
+# Alta recibida vía WhatsApp (2026-08-10, en respuesta al mensaje de
+# contacto de WaSender). Descripción, servicios y precio tomados tal
+# cual del texto que mandó el negocio, redactados para la ficha sin
+# agregar datos nuevos.
+# Habitaciones/capacidad: desglose dado por el negocio — 7 para 2 (14),
+# 3 dobles para 4 (12), 1 para 3, 1 triple para 6 → total 12 habitaciones,
+# 35 personas (el negocio confirmó el total y el cálculo cuadra).
+# Dirección: resuelta abriendo el enlace de Google Maps que mandaron
+# (título de la página: "9 Av Niños Héroes") — misma calle que Casa Xanath.
+# Coordenadas: del mismo enlace de Maps, cruzadas contra el texto DMS
+# embebido en la URL (20°28'44.8"N 97°00'33.9"W), coinciden.
+# distanciaPlayaMetros: calculada contra la geometría real de la línea de
+# costa (OpenStreetMap, natural=coastline), mismo método usado en las
+# altas anteriores.
+nombre: Casa de Huéspedes Microhotel
+categoria: hospedaje
+descripcionCorta: Casa de huéspedes con habitaciones equipadas, a una cuadra de
+  la playa y junto a la central de camiones ADO, ideal para grupos grandes.
+direccion: Av Niños Héroes 9, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4790497
+  lng: -97.009429
+telefono: "+52 766 103 5904"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/01-foto.jpg
+    alt: Terraza de Casa de Huéspedes Microhotel con sillones y mesa entre plantas
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/02-foto.jpg
+    alt: Recámara de Casa de Huéspedes Microhotel con cama matrimonial y pared decorada con conchas
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/03-foto.jpg
+    alt: Recámara de Casa de Huéspedes Microhotel con dos camas, ventilador de techo y aire acondicionado
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/04-foto.jpg
+    alt: Recámara de Casa de Huéspedes Microhotel con cama individual y piso ajedrezado
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/05-foto.jpg
+    alt: Baño de Casa de Huéspedes Microhotel con azulejo blanco y negro
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/06-foto.jpg
+    alt: Baño de Casa de Huéspedes Microhotel con lavabo y espejo
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/07-foto.jpg
+    alt: Escalera interior de Casa de Huéspedes Microhotel decorada con plantas
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/08-foto.jpg
+    alt: Sala de estar en la terraza de Casa de Huéspedes Microhotel con sillón de piel y cojines
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/09-foto.jpg
+    alt: Terraza de Casa de Huéspedes Microhotel con sillones frente a la pared verde
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/10-foto.jpg
+    alt: Vista de la terraza de Casa de Huéspedes Microhotel con área de descanso
+  - src: ../../assets/fotos/casa-de-huespedes-microhotel/11-foto.jpg
+    alt: Área de descanso en la terraza de Casa de Huéspedes Microhotel
+precioTemporada:
+  - temporada: Desde
+    precio: 500
+fechaActualizacion: 2026-08-10
+disponible: true
+servicios:
+  - Wifi
+  - Agua caliente
+  - Ventilador
+  - TV con Netflix y YouTube
+  - Refrigerador
+  - Microondas
+  - Cafetera
+  - Hieleras
+  - Plancha
+  - Espacio para desayunar y descansar
+numeroHabitaciones: 12
+capacidadMaxima: 35
+distanciaPlayaMetros: 263
+tipo: cuarto
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
