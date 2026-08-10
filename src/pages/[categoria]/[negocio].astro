@@ -39,6 +39,11 @@ const {
   video,
 } = negocio.data;
 
+// Actividades ecoturísticas (lanchas, tours) hablan de "pasajeros", no de
+// "huéspedes" — el resto de categorías conserva el término original.
+const etiquetaPersonas = categoria === 'actividades' ? 'pasajeros' : 'huéspedes';
+const etiquetaPersonaSingular = categoria === 'actividades' ? 'pasajero' : 'huésped';
+
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
 // aunque México ya no lo pida para llamadas normales desde el propio teléfono.
@@ -313,13 +318,13 @@ const esquemaLodging =
           </div>
 
           <div class="ficha__fechas-campo ficha__fechas-campo--huespedes">
-            <label for="numero-huespedes">Número de huéspedes</label>
+            <label for="numero-huespedes">Número de {etiquetaPersonas}</label>
             <div class="ficha__contador">
               <button
                 type="button"
                 class="ficha__contador-boton"
                 id="huespedes-menos"
-                aria-label="Restar un huésped"
+                aria-label={`Restar un ${etiquetaPersonaSingular}`}
               >
                 −
               </button>
@@ -328,7 +333,7 @@ const esquemaLodging =
                 type="button"
                 class="ficha__contador-boton"
                 id="huespedes-mas"
-                aria-label="Sumar un huésped"
+                aria-label={`Sumar un ${etiquetaPersonaSingular}`}
               >
                 +
               </button>
@@ -446,7 +451,15 @@ const esquemaLodging =
   });
 </script>
 
-<script define:vars={{ nombreNegocio: nombre, urlFicha: urlFichaAbsoluta, numeroWhatsapp: telefonoWhatsapp }}>
+<script
+  define:vars={{
+    nombreNegocio: nombre,
+    urlFicha: urlFichaAbsoluta,
+    numeroWhatsapp: telefonoWhatsapp,
+    etiquetaPersonas,
+    etiquetaLoQueSeReserva: categoria === 'actividades' ? 'su recorrido' : 'su hospedaje',
+  }}
+>
   // Arma el mensaje de WhatsApp en el navegador (no en el build) porque el
   // saludo depende de la hora exacta en la que el visitante da clic, y las
   // fechas dependen de lo que elija en los campos de entrada/salida.
@@ -488,10 +501,10 @@ const esquemaLodging =
 
     if (valorEntrada && valorSalida && valorSalida > valorEntrada && valorHuespedes) {
       mensaje +=
-        'Me interesa consultar la disponibilidad de su hospedaje y el costo para las siguientes fechas:\n\n' +
+        `Me interesa consultar la disponibilidad de ${etiquetaLoQueSeReserva} y el costo para las siguientes fechas:\n\n` +
         `Fecha de entrada: ${formatearFecha(valorEntrada)}\n` +
         `Fecha de salida: ${formatearFecha(valorSalida)}\n` +
-        `Número de huéspedes: ${valorHuespedes}`;
+        `Número de ${etiquetaPersonas}: ${valorHuespedes}`;
     } else {
       mensaje += 'Me gustaría más información.';
     }
