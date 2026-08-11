@@ -11,6 +11,11 @@
 # Se quitó la foto del letrero (fondo amarillo) a petición del usuario,
 # 2026-08-10 — quedan 3 fotos. Las reglas de mínimo de fotos para lanchas
 # quizá cambien más adelante, pendiente de decidir.
+# Servicios (2026-08-10): el usuario pidió igualarlos a los de Lancha Mi
+# Ángel IR, asumiendo que las lanchas del río ofrecen los mismos
+# recorridos — dijo que lo va a verificar directamente con el negocio.
+# Si al confirmar resulta que Santy no ofrece alguno de estos paseos,
+# hay que quitarlo de aquí.
 nombre: Lancha Santy
 categoria: actividades
 descripcionCorta: Recorridos en lancha por los esteros y manglares del río
@@ -31,9 +36,14 @@ fotos:
 fechaActualizacion: 2026-08-10
 disponible: true
 servicios:
-  - Recorrido por manglares y esteros
-  - Santuario de aves
-  - Chalecos salvavidas obligatorios
+  - Recorrido al Santuario de las Aves
+  - Recorrido a la Cueva de la Mojarra
+  - Recorrido a la Cueva del Pirata
+  - Recorrido al Manglar del Silencio
+  - Paseos privados para tu grupo
+  - Horarios flexibles
+  - Chalecos salvavidas y medidas de seguridad
+  - Reserva fácil, sin complicaciones
 capacidadMaxima: 10
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
