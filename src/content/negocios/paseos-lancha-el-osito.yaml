@@ -1,0 +1,51 @@
+# Alta recibida vía WhatsApp (2026-08-10, contacto de Paloma). Capitán
+# Ignacio Jacinto ("el osito bimbo"), opera dos lanchas bajo la misma
+# marca "Paseos en Lancha El Osito": "Evelin" y "Los Compadres". Mismo
+# teléfono y ubicación para ambas — se hizo una sola ficha con las dos
+# lanchas en el nombre, indicación explícita del usuario.
+# Teléfono: el usuario dio dos números distintos (uno por WhatsApp, otro
+# en el flyer); se confirmó explícitamente que el correcto es el del
+# flyer, 766 102 3516.
+# Facebook y correo: aparecen cortados en la imagen del flyer
+# ("PaseosEnLanchaElOs...", "Ignaciojo...") — no se usaron por no tener
+# el dato completo.
+# Ubicación: el usuario dio un link de búsqueda de Maps ("embarcadero de
+# tecolutla"), no un pin específico — se usó la coordenada del viewport
+# de ese enlace.
+# Fotos: portada = flyer ilustrado (a petición explícita del usuario,
+# misma regla que Lancha Mi Ángel IR para actividades ecoturísticas) +
+# 4 fotos reales de las dos lanchas y sus chalecos salvavidas.
+# Precios: no se publican por ahora, misma regla que las demás lanchas.
+nombre: Paseos en Lancha "El Osito" (lanchas "Evelin" y "Los Compadres")
+categoria: actividades
+descripcionCorta: Paseos en lancha por los manglares de Tecolutla con las
+  embarcaciones "Evelin" y "Los Compadres", a cargo del capitán Ignacio
+  Jacinto, con capacidad para 10 personas por lancha.
+direccion: Embarcadero de lanchas verdes, calle Carlos Prieto, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.474473
+  lng: -97.0077176
+telefono: "+52 766 102 3516"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/paseos-lancha-el-osito/01-foto.jpg
+    alt: Flyer promocional de Paseos en Lancha El Osito con las lanchas Evelin y Los Compadres
+  - src: ../../assets/fotos/paseos-lancha-el-osito/02-foto.jpg
+    alt: Lancha "Evelin" atracada en el embarcadero de Tecolutla
+  - src: ../../assets/fotos/paseos-lancha-el-osito/03-foto.jpg
+    alt: Lanchas "Los Compadres" y "Evelin" atracadas juntas en el embarcadero
+  - src: ../../assets/fotos/paseos-lancha-el-osito/04-foto.jpg
+    alt: Chalecos salvavidas de la lancha "Los Compadres" a bordo
+  - src: ../../assets/fotos/paseos-lancha-el-osito/05-foto.jpg
+    alt: Chalecos salvavidas de la lancha "Evelin" a bordo
+fechaActualizacion: 2026-08-10
+disponible: true
+servicios:
+  - Recorrido por los manglares de Tecolutla
+  - Dos lanchas disponibles ("Evelin" y "Los Compadres")
+  - Chalecos salvavidas obligatorios
+  - Botiquín y extintor a bordo
+capacidadMaxima: 10
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
