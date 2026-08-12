@@ -7,15 +7,20 @@ interface Props {
   titulo: string;
   descripcion: string;
   noindex?: boolean;
+  // URL absoluta a una imagen real (ej. la portada de una ficha). Si no se
+  // pasa, cae al logo genérico del sitio — así ninguna página comparte sin
+  // imagen en la vista previa de WhatsApp/Facebook (antes no había ninguna).
+  imagen?: string;
 }
 
-const { titulo, descripcion, noindex = false } = Astro.props;
+const { titulo, descripcion, noindex = false, imagen } = Astro.props;
 // El build usa format:'file' (paginas.html planas) para evitar redirects de
 // Netlify, pero eso deja el .html en Astro.url.pathname durante el build.
 // El canonico debe reflejar la URL limpia real (sin .html), igual que el
 // sitemap y los enlaces internos — si no, quedan inconsistentes entre si.
 const rutaCanonica = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
 const urlCanonica = new URL(rutaCanonica, Astro.site);
+const imagenFinal = imagen ?? new URL('/og-default.jpg', Astro.site).toString();
 
 // GA4 solo se activa cuando existe un ID de medición real (variable de
 // entorno PUBLIC_GA_MEASUREMENT_ID) — evita mandar datos a una propiedad
@@ -44,6 +49,9 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlCanonica} />
+    <meta property="og:image" content={imagenFinal} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={imagenFinal} />
     {
       gaMeasurementId && (
         <>

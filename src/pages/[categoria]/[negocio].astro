@@ -154,6 +154,7 @@ const esquemaLodging =
 <BaseLayout
   titulo={`${nombre} — ${nombreCategoria[categoria]} en Tecolutla`}
   descripcion={descripcionCorta}
+  imagen={new URL(fotosGrandes[0].src, Astro.site).toString()}
 >
   {
     esquemaLodging && (
