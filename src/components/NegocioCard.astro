@@ -30,6 +30,7 @@ const portada = fotos[0];
 // eligió como su gancho principal. Ver la regla de orden en content.config.ts.
 const distanciaTarjeta = distancias?.[0];
 const enlace = `/${categoria}/${negocio.id}`;
+const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
 const amenidadesVisibles = servicios.slice(0, 3);
 
 const datosExtra: string[] = [];
@@ -50,8 +51,11 @@ const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 const telefonoWhatsapp = telefono.trim().startsWith('+1')
   ? telefonoDigitos
   : `521${telefonoDigitos.replace(/^52/, '')}`;
+// Se manda la URL completa de la ficha (no solo "www.tecolutlatravel.mx"
+// como texto suelto) para que WhatsApp arme la vista previa con la foto
+// real del negocio (og:image de la ficha) — antes no aparecía ninguna.
 const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURIComponent(
-  `Hola, vi ${nombre} en el directorio de www.tecolutlatravel.mx y me gustaría más información.`,
+  `Hola, vi ${nombre} en el directorio de ${enlaceAbsoluto} y me gustaría más información.`,
 )}`;
 ---
 
