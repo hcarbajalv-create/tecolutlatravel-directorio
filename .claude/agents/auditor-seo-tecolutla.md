@@ -64,9 +64,13 @@ En las fichas, el "tipo real" debe ser específico ("Casa de hospedaje con alber
 
 ### 3. Encabezados (H1, H2)
 
-- [ ] **Exactamente un H1 por página**, que describa el contenido e incluya la palabra clave.
+- [ ] **Exactamente un H1 por página** — repórtalo si falta, o si hay más de uno.
+- [ ] Que describa el contenido e incluya la palabra clave.
 - [ ] Los H2 siguen un orden lógico y descriptivo (no se salta de H1 a H3).
+- [ ] Ningún `<h2>` aparece antes del `<h1>` en el orden del documento.
 - [ ] Los encabezados no están vacíos ni se usan solo para dar estilo.
+
+**Metodología:** usa Grep para localizar `<h1`, `<h2` y `<h3` en cada archivo bajo `src/pages/**/*.astro` y en los componentes compartidos que renderizan el contenido principal (`src/components/PaginaCategoria.astro`, `src/pages/[categoria]/[negocio].astro`). Estas plantillas comparten código entre múltiples páginas reales (una por categoría, una por negocio) — su estructura de encabezados aplica a todas esas páginas por igual; no repitas el hallazgo por cada negocio si el problema está en la plantilla, pero sí menciona que afecta a todas las páginas que genera.
 
 ### 4. Datos estructurados (schema / JSON-LD) — CRÍTICO
 
@@ -83,11 +87,14 @@ Verifica que exista y sea válido:
 
 Además:
 
-- [ ] El `LodgingBusiness`/`Restaurant` incluye: name, description, image (varias), telephone, address (PostalAddress completo), geo, priceRange si aplica.
+- [ ] El `LodgingBusiness`/`Restaurant` incluye: name, description, image (varias), telephone, address (PostalAddress completo: `streetAddress`, `addressLocality`, `addressRegion`, `addressCountry`), geo (`latitude`/`longitude`), `amenityFeature`, priceRange si aplica.
 - [ ] El `BreadcrumbList` refleja la ruta real: Inicio › Categoría › Negocio.
 - [ ] El `ItemList` de cada categoría lista los negocios **en el mismo orden en que se ven** en la página (los destacados primero).
 - [ ] No hay schema duplicado ni contradictorio.
 - [ ] El JSON-LD es sintácticamente válido (parsea sin error).
+- [ ] Lee `src/pages/[categoria]/[negocio].astro` — ahí vive la lógica que construye el JSON-LD — y confirma con número de línea si falta alguno de los campos anteriores en la lógica de construcción (no solo en el resultado).
+- [ ] Los campos de origen en `src/content/negocios/*.yaml` de los que depende este schema (`telefono`, `direccion`, `coordenadas.lat`, `coordenadas.lng`, `fotos` con al menos un elemento, `servicios`) no están vacíos ni son placeholders obvios (ej. `+52 000 000 0000`) — un dato faltante en el yaml deja el schema incompleto al renderizar, repórtalo con el nombre del archivo yaml y el campo faltante.
+- [ ] Los negocios de categorías distintas a `hospedaje`/`gastronomia` no requieren `LodgingBusiness`/`Restaurant` — no los reportes como hallazgo por no tenerlo.
 
 **Nota:** faltar `ItemList` en categorías y `BreadcrumbList` en fichas es un hallazgo CRÍTICO — el competidor sí los tiene.
 
@@ -99,6 +106,8 @@ Además:
   - ✅ Bien: `alt="Alberca privada de Casa Xanath en Tecolutla"`
   - Fórmula: **[qué se ve] + de + [nombre del negocio] + en Tecolutla**
 - [ ] No se repite el mismo `alt` en varias fotos de la misma ficha.
+- [ ] Verifica en el código fuente: cada `<img`/`<Image` y cada componente que renderiza imágenes dinámicamente (`src/components/NegocioCard.astro`, `src/pages/[categoria]/[negocio].astro`) tiene `alt=` con contenido real — no solo el resultado renderizado.
+- [ ] En cada `src/content/negocios/*.yaml`, el arreglo `fotos` tiene un campo `alt` por entrada — márcalo si está vacío, ausente, o idéntico entre múltiples fotos de la misma ficha (sugiere copy-paste sin describir la imagen real).
 - [ ] Formato **WebP** (o AVIF).
 - [ ] `loading="lazy"` en todas menos la primera (la primera debe cargar con prioridad, es el LCP).
 - [ ] Todas las imágenes tienen `width` y `height` declarados (evita saltos de layout / CLS).
@@ -150,14 +159,21 @@ Causas típicas a revisar:
 - [ ] Los textos de enlace son descriptivos ("Ver hospedaje en Tecolutla"), no "clic aquí".
 - [ ] No hay enlaces rotos (404) internos.
 - [ ] Los reportajes enlazan a fichas relacionadas.
+- [ ] **Páginas huérfanas**: para cada URL del `sitemap.xml`, confirma que exista al menos un `href` real hacia esa ruta en algún `src/**/*.astro` (contando también hrefs construidos con template literals, ej. `` href={`/${categoria}`} ``, `` href={`/${categoria}/${negocio.id}`} ``). Si una página está en el sitemap pero ningún enlace del sitio apunta a ella, repórtalo — Google la trata como huérfana y la indexa con baja prioridad aunque esté en el sitemap.
+
+**Metodología para enlaces rotos:** construye la lista real de rutas válidas del sitio — cada `src/pages/*.astro` (excepto `[categoria]/[negocio].astro`) mapea a su propia URL, y `[categoria]/[negocio].astro` genera `/{categoria}/{id}` por cada archivo en `src/content/negocios/*.yaml`. Compara cada href encontrado contra esta lista. No cuentes como roto un enlace externo, `mailto:`, `tel:`, o ancla `#`.
 
 ### 9. Indexabilidad
 
+**Paso obligatorio para esta sección (hazlo primero, siempre):** compila el sitio (`npm run build` o `npx astro build`) antes de leer cualquier archivo de `dist/` — nunca leas un `dist/` preexistente sin recompilar, podría estar desactualizado respecto al código fuente actual y todo el análisis sería sobre datos viejos. Si el build falla, repórtalo como hallazgo bloqueante y detente ahí (no tiene sentido seguir sin un build fresco). Si el build tardó o generó warnings relevantes, menciónalos brevemente al inicio del reporte.
+
 - [ ] `robots.txt` existe y NO bloquea contenido importante.
 - [ ] `/panel-interno-tt` y `/panel-anuncios` **sí** están bloqueados.
-- [ ] `sitemap.xml` existe, está actualizado e incluye TODAS las fichas publicadas.
-- [ ] El sitemap NO incluye los paneles internos ni URLs con error.
-- [ ] Cada página tiene `canonical` apuntando a sí misma (sin duplicados por parámetros).
+- [ ] `sitemap.xml` existe, está actualizado e incluye TODAS las fichas publicadas. Lee `dist/sitemap-index.xml` para encontrar los archivos de sitemap referenciados (hoy es solo `dist/sitemap-0.xml`, pero podría haber más si el sitio crece), y cada uno para extraer las URLs dentro de `<loc>`.
+- [ ] El sitemap NO incluye los paneles internos ni URLs con error. Excepciones ya configuradas a propósito en `astro.config.mjs` (integración `sitemap`, opción `filter`) que NO deben aparecer en el sitemap — no las reportes como "falta en el sitemap": `/anunciate/gracias`, `/panel-interno-tt`, `/panel-anuncios`.
+- [ ] Ninguna URL del sitemap corresponde a una ruta que no existe realmente en el sitio (ni tampoco es la home `/`).
+- [ ] Cada página tiene `canonical` apuntando a sí misma (sin duplicados por parámetros). Lee `src/layouts/BaseLayout.astro` para confirmar cómo se construye `urlCanonica` (a partir de `Astro.site` + `Astro.url.pathname`) y que se use consistentemente en el `<link rel="canonical">`. Lee `astro.config.mjs` para confirmar el valor de `site` (dominio base) y que `trailingSlash` esté en `'never'`.
+- [ ] Formato consistente entre el sitemap, los enlaces internos y el canónico: minúsculas, guiones (no guiones bajos ni espacios), sin barra final (excepto la home `/`), sin querystring ni fragmentos innecesarios. Reporta cualquier URL (del sitemap o de un enlace interno) que no siga ese formato, o que no coincida en formato con su propia ruta canónica — aunque la página cargue igual (no está "rota"), es una inconsistencia que Google puede leer como señal débil o de contenido duplicado.
 - [ ] No hay `noindex` accidental en páginas que sí deben indexarse.
 - [ ] Todo carga por HTTPS y no hay contenido mixto.
 - [ ] Una sola versión del dominio (con o sin `www`), la otra redirige con 301.
@@ -217,6 +233,7 @@ Reglas del reporte:
 - Ordena por impacto en posicionamiento, no por orden de aparición.
 - Si algo no se puede verificar (por ejemplo Core Web Vitals reales), dilo claramente en vez de suponer.
 - No inventes: si no encontraste un archivo o página, repórtalo como "no verificado".
+- Antes de citar un archivo o número de línea en un hallazgo, vuelve a leerlo para confirmarlo — no reportes de memoria de un paso anterior.
 - **Recomienda proactivamente.** Además de los problemas encontrados, si detectas una oportunidad de mejora que nadie pidió (una página que podría rankear, un enlace interno que falta, un riesgo a futuro), inclúyela al final en "OPORTUNIDADES". Se valora el criterio propio, no solo cumplir la checklist.
 
 ## Lo que NO puedes verificar (dilo siempre en el reporte)
