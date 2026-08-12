@@ -73,8 +73,9 @@ const guias = [
 ---
 
 <BaseLayout
-  titulo="Directorio turístico de Tecolutla, Veracruz"
-  descripcion="Encuentra hospedaje, restaurantes, actividades ecoturísticas y servicios en Tecolutla, Veracruz. Directorio local con negocios verificados."
+  titulo="Hoteles y casas de hospedaje en Tecolutla, Veracruz | Qué hacer y dónde comer"
+  tituloCompleto
+  descripcion="Guía local de Tecolutla: casas de hospedaje con alberca, hoteles, restaurantes de mariscos y paseos por los manglares. Contacto directo con cada negocio por WhatsApp."
 >
   <section class="hero">
     <div class="hero__puntos"></div>
@@ -113,8 +114,8 @@ const guias = [
           </div>
         </div>
         <div class="rejilla-negocios" id="rejilla-destacados-home">
-          {destacados.map((negocio) => (
-            <NegocioCard negocio={negocio} />
+          {destacados.map((negocio, i) => (
+            <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
         </div>
       </section>
@@ -228,6 +229,19 @@ const guias = [
     ordenFinal.forEach((tarjeta) => contenedor.appendChild(tarjeta));
     ordenFinal.forEach((tarjeta, i) => {
       tarjeta.style.display = i < MAX_DESTACADOS_HOME ? '' : 'none';
+    });
+
+    // Igual que en PaginaCategoria.astro: la rotación diaria decide cuál
+    // tarjeta queda primera de verdad, así que la prioridad de imagen
+    // (carga eager / fetchpriority alta, sección de rendimiento) se
+    // aplica aquí según el orden final, no según lo que haya decidido
+    // el servidor al renderizar.
+    ordenFinal.forEach((tarjeta, i) => {
+      const img = tarjeta.querySelector<HTMLImageElement>('.tarjeta__imagen');
+      if (!img) return;
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      if (i === 0) img.setAttribute('fetchpriority', 'high');
+      else img.removeAttribute('fetchpriority');
     });
   }
 

@@ -37,6 +37,7 @@ const {
   capacidadMaxima,
   petFriendly,
   distancias,
+  tipo,
   checkIn,
   checkOut,
   verificado,
@@ -92,6 +93,29 @@ const nombreCategoria: Record<string, string> = {
   actividades: 'Actividades ecoturísticas',
   servicios: 'Servicios',
 };
+
+// "Tipo real" para el título de la ficha — nunca el nombre genérico de
+// la categoría (ej. "Hospedaje"), siempre lo más específico que el
+// propio yaml del negocio ya sabe (tipo de hospedaje, tipo de cocina).
+// Para actividades/servicios no hay todavía un campo de sub-tipo, así
+// que se usa un término de categoría más específico que el nombre
+// plano de nav, sin inventar un dato que no existe.
+const tipoRealHospedaje: Record<string, string> = {
+  casa: 'Casa de hospedaje',
+  hotel: 'Hotel',
+  cuarto: 'Cuarto de hospedaje',
+};
+let tipoReal: string;
+if (categoria === 'hospedaje') {
+  tipoReal = tipoRealHospedaje[tipo ?? ''] ?? 'Hospedaje';
+} else if (categoria === 'gastronomia') {
+  tipoReal =
+    tipoCocina && tipoCocina.length > 0 ? `Restaurante de ${tipoCocina[0].toLowerCase()}` : 'Restaurante';
+} else if (categoria === 'actividades') {
+  tipoReal = 'Actividad ecoturística';
+} else {
+  tipoReal = 'Servicio turístico';
+}
 
 const iconoCategoria: Record<string, string> = {
   hospedaje: '🏡',
@@ -157,9 +181,11 @@ const esquemaLodging =
 ---
 
 <BaseLayout
-  titulo={`${nombre} — ${nombreCategoria[categoria]} en Tecolutla`}
+  titulo={`${nombre} — ${tipoReal} en Tecolutla, Veracruz`}
   descripcion={descripcionCorta}
   imagen={new URL(fotosGrandes[0].src, Astro.site).toString()}
+  imagenAncho={fotosGrandes[0].attributes.width}
+  imagenAlto={fotosGrandes[0].attributes.height}
 >
   {
     esquemaLodging && (
@@ -199,7 +225,16 @@ const esquemaLodging =
             data-alt={foto.alt}
             aria-label={`Ampliar foto: ${foto.alt}`}
           >
-            <Image src={foto.src} alt={foto.alt} loading="lazy" width={400} height={300} />
+            <Image
+              src={foto.src}
+              alt={foto.alt}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              width={400}
+              height={300}
+              widths={[300, 400, 600]}
+              sizes="(max-width: 640px) 45vw, 200px"
+            />
           </button>
         ))
       }

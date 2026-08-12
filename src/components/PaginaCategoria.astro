@@ -116,8 +116,8 @@ const etiquetaBusqueda = ETIQUETAS_BUSQUEDA[categoria];
         </p>
       ) : (
         <div class="rejilla-negocios" id="rejilla-negocios">
-          {negociosCategoria.map((negocio) => (
-            <NegocioCard negocio={negocio} />
+          {negociosCategoria.map((negocio, i) => (
+            <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
         </div>
       )
@@ -160,6 +160,28 @@ const etiquetaBusqueda = ETIQUETAS_BUSQUEDA[categoria];
       if (limite) contenedor.insertBefore(tarjeta, limite);
       else contenedor.appendChild(tarjeta);
     }
+
+    // La rotación diaria cambia cuál tarjeta queda primera de verdad en
+    // pantalla — el "esPrimera" que decide el servidor (para cargar esa
+    // imagen con prioridad, sección de rendimiento) casi nunca coincide
+    // con el resultado real después de esto. Se corrige aquí: la que
+    // termine primera pasa a "eager"/alta prioridad, y si el servidor le
+    // había dado esa prioridad a otra tarjeta que ya no quedó primera, se
+    // le quita (aunque su descarga ya haya empezado, no tiene caso seguir
+    // tratándola como si fuera la más importante de la página).
+    const actualizarPrioridadImagen = (tarjeta: HTMLElement, esLaPrimera: boolean) => {
+      const img = tarjeta.querySelector<HTMLImageElement>('.tarjeta__imagen');
+      if (!img) return;
+      img.loading = esLaPrimera ? 'eager' : 'lazy';
+      if (esLaPrimera) img.setAttribute('fetchpriority', 'high');
+      else img.removeAttribute('fetchpriority');
+    };
+    // Se vuelve a leer el DOM (no se reusa "tarjetas") porque ese array
+    // se capturó ANTES del reordenamiento de arriba — ya no refleja el
+    // orden final real.
+    Array.from(contenedor.children).forEach((tarjeta, i) =>
+      actualizarPrioridadImagen(tarjeta as HTMLElement, i === 0),
+    );
   }
 
   // Combina el filtro de tipo (pastillas, solo hospedaje) con la búsqueda

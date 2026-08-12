@@ -5,9 +5,14 @@ import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalo
 
 interface Props {
   negocio: CollectionEntry<'negocios'>;
+  // La primera tarjeta de cada listado suele ser el elemento LCP de la
+  // página — se carga con prioridad en vez de perezosa. El resto sigue
+  // en "lazy" como antes. Ver PaginaCategoria.astro e index.astro, que
+  // son quienes saben cuál tarjeta es la primera del listado real.
+  esPrimera?: boolean;
 }
 
-const { negocio } = Astro.props;
+const { negocio, esPrimera = false } = Astro.props;
 const {
   categoria,
   nombre,
@@ -73,9 +78,12 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
         class="tarjeta__imagen"
         src={portada.src}
         alt={portada.alt}
-        loading="lazy"
+        loading={esPrimera ? 'eager' : 'lazy'}
+        fetchpriority={esPrimera ? 'high' : 'auto'}
         width={500}
         height={375}
+        widths={[300, 500, 750]}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 320px"
       />
     </a>
     {

@@ -11,15 +11,43 @@ interface Props {
   // pasa, cae al logo genérico del sitio — así ninguna página comparte sin
   // imagen en la vista previa de WhatsApp/Facebook (antes no había ninguna).
   imagen?: string;
+  // Dimensiones reales de "imagen" — WhatsApp/Facebook las usan para
+  // reservar el espacio de la vista previa sin parpadeo. Si no se pasan,
+  // se asume el tamaño del logo por default (public/og-default.jpg, 640x640).
+  imagenAncho?: number;
+  imagenAlto?: number;
+  // Por default, "titulo" es solo la parte descriptiva y aquí se le
+  // agrega " | TecolutlaTravel" (sin punto — regla explícita del sitio).
+  // La home usa un formato propio que ya trae su propio cierre en vez
+  // de la marca ("... | Qué hacer y dónde comer"), así que pasa
+  // tituloCompleto para que no se le agregue nada más encima.
+  tituloCompleto?: boolean;
 }
 
-const { titulo, descripcion, noindex = false, imagen } = Astro.props;
+const {
+  titulo,
+  descripcion,
+  noindex = false,
+  imagen,
+  imagenAncho = 640,
+  imagenAlto = 640,
+  tituloCompleto = false,
+} = Astro.props;
+const tituloFinal = tituloCompleto ? titulo : `${titulo} | TecolutlaTravel`;
 // El build usa format:'file' (paginas.html planas) para evitar redirects de
 // Netlify, pero eso deja el .html en Astro.url.pathname durante el build.
 // El canonico debe reflejar la URL limpia real (sin .html), igual que el
 // sitemap y los enlaces internos — si no, quedan inconsistentes entre si.
 const rutaCanonica = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
-const urlCanonica = new URL(rutaCanonica, Astro.site);
+// La home es la única excepción a "sin barra final": un objeto URL
+// siempre serializa la raíz con "/" (es la sintaxis mínima válida), pero
+// @astrojs/sitemap sí le quita esa barra a la home de forma fija cuando
+// trailingSlash:'never' (ver astro.config.mjs) — se replica aquí ese
+// mismo recorte para que canonical y sitemap digan exactamente lo mismo.
+const urlCanonica =
+  rutaCanonica === '/'
+    ? Astro.site.toString().replace(/\/$/, '')
+    : new URL(rutaCanonica, Astro.site).toString();
 const imagenFinal = imagen ?? new URL('/og-default.jpg', Astro.site).toString();
 
 // GA4 solo se activa cuando existe un ID de medición real (variable de
@@ -33,7 +61,7 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{titulo} | TecolutlaTravel</title>
+    <title>{tituloFinal}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={urlCanonica} />
     <meta name="theme-color" content="#0b6f7a" />
@@ -45,12 +73,16 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
       rel="stylesheet"
     />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta property="og:title" content={`${titulo} | TecolutlaTravel`} />
+    <meta property="og:title" content={tituloFinal} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={urlCanonica} />
     <meta property="og:image" content={imagenFinal} />
+    <meta property="og:image:width" content={String(imagenAncho)} />
+    <meta property="og:image:height" content={String(imagenAlto)} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={tituloFinal} />
+    <meta name="twitter:description" content={descripcion} />
     <meta name="twitter:image" content={imagenFinal} />
     {
       gaMeasurementId && (
