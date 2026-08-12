@@ -42,7 +42,9 @@ servicios:
 numeroHabitaciones: 3
 capacidadMaxima: 15
 petFriendly: true
-distanciaPlayaMetros: 247
+distancias:
+  - a: playa
+    metros: 247
 checkIn: "15:00"
 checkOut: "12:00"
 verificado: true

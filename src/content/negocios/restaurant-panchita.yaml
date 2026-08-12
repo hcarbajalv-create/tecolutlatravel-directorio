@@ -17,8 +17,11 @@
 # genéricas y reseñas de terceros. Descripción y servicios redactados
 # desde cero a partir de las fotos reales del negocio (platillos y
 # ambiente), no copiados de ningún lado.
-# Distancia a la playa: calculada con la costa real (Overpass API), no
-# estimada — 527 m.
+# Distancias: la del río va PRIMERO (es el gancho real del negocio — está
+# literalmente sobre el río, junto al embarcadero — más que la playa,
+# que ni se ve desde ahí). La regla de orden vive en content.config.ts:
+# la primera entrada de "distancias" es la que se muestra en la tarjeta.
+# Playa calculada con la costa real (Overpass API), no estimada — 527 m.
 # Capacidad y horario: pendientes a petición explícita del usuario
 # (2026-08-12) — Google Maps no publica un horario semanal confiable
 # (solo el estado "abierto ahora" del momento de la consulta), así que
@@ -66,7 +69,11 @@ servicios:
   - Pescado entero frito con ajo
   - Terraza techada de dos niveles con vista al río
   - Junto al embarcadero de lanchas turísticas
-distanciaPlayaMetros: 527
+distancias:
+  - a: rio
+    texto: "A pie de río"
+  - a: playa
+    metros: 527
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: false

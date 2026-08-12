@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import { CATALOGO_DISTANCIAS, formatearDistancia } from '../../utils/catalogoDistancias';
 
 export async function getStaticPaths() {
   const negocios = await getCollection('negocios');
@@ -30,7 +31,7 @@ const {
   numeroHabitaciones,
   capacidadMaxima,
   petFriendly,
-  distanciaPlayaMetros,
+  distancias,
   checkIn,
   checkOut,
   verificado,
@@ -39,45 +40,14 @@ const {
   video,
 } = negocio.data;
 
-// Cada categoría reserva algo distinto (una habitación, un lugar en la
-// lancha, una mesa) — el bloque "Reserva" de la ficha se adapta con esta
-// configuración en vez de repetir ternarios por categoría en cada punto
-// donde se usa. "servicios" no tiene un caso de uso claro de fecha/personas
-// todavía, así que usa el mismo texto genérico que hospedaje mientras no
-// se dé de alta el primer negocio de esa categoría y se sepa qué necesita.
-const configReserva = {
-  hospedaje: {
-    etiquetaPersonas: 'huéspedes',
-    etiquetaPersonaSingular: 'huésped',
-    etiquetaFecha: 'Entrada',
-    mostrarSalida: true,
-    loQueSeReserva: 'su hospedaje',
-  },
-  actividades: {
-    etiquetaPersonas: 'pasajeros',
-    etiquetaPersonaSingular: 'pasajero',
-    etiquetaFecha: 'Fecha del paseo',
-    mostrarSalida: false,
-    loQueSeReserva: 'su recorrido',
-  },
-  gastronomia: {
-    etiquetaPersonas: 'comensales',
-    etiquetaPersonaSingular: 'comensal',
-    etiquetaFecha: 'Fecha de tu reservación',
-    mostrarSalida: false,
-    loQueSeReserva: 'una mesa',
-  },
-  servicios: {
-    etiquetaPersonas: 'personas',
-    etiquetaPersonaSingular: 'persona',
-    etiquetaFecha: 'Entrada',
-    mostrarSalida: true,
-    loQueSeReserva: 'su hospedaje',
-  },
-}[categoria];
-
-const { etiquetaPersonas, etiquetaPersonaSingular, etiquetaFecha, mostrarSalida, loQueSeReserva } =
-  configReserva;
+// El formulario de fechas/personas del bloque "Reserva" se limitó a
+// hospedaje (única categoría que lo renderiza) — ver más abajo, sección
+// "Reserva y contacto". Por eso estas etiquetas ya no varían por categoría.
+const etiquetaPersonas = 'huéspedes';
+const etiquetaPersonaSingular = 'huésped';
+const etiquetaFecha = 'Entrada';
+const mostrarSalida = true;
+const loQueSeReserva = 'su hospedaje';
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
@@ -307,7 +277,11 @@ const esquemaLodging =
         {petFriendly !== undefined && (
           <p>Mascotas: {petFriendly ? 'Sí se aceptan' : 'No se aceptan'}</p>
         )}
-        {distanciaPlayaMetros !== undefined && <p>Distancia a la playa: {distanciaPlayaMetros} metros</p>}
+        {distancias?.map((d) => (
+          <p>
+            {CATALOGO_DISTANCIAS[d.a].icono} {formatearDistancia(d)}
+          </p>
+        ))}
         <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
       </div>
 
@@ -340,48 +314,52 @@ const esquemaLodging =
       </div>
 
       <div class="ficha__bloque ficha__bloque--reserva">
-          <h2>Reserva</h2>
-          <div class="ficha__fechas">
-            <div class="ficha__fechas-campo">
-              <label for="fecha-entrada">{etiquetaFecha}</label>
-              <input type="date" id="fecha-entrada" />
-            </div>
-            {mostrarSalida && (
-              <div class="ficha__fechas-campo">
-                <label for="fecha-salida">Salida</label>
-                <input type="date" id="fecha-salida" />
+          <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Contacto'}</h2>
+          {categoria === 'hospedaje' && (
+            <>
+              <div class="ficha__fechas">
+                <div class="ficha__fechas-campo">
+                  <label for="fecha-entrada">{etiquetaFecha}</label>
+                  <input type="date" id="fecha-entrada" />
+                </div>
+                {mostrarSalida && (
+                  <div class="ficha__fechas-campo">
+                    <label for="fecha-salida">Salida</label>
+                    <input type="date" id="fecha-salida" />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div class="ficha__fechas-campo ficha__fechas-campo--huespedes">
-            <label for="numero-huespedes">Número de {etiquetaPersonas}</label>
-            <div class="ficha__contador">
-              <button
-                type="button"
-                class="ficha__contador-boton"
-                id="huespedes-menos"
-                aria-label={`Restar un ${etiquetaPersonaSingular}`}
-              >
-                −
-              </button>
-              <input type="number" id="numero-huespedes" min="1" max="50" inputmode="numeric" placeholder="0" />
-              <button
-                type="button"
-                class="ficha__contador-boton"
-                id="huespedes-mas"
-                aria-label={`Sumar un ${etiquetaPersonaSingular}`}
-              >
-                +
-              </button>
-            </div>
-          </div>
+              <div class="ficha__fechas-campo ficha__fechas-campo--huespedes">
+                <label for="numero-huespedes">Número de {etiquetaPersonas}</label>
+                <div class="ficha__contador">
+                  <button
+                    type="button"
+                    class="ficha__contador-boton"
+                    id="huespedes-menos"
+                    aria-label={`Restar un ${etiquetaPersonaSingular}`}
+                  >
+                    −
+                  </button>
+                  <input type="number" id="numero-huespedes" min="1" max="50" inputmode="numeric" placeholder="0" />
+                  <button
+                    type="button"
+                    class="ficha__contador-boton"
+                    id="huespedes-mas"
+                    aria-label={`Sumar un ${etiquetaPersonaSingular}`}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
 
-          <p id="aviso-fechas" class="aviso-envio" role="alert" hidden>
-            {mostrarSalida
-              ? `⚠️ Elige tu fecha de entrada, salida y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`
-              : `⚠️ Elige tu fecha y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`}
-          </p>
+              <p id="aviso-fechas" class="aviso-envio" role="alert" hidden>
+                {mostrarSalida
+                  ? `⚠️ Elige tu fecha de entrada, salida y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`
+                  : `⚠️ Elige tu fecha y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`}
+              </p>
+            </>
+          )}
 
           <p>
             <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp">

@@ -9,7 +9,7 @@
 # (título de la página: "9 Av Niños Héroes") — misma calle que Casa Xanath.
 # Coordenadas: del mismo enlace de Maps, cruzadas contra el texto DMS
 # embebido en la URL (20°28'44.8"N 97°00'33.9"W), coinciden.
-# distanciaPlayaMetros: calculada contra la geometría real de la línea de
+# distancias (playa): calculada contra la geometría real de la línea de
 # costa (OpenStreetMap, natural=coastline), mismo método usado en las
 # altas anteriores.
 nombre: Casa de Huéspedes Microhotel
@@ -63,7 +63,9 @@ servicios:
   - Espacio para desayunar y descansar
 numeroHabitaciones: 12
 capacidadMaxima: 35
-distanciaPlayaMetros: 263
+distancias:
+  - a: playa
+    metros: 263
 tipo: cuarto
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar

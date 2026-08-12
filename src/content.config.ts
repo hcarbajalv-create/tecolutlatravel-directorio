@@ -1,6 +1,9 @@
 import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { esUrlVideoValida } from './utils/embedVideo';
+import { CATALOGO_DISTANCIAS } from './utils/catalogoDistancias';
+
+const destinosDistancia = Object.keys(CATALOGO_DISTANCIAS) as [string, ...string[]];
 
 const negocios = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/negocios' }),
@@ -53,7 +56,30 @@ const negocios = defineCollection({
       numeroHabitaciones: z.number().optional(),
       capacidadMaxima: z.number().optional(),
       petFriendly: z.boolean().optional(),
-      distanciaPlayaMetros: z.number().optional(),
+      // Lista de distancias a puntos de referencia (playa, río, centro,
+      // embarcadero...) — catálogo de destinos válidos en
+      // utils/catalogoDistancias.ts, agregar uno nuevo es una línea ahí.
+      // Cada entrada trae "a" + exactamente uno de "metros" (número, se
+      // muestra formateado "527 m") o "texto" (frase corta ya redactada,
+      // se muestra tal cual, ej. "A pie de río").
+      // REGLA DE ORDEN: la PRIMERA entrada es la que se muestra en la
+      // tarjeta de listado — pon primero la distancia que sea el
+      // verdadero gancho del negocio (ej. el río para un restaurante
+      // frente al malecón, aunque la playa esté más cerca), no
+      // necesariamente la más corta.
+      distancias: z
+        .array(
+          z
+            .object({
+              a: z.enum(destinosDistancia),
+              metros: z.number().optional(),
+              texto: z.string().optional(),
+            })
+            .refine((d) => (d.metros !== undefined) !== (d.texto !== undefined), {
+              message: 'Cada distancia debe traer "metros" o "texto", exactamente uno de los dos.',
+            }),
+        )
+        .optional(),
       checkIn: z.string().optional(),
       checkOut: z.string().optional(),
       verificado: z.boolean().default(false),

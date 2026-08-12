@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalogoDistancias';
 
 interface Props {
   negocio: CollectionEntry<'negocios'>;
@@ -19,11 +20,15 @@ const {
   numeroHabitaciones,
   capacidadMaxima,
   petFriendly,
-  distanciaPlayaMetros,
+  distancias,
   tipo,
   ordenManual,
 } = negocio.data;
 const portada = fotos[0];
+// La tarjeta solo tiene espacio para una insignia de distancia — se usa
+// la primera de la lista, que es la que el negocio (o quien dio de alta)
+// eligió como su gancho principal. Ver la regla de orden en content.config.ts.
+const distanciaTarjeta = distancias?.[0];
 const enlace = `/${categoria}/${negocio.id}`;
 const amenidadesVisibles = servicios.slice(0, 3);
 
@@ -78,9 +83,11 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       )
     }
     {
-      distanciaPlayaMetros !== undefined && (
+      distanciaTarjeta && (
         <div class="tarjeta__datos">
-          <span class="insignia insignia--dato">🏖️ {distanciaPlayaMetros}m</span>
+          <span class="insignia insignia--dato">
+            {CATALOGO_DISTANCIAS[distanciaTarjeta.a].icono} {formatearDistanciaCompacta(distanciaTarjeta)}
+          </span>
         </div>
       )
     }
