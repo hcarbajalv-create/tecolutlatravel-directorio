@@ -39,10 +39,45 @@ const {
   video,
 } = negocio.data;
 
-// Actividades ecoturísticas (lanchas, tours) hablan de "pasajeros", no de
-// "huéspedes" — el resto de categorías conserva el término original.
-const etiquetaPersonas = categoria === 'actividades' ? 'pasajeros' : 'huéspedes';
-const etiquetaPersonaSingular = categoria === 'actividades' ? 'pasajero' : 'huésped';
+// Cada categoría reserva algo distinto (una habitación, un lugar en la
+// lancha, una mesa) — el bloque "Reserva" de la ficha se adapta con esta
+// configuración en vez de repetir ternarios por categoría en cada punto
+// donde se usa. "servicios" no tiene un caso de uso claro de fecha/personas
+// todavía, así que usa el mismo texto genérico que hospedaje mientras no
+// se dé de alta el primer negocio de esa categoría y se sepa qué necesita.
+const configReserva = {
+  hospedaje: {
+    etiquetaPersonas: 'huéspedes',
+    etiquetaPersonaSingular: 'huésped',
+    etiquetaFecha: 'Entrada',
+    mostrarSalida: true,
+    loQueSeReserva: 'su hospedaje',
+  },
+  actividades: {
+    etiquetaPersonas: 'pasajeros',
+    etiquetaPersonaSingular: 'pasajero',
+    etiquetaFecha: 'Fecha del paseo',
+    mostrarSalida: false,
+    loQueSeReserva: 'su recorrido',
+  },
+  gastronomia: {
+    etiquetaPersonas: 'comensales',
+    etiquetaPersonaSingular: 'comensal',
+    etiquetaFecha: 'Fecha de tu reservación',
+    mostrarSalida: false,
+    loQueSeReserva: 'una mesa',
+  },
+  servicios: {
+    etiquetaPersonas: 'personas',
+    etiquetaPersonaSingular: 'persona',
+    etiquetaFecha: 'Entrada',
+    mostrarSalida: true,
+    loQueSeReserva: 'su hospedaje',
+  },
+}[categoria];
+
+const { etiquetaPersonas, etiquetaPersonaSingular, etiquetaFecha, mostrarSalida, loQueSeReserva } =
+  configReserva;
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
@@ -308,10 +343,10 @@ const esquemaLodging =
           <h2>Reserva</h2>
           <div class="ficha__fechas">
             <div class="ficha__fechas-campo">
-              <label for="fecha-entrada">{categoria === 'actividades' ? 'Fecha del paseo' : 'Entrada'}</label>
+              <label for="fecha-entrada">{etiquetaFecha}</label>
               <input type="date" id="fecha-entrada" />
             </div>
-            {categoria !== 'actividades' && (
+            {mostrarSalida && (
               <div class="ficha__fechas-campo">
                 <label for="fecha-salida">Salida</label>
                 <input type="date" id="fecha-salida" />
@@ -343,9 +378,9 @@ const esquemaLodging =
           </div>
 
           <p id="aviso-fechas" class="aviso-envio" role="alert" hidden>
-            {categoria === 'actividades'
-              ? `⚠️ Elige tu fecha y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`
-              : `⚠️ Elige tu fecha de entrada, salida y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`}
+            {mostrarSalida
+              ? `⚠️ Elige tu fecha de entrada, salida y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`
+              : `⚠️ Elige tu fecha y número de ${etiquetaPersonas} antes de escribir por WhatsApp.`}
           </p>
 
           <p>
@@ -461,7 +496,7 @@ const esquemaLodging =
     urlFicha: urlFichaAbsoluta,
     numeroWhatsapp: telefonoWhatsapp,
     etiquetaPersonas,
-    etiquetaLoQueSeReserva: categoria === 'actividades' ? 'su recorrido' : 'su hospedaje',
+    etiquetaLoQueSeReserva: loQueSeReserva,
   }}
 >
   // Arma el mensaje de WhatsApp en el navegador (no en el build) porque el

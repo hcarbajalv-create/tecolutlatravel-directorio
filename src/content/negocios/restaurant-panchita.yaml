@@ -1,0 +1,72 @@
+# Alta recibida vía WhatsApp (2026-08-12). Primer negocio de la categoría
+# gastronomía en el sitio.
+# Ubicación: dirección dada por el negocio ("avenida Carlos Prieto No. 15,
+# a orillas del río, frente al Palo Volador"), confirmada contra Google
+# Maps ("Carlos Prieto 15, Tecolotitlán, 93570 Tecolutla, Ver.";
+# coordenadas del punto !3d!4d del enlace, pin del negocio).
+# Teléfono: confirmado directamente por el negocio (2026-08-12). Google
+# Maps no lo tenía listado públicamente.
+# OJO — hay dos negocios con nombre parecido en tecolutlaveracruz.mx:
+# "Restaurant Panchita" (este, misma dirección) y "Restaurant Panchita 2"
+# (otro local, Carlos Prieto No. 21). El teléfono 766-846-0519 que
+# aparece en algunos directorios es del "2", NO de este negocio — no
+# usarlo aquí.
+# Verificado contra la competencia (agente verificador-duplicados,
+# 2026-08-12): riesgo de contenido duplicado NINGUNO — la ficha del
+# competidor no tiene ni un párrafo propio, solo dirección/distancias
+# genéricas y reseñas de terceros. Descripción y servicios redactados
+# desde cero a partir de las fotos reales del negocio (platillos y
+# ambiente), no copiados de ningún lado.
+# Distancia a la playa: calculada con la costa real (Overpass API), no
+# estimada — 527 m.
+# Capacidad y horario: pendientes a petición explícita del usuario
+# (2026-08-12) — Google Maps no publica un horario semanal confiable
+# (solo el estado "abierto ahora" del momento de la consulta), así que
+# no se agregó para no publicar un dato no confirmado.
+nombre: Restaurant Panchita
+categoria: gastronomia
+descripcionCorta: Restaurante de mariscos a orillas del río Tecolutla,
+  frente al Palo Volador. Camarones, langosta y pescado frito en
+  terraza de dos niveles junto al embarcadero.
+direccion: Carlos Prieto 15, a orillas del río, frente al Palo Volador, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4745178
+  lng: -97.0074615
+telefono: "+52 766 100 0970"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/restaurant-panchita/01-foto.jpg
+    alt: Fachada de Restaurant Panchita con su toldo azul y blanco en Tecolutla
+  - src: ../../assets/fotos/restaurant-panchita/02-foto.jpg
+    alt: Terraza techada de Restaurant Panchita con vista al río Tecolutla
+  - src: ../../assets/fotos/restaurant-panchita/03-foto.jpg
+    alt: Comensales en la terraza de Restaurant Panchita frente al río
+  - src: ../../assets/fotos/restaurant-panchita/04-foto.jpg
+    alt: Salón principal de Restaurant Panchita con mural del restaurante
+  - src: ../../assets/fotos/restaurant-panchita/05-foto.jpg
+    alt: Familia disfrutando una langosta a la plancha en Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/06-foto.jpg
+    alt: Camarones en salsa rosa con arroz y plátano frito de Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/07-foto.jpg
+    alt: Langosta a la plancha con ensalada de Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/08-foto.jpg
+    alt: Camarones empanizados con arroz y papas de Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/09-foto.jpg
+    alt: Camarones en salsa verde con plátano frito de Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/10-foto.jpg
+    alt: Langosta y jaiba en salsa de adobo de Restaurant Panchita
+  - src: ../../assets/fotos/restaurant-panchita/11-foto.jpg
+    alt: Pescado entero frito con ajo de Restaurant Panchita
+fechaActualizacion: 2026-08-12
+disponible: true
+servicios:
+  - Camarones en salsa rosa, empanizados o en salsa verde
+  - Langosta a la plancha o en salsa de adobo
+  - Jaiba en salsa de adobo
+  - Pescado entero frito con ajo
+  - Terraza techada de dos niveles con vista al río
+  - Junto al embarcadero de lanchas turísticas
+distanciaPlayaMetros: 527
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
