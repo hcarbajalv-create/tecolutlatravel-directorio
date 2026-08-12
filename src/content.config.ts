@@ -50,6 +50,21 @@ const negocios = defineCollection({
       fechaActualizacion: z.coerce.date(),
       disponible: z.boolean(),
       servicios: z.array(z.string()).default([]),
+      // Platillos/especialidades del negocio — separado de "servicios"
+      // porque son cosas distintas (un platillo no es una amenidad). Hoy
+      // solo lo usa gastronomía, pero no se restringe por categoría, igual
+      // que "servicios".
+      especialidades: z.array(z.string()).default([]),
+      // Campos de gastronomía (todos opcionales, sin forzar por categoría
+      // — misma filosofía que "tipo"/"numeroHabitaciones" de hospedaje).
+      // "horario" es texto libre (ej. "Lunes a domingo, 9:00 a 20:00") en
+      // vez de una estructura por día porque hoy no hay ningún negocio que
+      // necesite horarios distintos por día — si hace falta más adelante,
+      // se puede migrar sin romper lo ya publicado.
+      horario: z.string().optional(),
+      rangoPrecios: z.enum(['$', '$$', '$$$']).optional(),
+      formasPago: z.array(z.string()).optional(),
+      tipoCocina: z.array(z.string()).optional(),
       // Solo aplica a categoria: 'hospedaje' — habilita el filtro por tipo
       // en /hospedaje (casas completas, hoteles, cuartos independientes).
       tipo: z.enum(['casa', 'hotel', 'cuarto']).optional(),

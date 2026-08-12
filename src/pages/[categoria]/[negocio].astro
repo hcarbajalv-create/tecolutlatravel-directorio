@@ -28,6 +28,11 @@ const {
   precioTemporada,
   fechaActualizacion,
   servicios,
+  especialidades,
+  horario,
+  rangoPrecios,
+  formasPago,
+  tipoCocina,
   numeroHabitaciones,
   capacidadMaxima,
   petFriendly,
@@ -228,7 +233,7 @@ const esquemaLodging =
         <h2>Contacto y ubicación</h2>
         <p>{direccion}</p>
         <p>
-          Teléfono: <a href={`tel:${telefonoDigitos}`}>{telefono}</a>
+          Teléfono: <a href={`tel:+${telefonoDigitos}`}>{telefono}</a>
         </p>
         <div class="ficha__iconos-contacto">
           {facebook && (
@@ -283,12 +288,14 @@ const esquemaLodging =
             {CATALOGO_DISTANCIAS[d.a].icono} {formatearDistancia(d)}
           </p>
         ))}
+        {tipoCocina && tipoCocina.length > 0 && <p>Tipo de cocina: {tipoCocina.join(', ')}</p>}
+        {rangoPrecios && <p>Rango de precios: {rangoPrecios}</p>}
         <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
       </div>
 
       <div class="ficha__columna-precio-servicios">
         {
-          (
+          categoria === 'hospedaje' && (
             // Regla temporal a nivel de todo el sitio: no se muestra ningún
             // precio real todavía, exista o no el dato en el .yaml del
             // negocio. Quitar este comentario y volver a la condición de
@@ -296,6 +303,19 @@ const esquemaLodging =
             <div class="ficha__bloque ficha__bloque--precio">
               <h2>Precio por temporada</h2>
               <p>Próximamente</p>
+            </div>
+          )
+        }
+
+        {
+          especialidades.length > 0 && (
+            <div class="ficha__bloque ficha__bloque--especialidades">
+              <h2>Especialidades de la casa</h2>
+              <ul class="ficha__amenidades">
+                {especialidades.map((e) => (
+                  <li>{e}</li>
+                ))}
+              </ul>
             </div>
           )
         }
@@ -316,6 +336,10 @@ const esquemaLodging =
 
       <div class="ficha__bloque ficha__bloque--reserva">
           <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Contacto'}</h2>
+          {horario && <p class="ficha__dato-contacto">🕒 {horario}</p>}
+          {formasPago && formasPago.length > 0 && (
+            <p class="ficha__dato-contacto">💳 Formas de pago: {formasPago.join(', ')}</p>
+          )}
           {categoria === 'hospedaje' && (
             <>
               <div class="ficha__fechas">

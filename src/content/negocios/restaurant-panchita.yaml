@@ -25,7 +25,14 @@
 # Capacidad y horario: pendientes a petición explícita del usuario
 # (2026-08-12) — Google Maps no publica un horario semanal confiable
 # (solo el estado "abierto ahora" del momento de la consulta), así que
-# no se agregó para no publicar un dato no confirmado.
+# no se agregó para no publicar un dato no confirmado. Mismo criterio
+# para rangoPrecios y formasPago: Google Maps sí muestra "$200-300 por
+# persona" pero es un estimado de la comunidad, no del negocio — no se
+# usa hasta que el negocio lo confirme directamente.
+# especialidades (2026-08-12): se separaron los platillos de los
+# servicios/amenidades reales (eran cosas distintas mezcladas en la
+# misma lista). tipoCocina "Mariscos" es una categorización directa de
+# los platillos ya confirmados, no un dato nuevo.
 nombre: Restaurant Panchita
 categoria: gastronomia
 descripcionCorta: Restaurante de mariscos a orillas del río Tecolutla,
@@ -63,12 +70,15 @@ fotos:
 fechaActualizacion: 2026-08-12
 disponible: true
 servicios:
+  - Terraza techada de dos niveles con vista al río
+  - Junto al embarcadero de lanchas turísticas
+especialidades:
   - Camarones en salsa rosa, empanizados o en salsa verde
   - Langosta a la plancha o en salsa de adobo
   - Jaiba en salsa de adobo
   - Pescado entero frito con ajo
-  - Terraza techada de dos niveles con vista al río
-  - Junto al embarcadero de lanchas turísticas
+tipoCocina:
+  - Mariscos
 distancias:
   - a: rio
     texto: "A pie de río"
