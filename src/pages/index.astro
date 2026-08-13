@@ -70,6 +70,26 @@ const guias = [
     descripcion: 'Alta sin costo, revisión manual antes de publicar.',
   },
 ];
+
+// Sin SearchAction: el buscador del Header es 100% en el navegador
+// (filtra un índice ya cargado, sección "buscador" de Header.astro) —
+// no existe ninguna URL tipo /buscar?q=... que Google pueda usar de
+// verdad para ejecutar una búsqueda. Declarar un SearchAction de todos
+// modos describiría una función que el sitio no tiene.
+const esquemaWebSite = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'TecolutlaTravel',
+  url: 'https://tecolutlatravel.mx/',
+};
+
+const esquemaOrganization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'TecolutlaTravel',
+  url: 'https://tecolutlatravel.mx/',
+  logo: 'https://tecolutlatravel.mx/og-default.jpg',
+};
 ---
 
 <BaseLayout
@@ -77,6 +97,8 @@ const guias = [
   tituloCompleto
   descripcion="Guía local de Tecolutla: casas de hospedaje con alberca, hoteles, restaurantes de mariscos y paseos por los manglares. Contacto directo con cada negocio por WhatsApp."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaWebSite)} />
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaOrganization)} />
   <section class="hero">
     <div class="hero__puntos"></div>
     <div class="contenedor hero__interior">

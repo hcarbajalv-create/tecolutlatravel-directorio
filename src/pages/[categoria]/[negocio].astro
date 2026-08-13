@@ -136,48 +136,107 @@ const calificacionPromedio =
     ? resenas.reduce((suma, r) => suma + r.calificacion, 0) / resenas.length
     : undefined;
 
-const esquemaLodging =
-  categoria === 'hospedaje'
+// Campos que todo tipo de negocio comparte, sin importar la categoría —
+// antes esto solo existía para hospedaje (LodgingBusiness) y gastronomía
+// /actividades/servicios se quedaban con CERO datos estructurados.
+const camposComunesEsquema = {
+  name: nombre,
+  description: descripcionCorta,
+  telephone: telefono,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: direccion,
+    addressLocality: 'Tecolutla',
+    addressRegion: 'Veracruz',
+    addressCountry: 'MX',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: coordenadas.lat,
+    longitude: coordenadas.lng,
+  },
+  // URLs absolutas — Google Search Central pide fully-qualified URLs en
+  // "image" de datos estructurados; f.src.src por sí solo es relativa
+  // (ej. "/_astro/01-foto.xyz.jpg"), no funcionaba bien aquí.
+  image: fotos.map((f) => new URL(f.src.src, Astro.site).toString()),
+  ...(calificacionPromedio
     ? {
-        '@context': 'https://schema.org',
-        '@type': 'LodgingBusiness',
-        name: nombre,
-        description: descripcionCorta,
-        telephone: telefono,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: direccion,
-          addressLocality: 'Tecolutla',
-          addressRegion: 'Veracruz',
-          addressCountry: 'MX',
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: calificacionPromedio.toFixed(1),
+          reviewCount: resenas.length,
         },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: coordenadas.lat,
-          longitude: coordenadas.lng,
-        },
-        image: fotos.map((f) => f.src.src),
-        amenityFeature: servicios.map((s) => ({
-          '@type': 'LocationFeatureSpecification',
-          name: s,
-        })),
-        ...(numeroHabitaciones
-          ? { numberOfRooms: numeroHabitaciones }
-          : {}),
-        ...(petFriendly !== undefined ? { petsAllowed: petFriendly } : {}),
-        ...(checkIn ? { checkinTime: checkIn } : {}),
-        ...(checkOut ? { checkoutTime: checkOut } : {}),
-        ...(calificacionPromedio
-          ? {
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: calificacionPromedio.toFixed(1),
-                reviewCount: resenas.length,
-              },
-            }
-          : {}),
       }
-    : null;
+    : {}),
+};
+
+let esquemaNegocio: Record<string, unknown>;
+if (categoria === 'hospedaje') {
+  esquemaNegocio = {
+    '@context': 'https://schema.org',
+    '@type': 'LodgingBusiness',
+    ...camposComunesEsquema,
+    amenityFeature: servicios.map((s) => ({
+      '@type': 'LocationFeatureSpecification',
+      name: s,
+    })),
+    ...(numeroHabitaciones ? { numberOfRooms: numeroHabitaciones } : {}),
+    ...(petFriendly !== undefined ? { petsAllowed: petFriendly } : {}),
+    ...(checkIn ? { checkinTime: checkIn } : {}),
+    ...(checkOut ? { checkoutTime: checkOut } : {}),
+  };
+} else if (categoria === 'gastronomia') {
+  esquemaNegocio = {
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    ...camposComunesEsquema,
+    ...(tipoCocina && tipoCocina.length > 0 ? { servesCuisine: tipoCocina } : {}),
+    ...(rangoPrecios ? { priceRange: rangoPrecios } : {}),
+    // "horario" es texto libre para que sea fácil de capturar/leer (ej.
+    // "Lunes a domingo, 9:00 a 20:00"), pero schema.org espera un
+    // formato específico tipo "Mo-Su 09:00-20:00" para openingHours —
+    // no se convierte automáticamente (parsear texto libre en español a
+    // ese formato es propenso a error, peor que no ponerlo). Se manda
+    // tal cual: Google generalmente lo ignora si no puede parsearlo, en
+    // vez de fallar. Ver C5 para negocios afectados hoy.
+    ...(horario ? { openingHours: horario } : {}),
+    ...(especialidades.length > 0
+      ? {
+          hasMenu: {
+            '@type': 'Menu',
+            hasMenuItem: especialidades.map((e) => ({ '@type': 'MenuItem', name: e })),
+          },
+        }
+      : {}),
+  };
+} else if (categoria === 'actividades') {
+  esquemaNegocio = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    ...camposComunesEsquema,
+  };
+} else {
+  esquemaNegocio = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    ...camposComunesEsquema,
+  };
+}
+
+const esquemaBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://tecolutlatravel.mx/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: nombreCategoria[categoria],
+      item: `https://tecolutlatravel.mx/${categoria}`,
+    },
+    { '@type': 'ListItem', position: 3, name: nombre, item: urlFichaAbsoluta },
+  ],
+};
 ---
 
 <BaseLayout
@@ -187,11 +246,8 @@ const esquemaLodging =
   imagenAncho={fotosGrandes[0].attributes.width}
   imagenAlto={fotosGrandes[0].attributes.height}
 >
-  {
-    esquemaLodging && (
-      <script type="application/ld+json" set:html={JSON.stringify(esquemaLodging)} />
-    )
-  }
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaNegocio)} />
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaBreadcrumb)} />
 
   <section class={`cabecera-categoria ${claseColorCategoria[categoria]}`}>
     <div class="contenedor">
