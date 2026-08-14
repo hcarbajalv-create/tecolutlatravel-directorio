@@ -67,6 +67,7 @@ distancias:
   - a: playa
     metros: 263
 tipo: cuarto
+subtipo: Hotel
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: false
