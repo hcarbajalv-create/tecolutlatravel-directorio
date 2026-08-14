@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from './NegocioCard.astro';
+import TarjetaCompacta from './TarjetaCompacta.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 
 interface Props {
@@ -134,6 +135,14 @@ const esquemaItemList =
           Todavía no hay negocios publicados en esta categoría.{' '}
           <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
         </p>
+      ) : categoria === 'hospedaje' ? (
+        // Prueba temporal de TarjetaCompacta (Tarea 1 del rediseño) — se
+        // reemplaza por la plantilla propia de /hospedaje en la Tarea 2.
+        <div class="rejilla-compacta" id="rejilla-negocios">
+          {negociosCategoria.map((negocio, i) => (
+            <TarjetaCompacta negocio={negocio} esPrimera={i === 0} />
+          ))}
+        </div>
       ) : (
         <div class="rejilla-negocios" id="rejilla-negocios">
           {negociosCategoria.map((negocio, i) => (
@@ -190,7 +199,9 @@ const esquemaItemList =
     // le quita (aunque su descarga ya haya empezado, no tiene caso seguir
     // tratándola como si fuera la más importante de la página).
     const actualizarPrioridadImagen = (tarjeta: HTMLElement, esLaPrimera: boolean) => {
-      const img = tarjeta.querySelector<HTMLImageElement>('.tarjeta__imagen');
+      const img = tarjeta.querySelector<HTMLImageElement>(
+        '.tarjeta__imagen, .tarjeta-compacta__imagen',
+      );
       if (!img) return;
       img.loading = esLaPrimera ? 'eager' : 'lazy';
       if (esLaPrimera) img.setAttribute('fetchpriority', 'high');
@@ -234,7 +245,7 @@ const esquemaItemList =
       const consulta = normalizar(buscadorInput?.value ?? '');
       let visibles = 0;
 
-      contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
+      contenedor?.querySelectorAll<HTMLElement>('.tarjeta, .tarjeta-compacta').forEach((tarjeta) => {
         const coincideTipo = tipo === 'todos' || tarjeta.dataset.tipo === tipo;
         const coincideBusqueda =
           !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);

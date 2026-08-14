@@ -534,6 +534,15 @@ select:focus-visible {
   gap: 1.5rem;
 }
 
+/* Rejilla de TarjetaCompacta (rediseño Fase 1) — más columnas y más
+   apretada que .rejilla-negocios, pensada para tarjetas 4:5 sin cuerpo
+   de texto separado. */
+.rejilla-compacta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
 /* ---------- Controles de la lista de negocios (filtro + buscador) ---------- */
 .negocios-controles {
   display: flex;
@@ -1995,4 +2004,12 @@ select:focus-visible {
 
 .aviso-envio[hidden] {
   display: none;
+}
+
+/* ---------- Rejilla de TarjetaCompacta en celular (rediseño Fase 1) ---------- */
+@media (max-width: 560px) {
+  .rejilla-compacta {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
 }

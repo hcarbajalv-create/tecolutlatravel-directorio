@@ -123,6 +123,11 @@ const negocios = defineCollection({
       // destacado): si está presente, gana siempre sobre el puntaje
       // calculado. Menor número = aparece primero.
       ordenManual: z.number().optional(),
+      // Mes y año en que se confirmaron los datos directamente con el
+      // dueño (texto libre, ej. "ago 2026") — se usa en la tarjeta
+      // compacta y en la tarjeta grande. Opcional: se omite la línea si
+      // no está, nunca se inventa una fecha.
+      confirmadoFecha: z.string().optional(),
     })
     .superRefine((datos, ctx) => {
       // Límite de fotos por plan: gratuito 12, pago 16 (sección 7-8 del
