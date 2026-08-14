@@ -1018,7 +1018,10 @@ p.buscador-pildora__resultados {
 
 @media (min-width: 641px) {
   .franja-categorias__fila {
-    grid-template-columns: repeat(4, 1fr);
+    /* auto-fit en vez de "repeat(4, 1fr)" fijo: si una categoría se
+       oculta por no tener negocios, las que quedan se reparten el
+       ancho completo en vez de dejar un hueco vacío. */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
 

@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import { Picture, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
-import TarjetaCompacta from '../components/TarjetaCompacta.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import fotoPromesa from '../assets/sitio/promesa-playa.jpg';
 
@@ -28,12 +27,14 @@ const destacados = negocios
   .filter((n) => n.data.destacado)
   .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
 
-// "Dónde quedarte en Tecolutla": los mejores hospedajes por puntaje que
-// no estén ya en la banda de destacados de arriba.
-const hospedajeParaQuedarte = negocios
-  .filter((n) => n.data.categoria === 'hospedaje' && !n.data.destacado)
-  .sort(compararDentroDeGrupo)
-  .slice(0, 6);
+// "También en Tecolutla": una ficha por cada categoría que NO sea
+// hospedaje, elegida por puntaje de completitud (la misma lógica que
+// ordena /gastronomia, /actividades y /servicios). Si una categoría
+// todavía no tiene negocios publicados, simplemente no aparece.
+const OTRAS_CATEGORIAS = ['gastronomia', 'actividades', 'servicios'] as const;
+const tambienEnTecolutla = OTRAS_CATEGORIAS.map(
+  (cat) => negocios.filter((n) => n.data.categoria === cat).sort(compararDentroDeGrupo)[0],
+).filter((n): n is NonNullable<typeof n> => Boolean(n));
 
 // Único lugar donde viven los emojis de los sellos de confianza — ver
 // nota en .sello-confianza__icono (global.css). Sustituir aquí cuando
@@ -44,15 +45,21 @@ const SELLOS_CONFIANZA = [
   { emoji: '🙌', fuerte: 'Cero', resto: 'comisiones' },
 ];
 
+// Una categoría sin negocios no se renderiza en la franja — mandar
+// gente a una página vacía es peor que no mostrarla. El conteo sale
+// del build, nunca de una lista escrita a mano: en cuanto entra el
+// primer negocio de esa categoría, el tile reaparece solo.
 const categorias = [
   { href: '/hospedaje', clase: 'tile--hospedaje', icono: '🏡', titulo: 'Hospedaje' },
   { href: '/gastronomia', clase: 'tile--gastronomia', icono: '🍤', titulo: 'Gastronomía' },
   { href: '/actividades', clase: 'tile--actividades', icono: '🛶', titulo: 'Actividades' },
   { href: '/servicios', clase: 'tile--servicios', icono: '🚲', titulo: 'Servicios' },
-].map((cat) => ({
-  ...cat,
-  conteo: negocios.filter((n) => n.data.categoria === cat.href.slice(1)).length,
-}));
+]
+  .map((cat) => ({
+    ...cat,
+    conteo: negocios.filter((n) => n.data.categoria === cat.href.slice(1)).length,
+  }))
+  .filter((cat) => cat.conteo > 0);
 
 // Sin SearchAction: el buscador del Header es 100% en el navegador
 // (filtra un índice ya cargado, sección "buscador" de Header.astro) —
@@ -163,24 +170,6 @@ const esquemaOrganization = {
     )
   }
 
-  {
-    hospedajeParaQuedarte.length > 0 && (
-      <section class="seccion contenedor">
-        <div class="seccion__encabezado">
-          <div>
-            <h2 class="titulo-seccion">Dónde quedarte en Tecolutla</h2>
-          </div>
-          <a class="boton boton--secundario boton--chico" href="/hospedaje">Todo el hospedaje →</a>
-        </div>
-        <div class="rejilla-compacta">
-          {hospedajeParaQuedarte.map((negocio) => (
-            <TarjetaCompacta negocio={negocio} />
-          ))}
-        </div>
-      </section>
-    )
-  }
-
   <section class="franja-categorias seccion--arena">
     <div class="contenedor">
       <div class="franja-categorias__fila">
@@ -196,6 +185,24 @@ const esquemaOrganization = {
       </div>
     </div>
   </section>
+
+  {
+    tambienEnTecolutla.length > 0 && (
+      <section class="seccion contenedor">
+        <div class="seccion__encabezado">
+          <div>
+            <h2 class="titulo-seccion">También en Tecolutla</h2>
+            <p class="subtitulo">Gastronomía, actividades y servicios que puedes encontrar.</p>
+          </div>
+        </div>
+        <div class="rejilla-negocios">
+          {tambienEnTecolutla.map((negocio) => (
+            <NegocioCard negocio={negocio} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   <section class="seccion contenedor">
     <div class="cta-negocio">
