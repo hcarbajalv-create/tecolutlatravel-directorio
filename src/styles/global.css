@@ -287,90 +287,93 @@ select:focus-visible {
   color: var(--color-blanco) !important;
 }
 
-/* ---------- Hero (Home) ---------- */
-.hero {
-  position: relative;
-  overflow: hidden;
-  color: var(--color-blanco);
-  padding: 4rem 0 6rem;
-  background: linear-gradient(160deg, var(--color-mar-claro) 0%, var(--color-mar) 55%, var(--color-mar-oscuro) 100%);
+/* ---------- Bloque promesa (Home, rediseño Fase 1) ---------- */
+.promesa {
+  background: linear-gradient(180deg, #fff, #fdf6e9);
 }
 
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 48px;
-  background: var(--color-blanco);
-  border-radius: 100% 100% 0 0;
-}
-
-.hero__puntos {
-  position: absolute;
-  inset: 0;
-  opacity: 0.12;
-  background: radial-gradient(circle at 15% 20%, #fff 0 2px, transparent 3px),
-    radial-gradient(circle at 45% 60%, #fff 0 2px, transparent 3px),
-    radial-gradient(circle at 80% 30%, #fff 0 2px, transparent 3px),
-    radial-gradient(circle at 65% 80%, #fff 0 2px, transparent 3px);
-  background-size: 280px 280px;
-}
-
-.hero__interior {
+.promesa__interior {
   position: relative;
   text-align: center;
   max-width: 760px;
   margin: 0 auto;
+  padding: 3.5rem 1.25rem 2.5rem;
 }
 
-.hero__antetitulo {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 1.1rem;
-}
-
-.hero h1 {
+.promesa__interior h1 {
   font-size: clamp(1.9rem, 5vw, 3rem);
   font-weight: 900;
   line-height: 1.15;
   margin: 0 0 0.9rem;
 }
 
-.hero__subtitulo {
+.promesa__resaltado {
+  color: var(--color-turquesa);
+}
+
+.promesa__subtitulo {
   font-size: 1.05rem;
-  opacity: 0.94;
-  margin: 0 0 2rem;
+  color: var(--color-texto-suave);
+  margin: 0 0 1.75rem;
 }
 
-.hero__categorias {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  justify-content: center;
+.promesa__confianza {
+  margin-top: 1.75rem;
+  padding: 0;
 }
 
-.hero__categorias a {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: var(--color-blanco);
-  padding: 0.5rem 1rem;
+.buscador-pildora {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.buscador-pildora__icono {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-texto-suave);
+  pointer-events: none;
+}
+
+.buscador-pildora__input {
+  width: 100%;
+  padding: 0.9rem 1.1rem 0.9rem 2.75rem;
+  border: 1.5px solid var(--color-borde);
   border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--color-blanco);
+  color: var(--color-texto);
+  box-shadow: var(--sombra);
 }
 
-.hero__categorias a:hover {
-  background: rgba(255, 255, 255, 0.28);
+.buscador-pildora__input:focus {
+  outline: none;
+  border-color: var(--color-turquesa);
+}
+
+.buscador-pildora__resultados {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  background: var(--color-blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-hover);
+  padding: 0.6rem;
+  text-align: left;
+  z-index: 20;
+}
+
+.buscador-pildora__resultados:empty {
+  padding: 0;
+  box-shadow: none;
+}
+
+p.buscador-pildora__resultados {
+  padding: 0.75rem 1rem;
 }
 
 /* ---------- Cabecera de categoría ---------- */
@@ -933,58 +936,53 @@ select:focus-visible {
 }
 
 
-/* ---------- Tiles de categoría ---------- */
-.rejilla-categorias {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.1rem;
+/* ---------- Franja compacta de categorías (Home, rediseño Fase 1) ---------- */
+.franja-categorias {
+  padding: 1.75rem 0;
 }
 
-.tile-categoria {
-  position: relative;
-  border-radius: var(--radio);
-  padding: 1.4rem 1.2rem;
-  min-height: 130px;
+.franja-categorias__fila {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 641px) {
+  .franja-categorias__fila {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.franja-categorias__tile {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.2rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radio-chico);
+  padding: 0.75rem 1rem;
   color: var(--color-blanco);
   text-decoration: none;
-  overflow: hidden;
+  font-weight: 700;
   transition: transform 0.15s ease;
 }
 
-.tile-categoria::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(8, 20, 25, 0.65), rgba(8, 20, 25, 0));
+.franja-categorias__tile:hover {
+  transform: translateY(-2px);
 }
 
-.tile-categoria:hover {
-  transform: translateY(-3px);
+.franja-categorias__icono {
+  font-size: 1.2rem;
 }
 
-.tile-categoria__icono {
-  font-size: 1.6rem;
-  position: relative;
+.franja-categorias__titulo {
+  flex: 1;
+  font-size: 0.9rem;
 }
 
-.tile-categoria__texto {
-  position: relative;
-}
-
-.tile-categoria__titulo {
-  font-family: var(--fuente-titulos);
-  font-weight: 900;
-  font-size: 1.05rem;
-  display: block;
-}
-
-.tile-categoria__descripcion {
-  font-size: 0.8rem;
-  opacity: 0.9;
+.franja-categorias__conteo {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.78rem;
 }
 
 .tile--hospedaje {
@@ -1001,41 +999,6 @@ select:focus-visible {
 
 .tile--servicios {
   background: linear-gradient(135deg, var(--color-turquesa-claro), var(--color-coral-claro));
-}
-
-/* ---------- Tarjetas de guía / informativas ---------- */
-.tarjeta-guia {
-  background: var(--color-blanco);
-  border-radius: var(--radio);
-  box-shadow: var(--sombra);
-  padding: 1.4rem;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.tarjeta-guia:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-hover);
-}
-
-.tarjeta-guia__icono {
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
-}
-
-.tarjeta-guia h3 {
-  font-size: 1.02rem;
-  font-weight: 900;
-  margin: 0 0 0.3rem;
-  color: var(--color-texto);
-}
-
-.tarjeta-guia p {
-  font-size: 0.88rem;
-  color: var(--color-texto-suave);
-  margin: 0;
 }
 
 /* ---------- CTA para negocios ---------- */

@@ -104,6 +104,8 @@ const indiceBuscador = negocios.map((negocio) => ({
 <script type="application/json" id="datos-buscador" set:html={JSON.stringify(indiceBuscador)} />
 
 <script>
+  import { leerIndiceBuscador, buscarNegocios, resultadosHtml } from '../utils/buscadorNegocios';
+
   const boton = document.querySelector<HTMLButtonElement>('.encabezado__toggle');
   const nav = document.getElementById('menu-principal');
 
@@ -127,40 +129,9 @@ const indiceBuscador = negocios.map((negocio) => ({
   });
 
   // ---------- Buscador de negocios ----------
-  interface NegocioIndice {
-    nombre: string;
-    categoria: string;
-    slug: string;
-  }
-
-  const ETIQUETAS_CATEGORIA: Record<string, string> = {
-    hospedaje: 'Hospedaje',
-    gastronomia: 'Gastronomía',
-    actividades: 'Actividades',
-    servicios: 'Servicios',
-  };
-
-  const datosBuscadorEl = document.getElementById('datos-buscador');
-  const indiceNegocios: NegocioIndice[] = datosBuscadorEl
-    ? JSON.parse(datosBuscadorEl.textContent || '[]')
-    : [];
-
-  // Compara sin distinguir mayúsculas/minúsculas ni acentos, para que
-  // "mandala" encuentre "Casa Mandala" aunque no coincida el nombre exacto.
-  function normalizar(texto: string): string {
-    return texto
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim();
-  }
-
-  function escaparHtml(texto: string): string {
-    return texto.replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
-    );
-  }
+  // Lógica compartida con el buscador píldora del home — ver
+  // src/utils/buscadorNegocios.ts.
+  const indiceNegocios = leerIndiceBuscador();
 
   const buscadorToggle = document.querySelector<HTMLButtonElement>('.buscador__toggle');
   const buscadorPanel = document.getElementById('buscador-panel');
@@ -206,17 +177,13 @@ const indiceBuscador = negocios.map((negocio) => ({
 
   function renderizarResultados(consulta: string) {
     if (!buscadorResultados || !buscadorSinResultados) return;
-    const normalizada = normalizar(consulta);
+    const coincidencias = buscarNegocios(indiceNegocios, consulta);
 
-    if (!normalizada) {
+    if (!consulta.trim()) {
       buscadorResultados.innerHTML = '';
       buscadorSinResultados.hidden = true;
       return;
     }
-
-    const coincidencias = indiceNegocios
-      .filter((negocio) => normalizar(negocio.nombre).includes(normalizada))
-      .slice(0, 8);
 
     if (coincidencias.length === 0) {
       buscadorResultados.innerHTML = '';
@@ -225,20 +192,7 @@ const indiceBuscador = negocios.map((negocio) => ({
     }
 
     buscadorSinResultados.hidden = true;
-    buscadorResultados.innerHTML = coincidencias
-      .map(
-        (negocio) => `
-          <li class="buscador__resultado">
-            <a href="/${negocio.categoria}/${negocio.slug}">
-              <span>${escaparHtml(negocio.nombre)}</span>
-              <span class="buscador__resultado-categoria">${escaparHtml(
-                ETIQUETAS_CATEGORIA[negocio.categoria] ?? negocio.categoria,
-              )}</span>
-            </a>
-          </li>
-        `,
-      )
-      .join('');
+    buscadorResultados.innerHTML = resultadosHtml(coincidencias);
   }
 
   buscadorInput?.addEventListener('input', () => renderizarResultados(buscadorInput.value));

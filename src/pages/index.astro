@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
+import TarjetaCompacta from '../components/TarjetaCompacta.astro';
+import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 
 const negocios = await getCollection('negocios');
 // Orden manual primero (si se define); el resto se manda tal cual al
@@ -12,64 +14,22 @@ const destacados = negocios
   .filter((n) => n.data.destacado)
   .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
 
+// "Dónde quedarte en Tecolutla": los mejores hospedajes por puntaje que
+// no estén ya en la banda de destacados de arriba.
+const hospedajeParaQuedarte = negocios
+  .filter((n) => n.data.categoria === 'hospedaje' && !n.data.destacado)
+  .sort(compararDentroDeGrupo)
+  .slice(0, 6);
+
 const categorias = [
-  {
-    href: '/hospedaje',
-    clase: 'tile--hospedaje',
-    icono: '🏡',
-    titulo: 'Hospedaje',
-    descripcion: 'Casas y espacios para quedarte',
-  },
-  {
-    href: '/gastronomia',
-    clase: 'tile--gastronomia',
-    icono: '🍤',
-    titulo: 'Gastronomía',
-    descripcion: 'Cocina veracruzana y mariscos',
-  },
-  {
-    href: '/actividades',
-    clase: 'tile--actividades',
-    icono: '🛶',
-    titulo: 'Actividades ecoturísticas',
-    descripcion: 'Manglares, río y naturaleza',
-  },
-  {
-    href: '/servicios',
-    clase: 'tile--servicios',
-    icono: '🚲',
-    titulo: 'Servicios',
-    descripcion: 'Todo para tu estancia',
-  },
-];
-
-// Un ejemplo de cada categoría distinta a hospedaje, para que las 4 categorías
-// tengan el mismo peso visual en el Home (no solo hospedaje).
-const otrasCategorias = ['gastronomia', 'actividades', 'servicios'] as const;
-const tambienEnTecolutla = otrasCategorias
-  .map((cat) => negocios.find((n) => n.data.categoria === cat))
-  .filter((n): n is NonNullable<typeof n> => Boolean(n));
-
-const guias = [
-  {
-    href: '/tips-para-tu-viaje',
-    icono: '🧳',
-    titulo: 'Tips para tu viaje',
-    descripcion: 'Cómo llegar, cuándo visitar y qué llevar.',
-  },
-  {
-    href: '/descubre-tecolutla',
-    icono: '🌴',
-    titulo: 'Descubre Tecolutla',
-    descripcion: 'El río, la playa y la cultura del pueblo.',
-  },
-  {
-    href: '/anunciate',
-    icono: '📣',
-    titulo: 'Anuncia tu negocio',
-    descripcion: 'Alta sin costo, revisión manual antes de publicar.',
-  },
-];
+  { href: '/hospedaje', clase: 'tile--hospedaje', icono: '🏡', titulo: 'Hospedaje' },
+  { href: '/gastronomia', clase: 'tile--gastronomia', icono: '🍤', titulo: 'Gastronomía' },
+  { href: '/actividades', clase: 'tile--actividades', icono: '🛶', titulo: 'Actividades' },
+  { href: '/servicios', clase: 'tile--servicios', icono: '🚲', titulo: 'Servicios' },
+].map((cat) => ({
+  ...cat,
+  conteo: negocios.filter((n) => n.data.categoria === cat.href.slice(1)).length,
+}));
 
 // Sin SearchAction: el buscador del Header es 100% en el navegador
 // (filtra un índice ya cargado, sección "buscador" de Header.astro) —
@@ -99,43 +59,52 @@ const esquemaOrganization = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(esquemaWebSite)} />
   <script type="application/ld+json" set:html={JSON.stringify(esquemaOrganization)} />
-  <section class="hero">
-    <div class="hero__puntos"></div>
-    <div class="contenedor hero__interior">
-      <span class="hero__antetitulo">🐢 Playa · Río · Costa de Veracruz</span>
-      <h1>Descubre Tecolutla, Veracruz</h1>
-      <p class="hero__subtitulo">
-        El directorio turístico local para planear tu visita: hospedaje, gastronomía, actividades
-        ecoturísticas y servicios, en un solo lugar.
+
+  <section class="promesa">
+    <div class="contenedor promesa__interior">
+      <h1>Casas de hospedaje y hoteles en <span class="promesa__resaltado">Tecolutla</span>, Veracruz</h1>
+      <p class="promesa__subtitulo">
+        Habla directo por WhatsApp con el dueño — sin comisiones, sin intermediarios.
       </p>
-      <nav class="hero__categorias" aria-label="Categorías del directorio">
-        {categorias.map((cat) => <a href={cat.href}>{cat.icono} {cat.titulo}</a>)}
-      </nav>
+
+      <div class="buscador-pildora">
+        <label for="buscador-home-input" class="sr-only">Buscar un negocio por nombre</label>
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" class="buscador-pildora__icono">
+          <circle cx="8.5" cy="8.5" r="6" />
+          <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
+        </svg>
+        <input
+          type="search"
+          id="buscador-home-input"
+          class="buscador-pildora__input"
+          placeholder="Busca hospedaje, restaurantes, actividades…"
+          autocomplete="off"
+        />
+        <ul class="buscador__resultados buscador-pildora__resultados" id="buscador-home-resultados" aria-live="polite"></ul>
+        <p class="buscador__sin-resultados buscador-pildora__resultados" id="buscador-home-sin-resultados" hidden>
+          No encontramos negocios con ese nombre.
+        </p>
+      </div>
+
+      <div class="confianza promesa__confianza">
+        <div class="confianza__item">✅ <b>Verificado</b>&nbsp;con cada dueño</div>
+        <div class="confianza__item">💬 <b>WhatsApp</b>&nbsp;directo</div>
+        <div class="confianza__item">🙌 <b>Cero</b>&nbsp;comisiones</div>
+      </div>
     </div>
   </section>
 
-  <div class="confianza contenedor">
-    <div class="confianza__item">✅ <b>Alta sin costo</b>&nbsp;para negocios</div>
-    <div class="confianza__item">🔍 <b>Revisión manual</b>&nbsp;antes de publicar</div>
-    <div class="confianza__item">💬 <b>Contacto directo</b>&nbsp;por WhatsApp</div>
-    <div class="confianza__item">📍 <b>Guía local</b>&nbsp;de Tecolutla</div>
-  </div>
-
   {
     destacados.length > 0 && (
-      <section class="seccion contenedor">
-        <div class="seccion__encabezado">
+      <section class="banda-destacados">
+        <div class="contenedor banda-destacados__encabezado">
           <div>
-            <h2 class="titulo-seccion">Negocios destacados</h2>
-            <div class="seccion__fila-cta">
-              <p class="subtitulo subtitulo--resaltado">
-                Negocios con posicionamiento destacado en el directorio.
-              </p>
-              <a class="boton boton--pildora" href="/hospedaje">🏨 Ver más, entra a Hospedaje</a>
-            </div>
+            <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
+            <p class="banda-destacados__subtitulo">⟳ El orden rota cada día — todos los destacados se ven</p>
           </div>
+          <a class="boton boton--pildora" href="/hospedaje">Ver todos →</a>
         </div>
-        <div class="rejilla-negocios" id="rejilla-destacados-home">
+        <div class="carrusel-destacados" id="carrusel-destacados-home">
           {destacados.map((negocio, i) => (
             <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
@@ -144,64 +113,37 @@ const esquemaOrganization = {
     )
   }
 
-  <section class="seccion seccion--arena">
-    <div class="contenedor">
-      <div class="seccion__encabezado">
-        <div>
-          <h2 class="titulo-seccion">Explora por categoría</h2>
-          <p class="subtitulo">Las 4 categorías del directorio de Tecolutla.</p>
-        </div>
-      </div>
-      <div class="rejilla-categorias">
-        {
-          categorias.map((cat) => (
-            <a class={`tile-categoria ${cat.clase}`} href={cat.href}>
-              <span class="tile-categoria__icono">{cat.icono}</span>
-              <span class="tile-categoria__texto">
-                <span class="tile-categoria__titulo">{cat.titulo}</span>
-                <span class="tile-categoria__descripcion">{cat.descripcion}</span>
-              </span>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
   {
-    tambienEnTecolutla.length > 0 && (
+    hospedajeParaQuedarte.length > 0 && (
       <section class="seccion contenedor">
         <div class="seccion__encabezado">
           <div>
-            <h2 class="titulo-seccion">También en Tecolutla</h2>
-            <p class="subtitulo">Gastronomía, actividades y servicios que puedes encontrar.</p>
+            <h2 class="titulo-seccion">Dónde quedarte en Tecolutla</h2>
           </div>
+          <a class="boton boton--secundario boton--chico" href="/hospedaje">Todo el hospedaje →</a>
         </div>
-        <div class="rejilla-negocios">
-          {tambienEnTecolutla.map((negocio) => (
-            <NegocioCard negocio={negocio} />
+        <div class="rejilla-compacta">
+          {hospedajeParaQuedarte.map((negocio) => (
+            <TarjetaCompacta negocio={negocio} />
           ))}
         </div>
       </section>
     )
   }
 
-  <section class="seccion contenedor">
-    <div class="seccion__encabezado">
-      <div>
-        <h2 class="titulo-seccion">Antes de viajar</h2>
+  <section class="franja-categorias seccion--arena">
+    <div class="contenedor">
+      <div class="franja-categorias__fila">
+        {
+          categorias.map((cat) => (
+            <a class={`franja-categorias__tile ${cat.clase}`} href={cat.href}>
+              <span class="franja-categorias__icono">{cat.icono}</span>
+              <span class="franja-categorias__titulo">{cat.titulo}</span>
+              <span class="franja-categorias__conteo">{cat.conteo}</span>
+            </a>
+          ))
+        }
       </div>
-    </div>
-    <div class="rejilla-categorias">
-      {
-        guias.map((guia) => (
-          <a class="tarjeta-guia" href={guia.href}>
-            <div class="tarjeta-guia__icono">{guia.icono}</div>
-            <h3>{guia.titulo}</h3>
-            <p>{guia.descripcion}</p>
-          </a>
-        ))
-      }
     </div>
   </section>
 
@@ -210,16 +152,18 @@ const esquemaOrganization = {
       <div>
         <h2>¿Tienes un negocio en Tecolutla?</h2>
         <p>
-          Publica tu ficha gratis en el directorio: fotos, ubicación y contacto directo por
-          WhatsApp. La alta nunca tiene costo.
+          Tu página con fotos, ubicación y WhatsApp directo. Gratis, siempre. Nosotros la armamos
+          por ti.
         </p>
       </div>
-      <a class="boton boton--whatsapp" href="/anunciate">Anúnciate gratis</a>
+      <a class="boton boton--whatsapp" href="/anunciate">Quiero mi página gratis</a>
     </div>
   </section>
 </BaseLayout>
 
 <script>
+  import { leerIndiceBuscador, buscarNegocios, resultadosHtml } from '../utils/buscadorNegocios';
+
   const MAX_DESTACADOS_HOME = 8;
 
   function hashDiario(semilla: string): number {
@@ -236,7 +180,7 @@ const esquemaOrganization = {
   // tienen oportunidad de aparecer con el tiempo, y la portada no se
   // vuelve una lista interminable.
   function rotarYLimitarDestacadosHome() {
-    const contenedor = document.getElementById('rejilla-destacados-home');
+    const contenedor = document.getElementById('carrusel-destacados-home');
     if (!contenedor) return;
 
     const tarjetas = Array.from(contenedor.children) as HTMLElement[];
@@ -267,5 +211,32 @@ const esquemaOrganization = {
     });
   }
 
+  // Buscador píldora del hero — misma lógica/índice que el panel del
+  // Header (src/utils/buscadorNegocios.ts), presentación distinta.
+  function activarBuscadorHome() {
+    const input = document.getElementById('buscador-home-input') as HTMLInputElement | null;
+    const resultados = document.getElementById('buscador-home-resultados');
+    const sinResultados = document.getElementById('buscador-home-sin-resultados');
+    if (!input || !resultados || !sinResultados) return;
+    const indice = leerIndiceBuscador();
+
+    input.addEventListener('input', () => {
+      const coincidencias = buscarNegocios(indice, input.value);
+      if (!input.value.trim()) {
+        resultados.innerHTML = '';
+        sinResultados.hidden = true;
+        return;
+      }
+      if (coincidencias.length === 0) {
+        resultados.innerHTML = '';
+        sinResultados.hidden = false;
+        return;
+      }
+      sinResultados.hidden = true;
+      resultados.innerHTML = resultadosHtml(coincidencias);
+    });
+  }
+
   rotarYLimitarDestacadosHome();
+  activarBuscadorHome();
 </script>
