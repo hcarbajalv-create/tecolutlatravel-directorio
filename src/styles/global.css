@@ -690,6 +690,11 @@ p.buscador-pildora__resultados {
 }
 
 .banda-destacados__encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 
@@ -924,6 +929,18 @@ p.buscador-pildora__resultados {
   border-color: var(--color-mar);
   color: var(--color-mar);
   background: var(--color-blanco);
+}
+
+/* Para usar sobre fondos de color (bandas turquesa/coral) — .boton
+   normal usa el mismo turquesa de fondo y se vuelve casi invisible ahí. */
+.boton--claro {
+  background: var(--color-blanco);
+  color: var(--color-turquesa);
+}
+
+.boton--claro:hover {
+  background: var(--color-arena);
+  color: var(--color-turquesa);
 }
 
 .boton--chico {
