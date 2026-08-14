@@ -21,6 +21,15 @@ const hospedajeParaQuedarte = negocios
   .sort(compararDentroDeGrupo)
   .slice(0, 6);
 
+// Único lugar donde viven los emojis de los sellos de confianza — ver
+// nota en .sello-confianza__icono (global.css). Sustituir aquí cuando
+// llegue el set de íconos ilustrados.
+const SELLOS_CONFIANZA = [
+  { emoji: '✅', fuerte: 'Verificado', resto: 'con cada dueño' },
+  { emoji: '💬', fuerte: 'WhatsApp', resto: 'directo' },
+  { emoji: '🙌', fuerte: 'Cero', resto: 'comisiones' },
+];
+
 const categorias = [
   { href: '/hospedaje', clase: 'tile--hospedaje', icono: '🏡', titulo: 'Hospedaje' },
   { href: '/gastronomia', clase: 'tile--gastronomia', icono: '🍤', titulo: 'Gastronomía' },
@@ -86,10 +95,15 @@ const esquemaOrganization = {
         </p>
       </div>
 
-      <div class="confianza promesa__confianza">
-        <div class="confianza__item">✅ <b>Verificado</b>&nbsp;con cada dueño</div>
-        <div class="confianza__item">💬 <b>WhatsApp</b>&nbsp;directo</div>
-        <div class="confianza__item">🙌 <b>Cero</b>&nbsp;comisiones</div>
+      <div class="promesa__confianza">
+        {
+          SELLOS_CONFIANZA.map((sello) => (
+            <div class="sello-confianza">
+              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
+              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
