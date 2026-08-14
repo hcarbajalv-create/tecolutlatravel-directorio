@@ -291,7 +291,29 @@ select:focus-visible {
 .promesa {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #fff, #fdf6e9);
+  /* Fondo sólido mientras carga la foto — evita el destello blanco. */
+  background: var(--color-tinta);
+}
+
+.promesa__imagen {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promesa__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 43, 46, 0.72) 0%,
+    rgba(12, 43, 46, 0.55) 55%,
+    rgba(12, 43, 46, 0.78) 100%
+  );
 }
 
 /* Misma curva que tenía el .hero original (ver historial de git) —
@@ -323,15 +345,16 @@ select:focus-visible {
   font-weight: 900;
   line-height: 1.15;
   margin: 0 0 0.9rem;
+  color: var(--color-blanco);
 }
 
 .promesa__resaltado {
-  color: var(--color-turquesa);
+  color: var(--color-turquesa-claro);
 }
 
 .promesa__subtitulo {
   font-size: 1.05rem;
-  color: var(--color-texto-suave);
+  color: rgba(255, 255, 255, 0.92);
   margin: 0 0 1.75rem;
 }
 
@@ -357,11 +380,11 @@ select:focus-visible {
   gap: 0.5rem;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-texto-suave);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .sello-confianza b {
-  color: var(--color-texto);
+  color: var(--color-blanco);
 }
 
 /* Único lugar de donde salen los emojis de los sellos (SELLOS_CONFIANZA
