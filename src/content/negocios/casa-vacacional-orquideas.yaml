@@ -1,0 +1,79 @@
+# Alta recibida vía formulario /anunciate (Netlify Forms, 2026-08-10,
+# Berenice Lozano — casaorquideastecolutla@hotmail.com). Se subió el
+# 2026-08-13 (quedó pendiente unos días).
+# Coordenadas: dadas directamente por el negocio como link de Maps con
+# lat/lng exactos (20.491470, -97.024422) — no requirió resolver enlace.
+# Teléfono, dirección, habitaciones (3) y capacidad (15 personas):
+# dados tal cual en el formulario.
+# OJO — capacidad: el negocio nos dio 15 personas en el formulario, pero
+# su propia ficha en el competidor (tecolutlaveracruz.mx) anuncia hasta
+# 20. Se publica 15 por ser el dato que nos dieron directamente a
+# nosotros — pendiente confirmar con el negocio cuál es el número real.
+# Facebook: el campo traía el link de su ficha en tecolutlaveracruz.mx,
+# no un Facebook real — no se usó.
+# Verificado contra la competencia (agente verificador-duplicados,
+# 2026-08-13): SÍ está publicado en tecolutlaveracruz.mx (confirmado por
+# el propio link que mandó el negocio). Riesgo medio — el borrador del
+# dueño compartía vocabulario genérico de cierre ("cómoda y placentera")
+# con la ficha del competidor, sin ser copia literal. Descripción
+# reescrita para evitar ese lenguaje de plantilla.
+# Distancia a la playa: calculada con la costa real (Overpass API), no
+# estimada — 211 m.
+# Fotos: se subieron 12 en el formulario pero 2 estaban repetidas
+# (mismo archivo subido dos veces) — quedan 10 fotos únicas.
+# Precio: dado por el negocio (15 personas, $6,500/noche) pero no se
+# publica por ahora — regla general del sitio, precios ocultos.
+nombre: Casa Vacacional Orquídeas
+categoria: hospedaje
+descripcionCorta: Casa vacacional a 211 m del mar en Tecolutla. Alberca,
+  jardín, fogata, asador y estacionamiento para 3 autos; hasta 15
+  personas en 3 habitaciones.
+direccion: Calle María Isabel, lote 10, manzana 18, fraccionamiento Los
+  Médanos, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.491470
+  lng: -97.024422
+telefono: "+52 766 112 4813"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-vacacional-orquideas/01-foto.jpg
+    alt: Alberca de Casa Vacacional Orquídeas con toldo y terraza techada
+  - src: ../../assets/fotos/casa-vacacional-orquideas/02-foto.jpg
+    alt: Sala de Casa Vacacional Orquídeas con sofás, chimenea y comedor
+  - src: ../../assets/fotos/casa-vacacional-orquideas/03-foto.jpg
+    alt: Área de fogata con asientos de mosaico en el jardín de Casa Vacacional Orquídeas
+  - src: ../../assets/fotos/casa-vacacional-orquideas/04-foto.jpg
+    alt: Habitación de Casa Vacacional Orquídeas con dos camas matrimoniales
+  - src: ../../assets/fotos/casa-vacacional-orquideas/05-foto.jpg
+    alt: Habitación de Casa Vacacional Orquídeas con sofá cama y televisión
+  - src: ../../assets/fotos/casa-vacacional-orquideas/06-foto.jpg
+    alt: Habitación de Casa Vacacional Orquídeas con tres camas y mural tropical
+  - src: ../../assets/fotos/casa-vacacional-orquideas/07-foto.jpg
+    alt: Mesa y bancas de madera en la terraza de Casa Vacacional Orquídeas
+  - src: ../../assets/fotos/casa-vacacional-orquideas/08-foto.jpg
+    alt: Jardín amplio de Casa Vacacional Orquídeas con área de fogata y alberca
+  - src: ../../assets/fotos/casa-vacacional-orquideas/09-foto.jpg
+    alt: Alberca de Casa Vacacional Orquídeas con toldo sombreador y jardín
+  - src: ../../assets/fotos/casa-vacacional-orquideas/10-foto.jpg
+    alt: Alberca de Casa Vacacional Orquídeas con vista a la fachada de la casa
+precioTemporada:
+  - temporada: Hasta 15 personas
+    precio: 6500
+fechaActualizacion: 2026-08-13
+disponible: true
+servicios:
+  - Alberca
+  - Estacionamiento para 3 vehículos
+  - Wifi
+  - Asador
+  - Área de fogata
+  - Jardín amplio
+numeroHabitaciones: 3
+capacidadMaxima: 15
+tipo: casa
+distancias:
+  - a: playa
+    metros: 211
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
