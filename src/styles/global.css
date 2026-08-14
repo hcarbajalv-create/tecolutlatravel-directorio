@@ -308,11 +308,16 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* .42/.30/.62 medía 4.16:1 en el subtítulo a 390px; .47/.35/.67
+     lo resolvía en móvil (4.56:1) pero quedaba en 4.40:1 a 1280px
+     (AA pide 4.5:1) por el recorte más bajo de la foto ahí — un
+     segundo +.05 lo deja arriba de AA en los dos tamaños, sin volver
+     a los valores anteriores (.72/.55/.78) que apagaban la foto. */
   background: linear-gradient(
     180deg,
-    rgba(12, 43, 46, 0.72) 0%,
-    rgba(12, 43, 46, 0.55) 55%,
-    rgba(12, 43, 46, 0.78) 100%
+    rgba(12, 43, 46, 0.52) 0%,
+    rgba(12, 43, 46, 0.4) 45%,
+    rgba(12, 43, 46, 0.72) 100%
   );
 }
 
@@ -346,6 +351,7 @@ select:focus-visible {
   line-height: 1.15;
   margin: 0 0 0.9rem;
   color: var(--color-blanco);
+  text-shadow: 0 2px 12px rgba(12, 43, 46, 0.55);
 }
 
 .promesa__resaltado {
@@ -356,6 +362,7 @@ select:focus-visible {
   font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.92);
   margin: 0 0 1.75rem;
+  text-shadow: 0 2px 12px rgba(12, 43, 46, 0.55);
 }
 
 .promesa__confianza {
