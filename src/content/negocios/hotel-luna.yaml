@@ -1,0 +1,62 @@
+# Alta recibida vía formulario /anunciate (Netlify Forms, 2026-08-13,
+# Montserrat Ramírez Villanueva — monse873994@gmail.com). Subida el
+# mismo día.
+# Coordenadas: resueltas del enlace corto de Google Maps que mandaron
+# (título de la página: "Carlos Prieto 17"), coincide con la dirección
+# dada en el formulario.
+# No se corrió el verificador de duplicados: el campo de Facebook vino
+# vacío (a diferencia de Casa Vacacional Orquídeas, que sí traía el
+# link directo a su ficha en el competidor) — sin esa señal directa no
+# hay indicio de que ya esté publicado en tecolutlaveracruz.mx.
+# Distancia a la playa: calculada con la costa real (Overpass API), no
+# estimada — 434 m.
+# Precio: dado por el negocio ($750 y $950, sin especificar a qué tipo
+# de habitación corresponde cada uno) — no se publica por ahora, regla
+# general del sitio.
+# Sin capacidadMaxima: no vino en el formulario, no se inventa.
+nombre: Hotel Luna
+categoria: hospedaje
+descripcionCorta: Hotel pequeño y familiar a una cuadra del centro de
+  Tecolutla, con alberca y 8 habitaciones — a un paso de la playa por
+  las calles vecinas.
+direccion: Carlos Prieto 17, Tecolotitlán, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4754975
+  lng: -97.0073167
+telefono: "+52 55 1186 4421"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/hotel-luna/01-foto.jpg
+    alt: Fachada de Hotel Luna Tecolutla iluminada de noche
+  - src: ../../assets/fotos/hotel-luna/02-foto.jpg
+    alt: Alberca de Hotel Luna junto a las habitaciones 1 y 2
+  - src: ../../assets/fotos/hotel-luna/03-foto.jpg
+    alt: Habitación de Hotel Luna con dos camas y cuadro floral
+  - src: ../../assets/fotos/hotel-luna/04-foto.jpg
+    alt: Habitación de Hotel Luna con dos camas, televisión y ventilador de techo
+  - src: ../../assets/fotos/hotel-luna/05-foto.jpg
+    alt: Habitación de Hotel Luna con dos camas y cuadro de Frida Kahlo
+  - src: ../../assets/fotos/hotel-luna/06-foto.jpg
+    alt: Baño de Hotel Luna con lavabo, espejo y regadera
+precioTemporada:
+  - temporada: Desde
+    precio: 750
+  - temporada: Hasta
+    precio: 950
+fechaActualizacion: 2026-08-13
+disponible: true
+servicios:
+  - Alberca
+  - Estacionamiento
+  - Wifi
+  - TV
+  - Internet
+  - Agua caliente
+numeroHabitaciones: 8
+tipo: hotel
+distancias:
+  - a: playa
+    metros: 434
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
