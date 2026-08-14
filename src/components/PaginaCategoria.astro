@@ -2,11 +2,12 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from './NegocioCard.astro';
-import TarjetaCompacta from './TarjetaCompacta.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 
 interface Props {
-  categoria: 'hospedaje' | 'gastronomia' | 'actividades' | 'servicios';
+  // "hospedaje" ya no pasa por este componente — tiene su propia
+  // plantilla en src/pages/hospedaje.astro (rediseño Fase 1, Tarea 2).
+  categoria: 'gastronomia' | 'actividades' | 'servicios';
   icono: string;
   claseColor: string;
   titulo: string;
@@ -35,15 +36,7 @@ const gratuitos = negociosFiltrados
 
 const negociosCategoria = [...destacados, ...gratuitos];
 
-const mostrarFiltroTipo = categoria === 'hospedaje';
-const tiposFiltro: { valor: string; etiqueta: string }[] = [
-  { valor: 'casa', etiqueta: 'Casas completas' },
-  { valor: 'hotel', etiqueta: 'Hoteles' },
-  { valor: 'cuarto', etiqueta: 'Cuartos / habitaciones' },
-];
-
 const ETIQUETAS_BUSQUEDA: Record<typeof categoria, string> = {
-  hospedaje: 'hoteles y casas',
   gastronomia: 'restaurantes',
   actividades: 'actividades',
   servicios: 'servicios',
@@ -87,18 +80,6 @@ const esquemaItemList =
     {
       negociosCategoria.length > 0 && (
         <div class="negocios-controles">
-          {mostrarFiltroTipo && (
-            <div class="filtro-tipo" id="filtro-tipo">
-              <button type="button" class="pastilla pastilla--activa" data-tipo-filtro="todos">
-                Todos
-              </button>
-              {tiposFiltro.map((t) => (
-                <button type="button" class="pastilla" data-tipo-filtro={t.valor}>
-                  {t.etiqueta}
-                </button>
-              ))}
-            </div>
-          )}
           <div class="buscador-categoria">
             <label for="buscador-categoria-input" class="buscador-categoria__etiqueta">
               Buscar {etiquetaBusqueda} por nombre
@@ -135,14 +116,6 @@ const esquemaItemList =
           Todavía no hay negocios publicados en esta categoría.{' '}
           <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
         </p>
-      ) : categoria === 'hospedaje' ? (
-        // Prueba temporal de TarjetaCompacta (Tarea 1 del rediseño) — se
-        // reemplaza por la plantilla propia de /hospedaje en la Tarea 2.
-        <div class="rejilla-compacta" id="rejilla-negocios">
-          {negociosCategoria.map((negocio, i) => (
-            <TarjetaCompacta negocio={negocio} esPrimera={i === 0} />
-          ))}
-        </div>
       ) : (
         <div class="rejilla-negocios" id="rejilla-negocios">
           {negociosCategoria.map((negocio, i) => (
@@ -199,9 +172,7 @@ const esquemaItemList =
     // le quita (aunque su descarga ya haya empezado, no tiene caso seguir
     // tratándola como si fuera la más importante de la página).
     const actualizarPrioridadImagen = (tarjeta: HTMLElement, esLaPrimera: boolean) => {
-      const img = tarjeta.querySelector<HTMLImageElement>(
-        '.tarjeta__imagen, .tarjeta-compacta__imagen',
-      );
+      const img = tarjeta.querySelector<HTMLImageElement>('.tarjeta__imagen');
       if (!img) return;
       img.loading = esLaPrimera ? 'eager' : 'lazy';
       if (esLaPrimera) img.setAttribute('fetchpriority', 'high');
@@ -215,13 +186,10 @@ const esquemaItemList =
     );
   }
 
-  // Combina el filtro de tipo (pastillas, solo hospedaje) con la búsqueda
-  // por nombre (todas las categorías) — una tarjeta se muestra solo si
-  // cumple los dos a la vez.
+  // Búsqueda por nombre dentro de la categoría.
   function activarControles() {
     const contenedor = document.getElementById('rejilla-negocios');
     if (!contenedor) return;
-    const filtro = document.getElementById('filtro-tipo');
     const mensajeVacio = document.getElementById('mensaje-filtro-vacio');
     const buscadorInput = document.getElementById(
       'buscador-categoria-input',
@@ -235,42 +203,21 @@ const esquemaItemList =
         .trim();
     }
 
-    function tipoActivo(): string {
-      return filtro?.querySelector('[data-tipo-filtro].pastilla--activa')
-        ?.getAttribute('data-tipo-filtro') ?? 'todos';
-    }
-
     function aplicarFiltros() {
-      const tipo = tipoActivo();
       const consulta = normalizar(buscadorInput?.value ?? '');
       let visibles = 0;
 
-      contenedor?.querySelectorAll<HTMLElement>('.tarjeta, .tarjeta-compacta').forEach((tarjeta) => {
-        const coincideTipo = tipo === 'todos' || tarjeta.dataset.tipo === tipo;
-        const coincideBusqueda =
-          !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
-        const mostrar = coincideTipo && coincideBusqueda;
+      contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
+        const mostrar = !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
         tarjeta.style.display = mostrar ? '' : 'none';
         if (mostrar) visibles++;
       });
 
       if (mensajeVacio) {
         mensajeVacio.hidden = visibles > 0;
-        mensajeVacio.textContent = consulta
-          ? 'No encontramos negocios con ese nombre.'
-          : 'Todavía no hay negocios de este tipo.';
+        mensajeVacio.textContent = 'No encontramos negocios con ese nombre.';
       }
     }
-
-    filtro?.querySelectorAll<HTMLButtonElement>('[data-tipo-filtro]').forEach((boton) => {
-      boton.addEventListener('click', () => {
-        filtro
-          .querySelectorAll('[data-tipo-filtro]')
-          .forEach((b) => b.classList.remove('pastilla--activa'));
-        boton.classList.add('pastilla--activa');
-        aplicarFiltros();
-      });
-    });
 
     buscadorInput?.addEventListener('input', aplicarFiltros);
   }

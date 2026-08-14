@@ -6,9 +6,17 @@ import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalo
 interface Props {
   negocio: CollectionEntry<'negocios'>;
   esPrimera?: boolean;
+  // Resultado de los chips de filtro de la página que use esta tarjeta
+  // (ej. /hospedaje) — se vuelca como atributos data-filtro-<clave> para
+  // que el JS de la página filtre sin tener que volver a calcular nada.
+  // Opcional: páginas que no tienen chips (ej. home) no lo pasan.
+  filtros?: Record<string, boolean>;
 }
 
-const { negocio, esPrimera = false } = Astro.props;
+const { negocio, esPrimera = false, filtros = {} } = Astro.props;
+const atributosFiltro = Object.fromEntries(
+  Object.entries(filtros).map(([clave, valor]) => [`data-filtro-${clave}`, valor ? '1' : '0']),
+);
 const {
   categoria,
   nombre,
@@ -71,6 +79,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
   data-tipo={tipo ?? ''}
   data-orden-manual={ordenManual ?? ''}
   data-nombre={nombre}
+  {...atributosFiltro}
 >
   <a class="tarjeta-compacta__enlace" href={enlace} tabindex="-1" aria-hidden="true">
     <Image

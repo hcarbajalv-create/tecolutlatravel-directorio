@@ -431,6 +431,17 @@ select:focus-visible {
   margin: 0;
 }
 
+.migaja {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 0.9rem;
+}
+
+.migaja a {
+  color: var(--color-blanco);
+  text-decoration: underline;
+}
+
 /* ---------- Barra de confianza ---------- */
 .confianza {
   display: flex;
@@ -653,6 +664,68 @@ select:focus-visible {
   color: var(--color-texto-suave);
 }
 
+/* ---------- Fila de chips deslizable (rediseño Fase 1, /hospedaje) ---------- */
+.fila-chips {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+}
+
+.fila-chips .pastilla {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ---------- Banda de destacados con carrusel (rediseño Fase 1) ---------- */
+.banda-destacados {
+  background: linear-gradient(150deg, var(--color-turquesa), #0a5a64);
+  padding: 1.75rem 0 2rem;
+  margin-top: 0.5rem;
+}
+
+.banda-destacados__encabezado {
+  margin-bottom: 1rem;
+}
+
+.titulo-seccion--claro {
+  color: var(--color-blanco);
+}
+
+.banda-destacados__subtitulo {
+  margin: 0.2rem 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+}
+
+.carrusel-destacados {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: 0 1.25rem 0.5rem;
+  scrollbar-width: thin;
+}
+
+.carrusel-destacados .tarjeta {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+}
+
+.texto-orden {
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.texto-orden a {
+  color: var(--color-turquesa);
+}
+
 /* ---------- Tarjeta de negocio ---------- */
 .tarjeta {
   background: var(--color-blanco);
@@ -710,17 +783,19 @@ select:focus-visible {
 }
 
 .insignia--destacado {
-  background: var(--color-coral);
+  background: var(--color-foco);
   color: var(--color-tinta);
   border-color: rgba(12, 43, 46, 0.25);
 }
 
 .insignia--verificado {
-  background: var(--color-texto);
+  background: var(--color-blanco);
+  color: var(--color-turquesa);
+  border-color: rgba(11, 111, 122, 0.25);
 }
 
 .insignia--dato {
-  background: rgba(30, 42, 50, 0.72);
+  background: rgba(12, 43, 46, 0.75);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -731,6 +806,21 @@ select:focus-visible {
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
+}
+
+.tarjeta__categoria {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-coral-texto);
+}
+
+.tarjeta__confirmado {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-turquesa);
 }
 
 .tarjeta__titulo {
@@ -772,9 +862,16 @@ select:focus-visible {
 
 .tarjeta__acciones {
   margin-top: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 0.5rem;
+}
+
+.tarjeta__acciones .boton--whatsapp {
+  flex: 1;
+}
+
+.tarjeta__acciones .boton--secundario {
+  flex: 0 0 auto;
 }
 
 /* ---------- Botones ---------- */
@@ -1487,7 +1584,6 @@ select:focus-visible {
   }
 
   .tarjeta__acciones {
-    grid-template-columns: 1fr 1fr;
     gap: 0.25rem;
   }
 

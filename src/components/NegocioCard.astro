@@ -28,8 +28,17 @@ const {
   distancias,
   tipo,
   ordenManual,
+  confirmadoFecha,
 } = negocio.data;
 const portada = fotos[0];
+
+// Mismo mapeo que TarjetaCompacta.astro y la ficha del negocio.
+const NOMBRE_CATEGORIA: Record<string, string> = {
+  hospedaje: 'Hospedaje',
+  gastronomia: 'Gastronomía',
+  actividades: 'Actividades',
+  servicios: 'Servicios',
+};
 // La tarjeta solo tiene espacio para una insignia de distancia — se usa
 // la primera de la lista, que es la que el negocio (o quien dio de alta)
 // eligió como su gancho principal. Ver la regla de orden en content.config.ts.
@@ -105,6 +114,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
     }
   </div>
   <div class="tarjeta__cuerpo">
+    <span class="tarjeta__categoria">{NOMBRE_CATEGORIA[categoria]}</span>
     <h3 class="tarjeta__titulo"><a href={enlace}>{nombre}</a></h3>
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
@@ -118,6 +128,12 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
             <span class="chip-amenidad">{servicio}</span>
           ))}
         </div>
+      )
+    }
+
+    {
+      confirmadoFecha && (
+        <p class="tarjeta__confirmado">📞 Confirmado con el dueño · {confirmadoFecha}</p>
       )
     }
 

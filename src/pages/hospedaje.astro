@@ -1,12 +1,234 @@
 ---
-import PaginaCategoria from '../components/PaginaCategoria.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NegocioCard from '../components/NegocioCard.astro';
+import TarjetaCompacta from '../components/TarjetaCompacta.astro';
+import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
+
+const todos = await getCollection('negocios');
+const negociosHospedaje = todos.filter((n) => n.data.categoria === 'hospedaje');
+
+// Mismo criterio de orden que el resto del sitio: destacados primero (el
+// orden exacto entre ellos rota a diario en el navegador, ver script
+// abajo), luego el resto por puntaje de completitud.
+const destacados = negociosHospedaje
+  .filter((n) => n.data.destacado)
+  .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
+const gratuitos = negociosHospedaje.filter((n) => !n.data.destacado).sort(compararDentroDeGrupo);
+const todosOrdenados = [...destacados, ...gratuitos];
+
+function normalizar(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+// Umbrales de los chips "A pasos de la playa" y "Para grupos grandes" —
+// centralizados aquí, una sola línea si hace falta ajustarlos.
+const UMBRAL_PLAYA_METROS = 300;
+const UMBRAL_GRUPO_GRANDE = 15;
+
+type Negocio = CollectionEntry<'negocios'>;
+
+const DEFINICION_CHIPS: { valor: string; etiqueta: string; prueba: (n: Negocio) => boolean }[] = [
+  { valor: 'casa', etiqueta: 'Casas vacacionales', prueba: (n) => n.data.tipo === 'casa' },
+  { valor: 'hotel', etiqueta: 'Hoteles', prueba: (n) => n.data.tipo === 'hotel' },
+  {
+    valor: 'alberca',
+    etiqueta: 'Con alberca',
+    prueba: (n) => n.data.servicios.some((s) => normalizar(s).includes('alberca')),
+  },
+  {
+    valor: 'playa',
+    etiqueta: 'A pasos de la playa',
+    prueba: (n) =>
+      (n.data.distancias ?? []).some(
+        (d) => d.a === 'playa' && d.metros !== undefined && d.metros <= UMBRAL_PLAYA_METROS,
+      ),
+  },
+  {
+    valor: 'grupo-grande',
+    etiqueta: 'Para grupos grandes',
+    prueba: (n) => (n.data.capacidadMaxima ?? 0) >= UMBRAL_GRUPO_GRANDE,
+  },
+  { valor: 'pet-friendly', etiqueta: 'Pet-friendly', prueba: (n) => Boolean(n.data.petFriendly) },
+  {
+    valor: 'tarjeta',
+    etiqueta: 'Acepta tarjeta',
+    prueba: (n) => (n.data.formasPago ?? []).some((f) => normalizar(f).includes('tarjeta')),
+  },
+];
+
+// Un chip solo se muestra si al menos un negocio lo cumple — mostrar un
+// filtro que siempre da "sin resultados" se ve roto y contradice la
+// regla de no mostrar etiquetas sin dato real detrás.
+const chips = DEFINICION_CHIPS.filter((c) => todosOrdenados.some(c.prueba));
+
+function filtrosDe(n: Negocio): Record<string, boolean> {
+  return Object.fromEntries(DEFINICION_CHIPS.map((c) => [c.valor, c.prueba(n)]));
+}
+
+const esquemaItemList =
+  todosOrdenados.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: todosOrdenados.map((n, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `https://tecolutlatravel.mx/hospedaje/${n.id}`,
+          name: n.data.nombre,
+        })),
+      }
+    : null;
 ---
 
-<PaginaCategoria
-  categoria="hospedaje"
-  icono="🏡"
-  claseColor="tile--hospedaje"
+<BaseLayout
   titulo="🏡 Casas de hospedaje y 🏨 Hoteles en Tecolutla, Veracruz"
-  descripcionSeo="Casas, cabañas y hospedaje disponible en Tecolutla, Veracruz, con precios, fotos y disponibilidad."
-  introduccion="Encuentra dónde quedarte en Tecolutla: casas de descanso y hospedajes verificados cerca de la playa y del centro."
-/>
+  descripcion="Casas, cabañas y hospedaje disponible en Tecolutla, Veracruz, con precios, fotos y disponibilidad."
+>
+  {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
+
+  <section class="cabecera-categoria tile--hospedaje">
+    <div class="contenedor">
+      <p class="migaja"><a href="/">Inicio</a> → Hospedaje</p>
+      <div class="cabecera-categoria__titulo">
+        <span class="cabecera-categoria__icono">🏡</span>
+        <h1>Hospedaje en Tecolutla: casas, hoteles y habitaciones</h1>
+      </div>
+      <p>Todas con WhatsApp directo del dueño y datos confirmados por teléfono.</p>
+    </div>
+  </section>
+
+  {
+    chips.length > 0 && (
+      <div class="contenedor">
+        <div class="fila-chips" id="fila-chips">
+          <button type="button" class="pastilla pastilla--activa" data-chip="todo">
+            Todo
+          </button>
+          {chips.map((c) => (
+            <button type="button" class="pastilla" data-chip={c.valor}>
+              {c.etiqueta}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    destacados.length > 0 && (
+      <section class="banda-destacados">
+        <div class="contenedor banda-destacados__encabezado">
+          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
+          <p class="banda-destacados__subtitulo">⟳ El orden rota cada día — todos los destacados se ven</p>
+        </div>
+        <div class="carrusel-destacados" id="carrusel-destacados">
+          {destacados.map((n, i) => (
+            <NegocioCard negocio={n} esPrimera={i === 0} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion contenedor">
+    <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
+    {
+      todosOrdenados.length > 0 && (
+        <p class="texto-orden">
+          Ordenado por qué tan completa está la información de cada negocio —{' '}
+          <a href="/como-ordenamos">así ordenamos el directorio</a>
+        </p>
+      )
+    }
+    {
+      todosOrdenados.length === 0 ? (
+        <p>
+          Todavía no hay negocios publicados en esta categoría.{' '}
+          <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
+        </p>
+      ) : (
+        <div class="rejilla-compacta" id="rejilla-hospedaje">
+          {todosOrdenados.map((n, i) => (
+            <TarjetaCompacta
+              negocio={n}
+              esPrimera={destacados.length === 0 && i === 0}
+              filtros={filtrosDe(n)}
+            />
+          ))}
+        </div>
+      )
+    }
+    <p id="mensaje-chip-vacio" class="filtro-tipo__vacio" hidden>
+      Todavía no hay negocios de este tipo.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  function hashDiario(semilla: string): number {
+    let hash = 5381;
+    for (let i = 0; i < semilla.length; i++) {
+      hash = (hash * 33) ^ semilla.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  // Rota el orden del carrusel de destacados (todos son destacados, no
+  // hay grupo "no destacado" que sirva de límite como en las categorías
+  // normales) — misma semilla diaria que el resto del sitio.
+  function rotarCarrusel() {
+    const contenedor = document.getElementById('carrusel-destacados');
+    if (!contenedor) return;
+
+    const tarjetas = Array.from(contenedor.children) as HTMLElement[];
+    const hoy = new Date().toISOString().slice(0, 10);
+    const fijas = tarjetas.filter((t) => t.dataset.ordenManual);
+    const aleatorias = tarjetas.filter((t) => !t.dataset.ordenManual);
+    aleatorias.sort(
+      (a, b) => hashDiario(`${hoy}-${a.dataset.slug}`) - hashDiario(`${hoy}-${b.dataset.slug}`),
+    );
+
+    for (const tarjeta of [...fijas, ...aleatorias]) {
+      contenedor.appendChild(tarjeta);
+    }
+
+    Array.from(contenedor.children).forEach((tarjeta, i) => {
+      const img = (tarjeta as HTMLElement).querySelector<HTMLImageElement>('.tarjeta__imagen');
+      if (!img) return;
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      if (i === 0) img.setAttribute('fetchpriority', 'high');
+      else img.removeAttribute('fetchpriority');
+    });
+  }
+
+  // Fila de chips: muestra/oculta tarjetas ya presentes en la rejilla
+  // compacta según el atributo data-filtro-<valor> que trae cada una.
+  function activarChips() {
+    const fila = document.getElementById('fila-chips');
+    const grid = document.getElementById('rejilla-hospedaje');
+    const mensajeVacio = document.getElementById('mensaje-chip-vacio');
+    if (!fila || !grid) return;
+
+    fila.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        fila.querySelectorAll('[data-chip]').forEach((b) => b.classList.remove('pastilla--activa'));
+        boton.classList.add('pastilla--activa');
+        const valor = boton.dataset.chip;
+        let visibles = 0;
+        grid.querySelectorAll<HTMLElement>('.tarjeta-compacta').forEach((tarjeta) => {
+          const mostrar = valor === 'todo' || tarjeta.getAttribute(`data-filtro-${valor}`) === '1';
+          tarjeta.style.display = mostrar ? '' : 'none';
+          if (mostrar) visibles++;
+        });
+        if (mensajeVacio) mensajeVacio.hidden = visibles > 0;
+      });
+    });
+  }
+
+  rotarCarrusel();
+  activarChips();
+</script>
