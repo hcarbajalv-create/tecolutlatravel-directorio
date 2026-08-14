@@ -29,6 +29,7 @@ const {
   capacidadMaxima,
   distancias,
   tipo,
+  subtipo,
   ordenManual,
   confirmadoFecha,
 } = negocio.data;
@@ -45,6 +46,10 @@ const NOMBRE_CATEGORIA: Record<string, string> = {
   actividades: 'Actividades',
   servicios: 'Servicios',
 };
+// En hospedaje se muestra el subtipo específico (Hotel, Posada, etc.)
+// en vez de la categoría genérica — solo si el .yaml lo trae; si no,
+// no se muestra nada ahí (sin dejar hueco).
+const etiquetaCategoria = categoria === 'hospedaje' ? subtipo : NOMBRE_CATEGORIA[categoria];
 
 // Línea de datos: capacidad o habitaciones primero (si existe alguna),
 // si no hay ninguna se usa el dato de distancia como gancho; luego se
@@ -112,7 +117,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
   </button>
 
   <div class="tarjeta-compacta__info">
-    <span class="tarjeta-compacta__categoria">{NOMBRE_CATEGORIA[categoria]}</span>
+    {etiquetaCategoria && <span class="tarjeta-compacta__categoria">{etiquetaCategoria}</span>}
     <h3 class="tarjeta-compacta__nombre"><a href={enlace}>{nombre}</a></h3>
     {lineaDatos && <p class="tarjeta-compacta__datos">{lineaDatos}</p>}
     {confirmadoFecha && <p class="tarjeta-compacta__confirmado">✓ Confirmado {confirmadoFecha}</p>}

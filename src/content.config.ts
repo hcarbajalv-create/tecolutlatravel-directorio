@@ -68,6 +68,12 @@ const negocios = defineCollection({
       // Solo aplica a categoria: 'hospedaje' — habilita el filtro por tipo
       // en /hospedaje (casas completas, hoteles, cuartos independientes).
       tipo: z.enum(['casa', 'hotel', 'cuarto']).optional(),
+      // Etiqueta específica que se muestra en las tarjetas donde antes
+      // decía "HOSPEDAJE" — distinto de "tipo" (que solo alimenta el
+      // filtro de /hospedaje). Opcional: solo se pone cuando el nombre o
+      // la descripción del propio negocio ya lo dejan claro; si no,
+      // se deja sin poner en vez de adivinar.
+      subtipo: z.enum(['Casa vacacional', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows']).optional(),
       numeroHabitaciones: z.number().optional(),
       capacidadMaxima: z.number().optional(),
       petFriendly: z.boolean().optional(),

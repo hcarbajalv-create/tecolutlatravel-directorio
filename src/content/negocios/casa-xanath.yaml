@@ -12,6 +12,7 @@ telefono: "+52 56 2437 7116"
 facebook: "https://www.facebook.com/Xanath.Tecolutla"
 logo: ../../assets/logos/casa-xanath.jpg
 tipo: casa
+subtipo: Casa vacacional
 fotos:
   - src: ../../assets/fotos/casa-xanath/01-alberca-jardin.jpg
     alt: Alberca y jardín de Casa Xanath

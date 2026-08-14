@@ -11,6 +11,7 @@ coordenadas:
 telefono: "+52 55 7805 7546"
 facebook: "https://www.facebook.com/profile.php?id=100068829169975"
 tipo: casa
+subtipo: Casa vacacional
 fotos:
   - src: ../../assets/fotos/casa-mandala/01-entrada.jpg
     alt: Entrada techada de Casa Mandala

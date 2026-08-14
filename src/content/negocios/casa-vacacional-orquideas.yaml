@@ -71,6 +71,7 @@ servicios:
 numeroHabitaciones: 3
 capacidadMaxima: 15
 tipo: casa
+subtipo: Casa vacacional
 distancias:
   - a: playa
     metros: 211

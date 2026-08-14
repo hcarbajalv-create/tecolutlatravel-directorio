@@ -54,6 +54,7 @@ servicios:
   - Agua caliente
 numeroHabitaciones: 8
 tipo: hotel
+subtipo: Hotel
 distancias:
   - a: playa
     metros: 434

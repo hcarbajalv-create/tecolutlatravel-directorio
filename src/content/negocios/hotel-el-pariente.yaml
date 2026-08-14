@@ -54,6 +54,7 @@ distancias:
   - a: playa
     metros: 538
 tipo: hotel
+subtipo: Hotel
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: false
