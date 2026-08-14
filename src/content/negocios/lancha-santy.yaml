@@ -11,6 +11,9 @@
 # Se quitó la foto del letrero (fondo amarillo) a petición del usuario,
 # 2026-08-10 — quedan 3 fotos. Las reglas de mínimo de fotos para lanchas
 # quizá cambien más adelante, pendiente de decidir.
+# Fotos 04-09 (2026-08-13): fauna real vista durante el recorrido
+# (tortugas, cocodrilos, águila pescadora, garza) — mismas fotos del
+# negocio, no de otro recorrido ni de banco de imágenes.
 # Servicios (2026-08-10): el usuario pidió igualarlos a los de Lancha Mi
 # Ángel IR, asumiendo que las lanchas del río ofrecen los mismos
 # recorridos — dijo que lo va a verificar directamente con el negocio.
@@ -33,7 +36,19 @@ fotos:
     alt: Lancha Santy de frente con su techo azul, lista para el recorrido
   - src: ../../assets/fotos/lancha-santy/03-foto.jpg
     alt: Vista superior de la lancha Santy con sus asientos y chaleco salvavidas
-fechaActualizacion: 2026-08-10
+  - src: ../../assets/fotos/lancha-santy/04-foto.jpg
+    alt: Grupo de tortugas asoleándose sobre un tronco en los esteros de Tecolutla
+  - src: ../../assets/fotos/lancha-santy/05-foto.jpg
+    alt: Cocodrilo de cerca entre las raíces del manglar en el recorrido de Lancha Santy
+  - src: ../../assets/fotos/lancha-santy/06-foto.jpg
+    alt: Cocodrilo asoleándose a la orilla del estero durante el recorrido
+  - src: ../../assets/fotos/lancha-santy/07-foto.jpg
+    alt: Cocodrilo joven sobre ramas en el agua de los esteros de Tecolutla
+  - src: ../../assets/fotos/lancha-santy/08-foto.jpg
+    alt: Águila pescadora posada en una rama seca durante el recorrido
+  - src: ../../assets/fotos/lancha-santy/09-foto.jpg
+    alt: Garza con las alas extendidas entre el manglar
+fechaActualizacion: 2026-08-13
 disponible: true
 servicios:
   - Recorrido al Santuario de las Aves
