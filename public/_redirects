@@ -1,0 +1,17 @@
+# Redirecciones 301 de Netlify — sintaxis: /origen  /destino  código
+# https://docs.netlify.com/manage/routing/redirects/overview/
+#
+# Cuándo agregar una línea aquí: cada vez que se borra el .yaml de un
+# negocio (o de un reportaje) que ya estaba indexado por Google, para
+# no dejar un 404 vivo en el índice — un 301 al hub de la categoría es
+# suficiente, no hace falta mandar a una ficha "parecida".
+#
+# Verifica antes de agregar una línea que esa ruta ya NO exista como
+# página generada por el build (si existiera, ganaría la página real y
+# la redirección de aquí abajo nunca se aplicaría).
+
+# Fichas de ejemplo/prueba que llegaron a indexarse antes de retirarse
+# (detectado en Google Search Console, 2026-08-14):
+/servicios/zzz-prueba-panel-anuncios   /servicios      301
+/gastronomia/cocina-dona-lupita        /gastronomia    301
+/gastronomia/restaurante-el-manglar    /gastronomia    301
