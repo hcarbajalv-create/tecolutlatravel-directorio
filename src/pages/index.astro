@@ -45,21 +45,36 @@ const SELLOS_CONFIANZA = [
   { emoji: '🙌', fuerte: 'Cero', resto: 'comisiones' },
 ];
 
-// Una categoría sin negocios no se renderiza en la franja — mandar
-// gente a una página vacía es peor que no mostrarla. El conteo sale
-// del build, nunca de una lista escrita a mano: en cuanto entra el
-// primer negocio de esa categoría, el tile reaparece solo.
 const categorias = [
-  { href: '/hospedaje', clase: 'tile--hospedaje', icono: '🏡', titulo: 'Hospedaje' },
-  { href: '/gastronomia', clase: 'tile--gastronomia', icono: '🍤', titulo: 'Gastronomía' },
-  { href: '/actividades', clase: 'tile--actividades', icono: '🛶', titulo: 'Actividades' },
-  { href: '/servicios', clase: 'tile--servicios', icono: '🚲', titulo: 'Servicios' },
-]
-  .map((cat) => ({
-    ...cat,
-    conteo: negocios.filter((n) => n.data.categoria === cat.href.slice(1)).length,
-  }))
-  .filter((cat) => cat.conteo > 0);
+  {
+    href: '/hospedaje',
+    clase: 'tile--hospedaje',
+    icono: '🏡',
+    titulo: 'Hospedaje',
+    descripcion: 'Casas y espacios para quedarte',
+  },
+  {
+    href: '/gastronomia',
+    clase: 'tile--gastronomia',
+    icono: '🍤',
+    titulo: 'Gastronomía',
+    descripcion: 'Cocina veracruzana y mariscos',
+  },
+  {
+    href: '/actividades',
+    clase: 'tile--actividades',
+    icono: '🛶',
+    titulo: 'Actividades ecoturísticas',
+    descripcion: 'Manglares, río y naturaleza',
+  },
+  {
+    href: '/servicios',
+    clase: 'tile--servicios',
+    icono: '🚲',
+    titulo: 'Servicios',
+    descripcion: 'Todo para tu estancia',
+  },
+];
 
 // Sin SearchAction: el buscador del Header es 100% en el navegador
 // (filtra un índice ya cargado, sección "buscador" de Header.astro) —
@@ -170,15 +185,23 @@ const esquemaOrganization = {
     )
   }
 
-  <section class="franja-categorias seccion--arena">
+  <section class="seccion seccion--arena">
     <div class="contenedor">
-      <div class="franja-categorias__fila">
+      <div class="seccion__encabezado">
+        <div>
+          <h2 class="titulo-seccion">Explora por categoría</h2>
+          <p class="subtitulo">Las 4 categorías del directorio de Tecolutla.</p>
+        </div>
+      </div>
+      <div class="rejilla-categorias">
         {
           categorias.map((cat) => (
-            <a class={`franja-categorias__tile ${cat.clase}`} href={cat.href}>
-              <span class="franja-categorias__icono">{cat.icono}</span>
-              <span class="franja-categorias__titulo">{cat.titulo}</span>
-              <span class="franja-categorias__conteo">{cat.conteo}</span>
+            <a class={`tile-categoria ${cat.clase}`} href={cat.href}>
+              <span class="tile-categoria__icono">{cat.icono}</span>
+              <span class="tile-categoria__texto">
+                <span class="tile-categoria__titulo">{cat.titulo}</span>
+                <span class="tile-categoria__descripcion">{cat.descripcion}</span>
+              </span>
             </a>
           ))
         }

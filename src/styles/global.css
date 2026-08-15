@@ -1012,56 +1012,64 @@ p.buscador-pildora__resultados {
 }
 
 
-/* ---------- Franja compacta de categorías (Home, rediseño Fase 1) ---------- */
-.franja-categorias {
-  padding: 1.75rem 0;
-}
-
-.franja-categorias__fila {
+/* ---------- Tiles de categoría (recuperado de producción) ---------- */
+.rejilla-categorias {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 1.1rem;
 }
 
 @media (min-width: 641px) {
-  .franja-categorias__fila {
-    /* auto-fit en vez de "repeat(4, 1fr)" fijo: si una categoría se
-       oculta por no tener negocios, las que quedan se reparten el
-       ancho completo en vez de dejar un hueco vacío. */
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  .rejilla-categorias {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-.franja-categorias__tile {
+.tile-categoria {
+  position: relative;
+  border-radius: var(--radio);
+  padding: 1.4rem 1.2rem;
+  min-height: 130px;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: var(--radio-chico);
-  padding: 0.75rem 1rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.2rem;
   color: var(--color-blanco);
   text-decoration: none;
-  font-weight: 700;
+  overflow: hidden;
   transition: transform 0.15s ease;
 }
 
-.franja-categorias__tile:hover {
-  transform: translateY(-2px);
+.tile-categoria::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 20, 25, 0.65), rgba(8, 20, 25, 0));
 }
 
-.franja-categorias__icono {
-  font-size: 1.2rem;
+.tile-categoria:hover {
+  transform: translateY(-3px);
 }
 
-.franja-categorias__titulo {
-  flex: 1;
-  font-size: 0.9rem;
+.tile-categoria__icono {
+  font-size: 1.6rem;
+  position: relative;
 }
 
-.franja-categorias__conteo {
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  font-size: 0.78rem;
+.tile-categoria__texto {
+  position: relative;
+}
+
+.tile-categoria__titulo {
+  font-family: var(--fuente-titulos);
+  font-weight: 900;
+  font-size: 1.05rem;
+  display: block;
+}
+
+.tile-categoria__descripcion {
+  font-size: 0.8rem;
+  opacity: 0.9;
 }
 
 .tile--hospedaje {
