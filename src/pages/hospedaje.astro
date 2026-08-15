@@ -6,6 +6,15 @@ import TarjetaCompacta from '../components/TarjetaCompacta.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
 
+// Con pocos negocios (hoy 12) la tarjeta compacta hace ver el catálogo
+// escaso: caben todas en dos filas y se siente vacío. La tarjeta grande
+// (NegocioCard) ocupa más espacio visual y da sensación de catálogo con
+// cuerpo. Es una decisión de percepción, no técnica — se invierte al
+// crecer el catálogo, porque entonces la grande obliga a demasiado
+// scroll y la compacta permite comparar de un vistazo. Cambiar este
+// valor a `true` cuando /hospedaje llegue a 30 negocios publicados.
+const USAR_TARJETA_COMPACTA = false;
+
 const todos = filtrarListables(await getCollection('negocios'));
 const negociosHospedaje = todos.filter((n) => n.data.categoria === 'hospedaje');
 
@@ -159,14 +168,22 @@ const esquemaItemList =
           <a href="/anunciate">Anúnciate aquí</a> si tienes un negocio en Tecolutla.
         </p>
       ) : (
-        <div class="rejilla-compacta" id="rejilla-hospedaje">
-          {todosOrdenados.map((n, i) => (
-            <TarjetaCompacta
-              negocio={n}
-              esPrimera={destacados.length === 0 && i === 0}
-              filtros={filtrosDe(n)}
-            />
-          ))}
+        <div class={USAR_TARJETA_COMPACTA ? 'rejilla-compacta' : 'rejilla-negocios'} id="rejilla-hospedaje">
+          {todosOrdenados.map((n, i) =>
+            USAR_TARJETA_COMPACTA ? (
+              <TarjetaCompacta
+                negocio={n}
+                esPrimera={destacados.length === 0 && i === 0}
+                filtros={filtrosDe(n)}
+              />
+            ) : (
+              <NegocioCard
+                negocio={n}
+                esPrimera={destacados.length === 0 && i === 0}
+                filtros={filtrosDe(n)}
+              />
+            ),
+          )}
         </div>
       )
     }
@@ -227,7 +244,10 @@ const esquemaItemList =
         boton.classList.add('pastilla--activa');
         const valor = boton.dataset.chip;
         let visibles = 0;
-        grid.querySelectorAll<HTMLElement>('.tarjeta-compacta').forEach((tarjeta) => {
+        // [data-slug] en vez de .tarjeta-compacta: funciona igual con la
+        // tarjeta grande (NegocioCard) o la compacta, según qué esté
+        // activa (ver USAR_TARJETA_COMPACTA arriba).
+        grid.querySelectorAll<HTMLElement>('[data-slug]').forEach((tarjeta) => {
           const mostrar = valor === 'todo' || tarjeta.getAttribute(`data-filtro-${valor}`) === '1';
           tarjeta.style.display = mostrar ? '' : 'none';
           if (mostrar) visibles++;

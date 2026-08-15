@@ -10,9 +10,17 @@ interface Props {
   // en "lazy" como antes. Ver PaginaCategoria.astro e index.astro, que
   // son quienes saben cuál tarjeta es la primera del listado real.
   esPrimera?: boolean;
+  // Resultado de los chips de filtro de la página que use esta tarjeta
+  // (ej. /hospedaje) — se vuelca como atributos data-filtro-<clave>,
+  // igual que en TarjetaCompacta.astro, para que el mismo JS de filtro
+  // funcione sin importar cuál de las dos tarjetas esté en uso.
+  filtros?: Record<string, boolean>;
 }
 
-const { negocio, esPrimera = false } = Astro.props;
+const { negocio, esPrimera = false, filtros = {} } = Astro.props;
+const atributosFiltro = Object.fromEntries(
+  Object.entries(filtros).map(([clave, valor]) => [`data-filtro-${clave}`, valor ? '1' : '0']),
+);
 const {
   categoria,
   nombre,
@@ -86,6 +94,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
   data-tipo={tipo ?? ''}
   data-orden-manual={ordenManual ?? ''}
   data-nombre={nombre}
+  {...atributosFiltro}
 >
   <div class="tarjeta__foto">
     <a href={enlace} tabindex="-1" aria-hidden="true">
