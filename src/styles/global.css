@@ -308,30 +308,16 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   z-index: 1;
-  /* Aclarado a .38/.26/.58 (antes .52/.40/.72) — el subtítulo pasó a
-     texto grande (ver .promesa__subtitulo, AA pide solo 3:1 ahí) y se
-     agregó .promesa__vineta para el contraste extra puntual, así el
-     overlay parejo ya no tiene que cargar solo con todo el trabajo. */
+  /* .42/.30/.62 medía 4.16:1 en el subtítulo a 390px; .47/.35/.67
+     lo resolvía en móvil (4.56:1) pero quedaba en 4.40:1 a 1280px
+     (AA pide 4.5:1) por el recorte más bajo de la foto ahí — un
+     segundo +.05 lo deja arriba de AA en los dos tamaños, sin volver
+     a los valores anteriores (.72/.55/.78) que apagaban la foto. */
   background: linear-gradient(
     180deg,
-    rgba(12, 43, 46, 0.38) 0%,
-    rgba(12, 43, 46, 0.26) 45%,
-    rgba(12, 43, 46, 0.58) 100%
-  );
-}
-
-/* Velo local centrado en el bloque de texto — deja las orillas de la
-   foto (donde no hay texto) sin oscurecer, y refuerza el contraste
-   justo donde hace falta. */
-.promesa__vineta {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 65% 75% at center,
-    rgba(12, 43, 46, 0.45) 0%,
-    rgba(12, 43, 46, 0) 70%
+    rgba(12, 43, 46, 0.52) 0%,
+    rgba(12, 43, 46, 0.4) 45%,
+    rgba(12, 43, 46, 0.72) 100%
   );
 }
 
@@ -373,11 +359,7 @@ select:focus-visible {
 }
 
 .promesa__subtitulo {
-  /* 20px + bold = "texto grande" en AA (mínimo 3:1 en vez de 4.5:1) —
-     el subtítulo era el que limitaba qué tanto se podía aclarar el
-     overlay parejo. */
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.92);
   margin: 0 0 1.75rem;
   text-shadow: 0 2px 12px rgba(12, 43, 46, 0.55);
