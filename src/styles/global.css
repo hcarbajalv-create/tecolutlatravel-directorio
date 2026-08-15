@@ -774,7 +774,12 @@ p.buscador-pildora__resultados {
   overflow-x: auto;
   flex-wrap: nowrap;
   padding: 1rem 0;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fila-chips::-webkit-scrollbar {
+  display: none;
 }
 
 .fila-chips .pastilla {
@@ -816,7 +821,12 @@ p.buscador-pildora__resultados {
   max-width: var(--ancho-maximo);
   margin: 0 auto;
   padding: 0 1.25rem 0.5rem;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carrusel-destacados::-webkit-scrollbar {
+  display: none;
 }
 
 .carrusel-destacados .tarjeta {
