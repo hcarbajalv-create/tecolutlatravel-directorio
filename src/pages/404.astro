@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const categorias = [
+  {
+    href: '/hospedaje',
+    clase: 'tile--hospedaje',
+    icono: '🏡',
+    titulo: 'Hospedaje',
+    descripcion: 'Casas y espacios para quedarte',
+  },
+  {
+    href: '/gastronomia',
+    clase: 'tile--gastronomia',
+    icono: '🍤',
+    titulo: 'Gastronomía',
+    descripcion: 'Cocina veracruzana y mariscos',
+  },
+  {
+    href: '/actividades',
+    clase: 'tile--actividades',
+    icono: '🛶',
+    titulo: 'Actividades ecoturísticas',
+    descripcion: 'Manglares, río y naturaleza',
+  },
+  {
+    href: '/servicios',
+    clase: 'tile--servicios',
+    icono: '🚲',
+    titulo: 'Servicios',
+    descripcion: 'Todo para tu estancia',
+  },
+];
+---
+
+<BaseLayout
+  titulo="Página no encontrada"
+  descripcion="Esta página ya no existe en el directorio de Tecolutla. Busca un negocio o explora por categoría."
+  noindex
+>
+  <section class="seccion contenedor pagina-404">
+    <p class="pagina-404__codigo" aria-hidden="true">404</p>
+    <h1 class="titulo-pagina">Esta página ya no existe</h1>
+    <p class="subtitulo">
+      El negocio pudo haberse dado de baja, o la dirección cambió. Busca directamente lo que
+      buscabas o explora el directorio por categoría.
+    </p>
+
+    <div class="buscador-pildora pagina-404__buscador">
+      <label for="buscador-404-input" class="sr-only">Buscar un negocio por nombre</label>
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" class="buscador-pildora__icono">
+        <circle cx="8.5" cy="8.5" r="6" />
+        <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
+      </svg>
+      <input
+        type="search"
+        id="buscador-404-input"
+        class="buscador-pildora__input"
+        placeholder="Busca hospedaje, restaurantes, actividades…"
+        autocomplete="off"
+      />
+      <ul class="buscador__resultados buscador-pildora__resultados" id="buscador-404-resultados" aria-live="polite"></ul>
+      <p class="buscador__sin-resultados buscador-pildora__resultados" id="buscador-404-sin-resultados" hidden>
+        No encontramos negocios con ese nombre.
+      </p>
+    </div>
+
+    <div class="rejilla-categorias pagina-404__categorias">
+      {
+        categorias.map((cat) => (
+          <a class={`tile-categoria ${cat.clase}`} href={cat.href}>
+            <span class="tile-categoria__icono">{cat.icono}</span>
+            <span class="tile-categoria__texto">
+              <span class="tile-categoria__titulo">{cat.titulo}</span>
+              <span class="tile-categoria__descripcion">{cat.descripcion}</span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="pagina-404__volver"><a href="/">← Volver al inicio</a></p>
+  </section>
+</BaseLayout>
+
+<script>
+  // Misma lógica/índice que el buscador del Header y el del hero del
+  // home — ver src/utils/buscadorNegocios.ts.
+  import { leerIndiceBuscador, buscarNegocios, resultadosHtml } from '../utils/buscadorNegocios';
+
+  function activarBuscador404() {
+    const input = document.getElementById('buscador-404-input') as HTMLInputElement | null;
+    const resultados = document.getElementById('buscador-404-resultados');
+    const sinResultados = document.getElementById('buscador-404-sin-resultados');
+    if (!input || !resultados || !sinResultados) return;
+    const indice = leerIndiceBuscador();
+
+    input.addEventListener('input', () => {
+      const coincidencias = buscarNegocios(indice, input.value);
+      if (!input.value.trim()) {
+        resultados.innerHTML = '';
+        sinResultados.hidden = true;
+        return;
+      }
+      if (coincidencias.length === 0) {
+        resultados.innerHTML = '';
+        sinResultados.hidden = false;
+        return;
+      }
+      sinResultados.hidden = true;
+      resultados.innerHTML = resultadosHtml(coincidencias);
+    });
+  }
+
+  activarBuscador404();
+</script>
