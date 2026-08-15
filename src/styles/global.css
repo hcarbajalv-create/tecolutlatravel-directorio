@@ -302,22 +302,22 @@ select:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(1.12) saturate(1.1);
 }
 
 .promesa__overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  /* .52/.40/.72 medía bien hasta que .promesa__imagen sumó
-     brightness(1.12) saturate(1.1) para verse más luminosa — eso baja
-     el contraste del subtítulo (4.15:1 a 1280px, AA pide 4.5:1). Se
-     subió +.06 para compensar exactamente esa foto ya más brillante. */
+  /* .42/.30/.62 medía 4.16:1 en el subtítulo a 390px; .47/.35/.67
+     lo resolvía en móvil (4.56:1) pero quedaba en 4.40:1 a 1280px
+     (AA pide 4.5:1) por el recorte más bajo de la foto ahí — un
+     segundo +.05 lo deja arriba de AA en los dos tamaños, sin volver
+     a los valores anteriores (.72/.55/.78) que apagaban la foto. */
   background: linear-gradient(
     180deg,
-    rgba(12, 43, 46, 0.58) 0%,
-    rgba(12, 43, 46, 0.46) 45%,
-    rgba(12, 43, 46, 0.78) 100%
+    rgba(12, 43, 46, 0.52) 0%,
+    rgba(12, 43, 46, 0.4) 45%,
+    rgba(12, 43, 46, 0.72) 100%
   );
 }
 
