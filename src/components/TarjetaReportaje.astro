@@ -66,7 +66,9 @@ const miniatura =
   </div>
   <div class="tarjeta-reportaje__cuerpo">
     <span class="etiqueta-categoria">{etiquetas[categoria]}</span>
-    <h3 class="tarjeta-reportaje__titulo">{titulo}</h3>
+    <h3 class="tarjeta-reportaje__titulo">
+      <a href={`/reportajes-y-noticias/${reportaje.id}`}>{titulo}</a>
+    </h3>
     <p class="tarjeta-reportaje__descripcion">{descripcionCorta}</p>
     {enlaceNegocio && (
       <a class="tarjeta-reportaje__ver-ficha" href={enlaceNegocio}>

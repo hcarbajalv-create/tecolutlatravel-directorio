@@ -1,0 +1,118 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+
+export async function getStaticPaths() {
+  const reportajes = await getCollection('reportajes');
+  return reportajes.map((reportaje) => ({
+    params: { reportaje: reportaje.id },
+    props: { reportaje },
+  }));
+}
+
+const { reportaje } = Astro.props;
+const { titulo, categoria, fecha, video, descripcionCorta, negocioRelacionado } = reportaje.data;
+
+const ETIQUETAS_CATEGORIA: Record<typeof categoria, string> = {
+  reportaje: 'Reportaje',
+  noticia: 'Noticia',
+  tip: 'Tip',
+};
+
+const negocio = negocioRelacionado ? await getEntry(negocioRelacionado) : undefined;
+const enlaceNegocio = negocio ? `/${negocio.data.categoria}/${negocio.id}` : undefined;
+
+const fechaFormateada = new Intl.DateTimeFormat('es-MX', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(fecha);
+
+const urlPagina = `https://tecolutlatravel.mx/reportajes-y-noticias/${reportaje.id}`;
+
+// Paloma es la anfitriona en cámara de todos los reportajes (ver
+// reportajes-y-noticias.astro: "Tu guía en cámara...") y la responsable
+// pública del proyecto (acerca-de.astro) — no es un dato inventado para
+// esta página, es el mismo nombre que ya usa el resto del sitio.
+const esquemaArticle = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: titulo,
+  description: descripcionCorta,
+  author: {
+    '@type': 'Person',
+    name: 'Paloma Uribe',
+  },
+  datePublished: fecha.toISOString(),
+  dateModified: fecha.toISOString(),
+  publisher: {
+    '@type': 'Organization',
+    name: 'TecolutlaTravel',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://tecolutlatravel.mx/og-default.jpg',
+    },
+  },
+  mainEntityOfPage: urlPagina,
+};
+
+const esquemaBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://tecolutlatravel.mx/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Reportajes y noticias',
+      item: 'https://tecolutlatravel.mx/reportajes-y-noticias',
+    },
+    { '@type': 'ListItem', position: 3, name: titulo, item: urlPagina },
+  ],
+};
+---
+
+<BaseLayout titulo={titulo} descripcion={descripcionCorta}>
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaArticle)} />
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaBreadcrumb)} />
+
+  <section class={`seccion seccion--arena reportaje-individual reportaje-individual--${categoria}`}>
+    <div class="contenedor reportaje-individual__ancho">
+      <p class="reportaje-individual__migaja">
+        <a href="/">Inicio</a> → <a href="/reportajes-y-noticias">Reportajes y noticias</a> → {titulo}
+      </p>
+
+      <span class="etiqueta-categoria">{ETIQUETAS_CATEGORIA[categoria]}</span>
+      <h1 class="titulo-pagina">{titulo}</h1>
+      <p class="reportaje-individual__fecha">{fechaFormateada}</p>
+
+      {
+        video ? (
+          <div class="reportaje-individual__video">
+            <VideoEmbed url={video} titulo={titulo} />
+          </div>
+        ) : (
+          <p class="reportaje-individual__video-pendiente">Video próximamente</p>
+        )
+      }
+
+      <p class="subtitulo">{descripcionCorta}</p>
+
+      {
+        enlaceNegocio && negocio && (
+          <p>
+            <a class="boton boton--secundario" href={enlaceNegocio}>
+              Ver ficha de {negocio.data.nombre} →
+            </a>
+          </p>
+        )
+      }
+
+      <p class="reportaje-individual__volver">
+        <a href="/reportajes-y-noticias">← Volver a Reportajes y noticias</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

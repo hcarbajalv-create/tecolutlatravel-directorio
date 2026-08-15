@@ -1995,11 +1995,92 @@ p.buscador-pildora__resultados {
   color: var(--color-tinta);
 }
 
+/* ---------- Página individual de reportaje ---------- */
+.reportaje-individual--reportaje .etiqueta-categoria {
+  background: var(--color-turquesa);
+}
+
+.reportaje-individual--noticia .etiqueta-categoria {
+  background: var(--color-coral);
+  color: var(--color-tinta);
+}
+
+.reportaje-individual--tip .etiqueta-categoria {
+  background: var(--color-foco);
+  color: var(--color-tinta);
+}
+
+.reportaje-individual__ancho {
+  max-width: 720px;
+}
+
+.reportaje-individual__migaja {
+  font-size: 0.82rem;
+  color: var(--color-texto-suave);
+  margin: 0 0 1rem;
+}
+
+.reportaje-individual__migaja a {
+  color: var(--color-mar);
+  text-decoration: none;
+}
+
+.reportaje-individual__migaja a:hover {
+  text-decoration: underline;
+}
+
+.reportaje-individual .titulo-pagina {
+  margin-top: 0.6rem;
+}
+
+.reportaje-individual__fecha {
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+  margin: 0 0 1.5rem;
+}
+
+.reportaje-individual__video {
+  margin-bottom: 1.5rem;
+}
+
+.reportaje-individual__video-pendiente {
+  background: var(--color-arena-oscura);
+  color: var(--color-texto-suave);
+  border-radius: var(--radio);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.reportaje-individual__volver {
+  margin-top: 2rem;
+}
+
+.reportaje-individual__volver a {
+  color: var(--color-mar);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reportaje-individual__volver a:hover {
+  text-decoration: underline;
+}
+
 .tarjeta-reportaje__titulo {
   margin: 0;
   font-size: 1rem;
   font-family: var(--fuente-titulos);
   font-weight: 900;
+}
+
+.tarjeta-reportaje__titulo a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tarjeta-reportaje__titulo a:hover {
+  text-decoration: underline;
 }
 
 .tarjeta-reportaje__descripcion {
