@@ -36,6 +36,14 @@ const gratuitos = negociosFiltrados
 
 const negociosCategoria = [...destacados, ...gratuitos];
 
+// Una categoría con cero negocios es contenido pobre para Google —
+// se le pone noindex automáticamente mientras esté vacía. Se calcula
+// del conteo real en cada build, nada escrito a mano: en cuanto entra
+// el primer negocio de la categoría, el noindex desaparece solo. La
+// categoría sigue viéndose normal en el menú y en la home — esto solo
+// cambia la etiqueta <meta name="robots">, no el contenido visible.
+const categoriaVacia = negociosCategoria.length === 0;
+
 const ETIQUETAS_BUSQUEDA: Record<typeof categoria, string> = {
   gastronomia: 'restaurantes',
   actividades: 'actividades',
@@ -63,7 +71,7 @@ const esquemaItemList =
     : null;
 ---
 
-<BaseLayout titulo={titulo} descripcion={descripcionSeo}>
+<BaseLayout titulo={titulo} descripcion={descripcionSeo} noindex={categoriaVacia}>
   {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
   <section class={`cabecera-categoria ${claseColor}`}>
     <div class="contenedor">

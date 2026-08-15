@@ -17,6 +17,12 @@ const destacados = negociosHospedaje
 const gratuitos = negociosHospedaje.filter((n) => !n.data.destacado).sort(compararDentroDeGrupo);
 const todosOrdenados = [...destacados, ...gratuitos];
 
+// Misma regla que las demás categorías (PaginaCategoria.astro): noindex
+// automático mientras la categoría no tenga negocios. Hoy hospedaje
+// siempre tiene fichas, pero se deja la misma protección por si algún
+// día queda vacía temporalmente.
+const categoriaVacia = todosOrdenados.length === 0;
+
 function normalizar(texto: string): string {
   return texto
     .normalize('NFD')
@@ -87,6 +93,7 @@ const esquemaItemList =
 <BaseLayout
   titulo="🏡 Casas de hospedaje y 🏨 Hoteles en Tecolutla, Veracruz"
   descripcion="Casas, cabañas y hospedaje disponible en Tecolutla, Veracruz, con precios, fotos y disponibilidad."
+  noindex={categoriaVacia}
 >
   {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
 
