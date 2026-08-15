@@ -2096,6 +2096,55 @@ p.buscador-pildora__resultados {
   text-decoration: underline;
 }
 
+/* Cuerpo de artículo (Markdown) — ancho de lectura ~68ch (65-75
+   recomendado), h2/h3 heredan Nunito 900 de la regla global h1,h2,h3;
+   los párrafos heredan Work Sans del body. */
+.reportaje-individual__cuerpo {
+  max-width: 68ch;
+  margin: 1.5rem 0 2rem;
+}
+
+.reportaje-individual__cuerpo p {
+  margin: 0 0 1.1rem;
+  line-height: 1.7;
+}
+
+.reportaje-individual__cuerpo h2,
+.reportaje-individual__cuerpo h3 {
+  margin: 1.75rem 0 0.75rem;
+}
+
+.reportaje-individual__cuerpo ul,
+.reportaje-individual__cuerpo ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.4rem;
+  line-height: 1.7;
+}
+
+.reportaje-individual__cuerpo li {
+  margin-bottom: 0.4rem;
+}
+
+.reportaje-individual__cuerpo a {
+  color: var(--color-mar);
+  text-decoration: underline;
+}
+
+.reportaje-individual__cuerpo a:hover {
+  color: var(--color-mar-oscuro);
+}
+
+.reportaje-individual__cuerpo img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radio-chico);
+  margin: 1rem 0;
+}
+
+.reportaje-individual__cuerpo strong {
+  color: var(--color-texto);
+}
+
 .tarjeta-reportaje__titulo {
   margin: 0;
   font-size: 1rem;

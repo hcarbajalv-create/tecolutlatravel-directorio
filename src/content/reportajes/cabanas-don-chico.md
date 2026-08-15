@@ -1,3 +1,4 @@
+---
 # Sin negocioRelacionado por ahora — "Cabañas Don Chico" todavía no tiene
 # ficha propia en el directorio. Enlazar cuando se dé de alta como negocio.
 titulo: Cabañas Don Chico
@@ -5,3 +6,4 @@ categoria: reportaje
 fecha: 2026-07-28
 video: https://youtu.be/01GTDZKkNEo?si=ObNlYPuZimNGZk-x
 descripcionCorta: Paloma recorre Cabañas Don Chico, un hospedaje de Tecolutla.
+---

@@ -185,7 +185,13 @@ const negocios = defineCollection({
 });
 
 const reportajes = defineCollection({
-  loader: glob({ pattern: '**/*.yaml', base: './src/content/reportajes' }),
+  // Markdown en vez de yaml — a diferencia de negocios/reportajes de
+  // antes, un reportaje puede tener cuerpo de artículo largo (párrafos,
+  // subtítulos, listas, enlaces) además del frontmatter. El cuerpo es
+  // opcional: un archivo con frontmatter y nada debajo sigue siendo
+  // válido, se renderiza sin sección de cuerpo — ver render(reportaje)
+  // en reportajes-y-noticias/[reportaje].astro.
+  loader: glob({ pattern: '**/*.md', base: './src/content/reportajes' }),
   schema: z.object({
     titulo: z.string(),
     categoria: z.enum(['reportaje', 'noticia', 'tip']),

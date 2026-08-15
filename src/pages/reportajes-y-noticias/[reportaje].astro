@@ -1,7 +1,8 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import { textoPlanoMarkdown, contarPalabras } from '../../utils/textoPlanoMarkdown';
 
 export async function getStaticPaths() {
   const reportajes = await getCollection('reportajes');
@@ -22,6 +23,13 @@ const ETIQUETAS_CATEGORIA: Record<typeof categoria, string> = {
 
 const negocio = negocioRelacionado ? await getEntry(negocioRelacionado) : undefined;
 const enlaceNegocio = negocio ? `/${negocio.data.categoria}/${negocio.id}` : undefined;
+
+// Cuerpo de artículo — opcional. Un reportaje sin texto debajo del
+// frontmatter (los 6 de hoy) sigue funcionando igual, sin esta sección.
+const cuerpoMarkdown = reportaje.body?.trim() ?? '';
+const tieneCuerpo = cuerpoMarkdown.length > 0;
+const { Content } = await render(reportaje);
+const cuerpoTextoPlano = tieneCuerpo ? textoPlanoMarkdown(cuerpoMarkdown) : '';
 
 const fechaFormateada = new Intl.DateTimeFormat('es-MX', {
   day: 'numeric',
@@ -56,6 +64,9 @@ const esquemaArticle = {
     },
   },
   mainEntityOfPage: urlPagina,
+  ...(tieneCuerpo
+    ? { articleBody: cuerpoTextoPlano, wordCount: contarPalabras(cuerpoTextoPlano) }
+    : {}),
 };
 
 const esquemaBreadcrumb = {
@@ -99,6 +110,14 @@ const esquemaBreadcrumb = {
       }
 
       <p class="subtitulo">{descripcionCorta}</p>
+
+      {
+        tieneCuerpo && (
+          <div class="reportaje-individual__cuerpo">
+            <Content />
+          </div>
+        )
+      }
 
       {
         enlaceNegocio && negocio && (
