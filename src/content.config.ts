@@ -48,6 +48,32 @@ const negocios = defineCollection({
         )
         .optional(),
       fechaActualizacion: z.coerce.date(),
+      // ESTADOS DE PUBLICACIÓN DE UN NEGOCIO — "borrador" y "disponible"
+      // son campos independientes, no confundir uno con otro. Ver
+      // src/utils/negociosPublicados.ts para dónde se aplican.
+      //
+      // - borrador: true -> el negocio NO EXISTE para el sitio construido.
+      //   No genera página (visitar su URL da 404 real), no aparece en
+      //   ningún listado, destacados, buscador ni sitemap. Úsalo para
+      //   fichas de prueba o altas a medio armar — nunca subas una
+      //   prueba sin este campo (así fue como "zzz-prueba-panel-anuncios"
+      //   llegó a indexarse en Google, Lote 3 de la auditoría SEO).
+      //
+      // - disponible: false -> el negocio se dio de baja (cerró, dejó de
+      //   pagar, pidió salir). Política del proyecto: NUNCA borrar una
+      //   ficha ya publicada — una URL borrada queda en 404 y Google
+      //   tarda meses en limpiarla del índice, perdiendo el
+      //   posicionamiento acumulado. Su página sigue existiendo y
+      //   responde 200, pero sale de todo listado/destacados/buscador/
+      //   sitemap, lleva noindex, y muestra un aviso de que ya no está
+      //   disponible en vez del contenido normal.
+      //
+      // Un negocio puede estar en borrador (no existe), dado de baja
+      // (existe pero fuera de circulación) o publicado normal — nunca
+      // los dos primeros a la vez tiene sentido, pero el schema no lo
+      // impide porque "borrador" ya gana primero en la práctica (ver
+      // filtrarPublicados, que se aplica antes que filtrarListables).
+      borrador: z.boolean().optional(),
       disponible: z.boolean(),
       servicios: z.array(z.string()).default([]),
       // Platillos/especialidades del negocio — separado de "servicios"

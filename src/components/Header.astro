@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { filtrarListables } from '../utils/negociosPublicados';
 
 interface Props {
   rutaActual: string;
@@ -25,7 +26,7 @@ function esActiva(href: string) {
 // Índice ligero (nombre + categoría + slug) para el buscador de negocios —
 // se resuelve en build time y se manda como JSON al cliente, que filtra ahí
 // mismo. El catálogo es estático, no hace falta backend para esto.
-const negocios = await getCollection('negocios');
+const negocios = filtrarListables(await getCollection('negocios'));
 const indiceBuscador = negocios.map((negocio) => ({
   nombre: negocio.data.nombre,
   categoria: negocio.data.categoria,

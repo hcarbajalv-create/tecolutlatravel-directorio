@@ -4,6 +4,7 @@ import { Picture, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
+import { filtrarListables } from '../utils/negociosPublicados';
 import fotoPromesa from '../assets/sitio/promesa-playa.jpg';
 
 // Anchos reales que sirve el <Picture> de abajo — se reutilizan para
@@ -18,7 +19,7 @@ const preloadPromesaSrcset = preloadPromesa
   .map((img, i) => `${img.src} ${ANCHOS_PROMESA[i]}w`)
   .join(', ');
 
-const negocios = await getCollection('negocios');
+const negocios = filtrarListables(await getCollection('negocios'));
 // Orden manual primero (si se define); el resto se manda tal cual al
 // navegador, que rota el orden por día y limita a MAX_DESTACADOS_HOME
 // (ver script abajo) — así, aunque haya cientos de negocios pagando, la

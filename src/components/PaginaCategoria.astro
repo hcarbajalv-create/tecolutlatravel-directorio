@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from './NegocioCard.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
+import { filtrarListables } from '../utils/negociosPublicados';
 
 interface Props {
   // "hospedaje" ya no pasa por este componente — tiene su propia
@@ -17,7 +18,7 @@ interface Props {
 
 const { categoria, icono, claseColor, titulo, descripcionSeo, introduccion } = Astro.props;
 
-const todos = await getCollection('negocios');
+const todos = filtrarListables(await getCollection('negocios'));
 const negociosFiltrados = todos.filter((n) => n.data.categoria === categoria);
 
 // Destacados: van primero como grupo, pero SIN ordenar por puntaje entre

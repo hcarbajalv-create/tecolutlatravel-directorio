@@ -4,8 +4,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
 import TarjetaCompacta from '../components/TarjetaCompacta.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
+import { filtrarListables } from '../utils/negociosPublicados';
 
-const todos = await getCollection('negocios');
+const todos = filtrarListables(await getCollection('negocios'));
 const negociosHospedaje = todos.filter((n) => n.data.categoria === 'hospedaje');
 
 // Mismo criterio de orden que el resto del sitio: destacados primero (el

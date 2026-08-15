@@ -4,9 +4,13 @@ import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import { CATALOGO_DISTANCIAS, formatearDistancia } from '../../utils/catalogoDistancias';
+import { filtrarPublicados } from '../../utils/negociosPublicados';
 
 export async function getStaticPaths() {
-  const negocios = await getCollection('negocios');
+  // Publicados = todo excepto borrador. Un negocio dado de baja
+  // (disponible:false) SIGUE generando página aquí — solo cambia lo
+  // que esa página muestra, ver el condicional "disponible" más abajo.
+  const negocios = filtrarPublicados(await getCollection('negocios'));
   return negocios.map((negocio) => ({
     params: { categoria: negocio.data.categoria, negocio: negocio.id },
     props: { negocio },
@@ -44,6 +48,7 @@ const {
   resenas,
   destacado,
   video,
+  disponible,
 } = negocio.data;
 
 // El formulario de fechas/personas del bloque "Reserva" se limitó a
@@ -245,16 +250,23 @@ const esquemaBreadcrumb = {
   imagen={new URL(fotosGrandes[0].src, Astro.site).toString()}
   imagenAncho={fotosGrandes[0].attributes.width}
   imagenAlto={fotosGrandes[0].attributes.height}
+  noindex={!disponible}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(esquemaNegocio)} />
+  {
+    // Dado de baja: no se publica el schema de negocio (LodgingBusiness/
+    // Restaurant/etc.) — sería información desactualizada declarando
+    // que sigue activo. El BreadcrumbList sigue siendo información de
+    // navegación válida, ese sí se deja.
+    disponible && <script type="application/ld+json" set:html={JSON.stringify(esquemaNegocio)} />
+  }
   <script type="application/ld+json" set:html={JSON.stringify(esquemaBreadcrumb)} />
 
   <section class={`cabecera-categoria ${claseColorCategoria[categoria]}`}>
     <div class="contenedor">
       <p><a href={`/${categoria}`} style="color: #fff;">&larr; Volver a {nombreCategoria[categoria]}</a></p>
       <div class="ficha__encabezado">
-        {destacado && <span class="insignia insignia--destacado">Destacado</span>}
-        {verificado && <span class="insignia insignia--verificado">Verificado</span>}
+        {disponible && destacado && <span class="insignia insignia--destacado">Destacado</span>}
+        {disponible && verificado && <span class="insignia insignia--verificado">Verificado</span>}
       </div>
       <div class="cabecera-categoria__titulo">
         <h1>{nombre}</h1>
@@ -264,10 +276,11 @@ const esquemaBreadcrumb = {
           <span class="cabecera-categoria__icono">{iconoCategoria[categoria]}</span>
         )}
       </div>
-      <p>{descripcionCorta}</p>
+      {disponible && <p>{descripcionCorta}</p>}
     </div>
   </section>
 
+  {disponible && (
   <section class="seccion contenedor">
     <div class="ficha__galeria">
       {
@@ -533,6 +546,29 @@ const esquemaBreadcrumb = {
       }
     </div>
   </section>
+  )}
+
+  {!disponible && (
+    <section class="seccion contenedor">
+      <div class="aviso-baja">
+        <p class="aviso-baja__icono" aria-hidden="true">🚫</p>
+        <h2>Este negocio ya no está disponible en el directorio</h2>
+        <p>
+          {nombre} pudo haber cerrado, dejar de participar o pedir salir del directorio de
+          TecolutlaTravel. Dejamos su página aquí para no romper enlaces, pero ya no forma
+          parte del catálogo activo.
+        </p>
+        <div class="aviso-baja__acciones">
+          <a class="boton" href={`/${categoria}`}>
+            Ver {nombreCategoria[categoria]}
+          </a>
+          <a class="boton boton--secundario" href="/">
+            Ir al inicio
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <script>
@@ -575,12 +611,15 @@ const esquemaBreadcrumb = {
 
   document.querySelector('[data-lightbox-cerrar]')?.addEventListener('click', cerrarLightbox);
 
-  lightbox.addEventListener('click', (evento) => {
+  // lightbox es null en una ficha dada de baja (esa galería no se
+  // renderiza ahí) — de ahí el optional chaining/guard en vez de dar
+  // por hecho que siempre existe.
+  lightbox?.addEventListener('click', (evento) => {
     if (evento.target === lightbox) cerrarLightbox();
   });
 
   document.addEventListener('keydown', (evento) => {
-    if (evento.key === 'Escape' && !lightbox.hidden) cerrarLightbox();
+    if (evento.key === 'Escape' && lightbox && !lightbox.hidden) cerrarLightbox();
   });
 </script>
 
