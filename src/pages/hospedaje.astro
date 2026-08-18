@@ -119,18 +119,51 @@ const esquemaItemList =
   </section>
 
   {
-    chips.length > 0 && (
+    todosOrdenados.length > 0 && (
       <div class="contenedor">
-        <div class="fila-chips" id="fila-chips">
-          <button type="button" class="pastilla pastilla--activa" data-chip="todo">
-            Todo
-          </button>
-          {chips.map((c) => (
-            <button type="button" class="pastilla" data-chip={c.valor}>
-              {c.etiqueta}
-            </button>
-          ))}
+        <div class="hospedaje-controles">
+          <div class="buscador-categoria">
+            <label for="buscador-hospedaje-input" class="buscador-categoria__etiqueta">
+              Buscar hoteles y casas por nombre
+            </label>
+            <div class="buscador-categoria__campo">
+              <svg
+                class="buscador-categoria__icono"
+                viewBox="0 0 20 20"
+                width="16"
+                height="16"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <circle cx="8.5" cy="8.5" r="6" />
+                <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
+              </svg>
+              <input
+                type="search"
+                id="buscador-hospedaje-input"
+                class="buscador-categoria__input"
+                placeholder="Buscar hoteles y casas…"
+                autocomplete="off"
+              />
+            </div>
+          </div>
         </div>
+        {
+          chips.length > 0 && (
+            <div class="fila-chips" id="fila-chips">
+              <button type="button" class="pastilla pastilla--activa" data-chip="todo">
+                Todo
+              </button>
+              {chips.map((c) => (
+                <button type="button" class="pastilla" data-chip={c.valor}>
+                  {c.etiqueta}
+                </button>
+              ))}
+            </div>
+          )
+        }
       </div>
     )
   }
@@ -230,33 +263,67 @@ const esquemaItemList =
     });
   }
 
-  // Fila de chips: muestra/oculta tarjetas ya presentes en la rejilla
-  // compacta según el atributo data-filtro-<valor> que trae cada una.
-  function activarChips() {
+  // Combina el chip de filtro activo (por amenidad/tipo) con la búsqueda
+  // por nombre — una tarjeta se muestra solo si cumple los dos a la vez,
+  // igual que el buscador de categoría combinaba filtro de tipo + nombre
+  // antes de la Tarea 2 del rediseño (commit 81ebdbd).
+  function activarControles() {
     const fila = document.getElementById('fila-chips');
     const grid = document.getElementById('rejilla-hospedaje');
     const mensajeVacio = document.getElementById('mensaje-chip-vacio');
-    if (!fila || !grid) return;
+    const buscadorInput = document.getElementById(
+      'buscador-hospedaje-input',
+    ) as HTMLInputElement | null;
+    if (!grid) return;
 
-    fila.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
+    function normalizar(texto: string): string {
+      return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    }
+
+    function chipActivo(): string {
+      return (
+        fila?.querySelector('[data-chip].pastilla--activa')?.getAttribute('data-chip') ?? 'todo'
+      );
+    }
+
+    function aplicarFiltros() {
+      const valor = chipActivo();
+      const consulta = normalizar(buscadorInput?.value ?? '');
+      let visibles = 0;
+      // [data-slug] en vez de .tarjeta-compacta: funciona igual con la
+      // tarjeta grande (NegocioCard) o la compacta, según qué esté
+      // activa (ver USAR_TARJETA_COMPACTA arriba).
+      grid.querySelectorAll<HTMLElement>('[data-slug]').forEach((tarjeta) => {
+        const coincideChip = valor === 'todo' || tarjeta.getAttribute(`data-filtro-${valor}`) === '1';
+        const coincideBusqueda =
+          !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
+        const mostrar = coincideChip && coincideBusqueda;
+        tarjeta.style.display = mostrar ? '' : 'none';
+        if (mostrar) visibles++;
+      });
+      if (mensajeVacio) {
+        mensajeVacio.hidden = visibles > 0;
+        mensajeVacio.textContent = consulta
+          ? 'No encontramos negocios con ese nombre.'
+          : 'Todavía no hay negocios de este tipo.';
+      }
+    }
+
+    fila?.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
       boton.addEventListener('click', () => {
         fila.querySelectorAll('[data-chip]').forEach((b) => b.classList.remove('pastilla--activa'));
         boton.classList.add('pastilla--activa');
-        const valor = boton.dataset.chip;
-        let visibles = 0;
-        // [data-slug] en vez de .tarjeta-compacta: funciona igual con la
-        // tarjeta grande (NegocioCard) o la compacta, según qué esté
-        // activa (ver USAR_TARJETA_COMPACTA arriba).
-        grid.querySelectorAll<HTMLElement>('[data-slug]').forEach((tarjeta) => {
-          const mostrar = valor === 'todo' || tarjeta.getAttribute(`data-filtro-${valor}`) === '1';
-          tarjeta.style.display = mostrar ? '' : 'none';
-          if (mostrar) visibles++;
-        });
-        if (mensajeVacio) mensajeVacio.hidden = visibles > 0;
+        aplicarFiltros();
       });
     });
+
+    buscadorInput?.addEventListener('input', aplicarFiltros);
   }
 
   rotarCarrusel();
-  activarChips();
+  activarControles();
 </script>
