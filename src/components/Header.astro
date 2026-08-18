@@ -51,34 +51,6 @@ const indiceBuscador = negocios.map((negocio) => ({
       Tecolutla<span>Travel</span>
     </a>
     <div class="encabezado__derecha">
-      <div class="buscador">
-        <button
-          class="buscador__toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="buscador-panel"
-          aria-label="Buscar un negocio"
-        >
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
-            <circle cx="8.5" cy="8.5" r="6" />
-            <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
-          </svg>
-        </button>
-        <div class="buscador__panel" id="buscador-panel" role="dialog" aria-label="Buscar un negocio" hidden>
-          <label for="buscador-input" class="sr-only">Buscar un negocio por nombre</label>
-          <input
-            type="search"
-            id="buscador-input"
-            class="buscador__input"
-            placeholder="Buscar un negocio…"
-            autocomplete="off"
-          />
-          <ul class="buscador__resultados" id="buscador-resultados" aria-live="polite"></ul>
-          <p class="buscador__sin-resultados" id="buscador-sin-resultados" hidden>
-            No encontramos negocios con ese nombre.
-          </p>
-        </div>
-      </div>
       <button
         class="encabezado__toggle"
         type="button"
@@ -105,8 +77,6 @@ const indiceBuscador = negocios.map((negocio) => ({
 <script type="application/json" id="datos-buscador" set:html={JSON.stringify(indiceBuscador)} />
 
 <script>
-  import { leerIndiceBuscador, buscarNegocios, resultadosHtml } from '../utils/buscadorNegocios';
-
   const boton = document.querySelector<HTMLButtonElement>('.encabezado__toggle');
   const nav = document.getElementById('menu-principal');
 
@@ -114,9 +84,6 @@ const indiceBuscador = negocios.map((negocio) => ({
     const abierto = nav?.classList.toggle('encabezado__nav--abierto');
     boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
     boton.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
-    // Si se abre el menú, cierra el buscador para que no se encimen.
-    document.getElementById('buscador-panel')?.setAttribute('hidden', '');
-    document.querySelector('.buscador__toggle')?.setAttribute('aria-expanded', 'false');
   });
 
   // Si la pantalla crece a tamaño de escritorio, aseguramos que el menú
@@ -128,73 +95,4 @@ const indiceBuscador = negocios.map((negocio) => ({
       boton?.setAttribute('aria-expanded', 'false');
     }
   });
-
-  // ---------- Buscador de negocios ----------
-  // Lógica compartida con el buscador píldora del home — ver
-  // src/utils/buscadorNegocios.ts.
-  const indiceNegocios = leerIndiceBuscador();
-
-  const buscadorToggle = document.querySelector<HTMLButtonElement>('.buscador__toggle');
-  const buscadorPanel = document.getElementById('buscador-panel');
-  const buscadorInput = document.getElementById('buscador-input') as HTMLInputElement | null;
-  const buscadorResultados = document.getElementById('buscador-resultados');
-  const buscadorSinResultados = document.getElementById('buscador-sin-resultados');
-
-  function abrirBuscador() {
-    if (!buscadorPanel || !buscadorToggle) return;
-    buscadorPanel.hidden = false;
-    buscadorToggle.setAttribute('aria-expanded', 'true');
-    // Cierra el menú de navegación móvil si estaba abierto.
-    nav?.classList.remove('encabezado__nav--abierto');
-    boton?.setAttribute('aria-expanded', 'false');
-    buscadorInput?.focus();
-  }
-
-  function cerrarBuscador() {
-    if (!buscadorPanel || !buscadorToggle) return;
-    buscadorPanel.hidden = true;
-    buscadorToggle.setAttribute('aria-expanded', 'false');
-  }
-
-  buscadorToggle?.addEventListener('click', () => {
-    if (buscadorPanel?.hidden === false) cerrarBuscador();
-    else abrirBuscador();
-  });
-
-  document.addEventListener('click', (evento) => {
-    if (!buscadorPanel || buscadorPanel.hidden) return;
-    const dentro =
-      evento.target instanceof Node &&
-      (buscadorPanel.contains(evento.target) || buscadorToggle?.contains(evento.target));
-    if (!dentro) cerrarBuscador();
-  });
-
-  document.addEventListener('keydown', (evento) => {
-    if (evento.key === 'Escape' && buscadorPanel && !buscadorPanel.hidden) {
-      cerrarBuscador();
-      buscadorToggle?.focus();
-    }
-  });
-
-  function renderizarResultados(consulta: string) {
-    if (!buscadorResultados || !buscadorSinResultados) return;
-    const coincidencias = buscarNegocios(indiceNegocios, consulta);
-
-    if (!consulta.trim()) {
-      buscadorResultados.innerHTML = '';
-      buscadorSinResultados.hidden = true;
-      return;
-    }
-
-    if (coincidencias.length === 0) {
-      buscadorResultados.innerHTML = '';
-      buscadorSinResultados.hidden = false;
-      return;
-    }
-
-    buscadorSinResultados.hidden = true;
-    buscadorResultados.innerHTML = resultadosHtml(coincidencias);
-  }
-
-  buscadorInput?.addEventListener('input', () => renderizarResultados(buscadorInput.value));
 </script>
