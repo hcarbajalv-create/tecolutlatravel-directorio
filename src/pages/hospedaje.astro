@@ -135,18 +135,20 @@ const esquemaItemList =
   }
 
   <section class="seccion contenedor">
-    <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
-    {
-      todosOrdenados.length > 0 && (
-        <p class="texto-orden">
-          Ordenado por qué tan completa está la información de cada negocio —{' '}
-          <a href="/como-ordenamos">así ordenamos el directorio</a>
-        </p>
-      )
-    }
-    {
-      todosOrdenados.length > 0 && (
-        <div class="hospedaje-controles">
+    <div class="negocios-controles">
+      <div>
+        <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
+        {
+          todosOrdenados.length > 0 && (
+            <p class="texto-orden" style="margin-bottom:0;">
+              Ordenado por qué tan completa está la información de cada negocio —{' '}
+              <a href="/como-ordenamos">así ordenamos el directorio</a>
+            </p>
+          )
+        }
+      </div>
+      {
+        todosOrdenados.length > 0 && (
           <div class="buscador-categoria">
             <label for="buscador-hospedaje-input" class="buscador-categoria__etiqueta">
               Buscar hoteles y casas por nombre
@@ -174,12 +176,12 @@ const esquemaItemList =
               />
             </div>
           </div>
-        </div>
-      )
-    }
+        )
+      }
+    </div>
     {
       chips.length > 0 && (
-        <div class="fila-chips" id="fila-chips">
+        <div class="fila-chips" id="fila-chips" style="margin-top:-0.5rem;">
           <button type="button" class="pastilla pastilla--activa" data-chip="todo">
             Todo
           </button>

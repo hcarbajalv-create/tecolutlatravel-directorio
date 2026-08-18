@@ -767,23 +767,6 @@ p.buscador-pildora__resultados {
   color: var(--color-texto-suave);
 }
 
-/* ---------- Buscador + chips como una sola barra de herramientas
-   (/hospedaje) ---------- */
-/* El buscador de /hospedaje comparte estilos con .buscador-categoria
-   (mismo look pulido que gastronomía/actividades/servicios), pero no
-   reutiliza .negocios-controles: ese wrapper es para colocar dos
-   bloques lado a lado, y aquí solo hay un elemento (los chips van en
-   su propia fila deslizable justo debajo). Alineado a la derecha para
-   que se lea como el encabezado de la barra de chips que sigue.
-   En celular, .buscador-categoria ya se vuelve ancho completo (ver
-   media max-width:640px), así que justify-content deja de importar
-   ahí. */
-.hospedaje-controles {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-}
-
 /* ---------- Fila de chips deslizable (rediseño Fase 1, /hospedaje) ---------- */
 .fila-chips {
   display: flex;
