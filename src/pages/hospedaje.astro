@@ -119,8 +119,33 @@ const esquemaItemList =
   </section>
 
   {
-    todosOrdenados.length > 0 && (
-      <div class="contenedor">
+    destacados.length > 0 && (
+      <section class="banda-destacados">
+        <div class="contenedor banda-destacados__encabezado">
+          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
+          <p class="banda-destacados__subtitulo">⟳ El orden rota cada día — todos los destacados se ven</p>
+        </div>
+        <div class="carrusel-destacados" id="carrusel-destacados">
+          {destacados.map((n, i) => (
+            <NegocioCard negocio={n} esPrimera={i === 0} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion contenedor">
+    <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
+    {
+      todosOrdenados.length > 0 && (
+        <p class="texto-orden">
+          Ordenado por qué tan completa está la información de cada negocio —{' '}
+          <a href="/como-ordenamos">así ordenamos el directorio</a>
+        </p>
+      )
+    }
+    {
+      todosOrdenados.length > 0 && (
         <div class="hospedaje-controles">
           <div class="buscador-categoria">
             <label for="buscador-hospedaje-input" class="buscador-categoria__etiqueta">
@@ -150,48 +175,20 @@ const esquemaItemList =
             </div>
           </div>
         </div>
-        {
-          chips.length > 0 && (
-            <div class="fila-chips" id="fila-chips">
-              <button type="button" class="pastilla pastilla--activa" data-chip="todo">
-                Todo
-              </button>
-              {chips.map((c) => (
-                <button type="button" class="pastilla" data-chip={c.valor}>
-                  {c.etiqueta}
-                </button>
-              ))}
-            </div>
-          )
-        }
-      </div>
-    )
-  }
-
-  {
-    destacados.length > 0 && (
-      <section class="banda-destacados">
-        <div class="contenedor banda-destacados__encabezado">
-          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
-          <p class="banda-destacados__subtitulo">⟳ El orden rota cada día — todos los destacados se ven</p>
-        </div>
-        <div class="carrusel-destacados" id="carrusel-destacados">
-          {destacados.map((n, i) => (
-            <NegocioCard negocio={n} esPrimera={i === 0} />
+      )
+    }
+    {
+      chips.length > 0 && (
+        <div class="fila-chips" id="fila-chips">
+          <button type="button" class="pastilla pastilla--activa" data-chip="todo">
+            Todo
+          </button>
+          {chips.map((c) => (
+            <button type="button" class="pastilla" data-chip={c.valor}>
+              {c.etiqueta}
+            </button>
           ))}
         </div>
-      </section>
-    )
-  }
-
-  <section class="seccion contenedor">
-    <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
-    {
-      todosOrdenados.length > 0 && (
-        <p class="texto-orden">
-          Ordenado por qué tan completa está la información de cada negocio —{' '}
-          <a href="/como-ordenamos">así ordenamos el directorio</a>
-        </p>
       )
     }
     {
