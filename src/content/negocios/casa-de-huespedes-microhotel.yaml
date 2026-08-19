@@ -63,6 +63,7 @@ servicios:
   - Espacio para desayunar y descansar
 numeroHabitaciones: 12
 capacidadMaxima: 35
+wifi: true
 distancias:
   - a: playa
     metros: 263

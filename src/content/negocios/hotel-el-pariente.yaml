@@ -50,6 +50,8 @@ servicios:
   - Alberca y chapoteadero
 numeroHabitaciones: 12
 capacidadMaxima: 45
+alberca: true
+wifi: true
 distancias:
   - a: playa
     metros: 538

@@ -3,8 +3,11 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
 import TarjetaCompacta from '../components/TarjetaCompacta.astro';
+import EscenaSubmarina from '../components/EscenaSubmarina.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
+import { AMENIDADES_CLAVE } from '../utils/amenidadesClave';
+import { SELLOS_CONFIANZA } from '../utils/sellosConfianza';
 
 // Con pocos negocios (hoy 12) la tarjeta compacta hace ver el catálogo
 // escaso: caben todas en dos filas y se siente vacío. La tarjeta grande
@@ -47,14 +50,18 @@ const UMBRAL_GRUPO_GRANDE = 15;
 
 type Negocio = CollectionEntry<'negocios'>;
 
+// pet-friendly y alberca vienen de utils/amenidadesClave.ts — mismo
+// criterio (campo booleano dedicado) que usa la línea de amenidades de
+// las tarjetas en celular, para no tener dos lugares con criterios
+// distintos para lo mismo.
+function amenidadClave(valor: (typeof AMENIDADES_CLAVE)[number]['valor']) {
+  return AMENIDADES_CLAVE.find((a) => a.valor === valor)!;
+}
+
 const DEFINICION_CHIPS: { valor: string; etiqueta: string; prueba: (n: Negocio) => boolean }[] = [
   { valor: 'casa', etiqueta: 'Casas vacacionales', prueba: (n) => n.data.tipo === 'casa' },
   { valor: 'hotel', etiqueta: 'Hoteles', prueba: (n) => n.data.tipo === 'hotel' },
-  {
-    valor: 'alberca',
-    etiqueta: 'Con alberca',
-    prueba: (n) => n.data.servicios.some((s) => normalizar(s).includes('alberca')),
-  },
+  { valor: 'alberca', etiqueta: amenidadClave('alberca').etiqueta, prueba: amenidadClave('alberca').prueba },
   {
     valor: 'playa',
     etiqueta: 'A pasos de la playa',
@@ -68,7 +75,11 @@ const DEFINICION_CHIPS: { valor: string; etiqueta: string; prueba: (n: Negocio) 
     etiqueta: 'Para grupos grandes',
     prueba: (n) => (n.data.capacidadMaxima ?? 0) >= UMBRAL_GRUPO_GRANDE,
   },
-  { valor: 'pet-friendly', etiqueta: 'Pet-friendly', prueba: (n) => Boolean(n.data.petFriendly) },
+  {
+    valor: 'pet-friendly',
+    etiqueta: amenidadClave('pet-friendly').etiqueta,
+    prueba: amenidadClave('pet-friendly').prueba,
+  },
   {
     valor: 'tarjeta',
     etiqueta: 'Acepta tarjeta',
@@ -107,14 +118,24 @@ const esquemaItemList =
 >
   {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
 
-  <section class="cabecera-categoria tile--hospedaje">
-    <div class="contenedor">
-      <p class="migaja"><a href="/">Inicio</a> → Hospedaje</p>
-      <div class="cabecera-categoria__titulo">
-        <span class="cabecera-categoria__icono">🏡</span>
-        <h1>Hospedaje en Tecolutla: casas, hoteles y habitaciones</h1>
+  <section class="promesa">
+    <EscenaSubmarina variante="calmada" class="promesa__imagen" />
+    <div class="promesa__overlay" aria-hidden="true"></div>
+    <div class="contenedor promesa__interior">
+      <p class="migaja migaja--promesa"><a href="/">Inicio</a> → Hospedaje</p>
+      <h1>Hospedaje en Tecolutla: casas, hoteles y habitaciones</h1>
+      <p class="promesa__subtitulo">Habla directo por WhatsApp con cada negocio, sin intermediarios ni comisiones.</p>
+
+      <div class="promesa__confianza">
+        {
+          SELLOS_CONFIANZA.map((sello) => (
+            <div class="sello-confianza">
+              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
+              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
+            </div>
+          ))
+        }
       </div>
-      <p>Todas con WhatsApp directo del dueño y datos confirmados por teléfono.</p>
     </div>
   </section>
 

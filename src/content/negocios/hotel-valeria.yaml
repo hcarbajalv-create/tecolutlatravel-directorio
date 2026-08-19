@@ -50,6 +50,7 @@ servicios:
   - Aire acondicionado
 numeroHabitaciones: 13
 capacidadMaxima: 45
+alberca: true
 distancias:
   - a: playa
     metros: 375

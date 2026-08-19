@@ -11,12 +11,20 @@ interface Props {
   categoria: 'gastronomia' | 'actividades' | 'servicios';
   icono: string;
   claseColor: string;
+  // Con emoji — es lo que va en <title> (BaseLayout), donde ayuda a que
+  // el resultado resalte en Google. NO es lo que se ve en el H1 de la
+  // página: eso es tituloVisible, sin emoji (ver abajo).
   titulo: string;
+  // Mismo texto que "titulo" pero sin el emoji inicial — para el H1
+  // visible. El emoji era una indicación para el <title> de Google, no
+  // para el encabezado que ve el visitante.
+  tituloVisible: string;
   descripcionSeo: string;
   introduccion: string;
 }
 
-const { categoria, icono, claseColor, titulo, descripcionSeo, introduccion } = Astro.props;
+const { categoria, icono, claseColor, titulo, tituloVisible, descripcionSeo, introduccion } =
+  Astro.props;
 
 const todos = filtrarListables(await getCollection('negocios'));
 const negociosFiltrados = todos.filter((n) => n.data.categoria === categoria);
@@ -78,7 +86,7 @@ const esquemaItemList =
     <div class="contenedor">
       <div class="cabecera-categoria__titulo">
         <span class="cabecera-categoria__icono">{icono}</span>
-        <h1>{titulo}</h1>
+        <h1>{tituloVisible}</h1>
       </div>
       <p>{introduccion}</p>
     </div>

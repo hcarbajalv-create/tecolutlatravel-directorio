@@ -103,6 +103,17 @@ const negocios = defineCollection({
       numeroHabitaciones: z.number().optional(),
       capacidadMaxima: z.number().optional(),
       petFriendly: z.boolean().optional(),
+      // alberca/wifi: igual que petFriendly, campos booleanos dedicados
+      // en vez de buscar "alberca" o "wifi" como texto suelto dentro de
+      // "servicios" — un negocio que escriba "Piscina" o "Internet" en
+      // vez de esas palabras exactas no se debe quedar sin su chip. Se
+      // llenan a mano leyendo el "servicios" real de cada negocio (dato
+      // ya real, no inventado — solo se estructura). Ver
+      // utils/amenidadesClave.ts, que es donde vive el criterio
+      // compartido entre los chips de filtro de /hospedaje y las
+      // tarjetas de negocio.
+      alberca: z.boolean().optional(),
+      wifi: z.boolean().optional(),
       // Lista de distancias a puntos de referencia (playa, río, centro,
       // embarcadero...) — catálogo de destinos válidos en
       // utils/catalogoDistancias.ts, agregar uno nuevo es una línea ahí.

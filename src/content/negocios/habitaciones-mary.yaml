@@ -48,6 +48,7 @@ servicios:
   - Internet
   - TV Roku
 numeroHabitaciones: 4
+wifi: true
 distancias:
   - a: playa
     metros: 310

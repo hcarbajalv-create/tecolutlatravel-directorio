@@ -53,6 +53,8 @@ servicios:
   - Internet
   - Agua caliente
 numeroHabitaciones: 8
+alberca: true
+wifi: true
 tipo: hotel
 subtipo: Hotel
 distancias:

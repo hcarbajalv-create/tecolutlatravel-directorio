@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalogoDistancias';
+import { amenidadesClaveMovil } from '../utils/amenidadesClave';
 
 interface Props {
   negocio: CollectionEntry<'negocios'>;
@@ -71,6 +72,19 @@ if (capacidadMaxima !== undefined) {
 }
 if (petFriendly) datosExtra.push('🐾 Pet friendly');
 
+// En móvil la tarjeta oculta .tarjeta__descripcion y .tarjeta__amenidades
+// por espacio (ver global.css, media max-width:640px) — sin esto la
+// tarjeta quedaba solo con categoría, nombre y botones, sin ningún dato
+// que ayude a decidir. Quien busca hospedaje en el celular decide por
+// capacidad y amenidades, no por el nombre. Se muestra únicamente la
+// capacidad (dato más buscado) y como máximo 2 amenidades "clave" (ver
+// utils/amenidadesClave.ts, mismo criterio que usan los chips de filtro
+// de /hospedaje) — no la lista completa, para eso está la ficha del
+// negocio.
+const capacidadMovil =
+  capacidadMaxima !== undefined ? `👥 Hasta ${capacidadMaxima} personas` : undefined;
+const chipsAmenidadesMovil = amenidadesClaveMovil(negocio);
+
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
 // aunque México ya no lo pida para llamadas normales desde el propio teléfono.
@@ -131,6 +145,16 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
   <div class="tarjeta__cuerpo">
     {etiquetaCategoria && <span class="tarjeta__categoria">{etiquetaCategoria}</span>}
     <h3 class="tarjeta__titulo"><a href={enlace}>{nombre}</a></h3>
+    {
+      (capacidadMovil || chipsAmenidadesMovil.length > 0) && (
+        <div class="tarjeta__info-movil">
+          {capacidadMovil && <span class="chip-amenidad">{capacidadMovil}</span>}
+          {chipsAmenidadesMovil.map((amenidad) => (
+            <span class="chip-amenidad">{amenidad}</span>
+          ))}
+        </div>
+      )
+    }
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
     {

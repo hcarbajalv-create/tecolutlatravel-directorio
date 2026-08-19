@@ -50,6 +50,8 @@ servicios:
   - Wifi
   - Agua caliente
   - Cocina totalmente equipada
+alberca: true
+wifi: true
 distancias:
   - a: playa
     metros: 274

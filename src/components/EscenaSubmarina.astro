@@ -1,0 +1,145 @@
+---
+// Escena submarina animada — diseño recibido como export de Claude Design
+// (carpeta /screen en la raíz del proyecto, 2026-08-18). El export traía el
+// dibujo completo pero sin las @keyframes de las animaciones (solo los
+// nombres puestos en cada elemento, ej. style="animation:tsBob...") — las
+// @keyframes de abajo en global.css son una reconstrucción nuestra
+// interpretando esos nombres y sus tiempos/curvas ya definidos aquí.
+//
+// variante="completa": home — trae las 2 estrellas de mar y el cardumen
+// extra de 3 peces chicos.
+// variante="calmada": el resto de las cabeceras (hoy solo /hospedaje) —
+// sin esos 2 elementos, para no competir tanto con el título encima.
+interface Props {
+  variante?: 'completa' | 'calmada';
+  class?: string;
+}
+const { variante = 'completa', class: className } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  class={`teco-scene ${className ?? ''}`}
+  viewBox="0 0 1440 900"
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+>
+  <defs>
+    <linearGradient id="tsWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd2c8"></stop><stop offset="0.32" stop-color="#0b6f7a"></stop><stop offset="0.78" stop-color="#0d3f46"></stop><stop offset="1" stop-color="#0c2b2e"></stop></linearGradient>
+    <radialGradient id="tsSun" cx="0.5" cy="0" r="0.75"><stop offset="0" stop-color="#4fd2c8" stop-opacity="0.85"></stop><stop offset="1" stop-color="#4fd2c8" stop-opacity="0"></stop></radialGradient>
+    <linearGradient id="tsRay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd2c8" stop-opacity="0.55"></stop><stop offset="1" stop-color="#4fd2c8" stop-opacity="0"></stop></linearGradient>
+    <linearGradient id="tsSandFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c2b2e" stop-opacity="0.5"></stop><stop offset="1" stop-color="#0c2b2e" stop-opacity="0"></stop></linearGradient>
+    <radialGradient id="tsCaustic"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9"></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop></radialGradient>
+    <filter id="tsBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="10"></feGaussianBlur></filter>
+    <clipPath id="tsSandClip"><path d="M0,900 V742 Q180,716 360,740 T720,736 T1080,744 T1440,738 V900 Z"></path></clipPath>
+    <g id="fishA">
+      <path d="M-28,0 L-42,-11 L-38,0 L-42,11 Z" fill="currentColor" opacity="0.8"></path>
+      <path d="M-28,0 C-16,-13 14,-15 30,0 C14,15 -16,13 -28,0 Z" fill="currentColor"></path>
+      <path d="M-4,-9 C2,-15 10,-15 14,-11 C8,-8 2,-8 -4,-9 Z" fill="currentColor" opacity="0.75"></path>
+      <circle cx="20" cy="-3" r="2.4" fill="#0c2b2e"></circle>
+    </g>
+    <g id="turtle">
+      <path d="M-40,6 L-60,20 L-54,7 L-59,-4 Z" fill="#4fd2c8" opacity="0.9"></path>
+      <path d="M-14,8 C-2,4 12,4 22,8 C12,28 -8,32 -24,26 Z" fill="#4fd2c8" style="transform-box:fill-box;transform-origin:60% 8%;animation:tsPaddle 1.7s ease-in-out infinite alternate"></path>
+      <circle cx="52" cy="-4" r="11" fill="#4fd2c8"></circle>
+      <circle cx="57" cy="-7" r="2.1" fill="#0c2b2e"></circle>
+      <path d="M-44,2 C-38,-28 38,-28 44,2 C30,13 -30,13 -44,2 Z" fill="#0c2b2e" opacity="0.92"></path>
+      <path d="M-31,-8 C-10,-21 14,-21 33,-6" stroke="#4fd2c8" stroke-width="2.5" fill="none" opacity="0.55"></path>
+      <path d="M-14,-18 L-12,4 M10,-18 L12,4" stroke="#4fd2c8" stroke-width="2" opacity="0.4"></path>
+    </g>
+    <g id="crab">
+      <path d="M-12,2 Q-26,8 -32,20 M-8,6 Q-18,14 -20,23 M-2,8 Q-5,17 -4,25" stroke="#ff7a5c" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+      <path d="M12,2 Q26,8 32,20 M8,6 Q18,14 20,23 M2,8 Q5,17 4,25" stroke="#ff7a5c" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+      <g style="transform-box:fill-box;transform-origin:80% 90%;animation:tsPinch 0.9s ease-in-out infinite alternate">
+        <path d="M-16,-4 Q-28,-10 -30,-18" stroke="#ff9478" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <circle cx="-31" cy="-21" r="6" fill="#ff9478"></circle>
+        <path d="M-34,-26 L-31,-21" stroke="#0c2b2e" stroke-width="1.6" stroke-linecap="round"></path>
+      </g>
+      <g style="transform-box:fill-box;transform-origin:20% 90%;animation:tsPinch 1.1s ease-in-out -0.4s infinite alternate-reverse">
+        <path d="M16,-4 Q28,-10 30,-18" stroke="#ff9478" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <circle cx="31" cy="-21" r="6" fill="#ff9478"></circle>
+        <path d="M34,-26 L31,-21" stroke="#0c2b2e" stroke-width="1.6" stroke-linecap="round"></path>
+      </g>
+      <path d="M-6,-8 L-8,-15 M6,-8 L8,-15" stroke="#ff7a5c" stroke-width="2" stroke-linecap="round"></path>
+      <circle cx="-8" cy="-17" r="3" fill="#f4e9d1"></circle><circle cx="-8" cy="-17" r="1.5" fill="#0c2b2e"></circle>
+      <circle cx="8" cy="-17" r="3" fill="#f4e9d1"></circle><circle cx="8" cy="-17" r="1.5" fill="#0c2b2e"></circle>
+      <ellipse cx="0" cy="2" rx="17" ry="11" fill="#ff7a5c"></ellipse>
+      <path d="M-10,2 Q0,7 10,2" stroke="#0c2b2e" stroke-width="1.6" fill="none" opacity="0.5" stroke-linecap="round"></path>
+    </g>
+    <g id="fishB">
+      <path d="M-18,0 L-28,-8 L-25,0 L-28,8 Z" fill="currentColor" opacity="0.8"></path>
+      <ellipse cx="0" cy="0" rx="19" ry="7.5" fill="currentColor"></ellipse>
+      <circle cx="12" cy="-2" r="1.8" fill="#0c2b2e"></circle>
+    </g>
+  </defs>
+  <rect width="1440" height="900" fill="url(#tsWater)"></rect>
+  <ellipse cx="720" cy="-40" rx="620" ry="330" fill="url(#tsSun)"></ellipse>
+  <polygon points="300,-40 380,-40 640,660 520,660" fill="url(#tsRay)" style="animation:tsRayA 7s ease-in-out -1s infinite alternate"></polygon>
+  <polygon points="520,-40 660,-40 980,700 830,700" fill="url(#tsRay)" style="animation:tsRayB 9s ease-in-out -4s infinite alternate"></polygon>
+  <polygon points="760,-40 830,-40 1120,640 1020,640" fill="url(#tsRay)" style="animation:tsRayA 8s ease-in-out -6s infinite alternate"></polygon>
+  <polygon points="950,-40 1080,-40 1440,620 1290,620" fill="url(#tsRay)" style="animation:tsRayB 11s ease-in-out -2s infinite alternate"></polygon>
+  <polygon points="150,-40 190,-40 380,520 330,520" fill="url(#tsRay)" style="animation:tsRayB 10s ease-in-out -5s infinite alternate"></polygon>
+  <path d="M0,58 q60,-18 120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 L2880,0 L0,0 Z" fill="#4fd2c8" opacity="0.4" style="animation:tsDrift 37s linear infinite reverse"></path>
+  <path d="M0,46 q45,16 90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 t90,0 L2880,0 L0,0 Z" fill="rgba(255,255,255,0.32)" style="animation:tsDrift 24s linear infinite"></path>
+  <path d="M0,900 V742 Q180,716 360,740 T720,736 T1080,744 T1440,738 V900 Z" fill="#ecdfc4"></path>
+  <path d="M0,900 V800 Q200,780 400,798 T800,792 T1200,800 T1440,794 V900 Z" fill="#f4e9d1"></path>
+  <g clip-path="url(#tsSandClip)">
+    <rect x="0" y="716" width="1440" height="110" fill="url(#tsSandFade)"></rect>
+    <path d="M100,784 q70,-14 140,0" stroke="#f4e9d1" stroke-width="3" fill="none" opacity="0.8" stroke-linecap="round"></path>
+    <path d="M420,772 q60,-12 120,0" stroke="#f4e9d1" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"></path>
+    <path d="M840,776 q70,-12 140,0" stroke="#f4e9d1" stroke-width="3" fill="none" opacity="0.75" stroke-linecap="round"></path>
+    <path d="M1180,770 q60,-12 120,0" stroke="#f4e9d1" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"></path>
+    <path d="M260,836 q80,-12 160,0" stroke="rgba(12,43,46,0.16)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+    <path d="M660,848 q80,-12 160,0" stroke="rgba(12,43,46,0.14)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+    <path d="M1020,840 q80,-12 160,0" stroke="rgba(12,43,46,0.16)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+  </g>
+  <path d="M1046,766 C1036,700 1062,656 1044,588" stroke="#0b6f7a" stroke-width="8" fill="none" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 100%;animation:tsSway 6s ease-in-out -1s infinite alternate"></path>
+  <path d="M1076,768 C1088,712 1064,668 1080,606" stroke="#0b6f7a" stroke-width="6" fill="none" opacity="0.85" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 100%;animation:tsSway 7.2s ease-in-out -3s infinite alternate"></path>
+  <path d="M1018,768 C1012,724 1026,696 1016,652" stroke="#0c2b2e" stroke-width="6" fill="none" opacity="0.9" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 100%;animation:tsSway 5.4s ease-in-out -2s infinite alternate"></path>
+  <path d="M628,770 C622,724 640,700 630,660" stroke="#0b6f7a" stroke-width="5" fill="none" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 100%;animation:tsSway 6.6s ease-in-out -4s infinite alternate"></path>
+  <path d="M652,772 C660,736 646,712 656,676" stroke="#0c2b2e" stroke-width="4" fill="none" opacity="0.8" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 100%;animation:tsSway 5.8s ease-in-out -1.5s infinite alternate"></path>
+  <path d="M985,764 q30,-70 108,-62 q70,7 92,62 Z" fill="#0c2b2e" opacity="0.8"></path>
+  <path d="M1000,742 q40,-38 96,-34" stroke="#0b6f7a" stroke-width="5" fill="none" opacity="0.8" stroke-linecap="round"></path>
+  <path d="M602,768 q22,-40 62,-34 q36,6 46,34 Z" fill="#0c2b2e" opacity="0.7"></path>
+  <path d="M180,772 q18,-30 50,-27 q30,5 38,27 Z" fill="#0c2b2e" opacity="0.6"></path>
+  <g clip-path="url(#tsSandClip)">
+    <ellipse cx="200" cy="790" rx="140" ry="26" fill="url(#tsCaustic)" opacity="0.28" filter="url(#tsBlur)" style="animation:tsCausticK 9s ease-in-out -2s infinite alternate"></ellipse>
+    <ellipse cx="480" cy="812" rx="110" ry="20" fill="url(#tsCaustic)" opacity="0.24" filter="url(#tsBlur)" style="animation:tsCausticK 11s ease-in-out -5s infinite alternate"></ellipse>
+    <ellipse cx="760" cy="782" rx="160" ry="30" fill="url(#tsCaustic)" opacity="0.28" filter="url(#tsBlur)" style="animation:tsCausticK 8s ease-in-out -1s infinite alternate"></ellipse>
+    <ellipse cx="1040" cy="806" rx="120" ry="22" fill="url(#tsCaustic)" opacity="0.24" filter="url(#tsBlur)" style="animation:tsCausticK 12s ease-in-out -7s infinite alternate"></ellipse>
+    <ellipse cx="1300" cy="788" rx="140" ry="24" fill="url(#tsCaustic)" opacity="0.26" filter="url(#tsBlur)" style="animation:tsCausticK 10s ease-in-out -4s infinite alternate"></ellipse>
+    <ellipse cx="620" cy="842" rx="90" ry="18" fill="url(#tsCaustic)" opacity="0.22" filter="url(#tsBlur)" style="animation:tsCausticK 9s ease-in-out -6s infinite alternate"></ellipse>
+  </g>
+  <g transform="translate(0,758)"><g style="animation:tsCrabWalk 47s linear -19s infinite"><g transform="scale(0.9)"><g style="animation:tsScuttle 0.38s ease-in-out infinite alternate"><use href="#crab"></use></g></g></g></g>
+  <g transform="translate(0,440)"><g style="animation:tsSwim 61s linear -24s infinite"><g style="animation:tsGlide 29s ease-in-out -8s infinite alternate"><g transform="scale(1.05)"><g style="animation:tsBob 4.8s ease-in-out -1.2s infinite alternate"><use href="#turtle"></use></g></g></g></g></g>
+  <g transform="translate(0,310)"><g style="animation:tsSwim 26s linear -4s infinite"><g transform="scale(1.1)"><g style="animation:tsBob 3.6s ease-in-out -1s infinite alternate"><use href="#fishA" style="color:#ff7a5c;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.9s ease-in-out infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,385)"><g style="animation:tsSwim 34s linear -19s infinite"><g transform="scale(0.8)"><g style="animation:tsBob 4.2s ease-in-out -2s infinite alternate"><use href="#fishA" style="color:#ff9478;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 1.1s ease-in-out -0.3s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,255)"><g style="animation:tsSwim 22s linear -12s infinite"><g transform="scale(0.9)"><g style="animation:tsBob 3s ease-in-out -0.5s infinite alternate"><use href="#fishB" style="color:#ff9478;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.8s ease-in-out -0.2s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,560)"><g style="animation:tsSwim 44s linear -31s infinite"><g transform="scale(1.35)"><g style="animation:tsBob 5s ease-in-out -1.6s infinite alternate"><use href="#fishA" style="color:#ff7a5c;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 1.2s ease-in-out -0.5s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,480)"><g style="animation:tsSwim 30s linear -22s infinite"><g transform="scale(0.7)"><g style="animation:tsBob 3.8s ease-in-out -2.4s infinite alternate"><use href="#fishB" style="color:#0c2b2e;opacity:0.5;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 1s ease-in-out infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,635)"><g style="animation:tsSwim 38s linear -7s infinite"><g transform="scale(0.55)"><g style="animation:tsBob 4.4s ease-in-out -1.2s infinite alternate"><use href="#fishB" style="color:#0c2b2e;opacity:0.45;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.9s ease-in-out -0.4s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(0,210)"><g style="animation:tsSwim 20s linear -9s infinite"><g transform="scale(0.5)"><g style="animation:tsBob 3.2s ease-in-out -0.8s infinite alternate"><use href="#fishB" style="color:#ff9478;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.7s ease-in-out infinite alternate"></use></g></g></g></g>
+  <g transform="translate(1440,345) scale(-1,1)"><g style="animation:tsSwim 29s linear -10s infinite"><g transform="scale(0.95)"><g style="animation:tsBob 3.4s ease-in-out -1.4s infinite alternate"><use href="#fishA" style="color:#ff9478;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 1s ease-in-out -0.1s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(1440,235) scale(-1,1)"><g style="animation:tsSwim 24s linear -20s infinite"><g transform="scale(0.6)"><g style="animation:tsBob 3.1s ease-in-out -0.6s infinite alternate"><use href="#fishB" style="color:#0c2b2e;opacity:0.5;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.8s ease-in-out -0.3s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(1440,525) scale(-1,1)"><g style="animation:tsSwim 40s linear -2s infinite"><g transform="scale(1.2)"><g style="animation:tsBob 4.6s ease-in-out -2s infinite alternate"><use href="#fishA" style="color:#ff7a5c;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 1.15s ease-in-out -0.6s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(1440,430) scale(-1,1)"><g style="animation:tsSwim 33s linear -15s infinite"><g transform="scale(0.75)"><g style="animation:tsBob 3.9s ease-in-out -1.8s infinite alternate"><use href="#fishB" style="color:#ff9478;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.85s ease-in-out -0.2s infinite alternate"></use></g></g></g></g>
+  <g transform="translate(1440,590) scale(-1,1)"><g style="animation:tsSwim 27s linear -25s infinite"><g transform="scale(0.65)"><g style="animation:tsBob 3.5s ease-in-out -1s infinite alternate"><use href="#fishB" style="color:#0c2b2e;opacity:0.55;transform-box:fill-box;transform-origin:35% 50%;animation:tsFlap 0.95s ease-in-out infinite alternate"></use></g></g></g></g>
+  {
+    variante === 'completa' && (
+      <>
+        <path d="M0,-12 L3.5,-3.7 L11.4,-3.7 L5,1.4 L7,9.7 L0,4.6 L-7,9.7 L-5,1.4 L-11.4,-3.7 L-3.5,-3.7 Z" transform="translate(388,754) rotate(-12) scale(1.15)" fill="#ff9478" opacity="0.95"></path>
+        <path d="M0,-12 L3.5,-3.7 L11.4,-3.7 L5,1.4 L7,9.7 L0,4.6 L-7,9.7 L-5,1.4 L-11.4,-3.7 L-3.5,-3.7 Z" transform="translate(1246,762) rotate(20) scale(0.8)" fill="#ff7a5c" opacity="0.9"></path>
+        <g transform="translate(0,330)"><g style="animation:tsSwim 25s linear -14s infinite"><g style="animation:tsBob 3.3s ease-in-out infinite alternate"><use href="#fishB" transform="scale(0.55)" style="color:#ff9478"></use><use href="#fishB" transform="translate(-46,22) scale(0.5)" style="color:#ff7a5c"></use><use href="#fishB" transform="translate(-88,-10) scale(0.45)" style="color:#ff9478"></use></g></g></g>
+      </>
+    )
+  }
+  <g transform="translate(150,880)"><g style="animation:tsRise 12s linear -3s infinite"><circle r="3" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" style="animation:tsWobble 3s ease-in-out infinite alternate"></circle></g></g>
+  <g transform="translate(320,880)"><g style="animation:tsRise 15s linear -8s infinite"><circle r="4.5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" style="animation:tsWobble 3.6s ease-in-out -1s infinite alternate"></circle></g></g>
+  <g transform="translate(480,880)"><g style="animation:tsRise 11s linear -5s infinite"><circle r="2.5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" style="animation:tsWobble 2.8s ease-in-out -0.5s infinite alternate"></circle></g></g>
+  <g transform="translate(700,880)"><g style="animation:tsRise 16s linear -11s infinite"><circle r="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" style="animation:tsWobble 4s ease-in-out -2s infinite alternate"></circle></g></g>
+  <g transform="translate(860,880)"><g style="animation:tsRise 13s linear -2s infinite"><circle r="3.5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" style="animation:tsWobble 3.2s ease-in-out -1.4s infinite alternate"></circle></g></g>
+  <g transform="translate(1020,880)"><g style="animation:tsRise 17s linear -9s infinite"><circle r="2.5" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" style="animation:tsWobble 3.4s ease-in-out -0.8s infinite alternate"></circle></g></g>
+  <g transform="translate(1180,880)"><g style="animation:tsRise 14s linear -6s infinite"><circle r="4" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" style="animation:tsWobble 3.8s ease-in-out -1.6s infinite alternate"></circle></g></g>
+  <g transform="translate(1330,880)"><g style="animation:tsRise 12.5s linear -10s infinite"><circle r="3" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" stroke-width="1.3" style="animation:tsWobble 3s ease-in-out -2.2s infinite alternate"></circle></g></g>
+</svg>

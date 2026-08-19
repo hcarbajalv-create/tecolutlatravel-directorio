@@ -54,6 +54,7 @@ servicios:
   - Estacionamiento
 numeroHabitaciones: 3
 capacidadMaxima: 12
+wifi: true
 distancias:
   - a: playa
     metros: 478
@@ -62,3 +63,4 @@ subtipo: Casa vacacional
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
+ordenManual: 3

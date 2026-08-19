@@ -70,6 +70,8 @@ servicios:
   - Jardín amplio
 numeroHabitaciones: 3
 capacidadMaxima: 15
+alberca: true
+wifi: true
 tipo: casa
 subtipo: Casa vacacional
 distancias:

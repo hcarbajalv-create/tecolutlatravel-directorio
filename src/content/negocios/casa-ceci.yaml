@@ -54,6 +54,8 @@ servicios:
   - Cable
 numeroHabitaciones: 3
 capacidadMaxima: 12
+alberca: true
+wifi: true
 distancias:
   - a: playa
     metros: 308
@@ -62,3 +64,4 @@ subtipo: Posada
 verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
+ordenManual: 4

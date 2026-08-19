@@ -43,6 +43,8 @@ servicios:
 numeroHabitaciones: 3
 capacidadMaxima: 15
 petFriendly: true
+alberca: true
+wifi: true
 distancias:
   - a: playa
     metros: 247
@@ -51,4 +53,5 @@ checkOut: "12:00"
 verificado: true
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
+ordenManual: 2
 plan: pago

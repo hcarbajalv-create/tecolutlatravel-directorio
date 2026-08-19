@@ -244,6 +244,84 @@ select:focus-visible {
   color: var(--color-blanco) !important;
 }
 
+/* ---------- Escena submarina animada (EscenaSubmarina.astro) ----------
+   Export de Claude Design (carpeta /screen, 2026-08-18) sin las
+   @keyframes — el dibujo trae los nombres puestos (ej.
+   style="animation:tsBob 4.8s...") pero nunca la definición. Esta es
+   nuestra reconstrucción, interpretando cada nombre contra el tiempo,
+   curva y transform-origin que sí venían en el SVG. */
+.teco-scene {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes tsSwim {
+  from { transform: translateX(0); }
+  to { transform: translateX(1600px); }
+}
+@keyframes tsBob {
+  from { transform: translateY(-6px); }
+  to { transform: translateY(6px); }
+}
+@keyframes tsGlide {
+  from { transform: translateY(-20px); }
+  to { transform: translateY(20px); }
+}
+@keyframes tsFlap {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.78); }
+}
+@keyframes tsPaddle {
+  from { transform: rotate(-16deg); }
+  to { transform: rotate(12deg); }
+}
+@keyframes tsPinch {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-20deg); }
+}
+@keyframes tsScuttle {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(-2px) rotate(-4deg); }
+}
+@keyframes tsCrabWalk {
+  from { transform: translateX(-60px); }
+  to { transform: translateX(1500px); }
+}
+@keyframes tsRise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-950px); }
+}
+@keyframes tsWobble {
+  from { transform: translateX(-4px); }
+  to { transform: translateX(4px); }
+}
+@keyframes tsRayA {
+  from { opacity: 0.5; transform: translateX(-16px); }
+  to { opacity: 0.85; transform: translateX(16px); }
+}
+@keyframes tsRayB {
+  from { opacity: 0.45; transform: translateX(14px); }
+  to { opacity: 0.8; transform: translateX(-14px); }
+}
+@keyframes tsDrift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-1440px); }
+}
+@keyframes tsCausticK {
+  from { transform: scale(0.85); }
+  to { transform: scale(1.2); }
+}
+@keyframes tsSway {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .teco-scene * {
+    animation: none !important;
+  }
+}
+
 /* ---------- Bloque promesa (Home, rediseño Fase 1) ---------- */
 .promesa {
   position: relative;
@@ -352,8 +430,9 @@ select:focus-visible {
 }
 
 /* Único lugar de donde salen los emojis de los sellos (SELLOS_CONFIANZA
-   en index.astro) — cuando llegue el set de íconos ilustrados, se
-   sustituyen aquí y en esa lista, sin tocar el resto del markup. */
+   en utils/sellosConfianza.ts, usado por index.astro y hospedaje.astro)
+   — cuando llegue el set de íconos ilustrados, se sustituyen aquí y en
+   esa lista, sin tocar el resto del markup. */
 .sello-confianza__icono {
   font-size: 1.05rem;
   line-height: 1;
@@ -419,6 +498,12 @@ p.buscador-pildora__resultados {
   overflow: hidden;
   color: var(--color-blanco);
   padding: 3rem 0 3.5rem;
+}
+
+.cabecera-categoria__escena {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .cabecera-categoria::after {
@@ -924,6 +1009,14 @@ p.buscador-pildora__resultados {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+}
+
+/* Línea compacta de capacidad + amenidades clave — solo para la vista
+   de celular (ver media max-width:640px), donde .tarjeta__amenidades se
+   oculta por espacio. En escritorio ese dato ya se ve ahí, así que aquí
+   se mantiene oculta. */
+.tarjeta__info-movil {
+  display: none;
 }
 
 .chip-amenidad {
@@ -1670,6 +1763,20 @@ p.buscador-pildora__resultados {
     display: none;
   }
 
+  /* Pero sin dejar la tarjeta vacía: capacidad + hasta 2 amenidades
+     clave (ver NegocioCard.astro), en vez de la descripción y la lista
+     completa de amenidades que sí caben en escritorio. */
+  .tarjeta__info-movil {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .tarjeta__info-movil .chip-amenidad {
+    font-size: 0.62rem;
+    padding: 0.15rem 0.4rem;
+  }
+
   .tarjeta__acciones {
     gap: 0.25rem;
   }
@@ -1677,6 +1784,33 @@ p.buscador-pildora__resultados {
   .tarjeta__acciones .boton {
     padding: 0.28rem 0.3rem;
     font-size: 0.65rem;
+  }
+
+  /* Cabecera de categoría: el H1 por defecto (~2rem del navegador) se
+     comía casi media pantalla en /hospedaje (título largo). Se reduce
+     solo en celular, con clamp() para que no se vea igual de chico en
+     390px que en 640px — el texto no cambia, solo el tamaño. */
+  .cabecera-categoria h1 {
+    font-size: clamp(1.3rem, 6vw, 1.85rem);
+    line-height: 1.2;
+  }
+
+  /* El ícono de categoría, junto al H1 en la misma fila (como en
+     escritorio), se veía flotando/encimado en celular — no porque
+     sobrara (el H1 visible ya no trae emoji propio, ver
+     PaginaCategoria.astro: ese emoji ahora vive solo en el <title> de
+     Google), sino porque comparte fila con un H1 de varias líneas. Y
+     ponerlo en la misma fila le resta ancho al H1, empujándolo a más
+     líneas todavía. Se apila arriba del H1 en vez de al lado, para que
+     el H1 conserve todo el ancho del contenedor y quepa en 2 renglones. */
+  .cabecera-categoria__titulo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .cabecera-categoria__icono {
+    font-size: 1.5rem;
   }
 
   .insignia {
