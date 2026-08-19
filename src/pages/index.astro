@@ -75,7 +75,11 @@ const categorias = [
     titulo: 'Servicios',
     descripcion: 'Todo para tu estancia',
   },
-];
+  // "Servicios" se quita de aquí mientras la categoría no tenga ningún
+  // negocio — mismo criterio que ya oculta el enlace en el header (ver
+  // Header.astro) y le pone noindex/lo excluye del sitemap. Se destapa
+  // solo en cuanto entre el primer negocio.
+].filter((cat) => cat.href !== '/servicios' || negocios.some((n) => n.data.categoria === 'servicios'));
 
 // Sin SearchAction: el buscador del Header es 100% en el navegador
 // (filtra un índice ya cargado, sección "buscador" de Header.astro) —

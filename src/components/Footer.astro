@@ -1,5 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
+import { filtrarListables } from '../utils/negociosPublicados';
+
 const anio = new Date().getFullYear();
+
+// Mismo criterio que Header.astro e index.astro: "Servicios" se oculta
+// mientras la categoría no tenga ningún negocio, para no enlazar desde
+// ningún lugar del sitio a una página con noindex.
+const negocios = filtrarListables(await getCollection('negocios'));
+const hayServicios = negocios.some((n) => n.data.categoria === 'servicios');
 ---
 
 <footer class="pie">
@@ -11,7 +20,7 @@ const anio = new Date().getFullYear();
           <li><a href="/hospedaje">Hospedaje en Tecolutla</a></li>
           <li><a href="/gastronomia">Gastronomía en Tecolutla</a></li>
           <li><a href="/actividades">Actividades ecoturísticas</a></li>
-          <li><a href="/servicios">Servicios turísticos</a></li>
+          {hayServicios && <li><a href="/servicios">Servicios turísticos</a></li>}
         </ul>
       </div>
       <div>

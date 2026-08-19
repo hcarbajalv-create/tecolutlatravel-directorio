@@ -8,11 +8,24 @@ interface Props {
 
 const { rutaActual } = Astro.props;
 
+// Índice ligero (nombre + categoría + slug) para el buscador de negocios —
+// se resuelve en build time y se manda como JSON al cliente, que filtra ahí
+// mismo. El catálogo es estático, no hace falta backend para esto.
+const negocios = filtrarListables(await getCollection('negocios'));
+
+// "Servicios" se oculta del menú mientras la categoría no tenga ningún
+// negocio — mismo criterio de "categoría vacía" que ya le pone noindex
+// automático a /servicios (ver PaginaCategoria.astro) y la excluye del
+// sitemap (ver astro.config.mjs). Sin esto, el menú seguía enlazando a
+// una página vacía que Google no debía indexar. Se destapa solo en
+// cuanto entre el primer negocio, sin tocar código.
+const hayServicios = negocios.some((n) => n.data.categoria === 'servicios');
+
 const enlaces = [
   { href: '/hospedaje', texto: 'Hospedaje' },
   { href: '/gastronomia', texto: 'Gastronomía' },
   { href: '/actividades', texto: 'Actividades ecoturísticas' },
-  { href: '/servicios', texto: 'Servicios' },
+  ...(hayServicios ? [{ href: '/servicios', texto: 'Servicios' }] : []),
   { href: '/reportajes-y-noticias', texto: 'Reportajes y noticias' },
   { href: '/tips-para-tu-viaje', texto: 'Tips para tu viaje' },
   { href: '/descubre-tecolutla', texto: 'Descubre Tecolutla' },
@@ -22,11 +35,6 @@ const enlaces = [
 function esActiva(href: string) {
   return rutaActual === href || rutaActual.startsWith(`${href}/`);
 }
-
-// Índice ligero (nombre + categoría + slug) para el buscador de negocios —
-// se resuelve en build time y se manda como JSON al cliente, que filtra ahí
-// mismo. El catálogo es estático, no hace falta backend para esto.
-const negocios = filtrarListables(await getCollection('negocios'));
 const indiceBuscador = negocios.map((negocio) => ({
   nombre: negocio.data.nombre,
   categoria: negocio.data.categoria,
