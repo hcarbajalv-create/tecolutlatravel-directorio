@@ -1,0 +1,68 @@
+# Alta recibida vía Paloma (WhatsApp, 17 de agosto de 2026). Contacto
+# interno: preguntar por Rebeca o Juan Carlos Mendo — no se publica en
+# la ficha visible.
+# LOTE COMPARTIDO (19 de agosto de 2026): en Calle Guerrero #41 hay
+# varias casas con una misma entrada principal — Casa Llanos es el
+# "41 exterior". "Casa/Hotel Nautilus" (el "41 interior", el nombre que
+# sale en Google Maps para esta dirección) es OTRO negocio del mismo
+# lote, que se va a dar de alta por separado más adelante — no mezclar
+# sus datos/fotos con los de Casa Llanos.
+nombre: Casa Llanos
+categoria: hospedaje
+descripcionCorta: Hotel en el centro de Tecolutla, a unos pasos del palacio
+  municipal, con 5 habitaciones dobles para hasta 4 personas cada una (4 con
+  dos camas matrimoniales y 1 con cama king size), baño privado y clóset.
+  Aire acondicionado, ventilador de techo, agua caliente y wifi en todas.
+direccion: Calle Guerrero #41 exterior, Col. Centro, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.477135
+  lng: -97.007721
+telefono: "+52 766 121 3476"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-llanos/00-fachada.jpg
+    alt: Fachada de Casa Llanos en el centro de Tecolutla, Veracruz
+  - src: ../../assets/fotos/casa-llanos/12-pasillo-habitaciones.jpg
+    alt: Pasillo de habitaciones de Casa Llanos en Tecolutla, con aire acondicionado en cada cuarto
+  - src: ../../assets/fotos/casa-llanos/01-pasillo-jardineras.jpg
+    alt: Pasillo con jardineras y macetas de Casa Llanos en Tecolutla
+  - src: ../../assets/fotos/casa-llanos/05-habitacion-naranja.jpg
+    alt: Habitación de Casa Llanos en Tecolutla con pared naranja, ventilador de techo y televisión
+  - src: ../../assets/fotos/casa-llanos/02-habitacion-azul.jpg
+    alt: Habitación de Casa Llanos en Tecolutla con pared azul y dos camas matrimoniales
+  - src: ../../assets/fotos/casa-llanos/04-habitacion-verde.jpg
+    alt: Habitación de Casa Llanos en Tecolutla con pared verde y dos camas
+  - src: ../../assets/fotos/casa-llanos/07-habitacion-amarilla.jpg
+    alt: Habitación de Casa Llanos en Tecolutla con pared amarilla y dos camas matrimoniales
+  - src: ../../assets/fotos/casa-llanos/06-habitacion-dos-camas.jpg
+    alt: Habitación de Casa Llanos en Tecolutla con dos camas matrimoniales y buró
+  - src: ../../assets/fotos/casa-llanos/08-habitacion-floral.jpg
+    alt: Habitación amplia de Casa Llanos en Tecolutla con dos camas matrimoniales
+  - src: ../../assets/fotos/casa-llanos/09-closet.jpg
+    alt: Clóset con ganchos y repisas en las habitaciones de Casa Llanos en Tecolutla
+  - src: ../../assets/fotos/casa-llanos/10-television.jpg
+    alt: Televisión, espejo y tocador en las habitaciones de Casa Llanos en Tecolutla
+  - src: ../../assets/fotos/casa-llanos/03-bano.jpg
+    alt: Baño privado con regadera de Casa Llanos en Tecolutla
+fechaActualizacion: 2026-08-17
+disponible: true
+distancias:
+  - a: playa
+    metros: 850
+servicios:
+  - Aire acondicionado
+  - Ventilador de techo
+  - Agua caliente
+  - TV Smart
+  - Wifi
+  - Baño privado
+  - Clóset con ganchos
+  - Pasillos interiores con jardineras
+tipo: hotel
+subtipo: Hotel
+numeroHabitaciones: 5
+capacidadMaxima: 20
+wifi: true
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
