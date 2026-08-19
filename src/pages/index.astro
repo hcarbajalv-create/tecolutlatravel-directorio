@@ -1,23 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
-import { Picture, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
+import EscenaSubmarina from '../components/EscenaSubmarina.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
-import fotoPromesa from '../assets/sitio/promesa-playa.jpg';
-
-// Anchos reales que sirve el <Picture> de abajo — se reutilizan para
-// generar el <link rel="preload"> del mismo set de AVIF en el head,
-// así el navegador no espera a parsear el CSS para empezar a bajarla
-// (es el elemento LCP del home).
-const ANCHOS_PROMESA = [480, 768, 1120, 1600];
-const preloadPromesa = await Promise.all(
-  ANCHOS_PROMESA.map((w) => getImage({ src: fotoPromesa, width: w, format: 'avif' })),
-);
-const preloadPromesaSrcset = preloadPromesa
-  .map((img, i) => `${img.src} ${ANCHOS_PROMESA[i]}w`)
-  .join(', ');
+import { SELLOS_CONFIANZA } from '../utils/sellosConfianza';
 
 const negocios = filtrarListables(await getCollection('negocios'));
 // Orden manual primero (si se define); el resto se manda tal cual al
@@ -36,15 +24,6 @@ const OTRAS_CATEGORIAS = ['gastronomia', 'actividades', 'servicios'] as const;
 const tambienEnTecolutla = OTRAS_CATEGORIAS.map(
   (cat) => negocios.filter((n) => n.data.categoria === cat).sort(compararDentroDeGrupo)[0],
 ).filter((n): n is NonNullable<typeof n> => Boolean(n));
-
-// Único lugar donde viven los emojis de los sellos de confianza — ver
-// nota en .sello-confianza__icono (global.css). Sustituir aquí cuando
-// llegue el set de íconos ilustrados.
-const SELLOS_CONFIANZA = [
-  { emoji: '✅', fuerte: 'Verificado', resto: 'con cada dueño' },
-  { emoji: '💬', fuerte: 'WhatsApp', resto: 'directo' },
-  { emoji: '🙌', fuerte: 'Cero', resto: 'comisiones' },
-];
 
 const categorias = [
   {
@@ -107,31 +86,11 @@ const esquemaOrganization = {
   tituloCompleto
   descripcion="Guía local de Tecolutla: casas de hospedaje con alberca, hoteles, restaurantes de mariscos y paseos por los manglares. Contacto directo con cada negocio por WhatsApp."
 >
-  <Fragment slot="head-extra">
-    <link
-      rel="preload"
-      as="image"
-      imagesrcset={preloadPromesaSrcset}
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
-  </Fragment>
   <script type="application/ld+json" set:html={JSON.stringify(esquemaWebSite)} />
   <script type="application/ld+json" set:html={JSON.stringify(esquemaOrganization)} />
 
   <section class="promesa">
-    <Picture
-      src={fotoPromesa}
-      alt="Vista aérea de la playa de Tecolutla con sombrillas, lanchas y bañistas"
-      width={1600}
-      height={900}
-      widths={ANCHOS_PROMESA}
-      sizes="100vw"
-      formats={['avif', 'webp']}
-      loading="eager"
-      fetchpriority="high"
-      class="promesa__imagen"
-    />
+    <EscenaSubmarina variante="completa" class="promesa__imagen" />
     <div class="promesa__overlay" aria-hidden="true"></div>
     <div class="contenedor promesa__interior">
       <h1>Casas de hospedaje y hoteles en <span class="promesa__resaltado">Tecolutla</span>, Veracruz</h1>
