@@ -24,7 +24,7 @@
 # lo pida explícitamente.
 nombre: Raysemar 1
 categoria: hospedaje
-descripcionCorta: Casa vacacional completa (se renta entera, no por
+descripcionCorta: Departamento completo (se renta entero, no por
   habitación) para hasta 8 personas en Tecolutla. Tiene 2 recámaras, cada
   una con 2 camas matrimoniales, aire acondicionado y ventilador de techo,
   agua caliente, cocina equipada, sala con TV y comedor. No se aceptan
@@ -66,7 +66,7 @@ servicios:
 checkIn: "13:00"
 checkOut: "11:00"
 tipo: casa
-subtipo: Casa vacacional
+subtipo: Departamento
 numeroHabitaciones: 2
 capacidadMaxima: 8
 wifi: true

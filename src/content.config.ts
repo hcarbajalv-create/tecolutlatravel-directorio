@@ -99,7 +99,9 @@ const negocios = defineCollection({
       // filtro de /hospedaje). Opcional: solo se pone cuando el nombre o
       // la descripción del propio negocio ya lo dejan claro; si no,
       // se deja sin poner en vez de adivinar.
-      subtipo: z.enum(['Casa vacacional', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows']).optional(),
+      subtipo: z
+        .enum(['Casa vacacional', 'Departamento', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows'])
+        .optional(),
       numeroHabitaciones: z.number().optional(),
       capacidadMaxima: z.number().optional(),
       petFriendly: z.boolean().optional(),
