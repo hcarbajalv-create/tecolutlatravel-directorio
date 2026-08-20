@@ -56,7 +56,7 @@ distancias:
     metros: 318
 checkIn: "15:00"
 checkOut: "12:00"
-verificado: true
+verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
 ordenManual: 1

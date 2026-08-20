@@ -100,10 +100,27 @@ const negocios = defineCollection({
       // la descripción del propio negocio ya lo dejan claro; si no,
       // se deja sin poner en vez de adivinar.
       subtipo: z
-        .enum(['Casa vacacional', 'Departamento', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows'])
+        .enum(['Casa vacacional', 'Departamentos', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows'])
         .optional(),
       numeroHabitaciones: z.number().optional(),
+      // "capacidadMaxima" siempre describe UNA unidad reservable normal
+      // (para que signifique lo mismo en todos los negocios). Cuando el
+      // negocio en realidad son varias unidades independientes en un
+      // mismo predio que también se pueden rentar juntas (ej. Raysemar),
+      // "unidadesEnConjunto" y "capacidadGrupoCompleto" describen esa
+      // opción de grupo por separado, sin pisar el significado normal de
+      // capacidadMaxima/numeroHabitaciones. Ambos opcionales.
       capacidadMaxima: z.number().optional(),
+      unidadesEnConjunto: z.number().optional(),
+      capacidadGrupoCompleto: z.number().optional(),
+      // Textos cortos extra para la insignia de dato de la tarjeta
+      // (NegocioCard.astro) — cuando un negocio tiene más de un dato que
+      // vale la pena destacar ahí (ej. capacidad total Y por unidad,
+      // "no se aceptan mascotas") en vez de llenar la tarjeta de
+      // insignias sueltas, se van rotando automáticamente cada pocos
+      // segundos en el mismo espacio. Opcional — la mayoría de negocios
+      // no lo necesita, con la distancia o la capacidad sola basta.
+      insigniasExtra: z.array(z.string()).optional(),
       petFriendly: z.boolean().optional(),
       // alberca/wifi: igual que petFriendly, campos booleanos dedicados
       // en vez de buscar "alberca" o "wifi" como texto suelto dentro de

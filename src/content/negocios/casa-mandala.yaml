@@ -37,7 +37,7 @@ disponible: true
 servicios:
   - Wifi
   - Alberca y chapoteadero
-  - Jardín privado
+  - Áreas verdes
   - Asador
   - Cocina equipada
 numeroHabitaciones: 3
@@ -50,7 +50,7 @@ distancias:
     metros: 247
 checkIn: "15:00"
 checkOut: "12:00"
-verificado: true
+verificado: false
 resenas: [] # Sin reseñas reales todavía — no inventar
 destacado: true
 ordenManual: 2

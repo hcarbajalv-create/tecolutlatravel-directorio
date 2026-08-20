@@ -15,3 +15,11 @@
 /servicios/zzz-prueba-panel-anuncios   /servicios      301
 /gastronomia/cocina-dona-lupita        /gastronomia    301
 /gastronomia/restaurante-el-manglar    /gastronomia    301
+
+# Las 4 fichas de Raysemar (1, 2, 3, 4) se consolidaron en una sola el
+# mismo día que se dieron de alta (2026-08-19) — se veían casi idénticas
+# entre sí en la rejilla de /hospedaje.
+/hospedaje/casa-raysemar-1             /hospedaje/casa-raysemar    301
+/hospedaje/casa-raysemar-2             /hospedaje/casa-raysemar    301
+/hospedaje/casa-raysemar-3             /hospedaje/casa-raysemar    301
+/hospedaje/casa-raysemar-4             /hospedaje/casa-raysemar    301

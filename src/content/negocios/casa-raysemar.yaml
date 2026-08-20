@@ -1,0 +1,98 @@
+# Alta directa con el usuario (WhatsApp/fotos, 19 de agosto de 2026).
+# HISTORIAL: originalmente se dieron de alta 4 fichas separadas
+# (casa-raysemar-1, -2, -3, -4), una por cada departamento del lote —
+# decisión revertida el mismo día porque en la rejilla de /hospedaje se
+# veían casi idénticas entre sí (misma dirección, mismo teléfono, mismas
+# características, fotos parecidas) y el usuario prefirió consolidarlas
+# en una sola ficha. Los 4 .yaml y sus carpetas de fotos se borraron;
+# hay redirecciones 301 en public/_redirects de las 4 URLs viejas hacia
+# esta.
+# Contacto interno (no se publica): Raymundo y familia. Mismo predio,
+# Calle Córdoba s/n, Sector Popular — 4 departamentos independientes con
+# entrada compartida. Ver revisión de duplicados contra
+# tecolutlaveracruz.mx en el historial de commits (no representa riesgo:
+# ellos solo tienen una ficha genérica y desactualizada de todo el
+# predio, con menos datos que los que tenemos aquí).
+# Todos los departamentos comparten las mismas características
+# (confirmado explícitamente por el usuario, no inventado): hasta 8
+# personas c/u, 2 recámaras con 2 camas matrimoniales c/u, aire
+# acondicionado, ventilador de techo, agua caliente, wifi, no se aceptan
+# mascotas, checkIn 13:00 / checkOut 11:00, mínimo 2 noches en fin de
+# semana. La decoración interior varía entre uno y otro (paredes de
+# distintos colores, distintos cuadros) — las fotos muestran esa
+# variedad a propósito, no son de un solo departamento.
+# PENDIENTE: sin precio todavía. Sin distancia a la playa (~2 km, no
+# vende — ver feedback_etiqueta_distancia_lejos en memoria).
+# numeroHabitaciones (2) y capacidadMaxima (8) describen UN departamento,
+# igual que en cualquier otro negocio del sitio. unidadesEnConjunto (4) y
+# capacidadGrupoCompleto (32) describen la opción de rentar los 4 juntos
+# — campos aparte para no pisar el significado normal de los primeros
+# dos (ver la nota junto a esos campos en content.config.ts). Si piden
+# más de 32, preguntar directo (confirmado por el usuario, no es un tope
+# inventado).
+nombre: Raysemar
+categoria: hospedaje
+descripcionCorta: Raysemar son 4 departamentos independientes en un mismo
+  lote, cada uno hasta para 8 personas, con aire acondicionado, ventilador
+  de techo, agua caliente, wifi, cocina equipada, sala y comedor. También
+  se pueden rentar los 4 juntos para grupos grandes, hasta 32 personas en
+  total. No se aceptan mascotas.
+direccion: Calle Córdoba s/n, Col. Sector Popular, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4802588
+  lng: -97.0171274
+telefono: "+52 766 113 5264"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-raysemar/00-fachada.jpg
+    alt: Fachada del edificio de los departamentos Raysemar en Tecolutla, Veracruz
+  - src: ../../assets/fotos/casa-raysemar/01-sala.jpg
+    alt: Sala de uno de los departamentos Raysemar en Tecolutla
+  - src: ../../assets/fotos/casa-raysemar/02-cocina.jpg
+    alt: Cocina equipada de uno de los departamentos Raysemar en Tecolutla
+  - src: ../../assets/fotos/casa-raysemar/03-comedor.jpg
+    alt: Comedor de uno de los departamentos Raysemar en Tecolutla
+  - src: ../../assets/fotos/casa-raysemar/04-recamara-a.jpg
+    alt: Recámara de uno de los departamentos Raysemar en Tecolutla con dos camas matrimoniales
+  - src: ../../assets/fotos/casa-raysemar/05-recamara-b.jpg
+    alt: Recámara de otro departamento Raysemar en Tecolutla, con distinta decoración
+  - src: ../../assets/fotos/casa-raysemar/06-recamara-c.jpg
+    alt: Recámara de otro departamento Raysemar en Tecolutla, con distinta decoración
+  - src: ../../assets/fotos/casa-raysemar/07-bano.jpg
+    alt: Baño de uno de los departamentos Raysemar en Tecolutla
+  - src: ../../assets/fotos/casa-raysemar/08-closet.jpg
+    alt: Clóset de madera en las recámaras de los departamentos Raysemar
+  - src: ../../assets/fotos/casa-raysemar/09-sala-b.jpg
+    alt: Sala de otro departamento Raysemar en Tecolutla, con distinta decoración
+fechaActualizacion: 2026-08-19
+disponible: true
+servicios:
+  - 2 camas matrimoniales por recámara
+  - Aire acondicionado
+  - Ventilador de techo
+  - Agua caliente
+  - Cocina equipada
+  - Sala con TV
+  - Comedor
+  - Wifi
+checkIn: "13:00"
+checkOut: "11:00"
+tipo: casa
+subtipo: Departamentos
+numeroHabitaciones: 2
+capacidadMaxima: 8
+unidadesEnConjunto: 4
+capacidadGrupoCompleto: 32
+# La insignia de la tarjeta rota entre estos datos en vez de mostrar
+# solo "Hasta 32 personas" fijo — evita confundir a quien busca un
+# departamento para pocas personas y no entiende de dónde sale el 32.
+# El primero ("Hasta 32") sale solo de capacidadGrupoCompleto; estos dos
+# son el resto de la rotación.
+insigniasExtra:
+  - "👥 8 personas c/u"
+  - "🚫 No se aceptan mascotas"
+wifi: true
+petFriendly: false
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false

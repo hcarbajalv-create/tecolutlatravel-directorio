@@ -33,12 +33,15 @@ const {
   telefono,
   numeroHabitaciones,
   capacidadMaxima,
+  capacidadGrupoCompleto,
+  insigniasExtra,
   petFriendly,
   distancias,
   tipo,
   subtipo,
   ordenManual,
   confirmadoFecha,
+  plan,
 } = negocio.data;
 const portada = fotos[0];
 
@@ -67,11 +70,33 @@ const distanciasVendibles = distancias?.filter(
 );
 const distanciaTarjeta = distanciasVendibles?.[0];
 // Si no queda ninguna distancia vendible, se usa la capacidad como gancho
-// alterno en su lugar, si existe.
+// alterno en su lugar, si existe. Se prefiere la capacidad de todo el
+// conjunto (ej. las 4 casas de Raysemar rentadas juntas) sobre la de una
+// sola unidad, por ser el gancho más fuerte.
+const capacidadGancho = capacidadGrupoCompleto ?? capacidadMaxima;
 const insigniaAlterna =
-  !distanciaTarjeta && capacidadMaxima !== undefined
-    ? `👥 Hasta ${capacidadMaxima} personas`
-    : undefined;
+  !distanciaTarjeta && capacidadGancho !== undefined ? `👥 Hasta ${capacidadGancho} personas` : undefined;
+// Todas las distancias vendibles del negocio (no solo la primera) rotan
+// solas en el mismo espacio — un negocio con playa Y río no necesita
+// escribir la segunda a mano en insigniasExtra, ya sale de "distancias".
+// insigniasExtra es para datos que NO son distancia (capacidad total,
+// política de mascotas, etc. — ver content.config.ts). El script al
+// final del componente hace la rotación cuando hay más de un dato; con
+// uno solo (el caso normal) se muestra fijo, sin JS de por medio.
+const distanciasFormateadas = (distanciasVendibles ?? []).map(
+  (d) => `${CATALOGO_DISTANCIAS[d.a].icono} ${formatearDistanciaCompacta(d)}`,
+);
+const insigniasRotativas = [
+  ...(distanciasFormateadas.length > 0 ? distanciasFormateadas : [insigniaAlterna]),
+  ...(insigniasExtra ?? []),
+].filter((texto): texto is string => Boolean(texto));
+// La rotación en sí (el movimiento) es un plus del plan de pago — un
+// negocio gratuito con varios datos solo muestra el primero, fijo, para
+// no darle una ventaja de atención (el movimiento llama la vista más
+// que lo estático) sobre negocios gratuitos vecinos que no tengan tantos
+// datos que mostrar. Ver feedback en memoria: se probó con Raysemar
+// (gratuito) y se decidió reservarlo para pago.
+const rotarInsignia = plan === 'pago' && insigniasRotativas.length > 1;
 const enlace = `/${categoria}/${negocio.id}`;
 const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
 const amenidadesVisibles = servicios.slice(0, 3);
@@ -147,12 +172,13 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       )
     }
     {
-      (distanciaTarjeta || insigniaAlterna) && (
+      insigniasRotativas.length > 0 && (
         <div class="tarjeta__datos">
-          <span class="insignia insignia--dato">
-            {distanciaTarjeta
-              ? `${CATALOGO_DISTANCIAS[distanciaTarjeta.a].icono} ${formatearDistanciaCompacta(distanciaTarjeta)}`
-              : insigniaAlterna}
+          <span
+            class="insignia insignia--dato"
+            data-insignias={rotarInsignia ? JSON.stringify(insigniasRotativas) : undefined}
+          >
+            {insigniasRotativas[0]}
           </span>
         </div>
       )
@@ -198,3 +224,29 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
     </div>
   </div>
 </article>
+
+<script>
+  // Rota el texto de la insignia de dato cuando el negocio trae más de
+  // un dato que destacar (ver insigniasExtra en content.config.ts) — en
+  // vez de llenar la tarjeta de insignias sueltas, se van alternando en
+  // el mismo espacio. Astro deduplica este bloque aunque la tarjeta se
+  // repita muchas veces en una misma página, así que corre una sola vez
+  // por carga y encuentra todas las insignias con querySelectorAll.
+  const prefiereMenosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefiereMenosMovimiento) {
+    document.querySelectorAll<HTMLElement>('.insignia--dato[data-insignias]').forEach((insignia) => {
+      const textos = JSON.parse(insignia.dataset.insignias ?? '[]') as string[];
+      if (textos.length < 2) return;
+      let indice = 0;
+      setInterval(() => {
+        indice = (indice + 1) % textos.length;
+        insignia.style.opacity = '0';
+        setTimeout(() => {
+          insignia.textContent = textos[indice];
+          insignia.style.opacity = '1';
+        }, 250);
+      }, 2600);
+    });
+  }
+</script>

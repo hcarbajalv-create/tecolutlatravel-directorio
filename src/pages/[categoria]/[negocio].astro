@@ -39,6 +39,8 @@ const {
   tipoCocina,
   numeroHabitaciones,
   capacidadMaxima,
+  unidadesEnConjunto,
+  capacidadGrupoCompleto,
   petFriendly,
   distancias,
   tipo,
@@ -382,8 +384,19 @@ const esquemaBreadcrumb = {
           <span id="estado-compartir" class="ficha__compartir-estado" role="status" aria-live="polite" />
         </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
-        {numeroHabitaciones && <p>Habitaciones: {numeroHabitaciones}</p>}
-        {capacidadMaxima !== undefined && <p>Capacidad máxima: hasta {capacidadMaxima} personas</p>}
+        {unidadesEnConjunto !== undefined && <p>Conjunto de {unidadesEnConjunto} departamentos</p>}
+        {numeroHabitaciones && (
+          <p>Habitaciones: {numeroHabitaciones}{unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
+        )}
+        {capacidadMaxima !== undefined && (
+          <p>
+            Capacidad máxima: hasta {capacidadMaxima} personas
+            {unidadesEnConjunto !== undefined ? ' por departamento' : ''}
+          </p>
+        )}
+        {capacidadGrupoCompleto !== undefined && (
+          <p>Rentando los {unidadesEnConjunto ?? ''} juntos: hasta {capacidadGrupoCompleto} personas</p>
+        )}
         {petFriendly !== undefined && (
           <p>Mascotas: {petFriendly ? 'Sí se aceptan' : 'No se aceptan'}</p>
         )}
@@ -405,7 +418,7 @@ const esquemaBreadcrumb = {
             // negocio. Quitar este comentario y volver a la condición de
             // precioTemporada cuando se levante la regla.
             <div class="ficha__bloque ficha__bloque--precio">
-              <h2>Precio por temporada</h2>
+              <h2>Precio</h2>
               <p>Consulta por WhatsApp</p>
             </div>
           )

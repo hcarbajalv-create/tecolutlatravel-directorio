@@ -73,7 +73,11 @@ const DEFINICION_CHIPS: { valor: string; etiqueta: string; prueba: (n: Negocio) 
   {
     valor: 'grupo-grande',
     etiqueta: 'Para grupos grandes',
-    prueba: (n) => (n.data.capacidadMaxima ?? 0) >= UMBRAL_GRUPO_GRANDE,
+    // Incluye la capacidad de rentar todo el conjunto (ej. las 4 casas
+    // de Raysemar juntas), no solo la de una unidad — ver
+    // capacidadGrupoCompleto en content.config.ts.
+    prueba: (n) =>
+      Math.max(n.data.capacidadMaxima ?? 0, n.data.capacidadGrupoCompleto ?? 0) >= UMBRAL_GRUPO_GRANDE,
   },
   {
     valor: 'pet-friendly',

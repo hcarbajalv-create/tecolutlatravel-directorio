@@ -957,6 +957,10 @@ p.buscador-pildora__resultados {
 .insignia--dato {
   background: rgba(12, 43, 46, 0.75);
   border-color: rgba(255, 255, 255, 0.3);
+  /* Cuando la tarjeta tiene más de un dato que rotar (ver
+     insigniasExtra en content.config.ts y el <script> de
+     NegocioCard.astro), este es el fundido entre uno y otro. */
+  transition: opacity 0.25s ease;
 }
 
 .tarjeta__datos {
