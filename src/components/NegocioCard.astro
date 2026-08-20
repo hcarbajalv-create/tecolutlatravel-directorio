@@ -54,10 +54,24 @@ const NOMBRE_CATEGORIA: Record<string, string> = {
 // solo si está definido en su .yaml; si no, no se muestra nada ahí.
 // Las demás categorías (sin subtipo todavía) siguen mostrando su nombre.
 const etiquetaCategoria = categoria === 'hospedaje' ? subtipo : NOMBRE_CATEGORIA[categoria];
-// La tarjeta solo tiene espacio para una insignia de distancia — se usa
-// la primera de la lista, que es la que el negocio (o quien dio de alta)
-// eligió como su gancho principal. Ver la regla de orden en content.config.ts.
-const distanciaTarjeta = distancias?.[0];
+// La tarjeta solo tiene espacio para una insignia sobre la foto — se usa
+// la primera distancia de la lista, la que el negocio (o quien dio de
+// alta) eligió como su gancho principal (ver la regla de orden en
+// content.config.ts). Regla: una distancia AL MAR de 1 km o más no vende
+// (espanta más de lo que informa en un pueblo costero) — se descarta esa
+// entrada aunque exista en el .yaml, sin tener que quitarla a mano.
+// Otros destinos (río, centro, embarcadero) no tienen este límite.
+const DISTANCIA_PLAYA_MAX_METROS = 999;
+const distanciasVendibles = distancias?.filter(
+  (d) => !(d.a === 'playa' && d.metros !== undefined && d.metros > DISTANCIA_PLAYA_MAX_METROS),
+);
+const distanciaTarjeta = distanciasVendibles?.[0];
+// Si no queda ninguna distancia vendible, se usa la capacidad como gancho
+// alterno en su lugar, si existe.
+const insigniaAlterna =
+  !distanciaTarjeta && capacidadMaxima !== undefined
+    ? `👥 Hasta ${capacidadMaxima} personas`
+    : undefined;
 const enlace = `/${categoria}/${negocio.id}`;
 const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
 const amenidadesVisibles = servicios.slice(0, 3);
@@ -133,10 +147,12 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       )
     }
     {
-      distanciaTarjeta && (
+      (distanciaTarjeta || insigniaAlterna) && (
         <div class="tarjeta__datos">
           <span class="insignia insignia--dato">
-            {CATALOGO_DISTANCIAS[distanciaTarjeta.a].icono} {formatearDistanciaCompacta(distanciaTarjeta)}
+            {distanciaTarjeta
+              ? `${CATALOGO_DISTANCIAS[distanciaTarjeta.a].icono} ${formatearDistanciaCompacta(distanciaTarjeta)}`
+              : insigniaAlterna}
           </span>
         </div>
       )
