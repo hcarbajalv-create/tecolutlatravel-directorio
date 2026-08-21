@@ -838,10 +838,9 @@ p.buscador-pildora__resultados {
 
 .banda-destacados__encabezado {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 
@@ -874,6 +873,83 @@ p.buscador-pildora__resultados {
 .carrusel-destacados .tarjeta {
   flex: 0 0 260px;
   scroll-snap-align: start;
+}
+
+/* Tarjeta final del carrusel de destacados — no es un negocio, es la
+   salida hacia /hospedaje para quien ya deslizó hasta el final (el
+   momento de mayor interés para convertir). Debe leerse como acción,
+   no como una tarjeta de negocio más: borde punteado en vez de foto,
+   fondo sutil sobre el degradado turquesa de la banda. */
+.tarjeta-ver-mas {
+  flex: 0 0 180px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 200px;
+  border: 2px dashed rgba(255, 255, 255, 0.55);
+  border-radius: var(--radio);
+  color: var(--color-blanco);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+}
+
+.tarjeta-ver-mas:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-blanco);
+}
+
+.tarjeta-ver-mas span:last-child {
+  font-size: 1.3rem;
+}
+
+/* Título y botón "Ver todos →" en la misma línea (patrón Airbnb/
+   Netflix). .banda-destacados__encabezado ya es flex sin wrap (ver
+   arriba), así que quedan en un renglón también en móvil — el botón usa
+   las clases normales .boton/.boton--claro/.boton--pildora, solo se le
+   agrega flex-shrink:0 para que nunca sea el que se comprime. */
+.banda-destacados__boton {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@keyframes bdBotonDesliza {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.banda-destacados__boton--animar {
+  animation: bdBotonDesliza 0.6s ease-in-out 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banda-destacados__boton--animar {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .banda-destacados__boton {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  /* A 24px, "Negocios destacados" no cabe en una sola línea junto al
+     botón sin achicarse — se reduce solo aquí, no en el resto de H2 del
+     sitio, para que título y botón queden en el mismo renglón (pedido
+     explícito) en vez de que el título se parta en dos. */
+  .banda-destacados__encabezado .titulo-seccion {
+    font-size: 1.15rem;
+  }
 }
 
 .texto-orden {
@@ -1777,8 +1853,8 @@ p.buscador-pildora__resultados {
   }
 
   .tarjeta__info-movil .chip-amenidad {
-    font-size: 0.62rem;
-    padding: 0.15rem 0.4rem;
+    font-size: 0.72rem;
+    padding: 0.18rem 0.45rem;
   }
 
   .tarjeta__acciones {

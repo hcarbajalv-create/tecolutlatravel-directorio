@@ -120,8 +120,11 @@ if (petFriendly) datosExtra.push('🐾 Pet friendly');
 // utils/amenidadesClave.ts, mismo criterio que usan los chips de filtro
 // de /hospedaje) — no la lista completa, para eso está la ficha del
 // negocio.
-const capacidadMovil =
-  capacidadMaxima !== undefined ? `👥 Hasta ${capacidadMaxima} personas` : undefined;
+// Sin "Hasta" — la fila de chips de móvil es angosta y con 3 chips
+// (capacidad + 2 amenidades) el texto largo los empuja a una segunda
+// línea; el chip grande de la tarjeta (arriba, sobre la foto) sí dice
+// "Hasta N personas" completo, aquí no hace falta.
+const capacidadMovil = capacidadMaxima !== undefined ? `👥 ${capacidadMaxima} personas` : undefined;
 const chipsAmenidadesMovil = amenidadesClaveMovil(negocio);
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');

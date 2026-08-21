@@ -134,15 +134,17 @@ const esquemaOrganization = {
     destacados.length > 0 && (
       <section class="banda-destacados">
         <div class="contenedor banda-destacados__encabezado">
-          <div>
-            <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
-          </div>
-          <a class="boton boton--claro boton--pildora" href="/hospedaje">Ver todos →</a>
+          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
+          <a class="boton boton--claro boton--pildora banda-destacados__boton" href="/hospedaje">Ver todos →</a>
         </div>
         <div class="carrusel-destacados" id="carrusel-destacados-home">
           {destacados.map((negocio, i) => (
             <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
+          <a class="tarjeta-ver-mas" href="/hospedaje" data-tarjeta-ver-mas>
+            <span>Más hospedaje</span>
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
       </section>
     )
@@ -226,7 +228,14 @@ const esquemaOrganization = {
     const contenedor = document.getElementById('carrusel-destacados-home');
     if (!contenedor) return;
 
-    const tarjetas = Array.from(contenedor.children) as HTMLElement[];
+    // La tarjeta "Más hospedaje →" del final es una liga fija, no un
+    // negocio — se excluye de la rotación/límite diario y se vuelve a
+    // colocar al final después, para que siempre sea lo último que se ve
+    // deslizando el carrusel.
+    const tarjetaVerMas = contenedor.querySelector('[data-tarjeta-ver-mas]');
+    const tarjetas = Array.from(contenedor.children).filter(
+      (t) => t !== tarjetaVerMas,
+    ) as HTMLElement[];
     const hoy = new Date().toISOString().slice(0, 10);
     const fijas = tarjetas.filter((t) => t.dataset.ordenManual);
     const aleatorias = tarjetas.filter((t) => !t.dataset.ordenManual);
@@ -239,6 +248,7 @@ const esquemaOrganization = {
     ordenFinal.forEach((tarjeta, i) => {
       tarjeta.style.display = i < MAX_DESTACADOS_HOME ? '' : 'none';
     });
+    if (tarjetaVerMas) contenedor.appendChild(tarjetaVerMas);
 
     // Igual que en PaginaCategoria.astro: la rotación diaria decide cuál
     // tarjeta queda primera de verdad, así que la prioridad de imagen
@@ -280,6 +290,74 @@ const esquemaOrganization = {
     });
   }
 
+  // El botón "Ver todos →" se mueve unas veces cuando la sección entra en
+  // pantalla, solo para que el ojo lo note. Se anima el botón completo
+  // (no solo la flecha: se probó así primero y la flecha sola se veía
+  // demasiado chica para notarse). Cada "tanda" de movimiento son las 3
+  // repeticiones del @keyframes (animation-iteration-count en CSS); al
+  // terminar una tanda espera 3s y dispara la siguiente, hasta 5 tandas
+  // en total — después se detiene para siempre, nunca queda en bucle
+  // infinito.
+  //
+  // El listener de "animationend" se registra UNA sola vez (no dentro de
+  // iniciar()) para no ir acumulando listeners duplicados cada vez que
+  // la animación se reinicia — solo el estado (tandas, observer) se
+  // reinicia en cada llamada a iniciar().
+  function configurarAnimacionBotonDestacados() {
+    const boton = document.querySelector('.banda-destacados__boton');
+    const seccion = document.querySelector('.banda-destacados');
+    if (!boton || !seccion || !('IntersectionObserver' in window)) return null;
+
+    const MAX_TANDAS = 5;
+    const PAUSA_ENTRE_TANDAS_MS = 3000;
+    const estado = { tandas: 0, observador: null };
+
+    function dispararTanda() {
+      estado.tandas++;
+      boton.classList.add('banda-destacados__boton--animar');
+    }
+
+    boton.addEventListener('animationend', () => {
+      boton.classList.remove('banda-destacados__boton--animar');
+      if (estado.tandas < MAX_TANDAS) {
+        setTimeout(dispararTanda, PAUSA_ENTRE_TANDAS_MS);
+      }
+    });
+
+    return function iniciar() {
+      // Sin IntersectionObserver en el navegador, o con
+      // prefers-reduced-motion, simplemente no se anima — no es
+      // información esencial.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      estado.tandas = 0;
+      boton.classList.remove('banda-destacados__boton--animar');
+      estado.observador?.disconnect();
+      estado.observador = new IntersectionObserver(
+        (entradas) => {
+          entradas.forEach((entrada) => {
+            if (!entrada.isIntersecting) return;
+            dispararTanda();
+            estado.observador.unobserve(entrada.target);
+          });
+        },
+        { threshold: 0.4 },
+      );
+      estado.observador.observe(seccion);
+    };
+  }
+
   rotarYLimitarDestacadosHome();
   activarBuscadorHome();
+
+  const iniciarAnimacionBotonDestacados = configurarAnimacionBotonDestacados();
+  iniciarAnimacionBotonDestacados?.();
+
+  // Al entrar a la ficha de un negocio y volver con "atrás", el
+  // navegador suele restaurar esta página desde memoria (bfcache) en
+  // vez de recargarla — el script de arriba no vuelve a correr solo, así
+  // que sin este listener la animación no se repetía al regresar.
+  window.addEventListener('pageshow', (evento) => {
+    if (evento.persisted) iniciarAnimacionBotonDestacados?.();
+  });
 </script>
