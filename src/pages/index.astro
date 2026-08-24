@@ -16,6 +16,20 @@ const destacados = negocios
   .filter((n) => n.data.destacado)
   .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
 
+// El número y las ligas del catálogo se calculan desde los datos reales.
+// Así la home nunca promete más hospedajes de los que existen, y el mensaje
+// sigue creciendo solo conforme se den de alta nuevos negocios.
+const hospedajes = negocios.filter((n) => n.data.categoria === 'hospedaje');
+const totalHospedajes = hospedajes.length;
+const filtrosRapidos = [
+  { href: '/hospedaje?filtro=casa', icono: '🏡', etiqueta: 'Casas vacacionales' },
+  { href: '/hospedaje?filtro=hotel', icono: '🏨', etiqueta: 'Hoteles' },
+  { href: '/hospedaje?filtro=alberca', icono: '🏊', etiqueta: 'Con alberca' },
+  { href: '/hospedaje?filtro=playa', icono: '🌊', etiqueta: 'Cerca de la playa' },
+  { href: '/hospedaje?filtro=grupo-grande', icono: '👨‍👩‍👧‍👦', etiqueta: 'Para grupos' },
+  { href: '/hospedaje?filtro=pet-friendly', icono: '🐾', etiqueta: 'Con mascotas' },
+];
+
 // "También en Tecolutla": una ficha por cada categoría que NO sea
 // hospedaje, elegida por puntaje de completitud (la misma lógica que
 // ordena /gastronomia, /actividades y /servicios). Si una categoría
@@ -117,6 +131,20 @@ const esquemaOrganization = {
         </p>
       </div>
 
+      {
+        totalHospedajes > 0 && (
+          <div class="promesa__acciones">
+            <a class="boton boton--hero-principal" href="/hospedaje">
+              Ver los {totalHospedajes} hospedajes
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="promesa__enlace-secundario" href="#elige-hospedaje">
+              Quiero buscar por tipo de viaje
+            </a>
+          </div>
+        )
+      }
+
       <div class="promesa__confianza">
         {
           SELLOS_CONFIANZA.map((sello) => (
@@ -131,20 +159,90 @@ const esquemaOrganization = {
   </section>
 
   {
+    totalHospedajes > 0 && (
+      <section class="busqueda-rapida" id="elige-hospedaje" aria-labelledby="titulo-busqueda-rapida">
+        <div class="contenedor busqueda-rapida__interior">
+          <div>
+            <p class="eyebrow">Encuentra tu lugar</p>
+            <h2 id="titulo-busqueda-rapida">¿Cómo quieres hospedarte?</h2>
+            <p>
+              Elige una opción para ver únicamente los hospedajes que más se ajustan a tu viaje.
+            </p>
+          </div>
+          <a class="boton boton--secundario busqueda-rapida__ver-todo" href="/hospedaje">
+            Ver los {totalHospedajes} hospedajes
+          </a>
+        </div>
+        <div class="contenedor filtros-rapidos" aria-label="Filtros rápidos de hospedaje">
+          {
+            filtrosRapidos.map((filtro) => (
+              <a href={filtro.href} class="filtro-rapido">
+                <span aria-hidden="true">{filtro.icono}</span>
+                {filtro.etiqueta}
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    )
+  }
+
+  {
     destacados.length > 0 && (
       <section class="banda-destacados">
         <div class="contenedor banda-destacados__encabezado">
-          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
-          <a class="boton boton--claro boton--pildora banda-destacados__boton" href="/hospedaje">Ver todos →</a>
+          <div>
+            <h2 class="titulo-seccion titulo-seccion--claro">Hospedajes recomendados</h2>
+            {
+              totalHospedajes > destacados.length && (
+                <p class="banda-destacados__subtitulo">
+                  Te mostramos {destacados.length} de {totalHospedajes}. Hay muchas más opciones para explorar.
+                </p>
+              )
+            }
+          </div>
+          <a class="boton boton--claro boton--pildora banda-destacados__boton" href="/hospedaje">
+            Ver los {totalHospedajes}
+          </a>
         </div>
         <div class="carrusel-destacados" id="carrusel-destacados-home">
           {destacados.map((negocio, i) => (
             <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
           <a class="tarjeta-ver-mas" href="/hospedaje" data-tarjeta-ver-mas>
-            <span>Más hospedaje</span>
+            <span>Ver los {totalHospedajes} hospedajes</span>
             <span aria-hidden="true">→</span>
           </a>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    totalHospedajes > destacados.length && (
+      <section class="seccion seccion--catalogo-completo">
+        <div class="contenedor">
+          <div class="puente-catalogo">
+            <div class="puente-catalogo__texto">
+              <p class="eyebrow eyebrow--claro">El directorio completo</p>
+              <h2>No son solo estos {destacados.length} hospedajes.</h2>
+              <p>
+                En TecolutlaTravel hay <strong>{totalHospedajes} opciones de hospedaje</strong> para conocer. Puedes verlas
+                todas, usar filtros y entrar a cada ficha antes de escribir por WhatsApp.
+              </p>
+            </div>
+            <div class="puente-catalogo__acciones">
+              <a class="boton boton--claro puente-catalogo__boton-principal" href="/hospedaje">
+                Ver todos los hospedajes →
+              </a>
+              <a class="puente-catalogo__enlace" href="/hospedaje?filtro=alberca">
+                Buscar hospedajes con alberca
+              </a>
+              <a class="puente-catalogo__enlace" href="/hospedaje?filtro=playa">
+                Buscar cerca de la playa
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     )
@@ -174,6 +272,23 @@ const esquemaOrganization = {
     </div>
   </section>
 
+  <section class="seccion contenedor guia-local" aria-labelledby="titulo-guia-local">
+    <div class="seccion__encabezado">
+      <div>
+        <p class="eyebrow">Planea tu viaje completo</p>
+        <h2 id="titulo-guia-local" class="titulo-seccion">Más que hospedaje: descubre Tecolutla</h2>
+        <p class="subtitulo">Una guía local para decidir qué comer, qué hacer y qué llevar antes de salir.</p>
+      </div>
+      <a class="boton boton--secundario" href="/descubre-tecolutla">Ver guía local</a>
+    </div>
+    <div class="guia-local__enlaces">
+      <a href="/gastronomia"><span aria-hidden="true">🍤</span> Dónde comer</a>
+      <a href="/actividades"><span aria-hidden="true">🛶</span> Actividades</a>
+      <a href="/tips-para-tu-viaje"><span aria-hidden="true">💡</span> Tips para tu viaje</a>
+      <a href="/descubre-tecolutla"><span aria-hidden="true">🗺️</span> Explora Tecolutla</a>
+    </div>
+  </section>
+
   {
     tambienEnTecolutla.length > 0 && (
       <section class="seccion contenedor">
@@ -197,8 +312,8 @@ const esquemaOrganization = {
       <div>
         <h2>¿Tienes un negocio en Tecolutla?</h2>
         <p>
-          Tu página con fotos, ubicación y WhatsApp directo. Gratis, siempre. Nosotros la armamos
-          por ti.
+          Tu página con fotos, ubicación y WhatsApp directo. El alta es gratuita en esta etapa;
+          nosotros la armamos por ti.
         </p>
       </div>
       <a class="boton boton--whatsapp" href="/anunciate">Quiero mi página gratis</a>

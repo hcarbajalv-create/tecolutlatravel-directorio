@@ -346,6 +346,29 @@ const esquemaItemList =
     });
 
     buscadorInput?.addEventListener('input', aplicarFiltros);
+
+    // Las ligas desde la portada conservan el filtro elegido en la URL.
+    // Si el filtro existe en el catálogo real, se activa automáticamente;
+    // si no existe (por ejemplo, porque aún no hay negocios de ese tipo),
+    // la página se queda de forma segura en "Todo" en vez de mostrar una
+    // pantalla vacía o fingir resultados.
+    const parametros = new URLSearchParams(window.location.search);
+    const filtroSolicitado = parametros.get('filtro');
+    const consultaSolicitada = parametros.get('q');
+    const botonSolicitado = filtroSolicitado
+      ? Array.from(fila?.querySelectorAll<HTMLButtonElement>('[data-chip]') ?? []).find(
+          (boton) => boton.dataset.chip === filtroSolicitado,
+        )
+      : null;
+
+    if (consultaSolicitada && buscadorInput) {
+      buscadorInput.value = consultaSolicitada;
+    }
+    if (botonSolicitado) {
+      botonSolicitado.click();
+    } else {
+      aplicarFiltros();
+    }
   }
 
   rotarCarrusel();
