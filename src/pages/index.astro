@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
-import EscenaSubmarina from '../components/EscenaSubmarina.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
 import { SELLOS_CONFIANZA } from '../utils/sellosConfianza';
@@ -104,13 +103,28 @@ const esquemaOrganization = {
   <script type="application/ld+json" set:html={JSON.stringify(esquemaOrganization)} />
 
   <section class="promesa">
-    <EscenaSubmarina variante="completa" class="promesa__imagen" />
+    <img
+      class="promesa__imagen"
+      src="/images/hero-tortuga-tecolutla-v2.png"
+      alt="Tortuga marina nadando en aguas turquesa de Tecolutla"
+      width="1728"
+      height="960"
+    />
     <div class="promesa__overlay" aria-hidden="true"></div>
     <div class="contenedor promesa__interior">
-      <h1>Casas de hospedaje y hoteles en <span class="promesa__resaltado">Tecolutla</span>, Veracruz</h1>
-      <p class="promesa__subtitulo">
-        Habla directo por WhatsApp con el dueño — sin comisiones, sin intermediarios.
-      </p>
+      <p class="promesa__marca">Tecolutla<span>Travel</span><b aria-hidden="true">.</b></p>
+      <h1>Encuentra tu hospedaje ideal en <span class="promesa__resaltado">Tecolutla</span></h1>
+
+      <div class="promesa__confianza">
+        {
+          SELLOS_CONFIANZA.map((sello) => (
+            <div class="sello-confianza">
+              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
+              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
+            </div>
+          ))
+        }
+      </div>
 
       <div class="buscador-pildora">
         <label for="buscador-home-input" class="sr-only">Buscar un negocio por nombre</label>
@@ -145,16 +159,6 @@ const esquemaOrganization = {
         )
       }
 
-      <div class="promesa__confianza">
-        {
-          SELLOS_CONFIANZA.map((sello) => (
-            <div class="sello-confianza">
-              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
-              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
-            </div>
-          ))
-        }
-      </div>
     </div>
   </section>
 

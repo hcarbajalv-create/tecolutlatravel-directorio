@@ -343,16 +343,19 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   z-index: 1;
-  /* .42/.30/.62 medía 4.16:1 en el subtítulo a 390px; .47/.35/.67
-     lo resolvía en móvil (4.56:1) pero quedaba en 4.40:1 a 1280px
-     (AA pide 4.5:1) por el recorte más bajo de la foto ahí — un
-     segundo +.05 lo deja arriba de AA en los dos tamaños, sin volver
-     a los valores anteriores (.72/.55/.78) que apagaban la foto. */
+  /* Dos velos suaves: preservan el agua luminosa y dan contraste a los
+     textos blancos sobre la nueva portada de tortuga. */
   background: linear-gradient(
     180deg,
-    rgba(12, 43, 46, 0.52) 0%,
-    rgba(12, 43, 46, 0.4) 45%,
-    rgba(12, 43, 46, 0.72) 100%
+    rgba(4, 69, 91, 0.18) 0%,
+    rgba(4, 69, 91, 0.2) 42%,
+    rgba(4, 69, 91, 0.5) 100%
+  ), linear-gradient(
+    90deg,
+    rgba(4, 69, 91, 0.15) 0%,
+    rgba(4, 69, 91, 0.48) 32%,
+    rgba(4, 69, 91, 0.4) 68%,
+    rgba(4, 69, 91, 0.08) 100%
   );
 }
 
@@ -375,18 +378,36 @@ select:focus-visible {
   position: relative;
   z-index: 3;
   text-align: center;
-  max-width: 760px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 3.5rem 1.25rem 4.5rem;
+  padding: 2.35rem 1.25rem 4.5rem;
 }
 
 .promesa__interior h1 {
-  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 900;
   line-height: 1.15;
-  margin: 0 0 0.9rem;
+  margin: 0 0 1rem;
   color: var(--color-blanco);
   text-shadow: 0 2px 12px rgba(12, 43, 46, 0.55);
+}
+
+.promesa__marca {
+  margin: 0 0 0.45rem;
+  color: var(--color-blanco);
+  font-size: clamp(1.55rem, 4vw, 2.45rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  text-shadow: 0 2px 12px rgba(4, 69, 91, 0.52);
+}
+
+.promesa__marca span {
+  color: var(--color-turquesa-claro);
+}
+
+.promesa__marca b {
+  color: var(--color-coral);
 }
 
 .promesa__resaltado {
@@ -401,7 +422,7 @@ select:focus-visible {
 }
 
 .promesa__confianza {
-  margin-top: 1.75rem;
+  margin: 0 0 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -440,7 +461,7 @@ select:focus-visible {
 
 .buscador-pildora {
   position: relative;
-  max-width: 480px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
