@@ -13,24 +13,11 @@ const { rutaActual } = Astro.props;
 // mismo. El catálogo es estático, no hace falta backend para esto.
 const negocios = filtrarListables(await getCollection('negocios'));
 
-// "Servicios" se oculta del menú mientras la categoría no tenga ningún
-// negocio — mismo criterio de "categoría vacía" que ya le pone noindex
-// automático a /servicios (ver PaginaCategoria.astro) y la excluye del
-// sitemap (ver astro.config.mjs). Sin esto, el menú seguía enlazando a
-// una página vacía que Google no debía indexar. Se destapa solo en
-// cuanto entre el primer negocio, sin tocar código.
-const hayServicios = negocios.some((n) => n.data.categoria === 'servicios');
-
 const enlaces = [
   { href: '/hospedaje', texto: 'Hospedaje' },
-  { href: '/mapa', texto: 'Mapa' },
   { href: '/gastronomia', texto: 'Gastronomía' },
-  { href: '/actividades', texto: 'Actividades ecoturísticas' },
-  ...(hayServicios ? [{ href: '/servicios', texto: 'Servicios' }] : []),
-  { href: '/reportajes-y-noticias', texto: 'Reportajes y noticias' },
-  { href: '/tips-para-tu-viaje', texto: 'Tips para tu viaje' },
-  { href: '/descubre-tecolutla', texto: 'Descubre Tecolutla' },
-  { href: '/contactanos', texto: 'Contáctanos' },
+  { href: '/actividades', texto: 'Actividades' },
+  { href: '/tips-para-tu-viaje', texto: 'Tips' },
 ];
 
 function esActiva(href: string) {
@@ -59,7 +46,21 @@ const indiceBuscador = negocios.map((negocio) => ({
       </svg>
       Tecolutla<span>Travel</span>
     </a>
+    <nav class="encabezado__nav" id="menu-principal" aria-label="Navegación principal">
+      {
+        enlaces.map((enlace) => (
+          <a href={enlace.href} aria-current={esActiva(enlace.href) ? 'page' : undefined}>
+            {enlace.texto}
+          </a>
+        ))
+      }
+    </nav>
     <div class="encabezado__derecha">
+      <a class="encabezado__favoritos" href="/comparar" title="Ver opciones guardadas y comparar hospedajes">
+        <span class="encabezado__favoritos-icono" aria-hidden="true">♡</span>
+        <span>Favoritos</span>
+      </a>
+      <a href="/anunciate" class="encabezado__anunciate">Anúnciate</a>
       <button
         class="encabezado__toggle"
         type="button"
@@ -70,16 +71,6 @@ const indiceBuscador = negocios.map((negocio) => ({
         ☰
       </button>
     </div>
-    <nav class="encabezado__nav" id="menu-principal" aria-label="Navegación principal">
-      {
-        enlaces.map((enlace) => (
-          <a href={enlace.href} aria-current={esActiva(enlace.href) ? 'page' : undefined}>
-            {enlace.texto}
-          </a>
-        ))
-      }
-      <a href="/anunciate" class="encabezado__anunciate">Anúnciate</a>
-    </nav>
   </div>
 </header>
 

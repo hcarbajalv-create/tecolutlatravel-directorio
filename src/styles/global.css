@@ -3179,3 +3179,672 @@ p.buscador-pildora__resultados {
     gap: 10px;
   }
 }
+
+/* ---------- Portada completa: propuesta submarina TecolutlaTravel ---------- */
+/* Esta capa final adapta la home a la maqueta aprobada. Se mantiene el
+   directorio real: sus ligas, filtros, favoritos y comparación siguen
+   siendo los componentes existentes del sitio. */
+.promesa::after {
+  height: 32px;
+  background: var(--color-blanco);
+}
+
+.promesa__interior {
+  max-width: 1080px;
+  padding-top: clamp(2.2rem, 5vw, 4.4rem);
+  padding-bottom: 3.5rem;
+}
+
+.promesa__interior h1 {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: clamp(2rem, 4.1vw, 3.7rem);
+}
+
+.promesa__confianza {
+  margin-bottom: 1.1rem;
+}
+
+.buscador-viaje {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.75fr) minmax(155px, 1fr) minmax(155px, 1fr) auto;
+  align-items: stretch;
+  gap: 0.55rem;
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 36px rgba(0, 42, 56, 0.28);
+  text-align: left;
+}
+
+.buscador-viaje__busqueda.buscador-pildora {
+  max-width: none;
+  margin: 0;
+}
+
+.buscador-viaje__busqueda .buscador-pildora__input {
+  min-height: 58px;
+  border-color: transparent;
+  border-radius: 13px;
+  background: #f7fbfc;
+  box-shadow: none;
+}
+
+.buscador-viaje__busqueda .buscador-pildora__input:focus {
+  border-color: var(--color-turquesa);
+}
+
+.buscador-viaje__atajo {
+  display: flex;
+  align-items: center;
+  gap: 0.52rem;
+  min-width: 0;
+  padding: 0.65rem 0.55rem;
+  border-left: 1px solid #dfe8eb;
+  border-radius: 10px;
+  color: var(--color-tinta);
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+.buscador-viaje__atajo:hover {
+  background: #effafa;
+  color: var(--color-mar-oscuro);
+}
+
+.buscador-viaje__atajo > span:first-child {
+  font-size: 1.25rem;
+}
+
+.buscador-viaje__atajo b,
+.buscador-viaje__atajo small {
+  display: block;
+}
+
+.buscador-viaje__atajo b {
+  font-size: 0.8rem;
+}
+
+.buscador-viaje__atajo small {
+  margin-top: 0.18rem;
+  color: var(--color-texto-suave);
+  font-size: 0.69rem;
+}
+
+.buscador-viaje__boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding-inline: 1rem;
+  border-radius: 12px;
+  background: var(--color-coral);
+  color: var(--color-blanco);
+  font-size: 0.86rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.buscador-viaje__boton:hover {
+  background: var(--color-coral-texto);
+  color: var(--color-blanco);
+}
+
+.promesa__enlace-secundario {
+  display: inline-block;
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+}
+
+.filtros-propuesta {
+  position: relative;
+  z-index: 4;
+  margin-top: -0.3rem;
+  padding: 1.1rem 0 1.25rem;
+  border-bottom: 1px solid var(--color-borde);
+  background: var(--color-blanco);
+}
+
+.filtros-propuesta__interior {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.filtros-propuesta__titulo {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.filtros-propuesta .filtros-rapidos {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.filtro-rapido {
+  min-height: 38px;
+  padding: 0.45rem 0.72rem;
+  font-size: 0.79rem;
+  box-shadow: 0 3px 10px rgba(12, 43, 46, 0.05);
+}
+
+.filtros-propuesta__ver-todos,
+.banda-destacados__enlace-todos {
+  flex: 0 0 auto;
+  color: #007d91;
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.filtros-propuesta__ver-todos:hover,
+.banda-destacados__enlace-todos:hover {
+  color: var(--color-coral-texto);
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+
+.destacados-propuesta {
+  margin-top: 0;
+  padding: 1.8rem 0 2.1rem;
+  background: var(--color-blanco);
+}
+
+.destacados-propuesta .banda-destacados__encabezado {
+  margin-bottom: 0.75rem;
+}
+
+.destacados-propuesta .banda-destacados__subtitulo {
+  color: var(--color-texto-suave);
+}
+
+.destacados-propuesta .carrusel-destacados {
+  padding-bottom: 0.8rem;
+}
+
+.destacados-propuesta .tarjeta {
+  flex-basis: 270px;
+  border: 1px solid #d9e4e7;
+  box-shadow: 0 8px 22px rgba(11, 52, 58, 0.1);
+}
+
+.destacados-propuesta .tarjeta:hover {
+  box-shadow: 0 12px 26px rgba(11, 52, 58, 0.17);
+}
+
+.destacados-propuesta .tarjeta__descripcion {
+  display: none;
+}
+
+.destacados-propuesta .tarjeta__cuerpo {
+  gap: 0.45rem;
+  padding: 0.85rem;
+}
+
+.destacados-propuesta .tarjeta__amenidades {
+  margin-top: 0;
+}
+
+.destacados-propuesta .tarjeta-ver-mas {
+  min-height: 240px;
+  border-color: #9fcad0;
+  color: var(--color-turquesa);
+}
+
+.destacados-propuesta .tarjeta-ver-mas:hover {
+  background: #effafa;
+  border-color: var(--color-turquesa);
+}
+
+.seccion--catalogo-completo {
+  padding: 1rem 0 2.3rem;
+  background: var(--color-blanco);
+}
+
+.puente-catalogo {
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  border: 1px solid #a9d9df;
+  border-radius: 20px;
+  background: linear-gradient(110deg, #f1fcfd, #e0f7f8);
+  box-shadow: none;
+  color: var(--color-tinta);
+}
+
+.puente-catalogo h2 {
+  color: var(--color-tinta);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+}
+
+.puente-catalogo p:not(.eyebrow) {
+  color: var(--color-texto-suave);
+}
+
+.puente-catalogo .eyebrow {
+  color: #007d91;
+}
+
+.puente-catalogo__boton-principal {
+  background: var(--color-coral);
+  color: var(--color-blanco);
+}
+
+.puente-catalogo__boton-principal:hover {
+  background: var(--color-coral-texto);
+  color: var(--color-blanco);
+}
+
+.puente-catalogo__enlace {
+  color: #007d91;
+}
+
+.seccion--arena {
+  background: #fbfdfd;
+}
+
+.tile-categoria {
+  min-height: 154px;
+  padding: 1rem;
+  justify-content: flex-end;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 18px rgba(12, 43, 46, 0.1);
+}
+
+.tile-categoria__imagen,
+.tile-categoria__velo {
+  position: absolute;
+  inset: 0;
+}
+
+.tile-categoria__imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tile-categoria__velo {
+  background: linear-gradient(180deg, rgba(0, 77, 91, 0.08), rgba(4, 36, 42, 0.83));
+}
+
+.tile-categoria::before {
+  display: none;
+}
+
+.tile-categoria__icono {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 0.35rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  font-size: 1.3rem;
+}
+
+.tile-categoria__texto {
+  z-index: 1;
+}
+
+.tile-categoria__titulo {
+  font-size: 1.08rem;
+}
+
+.tile--tips .tile-categoria__imagen {
+  object-position: 62% center;
+}
+
+.seccion--planifica {
+  padding: 2.2rem 0;
+  background: #f7fbfc;
+}
+
+.tablero-planifica {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(260px, 0.85fr);
+  gap: 1.2rem;
+}
+
+.zonas-tecolutla,
+.anuncio-gratis {
+  border: 1px solid #d9e5e8;
+  border-radius: 18px;
+  background: var(--color-blanco);
+  box-shadow: 0 7px 20px rgba(12, 43, 46, 0.07);
+}
+
+.zonas-tecolutla {
+  overflow: hidden;
+}
+
+.zonas-tecolutla__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.25rem 0.9rem;
+}
+
+.zonas-tecolutla__encabezado .titulo-seccion {
+  margin-top: 0.1rem;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+}
+
+.zonas-tecolutla__encabezado > a {
+  color: #007d91;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.zonas-tecolutla__contenido {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.66fr) minmax(0, 1.34fr);
+  min-height: 250px;
+}
+
+.zonas-tecolutla__lista {
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0.65rem 0.65rem;
+}
+
+.zonas-tecolutla__lista a {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.62rem;
+  border-radius: 10px;
+  color: var(--color-tinta);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.zonas-tecolutla__lista a:hover {
+  background: #eaf8f9;
+}
+
+.zonas-tecolutla__lista b,
+.zonas-tecolutla__lista small {
+  display: block;
+}
+
+.zonas-tecolutla__lista small {
+  margin-top: 0.15rem;
+  color: var(--color-texto-suave);
+}
+
+.zonas-tecolutla__mapa {
+  width: 100%;
+  min-height: 250px;
+  border: 0;
+}
+
+.anuncio-gratis {
+  padding: 1.45rem;
+}
+
+.anuncio-gratis h2 {
+  margin: 0.2rem 0 0.55rem;
+  color: var(--color-tinta);
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+}
+
+.anuncio-gratis p {
+  margin: 0.35rem 0;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.anuncio-gratis .anuncio-gratis__destacado {
+  color: #007d91;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.anuncio-gratis ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  padding: 0;
+  color: var(--color-texto);
+  font-size: 0.83rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+.anuncio-gratis__boton {
+  width: 100%;
+  justify-content: center;
+  background: var(--color-turquesa);
+  color: var(--color-blanco);
+}
+
+.anuncio-gratis__boton:hover {
+  background: var(--color-mar-oscuro);
+  color: var(--color-blanco);
+}
+
+.anuncio-gratis small {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--color-texto-suave);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 880px) {
+  .buscador-viaje {
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr);
+  }
+
+  .buscador-viaje__boton {
+    grid-column: 1 / -1;
+  }
+
+  .tablero-planifica {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .promesa__interior {
+    padding: 2.25rem 1rem 2.7rem;
+  }
+
+  .promesa__interior h1 {
+    font-size: clamp(1.9rem, 9vw, 2.55rem);
+  }
+
+  .buscador-viaje {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.4rem;
+    border-radius: 15px;
+  }
+
+  .buscador-viaje__atajo {
+    padding: 0.55rem 0.65rem;
+    border-top: 1px solid #dfe8eb;
+    border-left: 0;
+  }
+
+  .buscador-viaje__boton {
+    grid-column: auto;
+    min-height: 52px;
+  }
+
+  .promesa__enlace-secundario {
+    margin-top: 0.7rem;
+  }
+
+  .filtros-propuesta__interior {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .filtros-propuesta .filtros-rapidos {
+    width: calc(100% + 1.25rem);
+  }
+
+  .filtros-propuesta__ver-todos {
+    padding: 0.25rem 0;
+  }
+
+  .destacados-propuesta {
+    padding-top: 1.35rem;
+  }
+
+  .destacados-propuesta .banda-destacados__encabezado {
+    align-items: flex-start;
+  }
+
+  .destacados-propuesta .banda-destacados__enlace-todos {
+    max-width: 102px;
+    text-align: right;
+    white-space: normal;
+  }
+
+  .destacados-propuesta .tarjeta {
+    flex-basis: 254px;
+  }
+
+  .zonas-tecolutla__encabezado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .zonas-tecolutla__contenido {
+    grid-template-columns: 1fr;
+  }
+
+  .zonas-tecolutla__lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .zonas-tecolutla__lista a {
+    font-size: 0.71rem;
+  }
+
+  .zonas-tecolutla__mapa {
+    min-height: 220px;
+  }
+}
+
+/* Navegación compacta de la propuesta: las rutas principales caben en un
+   renglón y las acciones de guardar/anunciar quedan siempre a la vista. */
+.encabezado__barra {
+  flex-wrap: nowrap;
+  gap: clamp(0.55rem, 1.5vw, 1.1rem);
+}
+
+.encabezado__nav {
+  margin-left: auto;
+  flex-wrap: nowrap;
+  gap: clamp(0.35rem, 1.2vw, 1rem);
+}
+
+.encabezado__nav a {
+  font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+  white-space: nowrap;
+}
+
+.encabezado__derecha {
+  flex-shrink: 0;
+  gap: 0.65rem;
+}
+
+.encabezado__favoritos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: var(--color-texto) !important;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.encabezado__favoritos:hover {
+  color: var(--color-coral-texto) !important;
+}
+
+.encabezado__favoritos-icono {
+  color: var(--color-tinta);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+@media (max-width: 760px) {
+  .encabezado__barra {
+    padding: 0.65rem 1rem;
+  }
+
+  .encabezado__nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin: 0;
+    background: var(--color-blanco);
+    border-bottom: 1px solid var(--color-borde);
+    padding: 0.5rem 1rem 1rem;
+    box-shadow: var(--sombra);
+  }
+
+  .encabezado__nav--abierto {
+    display: flex;
+  }
+
+  .encabezado__nav a {
+    width: 100%;
+    padding: 0.6rem 0;
+    font-size: 0.95rem;
+  }
+
+  .encabezado__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .encabezado__marca {
+    font-size: 1.05rem;
+  }
+
+  .encabezado__marca-icono {
+    width: 24px;
+    height: 24px;
+  }
+
+  .encabezado__favoritos > span:last-child {
+    display: none;
+  }
+
+  .encabezado__anunciate {
+    padding: 0.45rem 0.72rem !important;
+    font-size: 0.78rem;
+  }
+}
