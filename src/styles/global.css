@@ -3848,3 +3848,129 @@ p.buscador-pildora__resultados {
     font-size: 0.78rem;
   }
 }
+
+/* Acabados de la maqueta de referencia. */
+.encabezado__marca {
+  gap: 0.35rem;
+  color: #087d99;
+}
+
+.encabezado__marca-icono {
+  width: 42px;
+  height: 38px;
+}
+
+.encabezado__marca-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.encabezado__marca-nombre {
+  color: #087d99 !important;
+  font-size: 1.36rem;
+  letter-spacing: -0.06em;
+}
+
+.encabezado__marca-nombre span {
+  color: #0b6f9e !important;
+}
+
+.encabezado__marca-nombre b {
+  color: var(--color-coral);
+}
+
+.encabezado__marca-texto small {
+  margin-top: 0.2rem;
+  color: #62777c !important;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.43rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.promesa__marca span,
+.promesa__resaltado {
+  color: var(--color-blanco);
+}
+
+.promesa__interior h1 {
+  max-width: 570px;
+}
+
+.filtros-propuesta__titulo {
+  display: none;
+}
+
+.filtros-propuesta__interior {
+  justify-content: space-between;
+}
+
+.tile-categoria {
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+}
+
+.tile-categoria__icono {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tile-categoria__texto {
+  width: 100%;
+}
+
+@media (min-width: 1000px) {
+  .encabezado__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    border: 0;
+    border-radius: 0;
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .encabezado__marca-nombre {
+    font-size: 1.12rem;
+  }
+
+  .encabezado__marca-texto small {
+    font-size: 0.36rem;
+  }
+
+  .encabezado__marca-icono {
+    width: 34px;
+    height: 31px;
+  }
+}
+
+.cabecera-categoria--simple {
+  background: linear-gradient(120deg, var(--color-mar-oscuro), var(--color-turquesa));
+}
+
+.cabecera-categoria--simple h1 {
+  margin-bottom: 0.35rem;
+}
+
+.cabecera-categoria--simple p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.favoritos-vacio {
+  max-width: 680px;
+  margin: 1.25rem auto 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid #b9dde1;
+  border-radius: var(--radio);
+  background: #effafa;
+  color: var(--color-texto-suave);
+}
