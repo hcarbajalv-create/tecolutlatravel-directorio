@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PlanificadorHospedajes from '../components/PlanificadorHospedajes.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -107,6 +108,7 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <main id="contenido-principal">
       <slot />
     </main>
+    <PlanificadorHospedajes />
     <Footer />
   </body>
 </html>

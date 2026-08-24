@@ -23,6 +23,7 @@ const hayServicios = negocios.some((n) => n.data.categoria === 'servicios');
 
 const enlaces = [
   { href: '/hospedaje', texto: 'Hospedaje' },
+  { href: '/mapa', texto: 'Mapa' },
   { href: '/gastronomia', texto: 'Gastronomía' },
   { href: '/actividades', texto: 'Actividades ecoturísticas' },
   ...(hayServicios ? [{ href: '/servicios', texto: 'Servicios' }] : []),

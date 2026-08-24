@@ -225,6 +225,18 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       <a class="boton boton--whatsapp boton--chico" href={enlaceWhatsapp}>WhatsApp</a>
       <a class="boton boton--secundario boton--chico" href={enlace}>Ver ficha</a>
     </div>
+    {
+      categoria === 'hospedaje' && (
+        <div class="tarjeta__seleccion" aria-label={`Opciones para ${nombre}`}>
+          <button type="button" class="tarjeta__seleccion-boton" data-favorito-hospedaje data-slug={negocio.id} aria-pressed="false">
+            ♡ Guardar
+          </button>
+          <button type="button" class="tarjeta__seleccion-boton" data-comparar-hospedaje data-slug={negocio.id} aria-pressed="false">
+            ↔ Comparar
+          </button>
+        </div>
+      )
+    }
   </div>
 </article>
 

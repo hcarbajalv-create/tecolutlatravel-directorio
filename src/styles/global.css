@@ -1279,6 +1279,38 @@ p.buscador-pildora__resultados {
   gap: 0.5rem;
 }
 
+/* Guardar y comparar son decisiones del viajero, no un plan comercial.
+   Se guardan solo en el navegador y se mantienen discretas para que los
+   botones de ficha y WhatsApp sigan siendo la acción principal. */
+.tarjeta__seleccion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.tarjeta__seleccion-boton {
+  border: 0;
+  background: transparent;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.2rem 0;
+}
+
+.tarjeta__seleccion-boton:hover,
+.tarjeta__seleccion-boton:focus-visible,
+.tarjeta__seleccion-boton--activo {
+  color: var(--color-coral-texto);
+}
+
+.tarjeta__seleccion-boton + .tarjeta__seleccion-boton {
+  border-left: 1px solid var(--color-borde);
+  padding-left: 0.55rem;
+}
+
 .tarjeta__acciones .boton--whatsapp {
   flex: 1;
 }
@@ -1489,6 +1521,287 @@ p.buscador-pildora__resultados {
 
 .guia-local__enlaces span {
   font-size: 1.35rem;
+}
+
+/* ---------- Planificador local: favoritos y comparación ---------- */
+.planificador-hospedajes {
+  position: fixed;
+  z-index: 40;
+  right: max(1rem, calc((100vw - var(--ancho-maximo)) / 2));
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: min(620px, calc(100vw - 2rem));
+  padding: 0.8rem 0.9rem 0.8rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(12, 43, 46, 0.96);
+  box-shadow: 0 12px 28px rgba(12, 43, 46, 0.28);
+  color: var(--color-blanco);
+  backdrop-filter: blur(10px);
+}
+
+.planificador-hospedajes__texto {
+  min-width: 0;
+}
+
+.planificador-hospedajes__eyebrow,
+.planificador-hospedajes__resumen {
+  margin: 0;
+}
+
+.planificador-hospedajes__eyebrow {
+  color: var(--color-turquesa-claro);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.planificador-hospedajes__resumen {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.planificador-hospedajes__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.planificador-hospedajes__limpiar {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+
+/* ---------- Comparador ---------- */
+.comparador__encabezado,
+.mapa-hospedajes__encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.comparador__encabezado h1,
+.mapa-hospedajes__encabezado h1 {
+  margin: 0.1rem 0 0.35rem;
+}
+
+.comparador__resultados {
+  overflow-x: auto;
+}
+
+.comparador__vacio {
+  max-width: 600px;
+  padding: 1.75rem;
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-arena);
+  color: var(--color-texto-suave);
+}
+
+.comparador__tabla {
+  min-width: 720px;
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  border-radius: 18px;
+  background: var(--color-blanco);
+}
+
+.comparador__cabecera,
+.comparador__fila {
+  display: grid;
+  grid-template-columns: 170px repeat(var(--columnas), minmax(190px, 1fr));
+}
+
+.comparador__cabecera {
+  background: linear-gradient(135deg, var(--color-mar-oscuro), var(--color-turquesa));
+  color: var(--color-blanco);
+}
+
+.comparador__cabecera > *,
+.comparador__fila > * {
+  padding: 1rem;
+}
+
+.comparador__cabecera > span {
+  align-self: end;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.comparador__cabecera p {
+  margin: 0 0 0.25rem;
+  color: var(--color-turquesa-claro);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.comparador__cabecera h2 {
+  margin: 0 0 0.45rem;
+  color: var(--color-blanco);
+  font-size: 1.15rem;
+}
+
+.comparador__cabecera h2 a,
+.comparador__ver-ficha {
+  color: inherit;
+}
+
+.comparador__ver-ficha {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.comparador__fila {
+  border-top: 1px solid var(--color-borde);
+}
+
+.comparador__fila > * + * {
+  border-left: 1px solid var(--color-borde);
+}
+
+.comparador__fila strong {
+  background: #f7fcfb;
+  color: var(--color-tinta);
+}
+
+.comparador__fila div {
+  color: var(--color-texto);
+  font-size: 0.92rem;
+}
+
+.comparador__fila ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comparador__fila li {
+  padding: 0.22rem 0.45rem;
+  border-radius: 999px;
+  background: var(--color-arena-oscura);
+  font-size: 0.78rem;
+}
+
+.comparador__sin-dato {
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+/* ---------- Mapa de hospedajes ---------- */
+.mapa-hospedajes__rejilla {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr);
+  gap: 1rem;
+}
+
+.mapa-hospedajes__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 500px;
+  overflow: auto;
+  padding-right: 0.25rem;
+}
+
+.mapa-hospedajes__opcion {
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-blanco);
+  color: var(--color-tinta);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.mapa-hospedajes__opcion:hover,
+.mapa-hospedajes__opcion--activa {
+  border-color: var(--color-turquesa);
+  background: color-mix(in srgb, var(--color-turquesa-claro) 18%, white);
+}
+
+.mapa-hospedajes__opcion span,
+.mapa-hospedajes__opcion strong,
+.mapa-hospedajes__opcion small {
+  display: block;
+}
+
+.mapa-hospedajes__opcion span {
+  color: var(--color-turquesa);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mapa-hospedajes__opcion strong {
+  margin: 0.15rem 0;
+}
+
+.mapa-hospedajes__opcion small {
+  color: var(--color-texto-suave);
+  line-height: 1.35;
+}
+
+.mapa-hospedajes__mapa {
+  min-width: 0;
+}
+
+.mapa-hospedajes__seleccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radio);
+  background: var(--color-arena);
+}
+
+.mapa-hospedajes__seleccion p,
+.mapa-hospedajes__seleccion h2,
+.mapa-hospedajes__seleccion span {
+  margin: 0;
+}
+
+.mapa-hospedajes__seleccion p {
+  color: var(--color-turquesa);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mapa-hospedajes__seleccion h2 {
+  margin: 0.15rem 0;
+  font-size: 1.1rem;
+}
+
+.mapa-hospedajes__seleccion span {
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
 }
 
 /* ---------- Aviso de negocio dado de baja (ficha) ---------- */
@@ -2050,6 +2363,65 @@ p.buscador-pildora__resultados {
     min-height: 62px;
     padding: 0.7rem;
     font-size: 0.86rem;
+  }
+
+  .tarjeta__seleccion {
+    gap: 0.2rem;
+    margin-top: 0.35rem;
+  }
+
+  .tarjeta__seleccion-boton {
+    font-size: 0.62rem;
+  }
+
+  .tarjeta__seleccion-boton + .tarjeta__seleccion-boton {
+    padding-left: 0.35rem;
+  }
+
+  .planificador-hospedajes {
+    right: 0.65rem;
+    bottom: 0.65rem;
+    left: 0.65rem;
+    max-width: none;
+    gap: 0.65rem;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .planificador-hospedajes__resumen {
+    font-size: 0.76rem;
+  }
+
+  .planificador-hospedajes__acciones {
+    gap: 0.35rem;
+  }
+
+  .planificador-hospedajes__acciones .boton {
+    padding: 0.48rem 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .planificador-hospedajes__limpiar {
+    font-size: 0.7rem;
+  }
+
+  .comparador__encabezado,
+  .mapa-hospedajes__encabezado,
+  .mapa-hospedajes__seleccion {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mapa-hospedajes__seleccion .boton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mapa-hospedajes__rejilla {
+    grid-template-columns: 1fr;
+  }
+
+  .mapa-hospedajes__lista {
+    max-height: 260px;
   }
 
   .buscador-categoria {
