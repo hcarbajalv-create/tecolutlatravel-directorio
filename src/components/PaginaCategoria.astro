@@ -148,6 +148,8 @@ const esquemaItemList =
 </BaseLayout>
 
 <script>
+  import { registrarBusqueda } from '../utils/buscadorNegocios';
+
   function hashDiario(semilla: string): number {
     let hash = 5381;
     for (let i = 0; i < semilla.length; i++) {
@@ -234,6 +236,10 @@ const esquemaItemList =
         mensajeVacio.hidden = visibles > 0;
         mensajeVacio.textContent = 'No encontramos negocios con ese nombre.';
       }
+
+      // Solo se registra cuando hay algo escrito — limpiar el campo no
+      // es una búsqueda.
+      if (consulta) registrarBusqueda(buscadorInput?.value ?? '', visibles > 0);
     }
 
     buscadorInput?.addEventListener('input', aplicarFiltros);

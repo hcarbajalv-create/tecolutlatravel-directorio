@@ -84,9 +84,12 @@ const categorias = [
 </BaseLayout>
 
 <script>
-  // Misma lógica/índice que el buscador del Header y el del hero del
-  // home — ver src/utils/buscadorNegocios.ts.
-  import { leerIndiceBuscador, buscarNegocios, resultadosHtml } from '../utils/buscadorNegocios';
+  import {
+    leerIndiceBuscador,
+    buscarNegocios,
+    resultadosHtml,
+    registrarBusqueda,
+  } from '../utils/buscadorNegocios';
 
   function activarBuscador404() {
     const input = document.getElementById('buscador-404-input') as HTMLInputElement | null;
@@ -105,10 +108,11 @@ const categorias = [
       if (coincidencias.length === 0) {
         resultados.innerHTML = '';
         sinResultados.hidden = false;
-        return;
+      } else {
+        sinResultados.hidden = true;
+        resultados.innerHTML = resultadosHtml(coincidencias);
       }
-      sinResultados.hidden = true;
-      resultados.innerHTML = resultadosHtml(coincidencias);
+      registrarBusqueda(input.value, coincidencias.length > 0);
     });
   }
 

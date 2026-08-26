@@ -251,6 +251,8 @@ const esquemaItemList =
 </BaseLayout>
 
 <script>
+  import { registrarBusqueda } from '../utils/buscadorNegocios';
+
   function hashDiario(semilla: string): number {
     let hash = 5381;
     for (let i = 0; i < semilla.length; i++) {
@@ -335,6 +337,7 @@ const esquemaItemList =
           ? 'No encontramos negocios con ese nombre.'
           : 'Todavía no hay negocios de este tipo.';
       }
+      return visibles;
     }
 
     fila?.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
@@ -345,7 +348,13 @@ const esquemaItemList =
       });
     });
 
-    buscadorInput?.addEventListener('input', aplicarFiltros);
+    // Se registra solo desde el input de búsqueda (no desde el clic de
+    // chips, que también llama aplicarFiltros pero no es una búsqueda por
+    // nombre) — y solo si el usuario escribió algo, no al borrar el campo.
+    buscadorInput?.addEventListener('input', () => {
+      const visibles = aplicarFiltros();
+      if (buscadorInput.value.trim()) registrarBusqueda(buscadorInput.value, visibles > 0);
+    });
   }
 
   rotarCarrusel();

@@ -353,6 +353,56 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-bottom: 1px solid var(--color-borde);
   }
 
+  .panel__th-orden {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .panel__th-orden:hover {
+    color: var(--color-turquesa);
+  }
+
+  .panel__semaforo {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+  }
+
+  .panel__semaforo--verde {
+    background: #2e9e5b;
+  }
+
+  .panel__semaforo--ambar {
+    background: #e0a52c;
+  }
+
+  .panel__semaforo--rojo {
+    background: #d3453f;
+  }
+
+  .panel__semaforo--gris {
+    background: #b7c0c2;
+  }
+
+  .panel__nota-promedio {
+    font-size: 0.82rem;
+    color: var(--color-texto-suave);
+    margin: -0.5rem 0 1rem;
+  }
+
+  .panel__tabla small {
+    color: var(--color-texto-suave);
+    font-weight: 400;
+  }
+
   .panel__mini-badge {
     display: inline-block;
     background: var(--color-coral);
@@ -440,7 +490,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     };
   }
 
+  interface MesBusquedas {
+    terminos: Record<string, number>;
+    sinResultado: Record<string, number>;
+  }
+
   let negociosData: DatosNegocio[] = [];
+  let busquedasPorMes: Record<string, MesBusquedas> = {};
 
   // ---------- Autenticación ----------
   // El login (dashboard-auth) valida la contraseña UNA vez y emite un
@@ -484,8 +540,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  // Falla "silencioso" — si busquedas no carga (función caída, error de
+  // red) el resto del panel debe seguir funcionando, no es tan crítico
+  // como los datos de negocios para bloquear el login.
+  async function obtenerBusquedas(token: string): Promise<Record<string, MesBusquedas> | null> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-busquedas', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      });
+      if (!respuesta.ok) return null;
+      const datos = await respuesta.json();
+      return datos.ok ? datos.porMes : null;
+    } catch {
+      return null;
+    }
+  }
+
   async function entrarConToken(token: string, opciones: { silencioso?: boolean } = {}) {
-    const negocios = await obtenerNegocios(token);
+    const [negocios, busquedas] = await Promise.all([
+      obtenerNegocios(token),
+      obtenerBusquedas(token),
+    ]);
     if (!negocios) {
       sessionStorage.removeItem(TOKEN_SESSION);
       if (!opciones.silencioso) {
@@ -497,6 +573,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     sessionStorage.setItem(TOKEN_SESSION, token);
     negociosData = negocios;
+    busquedasPorMes = busquedas || {};
     el.login.hidden = true;
     el.dashboard.hidden = false;
     poblarSelectorNegocios();
@@ -558,6 +635,52 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   function claveMesActual(): string {
     return new Date().toISOString().slice(0, 7);
+  }
+
+  // ---------- Tasa de conversión ----------
+  // "—" en vez de "0%" cuando no hay vistas — dividir 0/0 daría NaN, y
+  // mostrar "0%" se leería como "convierte pésimo" cuando en realidad es
+  // "todavía no hay datos", dos cosas muy distintas.
+  function formatearConversion(clics: number, vistas: number): string {
+    if (!vistas) return '—';
+    return `${((clics / vistas) * 100).toFixed(1)}%`;
+  }
+
+  function valorConversion(clics: number, vistas: number): number {
+    return vistas > 0 ? (clics / vistas) * 100 : -1; // -1 ordena "—" al final
+  }
+
+  // Semáforo relativo al promedio del propio conjunto de negocios, no a un
+  // número fijo — "buena conversión" depende de cómo le está yendo al
+  // resto del catálogo ese mes, no de un umbral arbitrario. Solo se
+  // calcula sobre negocios con al menos MINIMO_VISTAS_CONFIABLE vistas:
+  // con pocas vistas el % es puro ruido (2 vistas y 1 clic = 50%, no
+  // significa nada) y contaminaría el promedio si se incluyera.
+  const MINIMO_VISTAS_CONFIABLE = 20;
+
+  function promedioConversionConfiable(filas: { vistas: number; clics: number }[]): number | null {
+    const confiables = filas.filter((f) => f.vistas >= MINIMO_VISTAS_CONFIABLE);
+    if (confiables.length === 0) return null;
+    const suma = confiables.reduce((acc, f) => acc + valorConversion(f.clics, f.vistas), 0);
+    return suma / confiables.length;
+  }
+
+  function semaforoConversion(
+    clics: number,
+    vistas: number,
+    promedio: number | null,
+  ): { clase: string; titulo: string } {
+    if (vistas < MINIMO_VISTAS_CONFIABLE) {
+      return { clase: 'panel__semaforo--gris', titulo: 'Pocas vistas — el % todavía no es confiable' };
+    }
+    if (promedio === null) {
+      return { clase: 'panel__semaforo--gris', titulo: 'Sin promedio de referencia todavía' };
+    }
+    const propio = valorConversion(clics, vistas);
+    const diferencia = propio - promedio;
+    if (diferencia >= 1) return { clase: 'panel__semaforo--verde', titulo: `Por encima del promedio (${promedio.toFixed(1)}%)` };
+    if (diferencia <= -1) return { clase: 'panel__semaforo--rojo', titulo: `Muy por debajo del promedio (${promedio.toFixed(1)}%)` };
+    return { clase: 'panel__semaforo--ambar', titulo: `Cerca del promedio (${promedio.toFixed(1)}%)` };
   }
 
   // ---------- Gráficas SVG simples ----------
@@ -649,8 +772,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       dispositivos: {},
     };
 
-    const conversionGeneral =
-      stats.vistasTotal > 0 ? Math.round((stats.clicsTotal / stats.vistasTotal) * 100) : 0;
+    const conversionGeneral = formatearConversion(stats.clicsTotal, stats.vistasTotal);
 
     const graficaMensual = graficaBarras(
       meses.map((clave) => ({
@@ -688,8 +810,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const filasCanales =
       Object.entries(canales)
         .map(([canal, valores]: [string, any]) => {
-          const conv = valores.vistas > 0 ? Math.round((valores.clics / valores.vistas) * 100) : 0;
-          return `<tr><td>${NOMBRES_CANAL[canal] || canal}</td><td>${valores.vistas}</td><td>${valores.clics}</td><td>${conv}%</td></tr>`;
+          const conv = formatearConversion(valores.clics, valores.vistas);
+          return `<tr><td>${NOMBRES_CANAL[canal] || canal}</td><td>${valores.vistas}</td><td>${valores.clics}</td><td>${conv}</td></tr>`;
         })
         .join('') || '<tr><td colspan="4">Sin datos todavía</td></tr>';
 
@@ -719,7 +841,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="panel__tarjetas">
         ${tarjetaStat('Vistas totales', stats.vistasTotal, '#0B6F7A')}
         ${tarjetaStat('Clics a WhatsApp', stats.clicsTotal, '#FF7A5C')}
-        ${tarjetaStat('Tasa de conversión', conversionGeneral + '%', '#4FD2C8')}
+        ${tarjetaStat('Tasa de conversión', conversionGeneral, '#4FD2C8')}
         ${tarjetaStat('Puntaje de completitud', negocio.puntaje + '/100', '#0C2B2E')}
       </div>
 
@@ -830,35 +952,157 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  type CampoOrdenComparativa = 'nombre' | 'vistas' | 'clics' | 'conversion' | 'puntaje';
+  // Puntaje descendente por default — es el orden que ya existía antes de
+  // agregar la columna de conversión, no lo cambiamos para no sorprender
+  // a quien ya está acostumbrado al panel. Clic en cualquier encabezado
+  // cambia el criterio (mismo campo otra vez = invierte la dirección).
+  let ordenComparativa: { campo: CampoOrdenComparativa; direccion: 'asc' | 'desc' } = {
+    campo: 'puntaje',
+    direccion: 'desc',
+  };
+
+  const ETIQUETAS_ORDEN_COMPARATIVA: Record<CampoOrdenComparativa, string> = {
+    nombre: 'Negocio',
+    vistas: 'Vistas',
+    clics: 'Clics',
+    conversion: 'Conversión',
+    puntaje: 'Puntaje',
+  };
+
   function renderizarVistaComparativa() {
     const mesClave = claveMesActual();
-    const filas = negociosData
-      .slice()
-      .sort((a, b) => b.puntaje - a.puntaje)
-      .map((n) => {
-        const datosMes = n.stats.porMes[mesClave] || { vistas: 0, clics: 0 };
-        const conv = datosMes.vistas > 0 ? Math.round((datosMes.clics / datosMes.vistas) * 100) : 0;
+    const filasBase = negociosData.map((n) => {
+      const datosMes = n.stats.porMes[mesClave] || { vistas: 0, clics: 0 };
+      const vistas = datosMes.vistas || 0;
+      const clics = datosMes.clics || 0;
+      return { negocio: n, vistas, clics };
+    });
+
+    const promedio = promedioConversionConfiable(filasBase);
+
+    const filasOrdenadas = filasBase.slice().sort((a, b) => {
+      const dir = ordenComparativa.direccion === 'asc' ? 1 : -1;
+      switch (ordenComparativa.campo) {
+        case 'nombre':
+          return a.negocio.nombre.localeCompare(b.negocio.nombre) * dir;
+        case 'vistas':
+          return (a.vistas - b.vistas) * dir;
+        case 'clics':
+          return (a.clics - b.clics) * dir;
+        case 'conversion':
+          return (valorConversion(a.clics, a.vistas) - valorConversion(b.clics, b.vistas)) * dir;
+        case 'puntaje':
+        default:
+          return (a.negocio.puntaje - b.negocio.puntaje) * dir;
+      }
+    });
+
+    const filas = filasOrdenadas
+      .map(({ negocio: n, vistas, clics }) => {
+        const semaforo = semaforoConversion(clics, vistas, promedio);
+        const conv = formatearConversion(clics, vistas);
+        const notaPocasVistas = vistas < MINIMO_VISTAS_CONFIABLE && vistas > 0 ? ' <small>(pocas vistas)</small>' : '';
         return `
           <tr>
             <td>${n.nombre}${n.destacado ? '<span class="panel__mini-badge">Destacado</span>' : ''}</td>
-            <td>${datosMes.vistas || 0}</td>
-            <td>${datosMes.clics || 0}</td>
-            <td>${conv}%</td>
+            <td>${vistas}</td>
+            <td>${clics}</td>
+            <td>
+              <span class="panel__semaforo ${semaforo.clase}" title="${semaforo.titulo}"></span>${conv}${notaPocasVistas}
+            </td>
             <td>${n.puntaje}/100</td>
           </tr>
         `;
       })
       .join('');
 
+    const encabezados = (['nombre', 'vistas', 'clics', 'conversion', 'puntaje'] as CampoOrdenComparativa[])
+      .map((campo) => {
+        const activo = ordenComparativa.campo === campo;
+        const flecha = activo ? (ordenComparativa.direccion === 'asc' ? ' ▲' : ' ▼') : '';
+        return `<th><button type="button" class="panel__th-orden" data-campo="${campo}">${ETIQUETAS_ORDEN_COMPARATIVA[campo]}${flecha}</button></th>`;
+      })
+      .join('');
+
+    const notaPromedio =
+      promedio === null
+        ? ''
+        : `<p class="panel__nota-promedio">Promedio de conversión (negocios con ${MINIMO_VISTAS_CONFIABLE}+ vistas este mes): <strong>${promedio.toFixed(1)}%</strong></p>`;
+
     el.contenidoComparativa.innerHTML = `
       <div class="panel__seccion">
         <h3>Todos los negocios — mes actual</h3>
+        ${notaPromedio}
         <table class="panel__tabla">
-          <thead>
-            <tr><th>Negocio</th><th>Vistas</th><th>Clics</th><th>Conversión</th><th>Puntaje</th></tr>
-          </thead>
+          <thead><tr>${encabezados}</tr></thead>
           <tbody>${filas}</tbody>
         </table>
+      </div>
+      ${htmlSeccionBusquedas()}
+    `;
+
+    el.contenidoComparativa.querySelectorAll<HTMLButtonElement>('.panel__th-orden').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        const campo = boton.dataset.campo as CampoOrdenComparativa;
+        ordenComparativa =
+          ordenComparativa.campo === campo
+            ? { campo, direccion: ordenComparativa.direccion === 'asc' ? 'desc' : 'asc' }
+            : { campo, direccion: 'desc' };
+        renderizarVistaComparativa();
+      });
+    });
+  }
+
+  // ---------- Qué busca la gente ----------
+  // sinResultado es la parte que más importa: dice qué inventario le
+  // falta al directorio (alguien buscó "alberca" y no encontró nada, por
+  // ejemplo) — es información directa de qué negocio ir a buscar/dar de
+  // alta después.
+  const LIMITE_TERMINOS_MOSTRADOS = 15;
+
+  // Los términos vienen de lo que escribe cualquier visitante en el
+  // buscador público — a diferencia del nombre de un negocio (contenido
+  // ya curado por nosotros), esto es entrada externa sin filtrar. Sin
+  // escapar, alguien podría meter HTML/JS en el buscador y que se
+  // ejecute aquí, en el navegador del admin.
+  function escaparHtml(texto: string): string {
+    return texto.replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
+    );
+  }
+
+  function listaTerminosHtml(conteos: Record<string, number>): string {
+    const entradas = Object.entries(conteos).sort((a, b) => b[1] - a[1]).slice(0, LIMITE_TERMINOS_MOSTRADOS);
+    if (entradas.length === 0) return '<p class="panel__vacio">Todavía no hay búsquedas registradas este mes.</p>';
+    const filas = entradas
+      .map(([termino, veces]) => `<tr><td>${escaparHtml(termino)}</td><td>${veces}</td></tr>`)
+      .join('');
+    return `
+      <table class="panel__tabla">
+        <thead><tr><th>Término</th><th>Veces</th></tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+    `;
+  }
+
+  function htmlSeccionBusquedas(): string {
+    const mesClave = claveMesActual();
+    const datosMes = busquedasPorMes[mesClave] || { terminos: {}, sinResultado: {} };
+    return `
+      <div class="panel__fila-2">
+        <div class="panel__seccion">
+          <h3>Qué busca la gente — mes actual</h3>
+          ${listaTerminosHtml(datosMes.terminos)}
+        </div>
+        <div class="panel__seccion">
+          <h3>Búsquedas sin resultado</h3>
+          <p style="font-size:0.82rem;color:var(--color-texto-suave);margin:-0.25rem 0 0.75rem;">
+            Lo que la gente busca y no encuentra — pistas de qué negocio dar de alta.
+          </p>
+          ${listaTerminosHtml(datosMes.sinResultado)}
+        </div>
       </div>
     `;
   }
