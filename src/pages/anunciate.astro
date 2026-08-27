@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icono from '../components/Icono.astro';
 
 const tiposAceptados = 'image/jpeg,image/png,image/webp';
 ---
@@ -8,15 +9,39 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
   titulo="Anúnciate en el directorio"
   descripcion="Da de alta tu negocio de Tecolutla en el directorio sin costo. Revisión manual antes de publicar."
 >
-  <section class="seccion contenedor">
-    <h1 class="titulo-pagina">Anuncia tu negocio en Tecolutla</h1>
-    <p class="subtitulo">
-      Darte de alta en este directorio <strong>no tiene costo</strong>. Revisamos cada
-      solicitud manualmente antes de publicarla, así que puede tomar unos días antes de ser
-      publicado.
-    </p>
+  <section class="anunciate-hero">
+    <div class="contenedor anunciate-hero__contenido">
+      <div>
+        <span class="anunciate-hero__eyebrow">PARA NEGOCIOS LOCALES</span>
+        <h1>Haz que más viajeros encuentren tu negocio en Tecolutla</h1>
+        <p>Tu ficha en TecolutlaTravel es gratuita, clara y conecta directamente con tus clientes por WhatsApp.</p>
+        <a class="boton boton--coral" href="#formulario-alta">Crear mi ficha gratis <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="anunciate-hero__promesa">
+        <div><Icono nombre="escudo" /><b>Revisión humana</b><span>Publicamos negocios reales</span></div>
+        <div><Icono nombre="whatsapp" /><b>Contacto directo</b><span>Sin intermediarios ni comisiones</span></div>
+        <div class="anunciate-hero__mini-ficha"><span class="anunciate-hero__mini-ficha-label">TU NEGOCIO EN EL DIRECTORIO</span><strong>Más visibilidad. Más consultas.</strong><small>Fotos · ubicación · WhatsApp</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="anunciate-beneficios">
+    <div class="contenedor">
+      <div class="anunciate-seccion-titulo"><span>LO QUE OBTIENES</span><h2>Una presencia profesional sin pagar de más</h2><p>Completa tu información una sola vez y deja que los viajeros te encuentren, conozcan tu espacio y te escriban directamente.</p></div>
+      <div class="anunciate-beneficios__grid">
+        <article><Icono nombre="ubicacion" /><h3>Aparece donde te buscan</h3><p>Tu negocio queda visible en el directorio local y en el mapa de Tecolutla.</p></article>
+        <article><Icono nombre="etiqueta" /><h3>Una ficha que inspira confianza</h3><p>Fotos, servicios, ubicación y datos claros para ayudarte a destacar.</p></article>
+        <article><Icono nombre="whatsapp" /><h3>Habla directo con tus clientes</h3><p>Recibe consultas por WhatsApp sin intermediarios ni comisiones.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion contenedor anunciate-formulario" id="formulario-alta">
+    <div class="anunciate-formulario__intro"><span>EMPIEZA EN MINUTOS</span><h2>Cuéntanos sobre tu negocio</h2><p>Darte de alta no tiene costo. Revisamos cada solicitud manualmente antes de publicarla.</p><div class="anunciate-pasos"><span><b>1</b> Completa tus datos</span><span><b>2</b> Sube tus fotos</span><span><b>3</b> Te contactamos</span></div></div>
 
     <form
+      id="alta-negocio-form"
+      class="formulario-alta"
       name="alta-negocio"
       method="POST"
       data-netlify="true"
@@ -263,7 +288,7 @@ const tiposAceptados = 'image/jpeg,image/png,image/webp';
       <div class="campo">
         <label>
           <input type="checkbox" name="aceptaRevision" required />
-          Entiendo que mi negocio será revisado manualmente antes de publicarse y que darme de
+          Entiendo que mi negocio será revisado y visitado antes de publicarse y que darme de
           alta en el directorio no tiene costo. *
         </label>
       </div>

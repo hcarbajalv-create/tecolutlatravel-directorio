@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="titulo descripcion">
+  <title id="titulo">Borrador de logo TecolutlaTravel con tortuga clara</title>
+  <desc id="descripcion">Una tortuga marina vista desde arriba, dos olas y el nombre TecolutlaTravel.</desc>
+  <rect width="1200" height="300" rx="26" fill="#ffffff"/>
+  <g transform="translate(42 38)">
+    <path d="M8 186c26-22 52-22 78 0s52 22 78 0" fill="none" stroke="#12aab9" stroke-width="11" stroke-linecap="round"/>
+    <path d="M8 209c26-22 52-22 78 0s52 22 78 0" fill="none" stroke="#087d93" stroke-width="11" stroke-linecap="round"/>
+
+    <!-- Tortuga marina vista desde arriba: caparazón, cabeza y cuatro aletas reconocibles. -->
+    <path d="M65 72C43 48 24 44 18 55c-6 11 9 34 29 48" fill="#0a91a5"/>
+    <path d="M72 136c-19 23-24 47-13 54 12 7 33-12 43-35" fill="#0a91a5"/>
+    <path d="M104 137c13 25 33 42 45 35 11-7 5-31-13-54" fill="#0a91a5"/>
+    <path d="M142 72c20-24 40-28 47-17 6 11-9 34-30 48" fill="#0a91a5"/>
+    <path d="M55 93c0-37 22-63 51-63s51 26 51 63-22 59-51 59-51-22-51-59Z" fill="#078da2"/>
+    <path d="M73 80c8-19 25-31 43-31s35 12 43 31c-11 10-24 15-43 15S84 90 73 80Z" fill="#49c8c7"/>
+    <path d="M69 102c14-10 27-14 47-14s33 4 47 14" fill="none" stroke="#7adbd3" stroke-width="7" stroke-linecap="round"/>
+    <path d="M79 124c11-10 23-14 37-14s26 4 37 14" fill="none" stroke="#7adbd3" stroke-width="7" stroke-linecap="round"/>
+    <path d="M91 48c-5 17-5 32 0 45m25-45c5 17 5 32 0 45m25-45c5 17 5 32 0 45" fill="none" stroke="#087284" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    <path d="M101 31c3-17 12-26 22-26s19 9 22 26c-5 13-14 19-22 19s-17-6-22-19Z" fill="#0a91a5"/>
+    <circle cx="135" cy="25" r="3.2" fill="#fff"/>
+    <path d="M52 100 37 107l16 7" fill="#0a91a5"/>
+  </g>
+
+  <g transform="translate(272 87)">
+    <text x="0" y="64" font-family="Nunito, Arial, sans-serif" font-size="72" font-weight="900" letter-spacing="-3" fill="#087d9b">Tecolutla<tspan fill="#0874a4">Travel</tspan><tspan fill="#ff6b61">.</tspan></text>
+    <text x="4" y="105" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="4" fill="#5c7480">DIRECTORIO TURÍSTICO DE TECOLUTLA</text>
+  </g>
+</svg>

@@ -406,24 +406,10 @@ const esquemaBreadcrumb = {
           </p>
         ))}
         {tipoCocina && tipoCocina.length > 0 && <p>Tipo de cocina: {tipoCocina.join(', ')}</p>}
-        {rangoPrecios && <p>Rango de precios: {rangoPrecios}</p>}
         <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
       </div>
 
       <div class="ficha__columna-precio-servicios">
-        {
-          categoria === 'hospedaje' && (
-            // Regla temporal a nivel de todo el sitio: no se muestra ningún
-            // precio real todavía, exista o no el dato en el .yaml del
-            // negocio. Quitar este comentario y volver a la condición de
-            // precioTemporada cuando se levante la regla.
-            <div class="ficha__bloque ficha__bloque--precio">
-              <h2>Precio</h2>
-              <p>Consulta por WhatsApp</p>
-            </div>
-          )
-        }
-
         {
           especialidades.length > 0 && (
             <div class="ficha__bloque ficha__bloque--especialidades">

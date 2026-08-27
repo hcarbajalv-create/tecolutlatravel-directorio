@@ -1,85 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icono from '../components/Icono.astro';
 ---
-
-<BaseLayout
-  titulo="Cómo llegar a Tecolutla, Veracruz: rutas en auto y autobús ADO"
-  descripcion="Rutas en auto desde CDMX, Puebla, Veracruz y el norte, autobuses ADO, cuándo visitar y qué llevar. Todo lo que necesitas saber antes de tu viaje a Tecolutla."
->
-  <section class="seccion contenedor">
-    <h1 class="titulo-pagina">Cómo llegar a Tecolutla y tips para tu viaje</h1>
-    <p class="subtitulo">
-      Cómo llegar a Tecolutla en auto desde el centro, el norte o el sur del país, y en
-      autobús ADO. Más abajo, cuándo conviene visitar y qué llevar.
-    </p>
-
-    <div class="ficha__bloque">
-      <h2>Cómo llegar</h2>
-      <p>
-        Tecolutla se encuentra en la costa norte de Veracruz. La ruta para llegar depende de
-        desde dónde vengas:
-      </p>
-
-      <h3>En auto</h3>
-      <p>
-        <strong>Desde el centro del país</strong> (Ciudad de México, Estado de México, Puebla,
-        Tlaxcala, Hidalgo): toma la autopista México-Tuxpan hasta Poza Rica, y de ahí la
-        carretera federal 180 hacia el sur. El viaje dura aproximadamente 4 horas.
-      </p>
-      <p>
-        <strong>Desde el norte</strong> (Tampico, Reynosa, Monterrey y el norte de Veracruz como
-        Tuxpan): toma la carretera federal 180 en sentido sur, pasando por Tuxpan y Poza Rica.
-      </p>
-      <p>
-        <strong>Desde el sur</strong> (puerto de Veracruz, Xalapa, Coatzacoalcos y el sur del
-        estado): toma la carretera federal 180 en sentido norte, pasando por Nautla y Gutiérrez
-        Zamora.
-      </p>
-
-      <h3>En autobús (ADO)</h3>
-      <p>
-        Hay autobuses directos desde la Central de Autobuses del Norte de la Ciudad de México
-        hasta la terminal de Tecolutla, con un recorrido de 4 a 5 horas aproximadamente. Desde
-        otras ciudades como Puebla, Xalapa, Tampico o el puerto de Veracruz, ADO también cubre la
-        ruta, aunque en algunos casos con conexión en Poza Rica, Gutiérrez Zamora o Martínez de la
-        Torre. Te recomendamos consultar horarios y disponibilidad directamente en
-        <a href="https://www.ado.com.mx" target="_blank" rel="noopener noreferrer">ado.com.mx</a>
-        antes de tu viaje, ya que pueden cambiar por temporada.
-      </p>
-    </div>
-
-    <div class="ficha__bloque" style="margin-top:1.5rem;">
-      <h2>Cuándo visitar</h2>
-      <p>
-        La temporada alta suele ser en Semana Santa, julio-agosto y fin de año, cuando hay más
-        actividad en el pueblo pero también más movimiento y precios más altos en hospedaje. Entre
-        semana y fuera de esas fechas, Tecolutla es mucho más tranquilo.
-      </p>
-    </div>
-
-    <div class="ficha__bloque" style="margin-top:1.5rem;">
-      <h2>Qué llevar</h2>
-      <ul class="ficha__amenidades">
-        <li>Bloqueador solar</li>
-        <li>Repelente de insectos</li>
-        <li>Ropa ligera y traje de baño</li>
-        <li>Efectivo para negocios pequeños</li>
-        <li>Gorra o sombrero</li>
-      </ul>
-    </div>
-
-    <div class="ficha__bloque" style="margin-top:1.5rem;">
-      <h2>Dinero y pagos</h2>
-      <p>
-        En muchos restaurantes y negocios pequeños del centro se maneja principalmente efectivo.
-        Te recomendamos traer efectivo suficiente y preguntar directamente con cada negocio si
-        aceptan tarjeta antes de tu visita.
-      </p>
-    </div>
-
-    <p>
-      Explora nuestro <a href="/hospedaje">hospedaje</a>, <a href="/gastronomia">gastronomía</a> y
-      <a href="/actividades">actividades ecoturísticas</a> disponibles en Tecolutla.
-    </p>
-  </section>
+<BaseLayout titulo="Tips para tu viaje a Tecolutla: cómo llegar, qué hacer y qué llevar" descripcion="Planea tu viaje a Tecolutla: cómo llegar, cuándo visitar, qué llevar y recomendaciones prácticas para disfrutar playa, río y manglares." imagen="/images/tile-tips-mapa-playa.png" imagenAncho={1200} imagenAlto={800}>
+  <section class="tips-hero"><div class="tips-hero__contenido contenedor"><span class="tips-hero__eyebrow">GUÍA LOCAL DE TECOLUTLA</span><h1>Planea tu viaje<br />a Tecolutla</h1><p>Todo lo que necesitas saber para llegar, disfrutar y aprovechar tu visita.</p><nav class="tips-hero__accesos" aria-label="Accesos rápidos"><a href="#como-llegar"><Icono nombre="ubicacion" /> Cómo llegar</a><a href="#ideas"><Icono nombre="actividad" /> Qué hacer</a><a href="#cuando-visitar"><Icono nombre="calendario" /> Cuándo visitar</a><a href="#que-llevar"><Icono nombre="cama" /> Qué llevar</a><a href="#dinero"><Icono nombre="estacionamiento" /> Dinero y pagos</a></nav></div></section>
+  <section class="tips-seccion tips-seccion--suave" id="antes-de-venir"><div class="contenedor"><div class="tips-titulo"><Icono nombre="cama" /><div><span>PREPARA TU VISITA</span><h2>Antes de venir</h2></div></div><div class="tips-grid tips-grid--cinco"><article class="tips-card"><Icono nombre="documento" /><h3>Documentos</h3><p>Lleva una identificación oficial. No necesitas visa para viajar dentro de México.</p></article><article class="tips-card"><Icono nombre="escudo" /><h3>Viaje tranquilo</h3><p>Planea tus traslados y confirma horarios directamente con cada servicio.</p></article><article class="tips-card" id="cuando-visitar"><Icono nombre="idea" /><h3>Cuándo visitar</h3><p>Semana Santa, julio-agosto y fin de año tienen más movimiento y precios más altos.</p></article><article class="tips-card"><Icono nombre="mascota" /><h3>Clima y salud</h3><p>Hace calor gran parte del año. Lleva bloqueador y repelente biodegradable.</p></article><article class="tips-card"><Icono nombre="wifi" /><h3>Conectividad</h3><p>Trae efectivo y pregunta antes si el negocio acepta tarjeta o transferencia.</p></article></div></div></section>
+  <section class="tips-seccion" id="ideas"><div class="contenedor"><div class="tips-titulo"><Icono nombre="actividad" /><div><span>DESCUBRE EL DESTINO</span><h2>Ideas para tu visita</h2></div></div><div class="tips-grid tips-grid--cuatro"><a class="tips-idea tips-idea--hospedaje" href="/hospedaje"><strong>Hospedaje</strong><span>Encuentra dónde descansar.</span></a><a class="tips-idea tips-idea--gastronomia" href="/gastronomia"><strong>Gastronomía</strong><span>Sabores locales junto al río.</span></a><a class="tips-idea tips-idea--actividades" href="/actividades"><strong>Actividades</strong><span>Lanchas, manglares y naturaleza.</span></a><a class="tips-idea tips-idea--playa" href="/mapa"><strong>Playa y manglares</strong><span>Explora rincones de Tecolutla.</span></a></div></div></section>
+  <section class="tips-seccion tips-seccion--suave" id="recorrido"><div class="contenedor"><div class="tips-titulo"><Icono nombre="brujula" /><div><span>ORGANIZA TUS DÍAS</span><h2>Arma tu recorrido</h2></div></div><div class="tips-grid tips-grid--tres"><article class="tips-itinerario"><h3>Un día</h3><span>Escapada perfecta</span><ul><li>Paseo por el malecón</li><li>Comida de mariscos</li><li>Tarde en la playa</li><li>Atardecer junto al río</li></ul></article><article class="tips-itinerario"><h3>Fin de semana</h3><span>Desconexión total</span><ul><li>Explora los manglares</li><li>Actividad acuática</li><li>Gastronomía local</li><li>Noche de descanso</li></ul></article><article class="tips-itinerario"><h3>Viaje en familia</h3><span>Diversión para todos</span><ul><li>Playa tranquila</li><li>Paseo en lancha</li><li>Visita al centro</li><li>Helados y antojos locales</li></ul></article></div></div></section>
+  <section class="tips-seccion" id="que-llevar"><div class="contenedor"><div class="tips-titulo"><Icono nombre="cama" /><div><span>VIAJA PREPARADO</span><h2>Qué llevar</h2></div></div><div class="tips-checklist"><span>Bloqueador solar</span><span>Repelente de insectos</span><span>Ropa ligera y traje de baño</span><span>Efectivo</span><span>Gorra o sombrero</span></div></div></section>
+  <section class="tips-seccion tips-seccion--suave" id="como-llegar"><div class="contenedor"><div class="tips-titulo"><Icono nombre="ubicacion" /><div><span>PLANEA TU RUTA</span><h2>Cómo llegar</h2></div></div><div class="tips-rutas"><article><Icono nombre="ubicacion" /><div><h3>En auto</h3><p><strong>Desde el centro:</strong> toma la autopista México-Tuxpan hasta Poza Rica y después la carretera federal 180. El viaje dura aproximadamente 4 horas.</p><p><strong>Desde el norte o sur:</strong> sigue la carretera federal 180 pasando por Tuxpan, Poza Rica, Nautla o Gutiérrez Zamora, según tu origen.</p></div></article><article><Icono nombre="actividad" /><div><h3>En autobús ADO</h3><p>Hay rutas desde Ciudad de México y otras ciudades; algunas requieren conexión. Consulta horarios actualizados en <a href="https://www.ado.com.mx" target="_blank" rel="noopener noreferrer">ado.com.mx</a>.</p></div></article></div></div></section>
+  <section class="tips-seccion" id="dinero"><div class="contenedor tips-cierre"><Icono nombre="estacionamiento" /><div><h2>Dinero y pagos</h2><p>En muchos restaurantes y negocios pequeños se maneja principalmente efectivo. Trae suficiente y pregunta directamente si aceptan tarjeta antes de consumir.</p></div></div></section>
 </BaseLayout>

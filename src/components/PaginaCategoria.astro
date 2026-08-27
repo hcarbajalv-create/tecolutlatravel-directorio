@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from './NegocioCard.astro';
+import Icono from './Icono.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
 
@@ -52,6 +53,23 @@ const negociosCategoria = [...destacados, ...gratuitos];
 // categoría sigue viéndose normal en el menú y en la home — esto solo
 // cambia la etiqueta <meta name="robots">, no el contenido visible.
 const categoriaVacia = negociosCategoria.length === 0;
+const esGastronomia = categoria === 'gastronomia';
+const esActividades = categoria === 'actividades';
+// Banner editorial de Gastronomía: se mantiene independiente de las fotos
+// de los negocios para que el encabezado no cambie al rotar el catálogo.
+const portadaGastronomia = {
+  src: '/images/banner-gastronomia-restaurante-rio.png',
+  alt: 'Restaurante junto al río de Tecolutla con platillos de mariscos al atardecer',
+};
+function filtrosGastronomia(negocio: (typeof negociosCategoria)[number]) {
+  const servicios = (negocio.data.servicios ?? []).map((s) => s.toLocaleLowerCase('es-MX'));
+  const distancias = negocio.data.distancias ?? [];
+  return {
+    rio: distancias.some((d) => d.a === 'rio'),
+    embarcadero: servicios.some((s) => s.includes('embarcadero')) || distancias.some((d) => d.a === 'embarcadero'),
+    terraza: servicios.some((s) => s.includes('terraza')),
+  };
+}
 
 const ETIQUETAS_BUSQUEDA: Record<typeof categoria, string> = {
   gastronomia: 'restaurantes',
@@ -82,6 +100,42 @@ const esquemaItemList =
 
 <BaseLayout titulo={titulo} descripcion={descripcionSeo} noindex={categoriaVacia}>
   {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
+  {
+    esGastronomia && portadaGastronomia && (
+      <section class="categoria-hero categoria-hero--gastronomia">
+        <img src={portadaGastronomia.src} alt={portadaGastronomia.alt} loading="eager" />
+        <div class="categoria-hero__velo" aria-hidden="true"></div>
+        <div class="contenedor categoria-hero__contenido">
+          <p class="migaja"><a href="/">Inicio</a> → Gastronomía</p>
+          <h1>Descubre dónde comer en Tecolutla</h1>
+          <p>Mariscos frescos, cocina local y lugares con vista al río.</p>
+          <div class="categoria-hero__beneficios">
+            <span><Icono nombre="whatsapp" /> WhatsApp directo</span>
+            <span><Icono nombre="cubiertos" /> Cocina local</span>
+            <span><Icono nombre="escudo" /> Negocios verificados</span>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  {
+    esActividades && (
+      <section class="categoria-hero categoria-hero--actividades">
+        <img src="/images/tile-actividades-lancha-manglar.png" alt="Lancha recorriendo los manglares de Tecolutla" loading="eager" />
+        <div class="categoria-hero__velo" aria-hidden="true"></div>
+        <div class="contenedor categoria-hero__contenido">
+          <p class="migaja"><a href="/">Inicio</a> → Actividades</p>
+          <h1>Vive Tecolutla a tu manera</h1>
+          <p>Tours auténticos entre ríos, manglares y playa. Elige tu experiencia y conéctate con lo natural.</p>
+          <div class="categoria-hero__beneficios">
+            <span><Icono nombre="actividad" /> Experiencias locales</span>
+            <span><Icono nombre="ubicacion" /> Puntos de encuentro claros</span>
+            <span><Icono nombre="whatsapp" /> Reserva directa</span>
+          </div>
+        </div>
+      </section>
+    )
+  }
   <section class={`cabecera-categoria ${claseColor}`}>
     <div class="contenedor">
       <div class="cabecera-categoria__titulo">
@@ -92,8 +146,21 @@ const esquemaItemList =
     </div>
   </section>
 
-  <section class="seccion contenedor">
-    <h2 class="titulo-seccion" style="margin-bottom:1.25rem;">Negocios en esta categoría</h2>
+  <section class={`seccion contenedor categoria-catalogo ${esGastronomia ? 'categoria-catalogo--gastronomia destacados-propuesta' : ''} ${esActividades ? 'categoria-catalogo--actividades' : ''}`}>
+    <div class="categoria-catalogo__encabezado">
+      <div>
+        <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">{esGastronomia ? 'Dónde comer' : esActividades ? 'Encuentra tu próxima aventura' : 'Negocios en esta categoría'}</h2>
+        {esActividades && <p class="categoria-catalogo__subtitulo">Experiencias locales para disfrutar Tecolutla a tu ritmo.</p>}
+      </div>
+      {esActividades && <span class="categoria-catalogo__contador">{negociosCategoria.length} experiencias</span>}
+    </div>
+    {
+      esGastronomia && (
+        <button type="button" class="filtros-ayuda__boton categoria-ayuda" data-abrir-ayuda>
+          <span aria-hidden="true">?</span> ¿Qué significan los iconos?
+        </button>
+      )
+    }
     {
       negociosCategoria.length > 0 && (
         <div class="negocios-controles">
@@ -128,6 +195,16 @@ const esquemaItemList =
       )
     }
     {
+      esGastronomia && negociosCategoria.length > 0 && (
+            <div class="fila-chips categoria-chips" id="fila-chips-categoria" aria-label="Filtros de gastronomía">
+          <button type="button" class="filtro-rapido filtro-rapido--activo" data-chip="todo"><Icono nombre="cubiertos" /> Todo</button>
+          <button type="button" class="filtro-rapido" data-chip="rio"><Icono nombre="olas" /> A pie de río</button>
+          <button type="button" class="filtro-rapido" data-chip="embarcadero"><Icono nombre="ubicacion" /> Cerca del embarcadero</button>
+          <button type="button" class="filtro-rapido" data-chip="terraza"><Icono nombre="cama" /> Terraza</button>
+            </div>
+      )
+    }
+    {
       negociosCategoria.length === 0 ? (
         <p>
           Todavía no hay negocios publicados en esta categoría.{' '}
@@ -136,7 +213,7 @@ const esquemaItemList =
       ) : (
         <div class="rejilla-negocios" id="rejilla-negocios">
           {negociosCategoria.map((negocio, i) => (
-            <NegocioCard negocio={negocio} esPrimera={i === 0} />
+            <NegocioCard negocio={negocio} esPrimera={i === 0} filtros={esGastronomia ? filtrosGastronomia(negocio) : {}} />
           ))}
         </div>
       )
@@ -144,10 +221,31 @@ const esquemaItemList =
     <p id="mensaje-filtro-vacio" class="filtro-tipo__vacio" hidden>
       Todavía no hay negocios de este tipo.
     </p>
+    {
+      esGastronomia && (
+        <dialog class="filtros-ayuda" data-ayuda-iconos aria-labelledby="titulo-ayuda-gastronomia">
+          <div class="filtros-ayuda__cabecera">
+            <h2 id="titulo-ayuda-gastronomia">Cómo leer las fichas</h2>
+            <button type="button" class="filtros-ayuda__cerrar" data-cerrar-ayuda aria-label="Cerrar ayuda">×</button>
+          </div>
+          <div class="filtros-ayuda__lista">
+            <span><Icono nombre="cubiertos" /><b>Tipo de cocina</b><small>Especialidad confirmada del negocio.</small></span>
+            <span><Icono nombre="olas" /><b>A pie de río</b><small>El negocio está junto al río.</small></span>
+            <span><Icono nombre="ubicacion" /><b>Ubicación</b><small>Referencia de distancia registrada.</small></span>
+            <span><Icono nombre="whatsapp" /><b>WhatsApp</b><small>Contacto directo con el restaurante.</small></span>
+            <span><Icono nombre="corazon" /><b>Favorito</b><small>Guarda la ficha para verla después.</small></span>
+            <span><Icono nombre="comparar" /><b>Comparar</b><small>Permite comparar este negocio con otros.</small></span>
+          </div>
+        </dialog>
+      )
+    }
   </section>
 </BaseLayout>
 
 <script>
+  const ayudaCategoria = document.querySelector<HTMLDialogElement>('[data-ayuda-iconos]');
+  document.querySelector('[data-abrir-ayuda]')?.addEventListener('click', () => ayudaCategoria?.showModal());
+  document.querySelector('[data-cerrar-ayuda]')?.addEventListener('click', () => ayudaCategoria?.close());
   function hashDiario(semilla: string): number {
     let hash = 5381;
     for (let i = 0; i < semilla.length; i++) {
@@ -208,6 +306,7 @@ const esquemaItemList =
     const contenedor = document.getElementById('rejilla-negocios');
     if (!contenedor) return;
     const mensajeVacio = document.getElementById('mensaje-filtro-vacio');
+    const filaChips = document.getElementById('fila-chips-categoria');
     const buscadorInput = document.getElementById(
       'buscador-categoria-input',
     ) as HTMLInputElement | null;
@@ -222,10 +321,13 @@ const esquemaItemList =
 
     function aplicarFiltros() {
       const consulta = normalizar(buscadorInput?.value ?? '');
+      const chipActivo = filaChips?.querySelector<HTMLButtonElement>('.filtro-rapido--activo')?.dataset.chip ?? 'todo';
       let visibles = 0;
 
       contenedor?.querySelectorAll<HTMLElement>('.tarjeta').forEach((tarjeta) => {
-        const mostrar = !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
+        const coincideNombre = !consulta || normalizar(tarjeta.dataset.nombre ?? '').includes(consulta);
+        const coincideChip = chipActivo === 'todo' || tarjeta.getAttribute(`data-filtro-${chipActivo}`) === '1';
+        const mostrar = coincideNombre && coincideChip;
         tarjeta.style.display = mostrar ? '' : 'none';
         if (mostrar) visibles++;
       });
@@ -237,6 +339,13 @@ const esquemaItemList =
     }
 
     buscadorInput?.addEventListener('input', aplicarFiltros);
+    filaChips?.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        filaChips.querySelectorAll('.filtro-rapido').forEach((b) => b.classList.remove('filtro-rapido--activo'));
+        boton.classList.add('filtro-rapido--activo');
+        aplicarFiltros();
+      });
+    });
   }
 
   rotarDestacados();

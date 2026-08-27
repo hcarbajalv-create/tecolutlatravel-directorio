@@ -3,11 +3,10 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
 import TarjetaCompacta from '../components/TarjetaCompacta.astro';
-import EscenaSubmarina from '../components/EscenaSubmarina.astro';
+import Icono from '../components/Icono.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
 import { AMENIDADES_CLAVE } from '../utils/amenidadesClave';
-import { SELLOS_CONFIANZA } from '../utils/sellosConfianza';
 
 // Con pocos negocios (hoy 12) la tarjeta compacta hace ver el catálogo
 // escaso: caben todas en dos filas y se siente vacío. La tarjeta grande
@@ -21,9 +20,9 @@ const USAR_TARJETA_COMPACTA = false;
 const todos = filtrarListables(await getCollection('negocios'));
 const negociosHospedaje = todos.filter((n) => n.data.categoria === 'hospedaje');
 
-// Mismo criterio de orden que el resto del sitio: destacados primero (el
-// orden exacto entre ellos rota a diario en el navegador, ver script
-// abajo), luego el resto por puntaje de completitud.
+// Orden interno del catálogo: los negocios marcados como destacados quedan
+// arriba, pero se muestran dentro de un único catálogo público. Después van
+// los gratuitos por puntaje de completitud.
 const destacados = negociosHospedaje
   .filter((n) => n.data.destacado)
   .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
@@ -95,6 +94,16 @@ const DEFINICION_CHIPS: { valor: string; etiqueta: string; prueba: (n: Negocio) 
 // filtro que siempre da "sin resultados" se ve roto y contradice la
 // regla de no mostrar etiquetas sin dato real detrás.
 const chips = DEFINICION_CHIPS.filter((c) => todosOrdenados.some(c.prueba));
+const ICONOS_CHIP: Record<string, string> = {
+  todo: 'brujula',
+  casa: 'cama',
+  hotel: 'cama',
+  alberca: 'alberca',
+  playa: 'olas',
+  'grupo-grande': 'grupos',
+  'pet-friendly': 'mascota',
+  tarjeta: 'etiqueta',
+};
 
 function filtrosDe(n: Negocio): Record<string, boolean> {
   return Object.fromEntries(DEFINICION_CHIPS.map((c) => [c.valor, c.prueba(n)]));
@@ -122,53 +131,38 @@ const esquemaItemList =
 >
   {esquemaItemList && <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />}
 
-  <section class="promesa">
-    <EscenaSubmarina variante="calmada" class="promesa__imagen" />
+  <section class="promesa promesa--playa promesa--catalogo">
+    <img
+      class="promesa__imagen"
+      src="/images/banner-cangrejo-azul-submarino-v4.png"
+      alt="Cangrejo azul entre arrecifes submarinos"
+      width="1672"
+      height="941"
+      loading="eager"
+    />
     <div class="promesa__overlay" aria-hidden="true"></div>
     <div class="contenedor promesa__interior">
       <p class="migaja migaja--promesa"><a href="/">Inicio</a> → Hospedaje</p>
-      <h1>Hospedaje en Tecolutla: casas, hoteles y habitaciones</h1>
+      <h1>Descubre dónde hospedarte, qué hacer y dónde comer en Tecolutla</h1>
       <p class="promesa__subtitulo">Habla directo por WhatsApp con cada negocio, sin intermediarios ni comisiones.</p>
 
       <div class="promesa__confianza">
-        {
-          SELLOS_CONFIANZA.map((sello) => (
-            <div class="sello-confianza">
-              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
-              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
-            </div>
-          ))
-        }
+        <div class="promesa__beneficio"><Icono nombre="whatsapp" /><span>Contacto directo<br /><b>por WhatsApp</b></span></div>
+        <div class="promesa__beneficio"><Icono nombre="escudo" /><span>Negocios<br /><b>verificados</b></span></div>
+        <div class="promesa__beneficio"><Icono nombre="etiqueta" /><span>Cero<br /><b>comisiones</b></span></div>
       </div>
     </div>
   </section>
 
-  {
-    destacados.length > 0 && (
-      <section class="banda-destacados">
-        <div class="contenedor banda-destacados__encabezado">
-          <h2 class="titulo-seccion titulo-seccion--claro">Negocios destacados</h2>
-          <p class="banda-destacados__subtitulo">⟳ El orden rota cada día — todos los destacados se ven</p>
-        </div>
-        <div class="carrusel-destacados" id="carrusel-destacados">
-          {destacados.map((n, i) => (
-            <NegocioCard negocio={n} esPrimera={i === 0} />
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  <section class="seccion contenedor">
+  <section class="seccion contenedor hospedaje-catalogo destacados-propuesta">
     <div class="negocios-controles">
       <div>
         <h2 class="titulo-seccion" style="margin-bottom:0.35rem;">Todo el hospedaje</h2>
         {
           todosOrdenados.length > 0 && (
-            <p class="texto-orden" style="margin-bottom:0;">
-              Ordenado por qué tan completa está la información de cada negocio —{' '}
-              <a href="/como-ordenamos">así ordenamos el directorio</a>
-            </p>
+            <button type="button" class="filtros-ayuda__boton filtros-ayuda__boton--hospedaje" data-abrir-ayuda>
+              <span aria-hidden="true">?</span> ¿Qué significan los iconos?
+            </button>
           )
         }
       </div>
@@ -206,13 +200,13 @@ const esquemaItemList =
     </div>
     {
       chips.length > 0 && (
-        <div class="fila-chips" id="fila-chips" style="margin-top:-0.5rem;">
-          <button type="button" class="pastilla pastilla--activa" data-chip="todo">
-            Todo
+        <div class="fila-chips filtros-hospedaje" id="fila-chips" style="margin-top:-0.5rem;">
+          <button type="button" class="filtro-rapido filtro-rapido--activo" data-chip="todo">
+            <Icono nombre={ICONOS_CHIP.todo} /> Todo
           </button>
           {chips.map((c) => (
-            <button type="button" class="pastilla" data-chip={c.valor}>
-              {c.etiqueta}
+            <button type="button" class="filtro-rapido" data-chip={c.valor}>
+              <Icono nombre={ICONOS_CHIP[c.valor] ?? 'etiqueta'} /> {c.etiqueta}
             </button>
           ))}
         </div>
@@ -230,13 +224,13 @@ const esquemaItemList =
             USAR_TARJETA_COMPACTA ? (
               <TarjetaCompacta
                 negocio={n}
-                esPrimera={destacados.length === 0 && i === 0}
+                esPrimera={i === 0}
                 filtros={filtrosDe(n)}
               />
             ) : (
               <NegocioCard
                 negocio={n}
-                esPrimera={destacados.length === 0 && i === 0}
+                esPrimera={i === 0}
                 filtros={filtrosDe(n)}
               />
             ),
@@ -247,45 +241,37 @@ const esquemaItemList =
     <p id="mensaje-chip-vacio" class="filtro-tipo__vacio" hidden>
       Todavía no hay negocios de este tipo.
     </p>
+
+    <dialog class="filtros-ayuda" data-ayuda-iconos aria-labelledby="titulo-ayuda-iconos-hospedaje">
+      <div class="filtros-ayuda__cabecera">
+        <h2 id="titulo-ayuda-iconos-hospedaje">Cómo leer las fichas</h2>
+        <button type="button" class="filtros-ayuda__cerrar" data-cerrar-ayuda aria-label="Cerrar ayuda">×</button>
+      </div>
+      <div class="filtros-ayuda__lista">
+        <span><Icono nombre="alberca" /><b>Alberca</b><small>Cuenta con piscina.</small></span>
+        <span><Icono nombre="olas" /><b>Frente al mar</b><small>Está frente a la playa o cerca de ella.</small></span>
+        <span><Icono nombre="usuarios" /><b>Máx. X personas</b><small>Capacidad máxima del alojamiento.</small></span>
+        <span><Icono nombre="wifi" /><b>Wifi</b><small>Conexión inalámbrica disponible.</small></span>
+        <span><Icono nombre="aire" /><b>Aire acondicionado</b><small>Cuenta con aire acondicionado.</small></span>
+        <span><Icono nombre="estacionamiento" /><b>Estacionamiento</b><small>Ofrece espacio para estacionar.</small></span>
+        <span><Icono nombre="mascota" /><b>Pet friendly</b><small>Acepta mascotas según sus condiciones.</small></span>
+        <span><Icono nombre="ubicacion" /><b>A X m de la playa</b><small>Distancia aproximada a la playa.</small></span>
+        <span><Icono nombre="whatsapp" /><b>WhatsApp</b><small>Contacto directo con el hospedaje.</small></span>
+        <span><Icono nombre="corazon" /><b>Favorito</b><small>Guarda la ficha para verla después.</small></span>
+        <span><Icono nombre="comparar" /><b>Comparar</b><small>Permite comparar este hospedaje con otros.</small></span>
+        <span><Icono nombre="escudo" /><b>Verificado</b><small>El negocio confirmó sus datos con TecolutlaTravel.</small></span>
+      </div>
+    </dialog>
   </section>
 </BaseLayout>
 
 <script>
-  function hashDiario(semilla: string): number {
-    let hash = 5381;
-    for (let i = 0; i < semilla.length; i++) {
-      hash = (hash * 33) ^ semilla.charCodeAt(i);
-    }
-    return hash >>> 0;
-  }
-
-  // Rota el orden del carrusel de destacados (todos son destacados, no
-  // hay grupo "no destacado" que sirva de límite como en las categorías
-  // normales) — misma semilla diaria que el resto del sitio.
-  function rotarCarrusel() {
-    const contenedor = document.getElementById('carrusel-destacados');
-    if (!contenedor) return;
-
-    const tarjetas = Array.from(contenedor.children) as HTMLElement[];
-    const hoy = new Date().toISOString().slice(0, 10);
-    const fijas = tarjetas.filter((t) => t.dataset.ordenManual);
-    const aleatorias = tarjetas.filter((t) => !t.dataset.ordenManual);
-    aleatorias.sort(
-      (a, b) => hashDiario(`${hoy}-${a.dataset.slug}`) - hashDiario(`${hoy}-${b.dataset.slug}`),
-    );
-
-    for (const tarjeta of [...fijas, ...aleatorias]) {
-      contenedor.appendChild(tarjeta);
-    }
-
-    Array.from(contenedor.children).forEach((tarjeta, i) => {
-      const img = (tarjeta as HTMLElement).querySelector<HTMLImageElement>('.tarjeta__imagen');
-      if (!img) return;
-      img.loading = i === 0 ? 'eager' : 'lazy';
-      if (i === 0) img.setAttribute('fetchpriority', 'high');
-      else img.removeAttribute('fetchpriority');
-    });
-  }
+  const ayudaIconos = document.querySelector<HTMLDialogElement>('[data-ayuda-iconos]');
+  document.querySelector('[data-abrir-ayuda]')?.addEventListener('click', () => ayudaIconos?.showModal());
+  document.querySelector('[data-cerrar-ayuda]')?.addEventListener('click', () => ayudaIconos?.close());
+  ayudaIconos?.addEventListener('click', (evento) => {
+    if (evento.target === ayudaIconos) ayudaIconos.close();
+  });
 
   // Combina el chip de filtro activo (por amenidad/tipo) con la búsqueda
   // por nombre — una tarjeta se muestra solo si cumple los dos a la vez,
@@ -310,7 +296,7 @@ const esquemaItemList =
 
     function chipActivo(): string {
       return (
-        fila?.querySelector('[data-chip].pastilla--activa')?.getAttribute('data-chip') ?? 'todo'
+        fila?.querySelector('[data-chip].filtro-rapido--activo')?.getAttribute('data-chip') ?? 'todo'
       );
     }
 
@@ -339,8 +325,8 @@ const esquemaItemList =
 
     fila?.querySelectorAll<HTMLButtonElement>('[data-chip]').forEach((boton) => {
       boton.addEventListener('click', () => {
-        fila.querySelectorAll('[data-chip]').forEach((b) => b.classList.remove('pastilla--activa'));
-        boton.classList.add('pastilla--activa');
+        fila.querySelectorAll('[data-chip]').forEach((b) => b.classList.remove('filtro-rapido--activo'));
+        boton.classList.add('filtro-rapido--activo');
         aplicarFiltros();
       });
     });
@@ -348,6 +334,5 @@ const esquemaItemList =
     buscadorInput?.addEventListener('input', aplicarFiltros);
   }
 
-  rotarCarrusel();
   activarControles();
 </script>

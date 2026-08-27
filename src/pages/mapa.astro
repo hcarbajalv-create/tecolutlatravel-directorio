@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { filtrarListables } from '../utils/negociosPublicados';
+
+const hospedajes = filtrarListables(await getCollection('negocios'))
+  .filter((negocio) => negocio.data.categoria === 'hospedaje')
+  .map((negocio) => ({
+    id: negocio.id,
+    nombre: negocio.data.nombre,
+    subtipo: negocio.data.subtipo ?? negocio.data.tipo ?? 'Hospedaje',
+    direccion: negocio.data.direccion,
+    lat: negocio.data.coordenadas.lat,
+    lng: negocio.data.coordenadas.lng,
+    url: `/hospedaje/${negocio.id}`,
+  }));
+
+const primero = hospedajes[0];
+const mapaInicial = primero
+  ? `https://www.google.com/maps?q=${primero.lat},${primero.lng}&output=embed`
+  : 'https://www.google.com/maps?q=Tecolutla,Veracruz&output=embed';
+---
+
+<BaseLayout
+  titulo="Mapa de hospedajes en Tecolutla"
+  descripcion="Ubica hospedajes de Tecolutla y abre cada ficha para contactar al negocio directamente."
+>
+  <section class="seccion contenedor mapa-hospedajes" aria-labelledby="titulo-mapa-hospedajes">
+    <p class="migaja"><a href="/">Inicio</a> → Mapa de hospedajes</p>
+    <div class="mapa-hospedajes__encabezado">
+      <div>
+        <p class="eyebrow">Ubica tu estancia</p>
+        <h1 id="titulo-mapa-hospedajes">Hospedajes en el mapa</h1>
+        <p class="subtitulo">Selecciona una opción para ver su ubicación y abrir su ficha completa.</p>
+      </div>
+      <a class="boton boton--secundario" href="/hospedaje">Ver catálogo completo</a>
+    </div>
+    <div class="mapa-hospedajes__rejilla">
+      <div class="mapa-hospedajes__panel-lista">
+        <label class="mapa-hospedajes__busqueda" for="buscar-mapa-hospedaje">
+          <span>¿Ya sabes qué hospedaje buscas?</span>
+          <input id="buscar-mapa-hospedaje" type="search" placeholder="Escribe el nombre…" autocomplete="off" />
+        </label>
+        <p class="mapa-hospedajes__contador" data-mapa-contador aria-live="polite">{hospedajes.length} hospedajes disponibles</p>
+        <div class="mapa-hospedajes__lista" aria-label="Lista de hospedajes">
+        {
+          hospedajes.map((hospedaje, indice) => (
+            <button
+              type="button"
+              class:list={['mapa-hospedajes__opcion', { 'mapa-hospedajes__opcion--activa': indice === 0 }]}
+              data-mapa-hospedaje={hospedaje.id}
+              aria-pressed={indice === 0 ? 'true' : 'false'}
+            >
+              <span>{hospedaje.subtipo}</span>
+              <strong>{hospedaje.nombre}</strong>
+              <small>{hospedaje.direccion}</small>
+            </button>
+          ))
+        }
+          <p class="mapa-hospedajes__sin-resultados" data-mapa-sin-resultados hidden>No encontramos ese hospedaje. Prueba con otra parte del nombre.</p>
+        </div>
+      </div>
+      <div class="mapa-hospedajes__mapa">
+        <iframe id="mapa-hospedajes-embed" class="mapa-embed" src={mapaInicial} title="Ubicación del hospedaje seleccionado" loading="lazy" />
+        <div class="mapa-hospedajes__seleccion">
+          <div>
+            <p data-mapa-subtipo>{primero?.subtipo}</p>
+            <h2 data-mapa-nombre>{primero?.nombre ?? 'Selecciona un hospedaje'}</h2>
+            <span data-mapa-direccion>{primero?.direccion}</span>
+          </div>
+          <div class="mapa-hospedajes__acciones">
+            <a class="boton boton--secundario boton--chico" data-mapa-ficha href={primero?.url ?? '/hospedaje'}>Ver ficha</a>
+            <a class="boton boton--primario boton--chico" data-mapa-direcciones href={primero ? `https://www.google.com/maps/dir/?api=1&destination=${primero.lat},${primero.lng}` : 'https://www.google.com/maps'} target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="datos-mapa-hospedajes" set:html={JSON.stringify(hospedajes)} />
+
+<script>
+  interface HospedajeMapa {
+    id: string;
+    nombre: string;
+    subtipo: string;
+    direccion: string;
+    lat: number;
+    lng: number;
+    url: string;
+  }
+
+  const datosMapa = JSON.parse(document.getElementById('datos-mapa-hospedajes')?.textContent ?? '[]') as HospedajeMapa[];
+  const iframeMapa = document.getElementById('mapa-hospedajes-embed') as HTMLIFrameElement | null;
+  const nombreMapa = document.querySelector<HTMLElement>('[data-mapa-nombre]');
+  const subtipoMapa = document.querySelector<HTMLElement>('[data-mapa-subtipo]');
+  const direccionMapa = document.querySelector<HTMLElement>('[data-mapa-direccion]');
+  const fichaMapa = document.querySelector<HTMLAnchorElement>('[data-mapa-ficha]');
+  const direccionesMapa = document.querySelector<HTMLAnchorElement>('[data-mapa-direcciones]');
+  const buscadorMapa = document.getElementById('buscar-mapa-hospedaje') as HTMLInputElement | null;
+  const contadorMapa = document.querySelector<HTMLElement>('[data-mapa-contador]');
+  const sinResultados = document.querySelector<HTMLElement>('[data-mapa-sin-resultados]');
+  const normalizar = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+  document.querySelectorAll<HTMLButtonElement>('[data-mapa-hospedaje]').forEach((boton) => {
+    boton.addEventListener('click', () => {
+      const hospedaje = datosMapa.find((item) => item.id === boton.dataset.mapaHospedaje);
+      if (!hospedaje || !iframeMapa || !nombreMapa || !subtipoMapa || !direccionMapa || !fichaMapa || !direccionesMapa) return;
+
+      document.querySelectorAll<HTMLButtonElement>('[data-mapa-hospedaje]').forEach((opcion) => {
+        const activa = opcion === boton;
+        opcion.classList.toggle('mapa-hospedajes__opcion--activa', activa);
+        opcion.setAttribute('aria-pressed', String(activa));
+      });
+      iframeMapa.src = `https://www.google.com/maps?q=${hospedaje.lat},${hospedaje.lng}&output=embed`;
+      nombreMapa.textContent = hospedaje.nombre;
+      subtipoMapa.textContent = hospedaje.subtipo;
+      direccionMapa.textContent = hospedaje.direccion;
+      fichaMapa.href = hospedaje.url;
+      direccionesMapa.href = `https://www.google.com/maps/dir/?api=1&destination=${hospedaje.lat},${hospedaje.lng}`;
+    });
+  });
+
+  buscadorMapa?.addEventListener('input', () => {
+    const consulta = normalizar(buscadorMapa.value.trim());
+    let visibles = 0;
+    document.querySelectorAll<HTMLButtonElement>('[data-mapa-hospedaje]').forEach((boton) => {
+      const hospedaje = datosMapa.find((item) => item.id === boton.dataset.mapaHospedaje);
+      const coincide = !consulta || (hospedaje && normalizar(`${hospedaje.nombre} ${hospedaje.direccion}`).includes(consulta));
+      boton.hidden = !coincide;
+      if (coincide) visibles += 1;
+    });
+    if (contadorMapa) contadorMapa.textContent = `${visibles} hospedaje${visibles === 1 ? '' : 's'} encontrado${visibles === 1 ? '' : 's'}`;
+    if (sinResultados) sinResultados.hidden = visibles !== 0;
+  });
+</script>

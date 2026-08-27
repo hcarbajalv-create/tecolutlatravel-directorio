@@ -1,14 +1,16 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import { extraerInfoVideo } from '../utils/embedVideo';
+import placeholderPaloma from '../assets/fotos/placeholder.svg';
 
 interface Props {
   reportaje: CollectionEntry<'reportajes'>;
 }
 
 const { reportaje } = Astro.props;
-const { titulo, categoria, video, descripcionCorta, negocioRelacionado } = reportaje.data;
+const { titulo, categoria, video, descripcionCorta, negocioRelacionado, fecha } = reportaje.data;
 
 const etiquetas: Record<typeof categoria, string> = {
   reportaje: 'Reportaje',
@@ -43,6 +45,7 @@ const miniatura =
 
 <article class={`tarjeta-reportaje tarjeta-reportaje--${categoria}`} data-categoria={categoria}>
   <div class="tarjeta-reportaje__video">
+    <span class="tarjeta-reportaje__categoria-foto">{etiquetas[categoria]}</span>
     {miniatura && <img class="tarjeta-reportaje__miniatura" src={miniatura} alt="" loading="lazy" />}
     {
       video ? (
@@ -65,15 +68,16 @@ const miniatura =
     }
   </div>
   <div class="tarjeta-reportaje__cuerpo">
-    <span class="etiqueta-categoria">{etiquetas[categoria]}</span>
+    <span class="etiqueta-categoria" aria-hidden="true">{etiquetas[categoria]}</span>
     <h3 class="tarjeta-reportaje__titulo">
       <a href={`/reportajes-y-noticias/${reportaje.id}`}>{titulo}</a>
     </h3>
     <p class="tarjeta-reportaje__descripcion">{descripcionCorta}</p>
-    {enlaceNegocio && (
-      <a class="tarjeta-reportaje__ver-ficha" href={enlaceNegocio}>
-        Ver ficha →
-      </a>
-    )}
+    <div class="tarjeta-reportaje__autor"><Image src={placeholderPaloma} alt="" width={28} height={28} /><span>Paloma · Comunicadora local</span></div>
+    <time class="tarjeta-reportaje__fecha" datetime={fecha.toISOString()}>{fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+    <a class="tarjeta-reportaje__ver-ficha" href={video ?? `/reportajes-y-noticias/${reportaje.id}`} target={video ? '_blank' : undefined} rel={video ? 'noopener noreferrer' : undefined}>
+      {video ? 'Ver video' : 'Leer reportaje'} <b>→</b>
+    </a>
+    {enlaceNegocio && <a class="tarjeta-reportaje__negocio" href={enlaceNegocio}>Ver ficha del negocio</a>}
   </div>
 </article>

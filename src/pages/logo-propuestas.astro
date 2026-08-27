@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MarcaTecolutlaTravel from '../components/MarcaTecolutlaTravel.astro';
+
+const propuestas = [
+  {
+    numero: '01',
+    nombre: 'Lugar del tecolote',
+    idea: 'El nombre de Tecolutla convertido en un símbolo propio.',
+    imagen: '/images/logo-concept-01-tecolote.png',
+  },
+  {
+    numero: '02',
+    nombre: 'Cangrejo azul',
+    idea: 'Una especie emblemática de la costa y de la identidad local.',
+    imagen: '/images/logo-concept-02-jaiba-azul.png',
+  },
+  {
+    numero: '03',
+    nombre: 'Tortuga protectora',
+    idea: 'Playa, naturaleza y la vocación de conservación.',
+    imagen: '/images/logo-concept-03-tortuga.png',
+  },
+  {
+    numero: '04',
+    nombre: 'Travel / Ruta',
+    idea: 'Llegar, explorar y encontrar una experiencia fácilmente.',
+    imagen: '/images/logo-concept-04-travel-ruta.png',
+  },
+  {
+    numero: '05',
+    nombre: 'Tecolote viajero',
+    idea: 'Tecolutla y travel unidos en una sola marca.',
+    imagen: '/images/logo-concept-05-tecolote-viajero.png',
+  },
+  {
+    numero: '06',
+    nombre: 'Costa que te guía',
+    idea: 'Tortuga, mar y destino para representar el viaje responsable.',
+    imagen: '/images/logo-concept-06-costa-viajera.png',
+  },
+  {
+    numero: '07',
+    nombre: 'Minimal geométrico',
+    idea: 'La versión más compacta: fuerte para ícono, app y señalética.',
+    imagen: '/images/logo-concept-07-minimal-geometrico.png',
+  },
+  {
+    numero: '08',
+    nombre: 'Costero artesanal',
+    idea: 'Cálida y local, como una guía hecha con cariño por la comunidad.',
+    imagen: '/images/logo-concept-08-costero-artesanal.png',
+  },
+  {
+    numero: '09',
+    nombre: 'Póster de viaje clásico',
+    idea: 'Aventura y playa con la personalidad de un cartel turístico memorable.',
+    imagen: '/images/logo-concept-09-retro-viajero.png',
+  },
+  {
+    numero: '10',
+    nombre: 'Elegante costero',
+    idea: 'Una línea limpia y serena para una marca más sofisticada.',
+    imagen: '/images/logo-concept-10-elegante-costero.png',
+  },
+  {
+    numero: '11',
+    nombre: 'Alegre y familiar',
+    idea: 'Una jaiba azul cercana y divertida, pensada para todos los viajeros.',
+    imagen: '/images/logo-concept-11-alegre-familiar.png',
+  },
+];
+---
+
+<BaseLayout
+  titulo="Propuestas de logotipo"
+  descripcion="Galería privada de propuestas de logotipo para TecolutlaTravel."
+  noindex={true}
+>
+  <section class="propuestas contenedor">
+    <p class="propuestas__eyebrow">Identidad visual · revisión local</p>
+    <h1>Once caminos para <span>TecolutlaTravel</span></h1>
+    <p class="propuestas__intro">
+      Son bocetos de dirección creativa, no logotipos finales. Al elegir uno lo simplificaremos y
+      construiremos como vector original, junto con el nombre TecolutlaTravel.
+    </p>
+
+    <section class="marca-actual" aria-labelledby="marca-actual-titulo">
+      <div>
+        <p class="propuestas__eyebrow">Punto de partida</p>
+        <h2 id="marca-actual-titulo">Marca actual de la página</h2>
+        <p>La reproduzco aquí para compararla directamente con las nuevas direcciones.</p>
+      </div>
+      <div class="marca-actual__muestra" aria-label="Logotipo actual TecolutlaTravel">
+        <MarcaTecolutlaTravel />
+      </div>
+    </section>
+
+    <div class="propuestas__grid">
+      {propuestas.map((propuesta) => (
+        <article class="propuesta">
+          <div class="propuesta__imagen">
+            <img src={propuesta.imagen} alt={`Propuesta ${propuesta.numero}: ${propuesta.nombre}`} />
+          </div>
+          <div class="propuesta__contenido">
+            <span>Propuesta {propuesta.numero}</span>
+            <h2>{propuesta.nombre}</h2>
+            <p>{propuesta.idea}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .propuestas {
+    padding-block: clamp(2.5rem, 7vw, 5.5rem);
+  }
+
+  .propuestas__eyebrow,
+  .propuesta__contenido span {
+    color: #087f9f;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    color: #063d56;
+    font-size: clamp(2.15rem, 5vw, 4.1rem);
+    line-height: 1.03;
+    margin: 0.35rem 0 1rem;
+  }
+
+  h1 span {
+    color: #078eaf;
+  }
+
+  .propuestas__intro {
+    color: #49606c;
+    font-size: 1.08rem;
+    line-height: 1.65;
+    max-width: 47rem;
+    margin: 0;
+  }
+
+  .propuestas__grid {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 2.5rem;
+  }
+
+  .marca-actual {
+    align-items: stretch;
+    background: #f1fafb;
+    border: 1px solid #cce7e9;
+    border-radius: 1.15rem;
+    display: grid;
+    gap: 1.35rem;
+    margin-top: 2rem;
+    padding: 1.5rem 1.75rem;
+  }
+
+  .marca-actual h2 {
+    color: #133d50;
+    font-size: 1.35rem;
+    margin: 0.2rem 0 0.35rem;
+  }
+
+  .marca-actual p:not(.propuestas__eyebrow) {
+    color: #58707b;
+    margin: 0;
+  }
+
+  .marca-actual__muestra {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dce8ea;
+    border-radius: 0.85rem;
+    display: flex;
+    gap: 1.7rem;
+    justify-content: center;
+    min-height: 15rem;
+    padding: 2.25rem 2.5rem;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-icono) {
+    height: 9.25rem;
+    width: 10.75rem;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-texto) {
+    display: grid;
+    gap: 0.08rem;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-nombre) {
+    color: #087f9f;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(2.45rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-nombre span) {
+    color: #057aa5;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-nombre b) {
+    color: #ff6b61;
+  }
+
+  .marca-actual__muestra :global(.encabezado__marca-texto small) {
+    color: #5b717b;
+    font-size: clamp(0.68rem, 1.65vw, 1rem);
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .propuesta {
+    background: #fff;
+    border: 1px solid #dce8ea;
+    border-radius: 1.15rem;
+    box-shadow: 0 0.5rem 1.7rem rgb(9 54 72 / 0.09);
+    overflow: hidden;
+  }
+
+  .propuesta__imagen {
+    align-items: center;
+    background: linear-gradient(145deg, #f3fcfc, #e6f5f7);
+    display: flex;
+    height: 17rem;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .propuesta__imagen img {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .propuesta__contenido {
+    padding: 1.2rem 1.3rem 1.35rem;
+  }
+
+  .propuesta__contenido h2 {
+    color: #133d50;
+    font-size: 1.28rem;
+    margin: 0.35rem 0;
+  }
+
+  .propuesta__contenido p {
+    color: #58707b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .propuestas__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 580px) {
+    .marca-actual {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .marca-actual__muestra {
+      gap: 0.9rem;
+      min-height: 10rem;
+      padding: 1.2rem;
+    }
+
+    .marca-actual__muestra :global(.encabezado__marca-icono) {
+      height: 5rem;
+      width: 5.8rem;
+    }
+
+    .marca-actual__muestra :global(.encabezado__marca-nombre) {
+      font-size: clamp(1.75rem, 9vw, 2.35rem);
+    }
+
+    .marca-actual__muestra :global(.encabezado__marca-texto small) {
+      font-size: 0.48rem;
+    }
+
+    .propuestas__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .propuesta__imagen {
+      height: 16rem;
+    }
+  }
+</style>
