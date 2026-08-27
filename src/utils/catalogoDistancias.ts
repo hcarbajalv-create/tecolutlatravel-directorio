@@ -26,5 +26,11 @@ export function formatearDistancia(d: Distancia): string {
 // Tarjeta: versión compacta, sin "a <destino>", para caber en la insignia
 // sobre la foto (ej. "527m", "A pie de río").
 export function formatearDistanciaCompacta(d: Distancia): string {
-  return d.metros !== undefined ? `${d.metros}m` : (d.texto ?? '');
+  // La insignia de la tarjeta debe conservar el contexto de la distancia:
+  // "274m" aislado no indica si se trata de la playa, el río o el centro.
+  // Usamos el mismo pictograma del catálogo para que se reconozca de un
+  // vistazo y mantenemos el formato breve para no romper la tarjeta.
+  return d.metros !== undefined
+    ? `${CATALOGO_DISTANCIAS[d.a].icono} ${d.metros}m`
+    : (d.texto ?? '');
 }

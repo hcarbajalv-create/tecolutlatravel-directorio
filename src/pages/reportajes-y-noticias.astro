@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TarjetaReportaje from '../components/TarjetaReportaje.astro';
+import Icono from '../components/Icono.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import placeholderPaloma from '../assets/fotos/placeholder.svg';
@@ -15,9 +16,9 @@ const negociosCubiertos = new Set(
 ).size;
 
 const filtros = [
-  { categoria: 'reportaje', texto: 'Reportajes de negocios', icono: '📍' },
-  { categoria: 'noticia', texto: 'Noticias locales', icono: '📰' },
-  { categoria: 'tip', texto: 'Tips de viajero', icono: '💡' },
+  { categoria: 'reportaje', texto: 'Reportajes de negocios', icono: 'ubicacion' },
+  { categoria: 'noticia', texto: 'Noticias locales', icono: 'etiqueta' },
+  { categoria: 'tip', texto: 'Tips de viajero', icono: 'idea' },
 ] as const;
 ---
 
@@ -25,12 +26,20 @@ const filtros = [
   titulo="Reportajes y noticias"
   descripcion="Recorridos, novedades y tips de Tecolutla, contados por Paloma — cada semana, en video."
 >
+  <section class="reportajes-hero">
+    <div class="contenedor reportajes-hero__contenido">
+      <span>VOCES LOCALES DE TECOLUTLA</span>
+      <h1>Historias que cuentan Tecolutla</h1>
+      <p>Reportajes, noticias y recomendaciones de quienes viven y conocen nuestro destino.</p>
+      <a class="reportajes-hero__cta" href="#colabora">Quiero ser colaborador <b>→</b></a>
+    </div>
+  </section>
   <section class="seccion-reportajes seccion--arena">
     <div class="contenedor">
-      <h1 class="titulo-pagina">Reportajes y noticias</h1>
+      <div class="reportajes-encabezado"><div><h2 class="titulo-pagina">Reportajes y noticias</h2>
       <p class="subtitulo">
-        Recorridos, novedades y tips de Tecolutla, contados por Paloma — cada semana, en video.
-      </p>
+        Historias reales, novedades y tips para conocer mejor Tecolutla.
+      </p></div><a class="reportajes-enlace-colabora" href="#colabora">Publica tu historia →</a></div>
 
       <div class="perfil-anfitriona">
         <Image
@@ -61,7 +70,14 @@ const filtros = [
         </div>
       </div>
 
-      <div class="filtros-categoria" role="group" aria-label="Filtrar por categoría">
+      <section class="comunicadores-seccion" aria-labelledby="titulo-comunicadores">
+        <div class="comunicadores-seccion__encabezado"><div><span>VOCES LOCALES</span><h2 id="titulo-comunicadores">Conoce a nuestros comunicadores</h2></div><a href="#colabora">Ver cómo participar →</a></div>
+        <div class="comunicadores-grid comunicadores-grid--uno">
+          <article class="comunicador-card"><Image src={placeholderPaloma} alt="Perfil de Paloma" width={88} height={88} class="comunicador-card__foto" /><div><h3>Paloma</h3><p>Turismo y recomendaciones locales</p><span class="comunicador-card__sello">✓ Comunicadora local</span></div></article>
+        </div>
+      </section>
+
+      <div class="reportajes-recientes-encabezado"><h2>Reportajes recientes</h2><div class="filtros-categoria" role="group" aria-label="Filtrar por categoría">
         {
           filtros.map((f) => (
             <button
@@ -70,11 +86,11 @@ const filtros = [
               data-filtro={f.categoria}
               aria-pressed="false"
             >
-              {f.icono} {f.texto}
+              <Icono nombre={f.icono} /> {f.texto}
             </button>
           ))
         }
-      </div>
+      </div></div>
 
       {
         reportajes.length === 0 ? (
@@ -87,6 +103,11 @@ const filtros = [
           </div>
         )
       }
+
+      <section class="reportajes-colabora" id="colabora">
+        <div><span>PARA COMUNICADORES LOCALES</span><h2>¿Quieres publicar en TecolutlaTravel?</h2><p>Comparte tu historia, tu mirada y lo que hace único a nuestro destino.</p></div>
+        <a href="/contactanos">Enviar propuesta <b>→</b></a>
+      </section>
     </div>
   </section>
 </BaseLayout>
