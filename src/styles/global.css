@@ -4769,6 +4769,11 @@ body:has(.hero-referencia) {
   height: auto;
   max-width: 100%;
 }
+
+/* Prueba visual únicamente en Gastronomía: integra el logo claro con el pie oscuro. */
+.pie--gastronomia .pie__logo {
+  mix-blend-mode: multiply;
+}
 /* Fichas limpias de hospedaje: referencia aprobada para la home */
 .destacados-propuesta .tarjeta { border: 1px solid #e5ebed; border-radius: 12px; box-shadow: 0 3px 12px rgba(20,47,54,.09); overflow: hidden; }
 .destacados-propuesta .tarjeta__imagen { aspect-ratio: 4 / 3; object-fit: cover; }

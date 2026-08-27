@@ -1,8 +1,9 @@
 ---
 const anio = new Date().getFullYear();
+const esGastronomia = Astro.url.pathname.startsWith('/gastronomia');
 ---
 
-<footer class="pie">
+<footer class:list={['pie', esGastronomia && 'pie--gastronomia']}>
   <div class="contenedor">
     <div class="pie__columnas">
       <div class="pie__marca">
