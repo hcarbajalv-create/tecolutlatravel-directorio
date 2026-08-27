@@ -4770,23 +4770,8 @@ body:has(.hero-referencia) {
   max-width: 100%;
 }
 
-.pie--gastronomia { background: #fff; color: #405b63; border-top: 1px solid #e8eff0; }
-.pie--gastronomia .pie__beneficios { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; width: min(1080px, calc(100% - 2rem)); margin: 0 auto 2.2rem; padding: 1.25rem 1.4rem; border-radius: 18px; background: #effafa; }
-.pie--gastronomia .pie__beneficios > div { display: flex; align-items: center; gap: .8rem; padding: .25rem 1.2rem; }
-.pie--gastronomia .pie__beneficios > div + div { border-left: 1px solid #cfe4e5; }
-.pie--gastronomia .pie__beneficio-icono { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border-radius: 12px; background: transparent; color: #078c9a; }
-.pie--gastronomia .pie__beneficio-icono .icono-linea { width: 34px; height: 34px; stroke-width: 1.35; }
-.pie--gastronomia .pie__beneficios p { margin: 0; }
-.pie--gastronomia .pie__beneficios strong { display: block; color: #087f91; font-size: .82rem; font-weight: 800; }
-.pie--gastronomia .pie__beneficios small { display: block; margin-top: .25rem; color: #587784; font-size: .67rem; line-height: 1.35; }
-.pie--gastronomia .pie__logo { filter: none; mix-blend-mode: normal; }
-body:has(.pie--gastronomia) .pie h2 { color: #0b3e54; }
-body:has(.pie--gastronomia) .pie li,
-body:has(.pie--gastronomia) .pie a { color: #365d70; }
-body:has(.pie--gastronomia) .pie a:hover { color: #078c9a; }
-body:has(.pie--gastronomia) .pie__marca p { color: #557784; }
-body:has(.pie--gastronomia) .pie__legal { color: #627b85; }
-@media (max-width: 760px) { .pie--gastronomia .pie__beneficios { grid-template-columns: 1fr 1fr; gap: .7rem; padding: 1rem; } .pie--gastronomia .pie__beneficios > div { padding: .2rem .35rem; } .pie--gastronomia .pie__beneficios > div + div { border-left: 0; } }
+body:has(.pie--gastronomia) .pie { background: var(--color-mar-oscuro); color: var(--color-arena); border-top: 0; }
+body:has(.pie--gastronomia) .pie__logo { filter: none; mix-blend-mode: normal; }
 
 /* Prueba visual únicamente en Gastronomía: integra el logo claro con el pie oscuro. */
 /* Fichas limpias de hospedaje: referencia aprobada para la home */

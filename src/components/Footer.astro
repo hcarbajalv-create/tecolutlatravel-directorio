@@ -1,23 +1,18 @@
 ---
 const anio = new Date().getFullYear();
 const esGastronomia = Astro.url.pathname.startsWith('/gastronomia');
-import Icono from './Icono.astro';
 ---
 
 <footer class:list={['pie', esGastronomia && 'pie--gastronomia']}>
-  {esGastronomia && <div class="pie__beneficios" aria-label="Beneficios de Tecolutla Travel">
-    <div><span class="pie__beneficio-icono"><Icono nombre="escudo" /></span><p><strong>Reservas seguras</strong><small>Contacta directamente con hospedajes de confianza.</small></p></div>
-    <div><span class="pie__beneficio-icono"><Icono nombre="audifonos" /></span><p><strong>Atención personalizada</strong><small>Te ayudamos a encontrar la mejor opción para tu viaje.</small></p></div>
-    <div><span class="pie__beneficio-icono"><Icono nombre="etiqueta" /></span><p><strong>Sin cargos ocultos</strong><small>Precios claros y sin comisiones extra.</small></p></div>
-    <div><span class="pie__beneficio-icono"><Icono nombre="pulgar" /></span><p><strong>Experiencias locales</strong><small>Alojamientos que reflejan la calidez y esencia de Tecolutla.</small></p></div>
-  </div>}
   <div class="contenedor">
     <div class="pie__columnas">
       <div class="pie__marca">
         <a href="/" class="pie__nombre">
           <img
             class="pie__logo"
-            src="/images/logo-tecolutlatravel-oficial.png"
+            src={esGastronomia
+              ? '/images/logo-tecolutlatravel-footer-transparente.png'
+              : '/images/logo-tecolutlatravel-oficial.png'}
             alt="TecolutlaTravel — Directorio turístico de Tecolutla"
             width="1158"
             height="204"
