@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PlanificadorHospedajes from '../components/PlanificadorHospedajes.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -22,7 +23,6 @@ interface Props {
   // de la marca ("... | Qué hacer y dónde comer"), así que pasa
   // tituloCompleto para que no se le agregue nada más encima.
   tituloCompleto?: boolean;
-  encabezadoSobreHero?: boolean;
 }
 
 const {
@@ -33,7 +33,6 @@ const {
   imagenAncho = 640,
   imagenAlto = 640,
   tituloCompleto = false,
-  encabezadoSobreHero = false,
 } = Astro.props;
 const tituloFinal = tituloCompleto ? titulo : `${titulo} | TecolutlaTravel`;
 // El build usa format:'file' (paginas.html planas) para evitar redirects de
@@ -105,10 +104,11 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   </head>
   <body>
     <a class="saltar-enlace" href="#contenido-principal">Saltar al contenido principal</a>
-    <Header rutaActual={Astro.url.pathname} sobreHero={encabezadoSobreHero} />
+    <Header rutaActual={Astro.url.pathname} />
     <main id="contenido-principal">
       <slot />
     </main>
+    <PlanificadorHospedajes />
     <Footer />
   </body>
 </html>
