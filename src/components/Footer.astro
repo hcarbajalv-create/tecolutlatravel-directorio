@@ -1,44 +1,65 @@
 ---
-import { getCollection } from 'astro:content';
-import { filtrarListables } from '../utils/negociosPublicados';
-
 const anio = new Date().getFullYear();
-
-// Mismo criterio que Header.astro e index.astro: "Servicios" se oculta
-// mientras la categoría no tenga ningún negocio, para no enlazar desde
-// ningún lugar del sitio a una página con noindex.
-const negocios = filtrarListables(await getCollection('negocios'));
-const hayServicios = negocios.some((n) => n.data.categoria === 'servicios');
 ---
 
 <footer class="pie">
   <div class="contenedor">
     <div class="pie__columnas">
+      <div class="pie__marca">
+        <a href="/" class="pie__nombre">
+          <img
+            class="pie__logo"
+            src="/images/logo-tecolutlatravel-footer-transparente.png"
+            alt="TecolutlaTravel — Directorio turístico de Tecolutla"
+            width="1158"
+            height="204"
+          />
+        </a>
+        <p>Tu guía local para descubrir lo mejor de Tecolutla, Veracruz.</p>
+        <div class="pie__redes" aria-label="Redes y contacto">
+          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">f</a>
+          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◎</a>
+          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◉</a>
+          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◔</a>
+        </div>
+      </div>
       <div>
-        <h2>Categorías</h2>
+        <h2>Explora</h2>
         <ul>
-          <li><a href="/hospedaje">Hospedaje en Tecolutla</a></li>
-          <li><a href="/gastronomia">Gastronomía en Tecolutla</a></li>
-          <li><a href="/actividades">Actividades ecoturísticas</a></li>
-          {hayServicios && <li><a href="/servicios">Servicios turísticos</a></li>}
+          <li><a href="/hospedaje">Hospedaje</a></li>
+          <li><a href="/gastronomia">Gastronomía</a></li>
+          <li><a href="/actividades">Actividades</a></li>
+          <li><a href="/tips-para-tu-viaje">Tips para tu viaje</a></li>
         </ul>
       </div>
       <div>
         <h2>Información</h2>
         <ul>
-          <li><a href="/tips-para-tu-viaje">Tips para tu viaje</a></li>
-          <li><a href="/descubre-tecolutla">Descubre Tecolutla</a></li>
-          <li><a href="/acerca-de">Acerca de este directorio</a></li>
+          <li><a href="/acerca-de">¿Cómo funciona?</a></li>
+          <li><a href="/acerca-de">Preguntas frecuentes</a></li>
+          <li><a href="/aviso-de-privacidad">Términos y condiciones</a></li>
           <li><a href="/aviso-de-privacidad">Aviso de Privacidad</a></li>
+          <li><a href="/contactanos">Contacto</a></li>
         </ul>
       </div>
       <div>
         <h2>Para negocios</h2>
         <ul>
-          <li><a href="/anunciate">Anuncia tu negocio gratis</a></li>
+          <li><a href="/anunciate">Anúnciate</a></li>
+          <li><a href="/anunciate">Directorio gratuito</a></li>
+          <li><a href="/anunciate">Consejos para anfitriones</a></li>
+          <li><a href="/reportajes-y-noticias">Blog para negocios</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contacto</h2>
+        <ul>
+          <li>Tecolutla, Veracruz, México</li>
+          <li><a href="/contactanos">Escríbenos por WhatsApp</a></li>
+          <li><a href="mailto:contacto@tecolutlatravel.mx">contacto@tecolutlatravel.mx</a></li>
         </ul>
       </div>
     </div>
-    <p class="pie__legal">© {anio} TecolutlaTravel. Directorio turístico independiente de Tecolutla, Veracruz.</p>
+    <p class="pie__legal">© {anio} TecolutlaTravel. Todos los derechos reservados.<span>Hecho con <b aria-hidden="true">♥</b> en Tecolutla</span></p>
   </div>
 </footer>

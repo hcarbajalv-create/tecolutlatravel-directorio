@@ -1,0 +1,127 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { filtrarListables } from '../utils/negociosPublicados';
+import { formatearDistanciaCompacta } from '../utils/catalogoDistancias';
+
+const hospedajes = filtrarListables(await getCollection('negocios'))
+  .filter((negocio) => negocio.data.categoria === 'hospedaje')
+  .map((negocio) => {
+    const telefonoDigitos = negocio.data.telefono.replace(/[^\d]/g, '');
+    const telefonoWhatsapp = negocio.data.telefono.trim().startsWith('+1')
+      ? telefonoDigitos
+      : `521${telefonoDigitos.replace(/^52/, '')}`;
+    return {
+      id: negocio.id,
+      nombre: negocio.data.nombre,
+      subtipo: negocio.data.subtipo ?? negocio.data.tipo ?? 'Hospedaje',
+      capacidad: negocio.data.capacidadGrupoCompleto ?? negocio.data.capacidadMaxima ?? null,
+      habitaciones: negocio.data.numeroHabitaciones ?? null,
+      amenidades: negocio.data.servicios.slice(0, 6),
+      mascotas: negocio.data.petFriendly === true,
+      distancias: (negocio.data.distancias ?? []).slice(0, 2).map(
+        (distancia) => formatearDistanciaCompacta(distancia),
+      ),
+      url: `/hospedaje/${negocio.id}`,
+      whatsapp: `https://wa.me/${telefonoWhatsapp}?text=${encodeURIComponent(
+        `Hola, vi ${negocio.data.nombre} en TecolutlaTravel y me gustaría más información.`,
+      )}`,
+    };
+  });
+---
+
+<BaseLayout
+  titulo="Compara hospedajes en Tecolutla"
+  descripcion="Compara capacidad, amenidades y ubicación de tus hospedajes seleccionados en Tecolutla."
+  noindex
+>
+  <section class="seccion contenedor comparador" aria-labelledby="titulo-comparador">
+    <p class="migaja"><a href="/">Inicio</a> → Comparar hospedajes</p>
+    <div class="comparador__encabezado">
+      <div>
+        <p class="eyebrow">Decide con calma</p>
+        <h1 id="titulo-comparador">Compara tus hospedajes</h1>
+        <p class="subtitulo">Revisa hasta tres opciones lado a lado antes de contactar directamente por WhatsApp.</p>
+      </div>
+      <a class="boton boton--secundario" href="/hospedaje">Agregar hospedajes</a>
+    </div>
+    <div id="comparador-resultados" class="comparador__resultados" aria-live="polite">
+      <p class="comparador__vacio">Elige al menos dos hospedajes para compararlos.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="datos-comparador" set:html={JSON.stringify(hospedajes)} />
+
+<script>
+  interface HospedajeComparable {
+    id: string;
+    nombre: string;
+    subtipo: string;
+    capacidad: number | null;
+    habitaciones: number | null;
+    amenidades: string[];
+    mascotas: boolean;
+    distancias: string[];
+    url: string;
+    whatsapp: string;
+  }
+
+  const datos = JSON.parse(document.getElementById('datos-comparador')?.textContent ?? '[]') as HospedajeComparable[];
+  const contenedor = document.getElementById('comparador-resultados');
+
+  function escaparHtml(texto: string) {
+    return texto.replace(/[&<>"']/g, (caracter) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[caracter] ?? caracter);
+  }
+
+  function valor(texto: string | number | null, vacio = 'Sin dato confirmado') {
+    return texto === null || texto === '' ? `<span class="comparador__sin-dato">${vacio}</span>` : escaparHtml(String(texto));
+  }
+
+  function renderizar() {
+    if (!contenedor) return;
+    const ids = (new URLSearchParams(window.location.search).get('ids') ?? '')
+      .split(',')
+      .filter(Boolean)
+      .slice(0, 3);
+    const seleccionados = ids.map((id) => datos.find((hospedaje) => hospedaje.id === id)).filter(
+      (hospedaje): hospedaje is HospedajeComparable => Boolean(hospedaje),
+    );
+
+    if (seleccionados.length < 2) {
+      contenedor.innerHTML = `
+        <div class="comparador__vacio">
+          <p>Elige dos o tres hospedajes y aparecerán aquí para compararlos.</p>
+          <a class="boton" href="/hospedaje">Ver todos los hospedajes</a>
+        </div>`;
+      return;
+    }
+
+    const fila = (etiqueta: string, contenido: (hospedaje: HospedajeComparable) => string) => `
+      <div class="comparador__fila">
+        <strong>${etiqueta}</strong>
+        ${seleccionados.map((hospedaje) => `<div>${contenido(hospedaje)}</div>`).join('')}
+      </div>`;
+
+    contenedor.innerHTML = `
+      <div class="comparador__tabla" style="--columnas:${seleccionados.length}">
+        <div class="comparador__cabecera">
+          <span>Qué comparar</span>
+          ${seleccionados.map((hospedaje) => `
+            <div>
+              <p>${escaparHtml(hospedaje.subtipo)}</p>
+              <h2><a href="${hospedaje.url}">${escaparHtml(hospedaje.nombre)}</a></h2>
+              <a class="comparador__ver-ficha" href="${hospedaje.url}">Ver ficha</a>
+            </div>`).join('')}
+        </div>
+        ${fila('Capacidad', (hospedaje) => valor(hospedaje.capacidad ? `Hasta ${hospedaje.capacidad} personas` : null))}
+        ${fila('Habitaciones', (hospedaje) => valor(hospedaje.habitaciones ? `${hospedaje.habitaciones} habitaciones` : null))}
+        ${fila('Amenidades', (hospedaje) => hospedaje.amenidades.length ? `<ul>${hospedaje.amenidades.map((amenidad) => `<li>${escaparHtml(amenidad)}</li>`).join('')}</ul>` : valor(null))}
+        ${fila('Mascotas', (hospedaje) => hospedaje.mascotas ? 'Sí, pet friendly' : 'No se indica')}
+        ${fila('Ubicación', (hospedaje) => hospedaje.distancias.length ? hospedaje.distancias.map(escaparHtml).join('<br>') : valor(null))}
+        ${fila('Contacto', (hospedaje) => `<a class="boton boton--whatsapp boton--chico" href="${hospedaje.whatsapp}">WhatsApp</a>`)}
+      </div>`;
+  }
+
+  renderizar();
+</script>

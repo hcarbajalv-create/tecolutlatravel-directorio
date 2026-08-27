@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="titulo descripcion">
+  <title id="titulo">Borrador de logo TecolutlaTravel con tortuga diagonal</title>
+  <desc id="descripcion">Una tortuga marina estilizada de perfil que sube en diagonal sobre dos olas.</desc>
+  <rect width="1200" height="300" rx="26" fill="#ffffff"/>
+  <g transform="translate(38 30)">
+    <path d="M8 192c25-22 51-22 76 0s51 22 76 0" fill="none" stroke="#13aab8" stroke-width="11" stroke-linecap="round"/>
+    <path d="M8 215c25-22 51-22 76 0s51 22 76 0" fill="none" stroke="#087c92" stroke-width="11" stroke-linecap="round"/>
+
+    <!-- Tortuga de perfil ascendente: caparazón, cabeza y cuatro aletas. -->
+    <g transform="rotate(-22 99 96)">
+      <path d="M94 66C83 43 65 31 52 36c-11 5-7 24 9 42 10 11 20 16 31 17" fill="#0c8fa2"/>
+      <path d="M115 113c10 27 28 45 41 40 12-5 8-27-8-47-9-11-21-16-33-16" fill="#0c8fa2"/>
+      <path d="M90 111c-10 25-27 40-39 34-10-5-6-25 10-43 8-9 18-14 30-15" fill="#0c8fa2"/>
+      <path d="M132 75c20-15 39-17 46-7 7 11-6 29-27 39-11 5-22 6-33 3" fill="#0c8fa2"/>
+      <ellipse cx="106" cy="88" rx="38" ry="28" fill="#0a8ea1"/>
+      <path d="M74 84c12-18 27-26 45-26 11 0 22 3 31 10-9 10-24 16-43 16-14 0-25 0-33 0Z" fill="#50c9c6"/>
+      <path d="M72 96c12-10 26-14 42-14s29 4 39 11" fill="none" stroke="#78dad2" stroke-width="6" stroke-linecap="round"/>
+      <path d="M80 111c11-8 23-11 35-11 10 0 19 2 29 7" fill="none" stroke="#78dad2" stroke-width="6" stroke-linecap="round"/>
+      <path d="M92 62c-4 10-5 21-3 32m19-36c-2 11-2 23 0 35m17-30c4 9 5 19 4 29" fill="none" stroke="#087183" stroke-width="4" stroke-linecap="round"/>
+      <path d="M69 73c-15-13-29-14-36-5-7 9 2 24 20 30 8 3 16 2 23-1" fill="#0c8fa2"/>
+      <path d="M77 67c-10-16-21-23-30-18-8 5-4 18 7 29 7 7 15 10 23 10Z" fill="#0c8fa2"/>
+      <ellipse cx="60" cy="58" rx="14" ry="12" fill="#0c8fa2" transform="rotate(-20 60 58)"/>
+      <circle cx="53" cy="54" r="2.8" fill="#fff"/>
+      <path d="M46 63c5 3 10 4 15 3" fill="none" stroke="#78dad2" stroke-width="2.4" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <g transform="translate(272 87)">
+    <text x="0" y="64" font-family="Nunito, Arial, sans-serif" font-size="72" font-weight="900" letter-spacing="-3" fill="#087d9b">Tecolutla<tspan fill="#0874a4">Travel</tspan><tspan fill="#ff6b61">.</tspan></text>
+    <text x="4" y="105" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="4" fill="#5c7480">DIRECTORIO TURÍSTICO DE TECOLUTLA</text>
+  </g>
+</svg>

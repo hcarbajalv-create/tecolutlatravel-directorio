@@ -15,19 +15,22 @@ export const AMENIDADES_CLAVE = [
   {
     valor: 'pet-friendly',
     etiqueta: 'Pet-friendly',
-    chip: '🐾 Pet friendly',
+    chip: 'Pet friendly',
+    icono: 'mascota',
     prueba: (n: Negocio) => Boolean(n.data.petFriendly),
   },
   {
     valor: 'alberca',
     etiqueta: 'Con alberca',
-    chip: '🏊 Alberca',
+    chip: 'Alberca',
+    icono: 'alberca',
     prueba: (n: Negocio) => Boolean(n.data.alberca),
   },
   {
     valor: 'wifi',
     etiqueta: 'Con wifi',
-    chip: '📶 Wifi',
+    chip: 'Wifi',
+    icono: 'wifi',
     prueba: (n: Negocio) => Boolean(n.data.wifi),
   },
 ] as const;
@@ -37,8 +40,8 @@ export const AMENIDADES_CLAVE = [
 // (pet-friendly, alberca, wifi): pet-friendly es el dato que más cambia
 // la decisión cuando aplica, así que gana el primer lugar si compite
 // por espacio.
-export function amenidadesClaveMovil(negocio: Negocio): string[] {
+export function amenidadesClaveMovil(negocio: Negocio) {
   return AMENIDADES_CLAVE.filter((a) => a.prueba(negocio))
     .slice(0, 2)
-    .map((a) => a.chip);
+    .map((a) => ({ icono: a.icono, texto: a.chip }));
 }

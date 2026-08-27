@@ -1,0 +1,54 @@
+---
+import Icono from './Icono.astro';
+
+interface Props {
+  totalHospedajes: number;
+}
+
+const { totalHospedajes } = Astro.props;
+---
+
+<!-- La composición reproduce la referencia aprobada: fotografía marina
+     luminosa, tortuga a la derecha, título centrado y buscador de viaje. -->
+<section class="hero-referencia" aria-labelledby="titulo-hero-referencia">
+  <img
+    class="hero-referencia__imagen"
+    src="/images/hero-tortuga-referencia-v3.png"
+    alt="Tortuga marina nadando entre arrecifes en Tecolutla"
+    width="1672"
+    height="941"
+  />
+  <div class="hero-referencia__velo" aria-hidden="true"></div>
+
+  <div class="contenedor hero-referencia__interior">
+    <p class="hero-referencia__marca">Tecolutla<span>Travel</span><b aria-hidden="true">.</b></p>
+    <h1 id="titulo-hero-referencia">Encuentra tu hospedaje<br />ideal en Tecolutla</h1>
+
+    <div class="hero-referencia__beneficios" aria-label="Beneficios de TecolutlaTravel">
+      <p><Icono nombre="whatsapp" />Contacto directo<br /><b>por WhatsApp</b></p>
+      <p><Icono nombre="escudo" />Negocios<br /><b>verificados</b></p>
+      <p><Icono nombre="etiqueta" />Cero<br /><b>comisiones</b></p>
+    </div>
+
+    <div class="hero-explora" aria-label="Explora hospedajes por características">
+      <div class="hero-explora__encabezado">
+        <div>
+          <strong>¿Qué tipo de hospedaje buscas?</strong>
+          <small>Explora {totalHospedajes} opciones y contacta directamente por WhatsApp.</small>
+        </div>
+        <button type="button" data-abrir-ayuda><span aria-hidden="true">?</span> ¿Qué significan los iconos?</button>
+      </div>
+      <nav class="hero-explora__filtros" aria-label="Filtros rápidos de hospedaje">
+        <a href="/hospedaje?filtro=alberca"><Icono nombre="alberca" /><span>Con alberca</span></a>
+        <a href="/hospedaje?filtro=playa"><Icono nombre="olas" /><span>Cerca de la playa</span></a>
+        <a href="/hospedaje?filtro=grupo-grande"><Icono nombre="grupos" /><span>Para grupos</span></a>
+        <a href="/hospedaje?filtro=pet-friendly"><Icono nombre="mascota" /><span>Aceptan mascotas</span></a>
+        <a href="/hospedaje?filtro=estacionamiento"><Icono nombre="estacionamiento" /><span>Estacionamiento</span></a>
+      </nav>
+      <div class="hero-explora__acciones">
+        <a class="hero-explora__secundario" href="/mapa"><Icono nombre="ubicacion" /> Ver en el mapa</a>
+      </div>
+    </div>
+    <p class="sr-only">Hay {totalHospedajes} hospedajes disponibles para explorar.</p>
+  </div>
+</section>

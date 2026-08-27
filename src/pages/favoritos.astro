@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NegocioCard from '../components/NegocioCard.astro';
+import { filtrarListables } from '../utils/negociosPublicados';
+
+const hospedajes = filtrarListables(await getCollection('negocios'))
+  .filter((negocio) => negocio.data.categoria === 'hospedaje');
+---
+
+<BaseLayout
+  titulo="Mis hospedajes favoritos en Tecolutla"
+  descripcion="Consulta los hospedajes que guardaste para compararlos antes de reservar en Tecolutla."
+>
+  <section class="cabecera-categoria cabecera-categoria--simple">
+    <div class="contenedor">
+      <p class="eyebrow eyebrow--claro">Tu selección</p>
+      <h1>Mis hospedajes favoritos</h1>
+      <p>Guarda las opciones que te interesan y revísalas aquí cuando quieras.</p>
+    </div>
+  </section>
+
+  <section class="seccion contenedor" aria-labelledby="titulo-favoritos">
+    <div class="seccion__encabezado">
+      <div>
+        <h2 id="titulo-favoritos" class="titulo-seccion">Opciones guardadas</h2>
+        <p class="subtitulo" data-favoritos-resumen>Cargando tus favoritos…</p>
+      </div>
+      <a class="boton boton--secundario" href="/hospedaje">Ver todos los hospedajes</a>
+    </div>
+
+    <p class="favoritos-vacio" data-favoritos-vacio hidden>
+      Aún no has guardado hospedajes. Entra al directorio y usa el corazón <strong>Guardar</strong> en las opciones que te gusten.
+    </p>
+    <div class="rejilla-negocios" data-favoritos-lista>
+      {
+        hospedajes.map((negocio) => (
+          <div data-favorito-tarjeta data-slug={negocio.id} hidden>
+            <NegocioCard negocio={negocio} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const CLAVE_FAVORITOS = 'tecolutlatravel-favoritos';
+
+  function leerFavoritos(): string[] {
+    try {
+      const valor = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS) ?? '[]');
+      return Array.isArray(valor) ? valor.filter((slug): slug is string => typeof slug === 'string') : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function mostrarFavoritos() {
+    const favoritos = leerFavoritos();
+    const tarjetas = Array.from(document.querySelectorAll<HTMLElement>('[data-favorito-tarjeta]'));
+    const visibles = tarjetas.filter((tarjeta) => favoritos.includes(tarjeta.dataset.slug ?? ''));
+    tarjetas.forEach((tarjeta) => {
+      tarjeta.hidden = !favoritos.includes(tarjeta.dataset.slug ?? '');
+    });
+
+    const resumen = document.querySelector<HTMLElement>('[data-favoritos-resumen]');
+    const vacio = document.querySelector<HTMLElement>('[data-favoritos-vacio]');
+    if (resumen) {
+      resumen.textContent = visibles.length === 1
+        ? 'Tienes 1 hospedaje guardado para revisar.'
+        : `Tienes ${visibles.length} hospedajes guardados para revisar.`;
+    }
+    if (vacio) vacio.hidden = visibles.length > 0;
+  }
+
+  window.addEventListener('storage', mostrarFavoritos);
+  mostrarFavoritos();
+</script>
