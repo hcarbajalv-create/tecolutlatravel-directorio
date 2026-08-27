@@ -1,0 +1,89 @@
+# Alta recibida vía carpeta de fotos (2026-08-24) — "Fotos Pagina/Restaurantes/El
+# manglar". De 6 archivos, el agente curador-fotos-tecolutla solo aprobó 2 como
+# fotos reales limpias (fachada y un plato); las otras 2 usadas aquí tienen
+# comensales con rostro identificable — el usuario confirmó explícitamente
+# usarlas de todos modos pese a la advertencia de privacidad de terceros
+# (2026-08-24). Los otros 2 archivos eran flyers de menú (info, no fotos) —
+# esos SÍ se descartaron, solo se usaron para extraer los datos de abajo.
+#
+# Ubicación y teléfono: confirmados de forma cruzada — flyer propio del
+# negocio, ficha de Google Maps (Hotel y Restaurante El Manglar, 4.3★) y
+# tecolutlaveracruz.mx coinciden en "C. Hidalgo No. 17, Centro, Tecolutla".
+# Coordenadas: pin exacto del enlace de Google Maps que mandó el usuario
+# (par !3d!4d final, no el centro de vista del mapa).
+# Hay un segundo teléfono en el flyer (556 750 2782) sin confirmar si es
+# WhatsApp activo — se usa el que coincide con la ficha oficial de Google
+# Maps (766 102 2956) como principal.
+#
+# Comparte predio con hospedaje: el competidor también lista "Microhotel El
+# Manglar" en la misma dirección (6 habitaciones) — mismo edificio que el
+# restaurante, tal cual lo describe el nombre "Hotel y Restaurante El
+# Manglar" en Maps. No se da de alta el hospedaje todavía (sin fotos de
+# habitaciones); solo esta ficha de gastronomía.
+#
+# Verificado contra la competencia (agente verificador-duplicados,
+# 2026-08-24): riesgo de duplicado NINGUNO — la ficha de gastronomía del
+# competidor no tiene ningún párrafo propio, solo datos de contacto y una
+# reseña de cliente. Descripción redactada desde cero.
+#
+# Distancias: centro (170 m, medido con Google Maps desde el pin exacto,
+# consistente con ~180 m reportado por un directorio externo) va PRIMERO —
+# es el gancho real, el negocio está en pleno centro. Playa a 1.6 km medida
+# igual de forma directa — se descarta un dato de "515 m" que circula en
+# otro directorio porque es de la ficha del HOTEL vecino, no verificado
+# para este predio específico.
+#
+# Especialidades y tipoCocina: transcritas directo del menú propio del
+# negocio (foto del flyer), no inventadas.
+#
+# PENDIENTE (no inventar, confirmar directo con el negocio):
+# - Horario real de servicio: el flyer dice "7am a 1pm" pero parece ser solo
+#   para el menú de desayunos — el menú de mariscos dice "todo el día", sin
+#   hora de cierre clara.
+# - Capacidad (mesas/comensales).
+# - Rango de precios (el menú va de $70 a $230 por platillo, pero la
+#   categorización $/$$/$$$ la debe confirmar el negocio, no adivinarla).
+# - Amenidades propias del comedor (A/C, terraza, estacionamiento,
+#   pet-friendly) — lo que se sabe (A/C, wifi, alberca) es del hotel vecino,
+#   no verificado para el restaurante.
+# - Confirmar si "Camarones Suspiro de Dragón" es especialidad real de este
+#   El Manglar (hay un tocayo en Chachalacas) — no se incluyó por esa duda.
+nombre: Restaurant El Manglar
+categoria: gastronomia
+descripcionCorta: Restaurante de mariscos, antojitos y desayunos en pleno
+  centro de Tecolutla, a 170 metros del zócalo sobre calle Hidalgo. Ambiente
+  familiar, ideal para comer sin alejarte a pie del centro.
+direccion: C. Hidalgo No. 17, Centro, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.476818
+  lng: -97.010154
+telefono: "+52 766 102 2956"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/restaurant-el-manglar/01-pan-frances-con-frutos-rojos.jpg
+    alt: Pan francés con frutos rojos de Restaurant El Manglar en Tecolutla
+  - src: ../../assets/fotos/restaurant-el-manglar/02-fachada-palapa.jpg
+    alt: Fachada con palapa de Restaurant El Manglar en Tecolutla
+  - src: ../../assets/fotos/restaurant-el-manglar/03-ambiente-terraza.jpg
+    alt: Ambiente en la terraza de Restaurant El Manglar en Tecolutla, Veracruz
+  - src: ../../assets/fotos/restaurant-el-manglar/04-comedor-interior.jpg
+    alt: Interior del comedor de Restaurant El Manglar en Tecolutla, Veracruz
+fechaActualizacion: 2026-08-24
+disponible: true
+servicios: []
+especialidades:
+  - Mojarra frita o al mojo de ajo
+  - Coctel de camarón o pulpo con filete de pescado empanizado
+  - Tostadas de camarón o de mariscos
+  - Ceviche de cangrejo
+tipoCocina:
+  - Mariscos
+  - Antojitos mexicanos
+distancias:
+  - a: centro
+    metros: 170
+  - a: playa
+    metros: 1600
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false

@@ -1,0 +1,89 @@
+# Alta recibida por WhatsApp del dueño (20 de agosto de 2026).
+# Contacto interno (no se publica): Nayeli, propietaria.
+# OJO: este negocio SÍ está en tecolutlaveracruz.mx, Trivago y Facebook. Su ficha de
+#   la competencia está desactualizada (10 pax, 2 hab, sin alberca). Nada de texto
+#   copiado — todo reescrito. Verificado 20/08/2026.
+# Fachada actual es foto nocturna — pedir una de día al dueño cuando se pueda.
+# Pendientes de fotos (del curador-fotos-tecolutla): fachada de día, alberca en
+# horizontal (la 01 es vertical — se recorta al centro en tarjeta/mosaico y
+# funciona, pero ya se pidió versión horizontal al dueño), foto del asador.
+# Orden de fotos elegido por el agente curador-fotos-tecolutla: alberca (gancho
+# frente a la competencia, que la marca "sin alberca") → 2 salas → cocina
+# horizontal → habitaciones → cocina secundaria/baño/detalles → fachada al
+# final (ubica pero no vende).
+# OJO 2 (resuelto): las coordenadas del dueño (20.478668, -97.014977) están a un
+# predio de "Casa Juma" (Juan de la Barrera 37). El usuario mandó el enlace directo
+# de Google Maps de Casa Vía Mar — ahí la ficha real dice "Juan de la Barrera 39,
+# Col. Emiliano Zapata" (predio vecino) y trae el sitio casasviamar.com, que
+# confirma que es el negocio correcto. Dirección tomada de ahí.
+# OJO 3: esa misma ficha de Google Maps trae el teléfono 782 214 1920, distinto al
+# que dio el dueño por WhatsApp (766 115 1203, el que se publica). Puede ser un
+# número viejo en Google — el usuario dijo confirmarlo con Nayeli antes de tocarlo,
+# no cambiar el teléfono publicado sin esa confirmación.
+# Distancia a la playa: Google Maps no devolvió resultados para "Playa Tecolutla"
+# al momento de la alta (falla intermitente del buscador) — se usó la estimación
+# del propio dueño ("5 minutos caminando") como texto en vez de metros medidos.
+# Cuando se pueda remedir, cambiar a metros si da un número confiable.
+nombre: Casa Vía Mar
+categoria: hospedaje
+descripcionCorta: Casa vacacional con alberca privada para 14 personas en
+  Tecolutla, a 5 minutos caminando de la playa. 3 habitaciones climatizadas
+  y pet friendly.
+direccion: Juan de la Barrera 39, Col. Emiliano Zapata, 93570 Tecolutla, Veracruz
+coordenadas:
+  lat: 20.478668
+  lng: -97.014977
+telefono: "+52 766 115 1203"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/casa-via-mar/01-alberca-mural-marino.jpg
+    alt: Alberca privada con toldo y mural marino de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/02-sala-comedor-loro.jpg
+    alt: Sala y comedor con cuadro de loro de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/03-sala-mural-flamencos.jpg
+    alt: Sala con mural de flamencos y tucán de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/04-cocina-completa.jpg
+    alt: Cocina equipada con estufa y ventana al jardín de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/05-habitacion-tortuga.jpg
+    alt: Habitación climatizada con cuadro de tortuga de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/06-habitacion-girasoles.jpg
+    alt: Habitación con dos camas y cuadro de girasoles de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/07-habitacion-loros-rojos.jpg
+    alt: Habitación con cuadro de guacamaya roja de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/08-habitacion-guacamaya.jpg
+    alt: Habitación con aire acondicionado y cuadro de guacamaya de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/09-cocina-barra.jpg
+    alt: Barra de cocina con bancos de madera de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/10-bano-completo.jpg
+    alt: Baño completo con regadera de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/11-tocador-espejo.jpg
+    alt: Tocador con espejo iluminado de Casa Vía Mar en Tecolutla
+  - src: ../../assets/fotos/casa-via-mar/12-fachada-noche.jpg
+    alt: Fachada iluminada de noche de Casa Vía Mar en Tecolutla
+fechaActualizacion: 2026-08-20
+disponible: true
+distancias:
+  - a: playa
+    texto: "5 min caminando a la playa"
+  - a: centro
+    texto: "8-10 min al centro"
+servicios:
+  - Alberca privada
+  - 3 habitaciones con aire acondicionado y ventilador de techo
+  - Smart TV en habitaciones y sala
+  - Cocina totalmente equipada
+  - Área de asador
+  - Estacionamiento
+  - Bocina para música
+  - Acepta mascotas (pet friendly)
+  - Wifi
+tipo: casa
+subtipo: Casa vacacional
+numeroHabitaciones: 3
+capacidadMaxima: 14
+alberca: true
+petFriendly: true
+wifi: true
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false

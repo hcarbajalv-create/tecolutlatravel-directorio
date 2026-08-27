@@ -1,0 +1,88 @@
+# Alta recibida vía carpeta de fotos (2026-08-24) — "Fotos Pagina/Restaurantes/
+# Caracol". De 6 archivos, el agente curador-fotos-tecolutla aprobó 3 fotos
+# reales limpias (terraza con vista al río, fachada con embarcadero, fachada
+# con pizarrón de menú); rechazó una 4ª (comensales cercanos y reconocibles,
+# problema de privacidad) y 2 más por ser fotos de la carta física (info, no
+# fotos del lugar) — esas 2 solo se usaron para extraer los datos de abajo.
+#
+# Ubicación: "Carlos Prieto S/N, Ribera del Río, 93570 Tecolutla, Ver."
+# confirmada en Google Maps (coincide con la carta impresa). Coordenadas: pin
+# exacto del enlace de Google Maps que mandó el usuario.
+# Está a ~50 m de Restaurant Panchita (mismo tramo ribereño junto al
+# embarcadero) — son negocios DISTINTOS, verificado con el agente
+# verificador-duplicados (dirección, teléfono y especialidades no coinciden).
+#
+# Teléfono — OJO, SIGUE SIN CONFIRMARSE (2026-08-24): ninguno de los dos
+# números que teníamos existe en WhatsApp. Yelp/competidor daba
+# 766 846 0321 (no existe en WhatsApp); se cambió al de la carta impresa,
+# 766 105 0321, releído letra por letra en dos fotos distintas (menú y
+# pizarrón de la entrada) — tampoco existe en WhatsApp. No es un tema de
+# fijo vs. celular (los celulares de la zona también empiezan con 766).
+# Se deja este número por ahora; Paloma lo verifica directo con el negocio
+# mañana. Si cambia, actualizar aquí y en "telefono" abajo.
+#
+# Verificado contra la competencia (agente verificador-duplicados,
+# 2026-08-24): riesgo ALTO si se copiaba texto — tecolutlaveracruz.mx sí
+# tiene un párrafo de bienvenida propio y ya redactado. La descripción de
+# abajo es una reescritura desde cero, sin frases ni estructura calcadas.
+# Las especialidades (caldo rompecatre, langostinos, piña rellena) sí
+# aparecen igual en varios sitios porque son platillos reales del negocio —
+# no hay problema en mencionarlas, solo no se copió la redacción.
+#
+# Distancias: río va PRIMERO (el gancho real — está literalmente junto al
+# embarcadero, igual que Panchita). Centro medido fresco (350 m). Playa
+# reutiliza el mismo valor ya calculado para Panchita con la costa real vía
+# Overpass API (527 m) — las coordenadas de ambos negocios están a ~50 m de
+# distancia entre sí, en el mismo tramo del río, así que es la misma
+# distancia real a la costa en la práctica.
+#
+# "Traslado gratuito ida y vuelta" sale del propio pizarrón de anuncios del
+# negocio (foto 03), dato real del negocio, no inventado.
+#
+# PENDIENTE (no inventar, confirmar directo con el negocio):
+# - Horario real de servicio (Google Maps solo muestra un horario parcial/
+#   poco confiable).
+# - Capacidad (mesas/comensales).
+# - Rango de precios — Google Maps muestra "$100-200 por persona" (estimado
+#   de 442 personas) pero es dato de la comunidad, no del negocio; la carta
+#   propia va de $45 a $625 por platillo, muy variable para adivinar $/$$/$$$.
+nombre: Restaurant El Caracol
+categoria: gastronomia
+descripcionCorta: Restaurante de mariscos junto al embarcadero de Tecolutla,
+  con vista al río desde la terraza. Su especialidad es la comida exótica
+  afrodisiaca — caldo rompecatre, receta original de la casa, langosta
+  entera y piña rellena de mariscos.
+direccion: Carlos Prieto y Ribera del Río, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.474441
+  lng: -97.007254
+telefono: "+52 766 105 0321"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/restaurant-el-caracol/01-terraza-vista-rio.jpg
+    alt: Terraza con vista al río de Restaurant El Caracol en Tecolutla
+  - src: ../../assets/fotos/restaurant-el-caracol/02-fachada-embarcadero-lanchas.jpg
+    alt: Fachada junto al embarcadero de lanchas de Restaurant El Caracol en Tecolutla
+  - src: ../../assets/fotos/restaurant-el-caracol/03-fachada-menu-entrada.jpg
+    alt: Entrada con pizarrón de menú de Restaurant El Caracol en Tecolutla
+fechaActualizacion: 2026-08-24
+disponible: true
+servicios:
+  - Traslado gratuito ida y vuelta
+especialidades:
+  - Caldo afrodisiaco rompecatre, receta original de la casa
+  - Langosta entera (para 4 personas)
+  - Langostinos al gusto
+  - Piña rellena de mariscos o de camarón
+tipoCocina:
+  - Mariscos
+distancias:
+  - a: rio
+    texto: "A pie de río"
+  - a: centro
+    metros: 350
+  - a: playa
+    metros: 527
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false

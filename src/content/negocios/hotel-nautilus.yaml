@@ -1,0 +1,77 @@
+# Alta con datos por imágenes (tarjeta de presentación + notas a mano del
+# dueño + flyer promocional, 20 de agosto de 2026). Fotos evaluadas y
+# ordenadas por el agente curador-fotos-tecolutla (14 reales evaluadas, 9
+# publicadas; 2 rechazadas por traer el encabezado de Instagram encima —
+# ver PENDIENTE abajo — y 3 casi-duplicadas descartadas).
+# LOTE COMPARTIDO: mismo predio que Casa Llanos — Calle Guerrero #41,
+# Col. Centro. Casa Llanos es el "41 exterior"; este hotel es el
+# "41 interior" (confirmado: mismas coordenadas de entrada, ver
+# casa-llanos.yaml). Fichas independientes, sin compartir fotos/texto.
+# Contacto interno (no se publica): Lyde Manzano. Recepción del hotel
+# (distinto al WhatsApp que se publica): 766 688 0633.
+# Distancias: centro (Parque Miguel Hidalgo) medido en Google Maps, 140 m
+# — su propio flyer dice "60 m", se usó la medición propia en su lugar.
+# Playa: se reutiliza la medición de Casa Llanos (850 m, mismo predio
+# exacto) en vez de remedir.
+# PENDIENTE (fotos, del reporte del curador): pedir al dueño el original
+# sin encabezado de Instagram de 2 habitaciones muy buenas (mural de
+# velero al atardecer, y mural de ventana con playa/palmeras) — hoy
+# descartadas por traer la app encima. También pedir fachada de día (la
+# única que hay es de noche, con decoración navideña de temporada) y una
+# foto de recepción/check-in si existe. Regla de exigencia de fotos
+# relajada mientras el catálogo tenga <50 fichas — ver
+# feedback_exigencia_fotos_hasta_50_fichas en memoria.
+# Sin precio todavía.
+nombre: Hotel Nautilus
+categoria: hospedaje
+descripcionCorta: Hotel con habitaciones temáticas pintadas a mano (faro,
+  palmera, mar) en el centro de Tecolutla, a pasos del Parque Miguel
+  Hidalgo. Aire acondicionado, wifi, agua caliente y terraza.
+direccion: Calle Guerrero #41 interior, Col. Centro, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.477135
+  lng: -97.007721
+telefono: "+52 766 121 2683"
+plan: gratuito
+fotos:
+  - src: ../../assets/fotos/hotel-nautilus/01-habitacion-faro-gaviotas.jpg
+    alt: Habitación con mural de faro y gaviotas de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/02-habitacion-palmera-atardecer.jpg
+    alt: Habitación con mural de palmera al atardecer de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/03-habitacion-faro-floral.jpg
+    alt: Habitación con mural de faro y colchas florales de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/04-terraza-logo-nautilus.jpg
+    alt: Terraza con mural del logo Nautilus de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/05-bano-tematico-nautico.jpg
+    alt: Baño con cortina de temática náutica de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/06-terraza-privada-habitacion.jpg
+    alt: Acceso a terraza privada desde habitación de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/07-pasillo-segundo-piso-plantas.jpg
+    alt: Pasillo del segundo piso con plantas de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/08-pasillo-planta-baja.jpg
+    alt: Pasillo de planta baja de Hotel Nautilus en Tecolutla
+  - src: ../../assets/fotos/hotel-nautilus/09-fachada-nocturna.jpg
+    alt: Fachada nocturna iluminada de Hotel Nautilus en Tecolutla
+fechaActualizacion: 2026-08-20
+disponible: true
+distancias:
+  - a: centro
+    metros: 140
+  - a: playa
+    metros: 850
+servicios:
+  - 14 habitaciones dobles (hasta 4 personas) y 2 King (hasta 2 adultos y un niño)
+  - Aire acondicionado
+  - Ventilador de techo
+  - Agua caliente
+  - TV Smart
+  - Terraza
+  - Wifi
+tipo: hotel
+subtipo: Hotel
+numeroHabitaciones: 16
+capacidadMaxima: 62
+wifi: true
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
