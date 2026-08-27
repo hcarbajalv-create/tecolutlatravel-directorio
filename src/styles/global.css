@@ -4780,6 +4780,12 @@ body:has(.hero-referencia) {
 .pie--gastronomia .pie__beneficios strong { display: block; color: #087f91; font-size: .82rem; font-weight: 800; }
 .pie--gastronomia .pie__beneficios small { display: block; margin-top: .25rem; color: #587784; font-size: .67rem; line-height: 1.35; }
 .pie--gastronomia .pie__logo { filter: none; mix-blend-mode: normal; }
+body:has(.pie--gastronomia) .pie h2 { color: #0b3e54; }
+body:has(.pie--gastronomia) .pie li,
+body:has(.pie--gastronomia) .pie a { color: #365d70; }
+body:has(.pie--gastronomia) .pie a:hover { color: #078c9a; }
+body:has(.pie--gastronomia) .pie__marca p { color: #557784; }
+body:has(.pie--gastronomia) .pie__legal { color: #627b85; }
 @media (max-width: 760px) { .pie--gastronomia .pie__beneficios { grid-template-columns: 1fr 1fr; gap: .7rem; padding: 1rem; } .pie--gastronomia .pie__beneficios > div { padding: .2rem .35rem; } .pie--gastronomia .pie__beneficios > div + div { border-left: 0; } }
 
 /* Prueba visual únicamente en Gastronomía: integra el logo claro con el pie oscuro. */
