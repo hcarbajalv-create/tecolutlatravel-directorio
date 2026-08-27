@@ -1,7 +1,0 @@
----
-# ENTRADA DE EJEMPLO — video pendiente de grabar
-titulo: Llega la temporada alta
-categoria: noticia
-fecha: 2026-07-20
-descripcionCorta: Qué esperar en Tecolutla durante fines de semana y vacaciones — afluencia, clima y recomendaciones.
----

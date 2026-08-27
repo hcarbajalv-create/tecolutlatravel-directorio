@@ -16,6 +16,11 @@
 /gastronomia/cocina-dona-lupita        /gastronomia    301
 /gastronomia/restaurante-el-manglar    /gastronomia    301
 
+# Reportajes de ejemplo retirados (contenido vacío)
+/reportajes-y-noticias/5-cosas-que-no-debes-olvidar   /reportajes-y-noticias   301
+/reportajes-y-noticias/casa-xanath-por-dentro       /reportajes-y-noticias   301
+/reportajes-y-noticias/llega-la-temporada-alta     /reportajes-y-noticias   301
+
 # Las 4 fichas de Raysemar (1, 2, 3, 4) se consolidaron en una sola el
 # mismo día que se dieron de alta (2026-08-19) — se veían casi idénticas
 # entre sí en la rejilla de /hospedaje.
