@@ -5040,6 +5040,24 @@ body .pie__logo { filter: none; mix-blend-mode: normal; }
   color: #fff;
 }
 
+/* En móvil los filtros se recorren horizontalmente para evitar que se amontonen. */
+@media (max-width: 760px) {
+  .filtros-hospedaje,
+  .filtros-propuesta .filtros-rapidos {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: .35rem;
+  }
+  .filtros-hospedaje::-webkit-scrollbar,
+  .filtros-propuesta .filtros-rapidos::-webkit-scrollbar { display: none; }
+  .filtros-hospedaje .filtro-rapido,
+  .filtros-propuesta .filtros-rapidos .filtro-rapido { flex: 0 0 auto; white-space: nowrap; }
+}
+
 .filtros-propuesta__interior { position: relative; }
 .filtros-ayuda__boton { margin-left: auto; margin-bottom: .55rem; border: 0; background: transparent; color: #0b7184; font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: .35rem; }
 .filtros-ayuda__boton span { width: 20px; height: 20px; border: 1.5px solid currentColor; border-radius: 50%; display: inline-grid; place-items: center; font-size: .75rem; }
