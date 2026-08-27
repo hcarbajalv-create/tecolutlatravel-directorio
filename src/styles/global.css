@@ -4772,8 +4772,8 @@ body:has(.hero-referencia) {
 
 /* Prueba visual únicamente en Gastronomía: integra el logo claro con el pie oscuro. */
 .pie--gastronomia .pie__logo {
-  mix-blend-mode: multiply;
   filter: brightness(0) invert(1);
+  mix-blend-mode: screen;
   opacity: 0.96;
 }
 /* Fichas limpias de hospedaje: referencia aprobada para la home */
