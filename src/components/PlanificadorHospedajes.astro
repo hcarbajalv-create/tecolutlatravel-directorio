@@ -5,10 +5,10 @@
 ---
 
 <aside class="planificador-hospedajes" data-planificador-hospedajes hidden aria-label="Tu selección de hospedajes">
-  <div class="planificador-hospedajes__texto">
+  <a class="planificador-hospedajes__texto" data-planificador-ir-favoritos href="/favoritos" aria-label="Abrir favoritos">
     <p class="planificador-hospedajes__eyebrow">Tu selección</p>
     <p class="planificador-hospedajes__resumen" data-planificador-resumen>Guarda opciones para revisarlas después.</p>
-  </div>
+  </a>
   <div class="planificador-hospedajes__acciones">
     <a class="boton boton--claro boton--chico" data-planificador-comparar hidden href="/comparar">
       Comparar opciones
@@ -60,12 +60,14 @@
     const planificador = document.querySelector<HTMLElement>('[data-planificador-hospedajes]');
     const resumen = document.querySelector<HTMLElement>('[data-planificador-resumen]');
     const enlaceComparar = document.querySelector<HTMLAnchorElement>('[data-planificador-comparar]');
+    const enlaceFavoritos = document.querySelector<HTMLAnchorElement>('[data-planificador-ir-favoritos]');
     const estado = document.querySelector<HTMLElement>('[data-planificador-estado]');
 
     actualizarBotones(favoritos, comparacion);
     if (!planificador || !resumen || !enlaceComparar) return;
 
     planificador.hidden = favoritos.length === 0 && comparacion.length === 0;
+    if (enlaceFavoritos) enlaceFavoritos.href = favoritos.length > 0 ? '/favoritos' : '/comparar';
     const textoFavoritos = `${favoritos.length} ${favoritos.length === 1 ? 'favorito guardado' : 'favoritos guardados'}`;
     const textoComparacion = `${comparacion.length} ${comparacion.length === 1 ? 'opción para comparar' : 'opciones para comparar'}`;
     resumen.textContent = favoritos.length > 0 && comparacion.length > 0

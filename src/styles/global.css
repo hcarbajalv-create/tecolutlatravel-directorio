@@ -1639,6 +1639,8 @@ p.buscador-pildora__resultados {
 .planificador-hospedajes__texto {
   min-width: 0;
 }
+.planificador-hospedajes__texto { color: inherit; text-decoration: none; cursor: pointer; }
+.planificador-hospedajes__texto:hover { color: inherit; text-decoration: none; }
 
 .planificador-hospedajes__eyebrow,
 .planificador-hospedajes__resumen {
