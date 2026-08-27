@@ -1,0 +1,119 @@
+---
+// Selección local para viajeros. No crea cuentas ni manda datos a un
+// servidor: favoritos y comparación se guardan únicamente en el navegador
+// de la persona que navega el directorio.
+---
+
+<aside class="planificador-hospedajes" data-planificador-hospedajes hidden aria-label="Tu selección de hospedajes">
+  <div class="planificador-hospedajes__texto">
+    <p class="planificador-hospedajes__eyebrow">Tu selección</p>
+    <p class="planificador-hospedajes__resumen" data-planificador-resumen>Guarda opciones para revisarlas después.</p>
+  </div>
+  <div class="planificador-hospedajes__acciones">
+    <a class="boton boton--claro boton--chico" data-planificador-comparar hidden href="/comparar">
+      Comparar opciones
+    </a>
+    <button type="button" class="planificador-hospedajes__limpiar" data-planificador-limpiar>
+      Limpiar
+    </button>
+  </div>
+  <p class="sr-only" aria-live="polite" data-planificador-estado></p>
+</aside>
+
+<script>
+  const CLAVE_FAVORITOS = 'tecolutlatravel-favoritos';
+  const CLAVE_COMPARAR = 'tecolutlatravel-comparar';
+  const MAXIMO_COMPARAR = 3;
+
+  function leerSeleccion(clave: string): string[] {
+    try {
+      const valor = JSON.parse(localStorage.getItem(clave) ?? '[]');
+      return Array.isArray(valor) ? valor.filter((slug): slug is string => typeof slug === 'string') : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function guardarSeleccion(clave: string, seleccion: string[]) {
+    localStorage.setItem(clave, JSON.stringify([...new Set(seleccion)]));
+  }
+
+  function actualizarBotones(favoritos: string[], comparacion: string[]) {
+    document.querySelectorAll<HTMLButtonElement>('[data-favorito-hospedaje]').forEach((boton) => {
+      const seleccionado = favoritos.includes(boton.dataset.slug ?? '');
+      boton.setAttribute('aria-pressed', String(seleccionado));
+      boton.classList.toggle('tarjeta__seleccion-boton--activo', seleccionado);
+      boton.textContent = seleccionado ? '♥ Guardado' : '♡ Guardar';
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-comparar-hospedaje]').forEach((boton) => {
+      const seleccionado = comparacion.includes(boton.dataset.slug ?? '');
+      boton.setAttribute('aria-pressed', String(seleccionado));
+      boton.classList.toggle('tarjeta__seleccion-boton--activo', seleccionado);
+      boton.textContent = seleccionado ? '✓ En comparación' : '↔ Comparar';
+    });
+  }
+
+  function actualizarPlanificador(mensaje = '') {
+    const favoritos = leerSeleccion(CLAVE_FAVORITOS);
+    const comparacion = leerSeleccion(CLAVE_COMPARAR);
+    const planificador = document.querySelector<HTMLElement>('[data-planificador-hospedajes]');
+    const resumen = document.querySelector<HTMLElement>('[data-planificador-resumen]');
+    const enlaceComparar = document.querySelector<HTMLAnchorElement>('[data-planificador-comparar]');
+    const estado = document.querySelector<HTMLElement>('[data-planificador-estado]');
+
+    actualizarBotones(favoritos, comparacion);
+    if (!planificador || !resumen || !enlaceComparar) return;
+
+    planificador.hidden = favoritos.length === 0 && comparacion.length === 0;
+    const textoFavoritos = `${favoritos.length} ${favoritos.length === 1 ? 'favorito guardado' : 'favoritos guardados'}`;
+    const textoComparacion = `${comparacion.length} ${comparacion.length === 1 ? 'opción para comparar' : 'opciones para comparar'}`;
+    resumen.textContent = favoritos.length > 0 && comparacion.length > 0
+      ? `${textoFavoritos} · ${textoComparacion}`
+      : favoritos.length > 0
+        ? textoFavoritos
+        : textoComparacion;
+
+    enlaceComparar.hidden = comparacion.length < 2;
+    enlaceComparar.href = `/comparar?ids=${encodeURIComponent(comparacion.join(','))}`;
+    if (estado) estado.textContent = mensaje;
+  }
+
+  function alternarSeleccion(clave: string, slug: string, maximo?: number): string | undefined {
+    const actual = leerSeleccion(clave);
+    const indice = actual.indexOf(slug);
+    if (indice >= 0) {
+      actual.splice(indice, 1);
+      guardarSeleccion(clave, actual);
+      return 'Opción retirada de tu selección.';
+    }
+    if (maximo && actual.length >= maximo) {
+      return `Puedes comparar hasta ${maximo} hospedajes a la vez.`;
+    }
+    actual.push(slug);
+    guardarSeleccion(clave, actual);
+    return clave === CLAVE_FAVORITOS ? 'Hospedaje guardado en favoritos.' : 'Hospedaje agregado a comparación.';
+  }
+
+  document.addEventListener('click', (evento) => {
+    const objetivo = evento.target as Element | null;
+    const boton = objetivo?.closest<HTMLButtonElement>('[data-favorito-hospedaje], [data-comparar-hospedaje]');
+    if (!boton) return;
+
+    const slug = boton.dataset.slug;
+    if (!slug) return;
+    const mensaje = boton.hasAttribute('data-favorito-hospedaje')
+      ? alternarSeleccion(CLAVE_FAVORITOS, slug)
+      : alternarSeleccion(CLAVE_COMPARAR, slug, MAXIMO_COMPARAR);
+    actualizarPlanificador(mensaje);
+  });
+
+  document.querySelector<HTMLButtonElement>('[data-planificador-limpiar]')?.addEventListener('click', () => {
+    localStorage.removeItem(CLAVE_FAVORITOS);
+    localStorage.removeItem(CLAVE_COMPARAR);
+    actualizarPlanificador('Tu selección se limpió.');
+  });
+
+  window.addEventListener('storage', () => actualizarPlanificador());
+  actualizarPlanificador();
+</script>
