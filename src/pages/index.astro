@@ -3,33 +3,25 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NegocioCard from '../components/NegocioCard.astro';
+import HeroSubmarino from '../components/HeroSubmarino.astro';
+import Icono from '../components/Icono.astro';
 import { compararDentroDeGrupo } from '../utils/puntajeCompletitud';
 import { filtrarListables } from '../utils/negociosPublicados';
-import { SELLOS_CONFIANZA } from '../utils/sellosConfianza';
 
 const negocios = filtrarListables(await getCollection('negocios'));
-// Orden manual primero (si se define); el resto se manda tal cual al
-// navegador, que rota el orden por día y limita a MAX_DESTACADOS_HOME
-// (ver script abajo) — así, aunque haya cientos de negocios pagando, la
-// portada no se vuelve una lista interminable, y todos rotan con el tiempo.
+// Orden manual primero (si se define). La portada muestra cuatro
+// recomendaciones para que se lean de un vistazo; el catálogo completo
+// siempre conserva todas las opciones de hospedaje.
 const destacados = negocios
   .filter((n) => n.data.destacado)
   .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
+const destacadosEnPortada = destacados.slice(0, 4);
 
 // El número y las ligas del catálogo se calculan desde los datos reales.
 // Así la home nunca promete más hospedajes de los que existen, y el mensaje
 // sigue creciendo solo conforme se den de alta nuevos negocios.
 const hospedajes = negocios.filter((n) => n.data.categoria === 'hospedaje');
 const totalHospedajes = hospedajes.length;
-const filtrosRapidos = [
-  { href: '/hospedaje?filtro=casa', icono: '🏡', etiqueta: 'Casas vacacionales' },
-  { href: '/hospedaje?filtro=hotel', icono: '🏨', etiqueta: 'Hoteles' },
-  { href: '/hospedaje?filtro=alberca', icono: '🏊', etiqueta: 'Con alberca' },
-  { href: '/hospedaje?filtro=playa', icono: '🌊', etiqueta: 'Cerca de la playa' },
-  { href: '/hospedaje?filtro=grupo-grande', icono: '👨‍👩‍👧‍👦', etiqueta: 'Para grupos' },
-  { href: '/hospedaje?filtro=pet-friendly', icono: '🐾', etiqueta: 'Con mascotas' },
-];
-
 // "También en Tecolutla": una ficha por cada categoría que NO sea
 // hospedaje, elegida por puntaje de completitud (la misma lógica que
 // ordena /gastronomia, /actividades y /servicios). Si una categoría
@@ -46,34 +38,35 @@ const categorias = [
   {
     href: '/hospedaje',
     clase: 'tile--hospedaje',
-    icono: '🏡',
+    icono: 'cama',
     titulo: 'Hospedaje',
     descripcion: 'Hoteles, casas y posadas',
-    imagen: primerNegocio('hospedaje'),
+    imagenPublica: '/images/tile-hospedaje-alberca-playa.png',
   },
   {
     href: '/gastronomia',
     clase: 'tile--gastronomia',
-    icono: '🍤',
+    icono: 'cubiertos',
     titulo: 'Gastronomía',
     descripcion: 'Restaurantes y antojitos',
-    imagen: primerNegocio('gastronomia'),
+    // Imagen editorial compartida con el banner de Gastronomía.
+    imagenPublica: '/images/banner-gastronomia-restaurante-rio.png',
   },
   {
     href: '/actividades',
     clase: 'tile--actividades',
-    icono: '🛶',
+    icono: 'actividad',
     titulo: 'Actividades',
     descripcion: 'Tours y experiencias',
-    imagen: primerNegocio('actividades'),
+    imagenPublica: '/images/tile-actividades-lancha-manglar.png',
   },
   {
     href: '/tips-para-tu-viaje',
     clase: 'tile--tips',
-    icono: '💡',
+    icono: 'idea',
     titulo: 'Tips para tu viaje',
     descripcion: 'Guías y recomendaciones',
-    imagenPublica: '/images/hero-tortuga-tecolutla-v2.png',
+    imagenPublica: '/images/tile-tips-mapa-playa.png',
   },
 ];
 
@@ -111,156 +104,77 @@ const esquemaOrganization = {
   <script type="application/ld+json" set:html={JSON.stringify(esquemaWebSite)} />
   <script type="application/ld+json" set:html={JSON.stringify(esquemaOrganization)} />
 
-  <section class="promesa">
-    <img
-      class="promesa__imagen"
-      src="/images/hero-tortuga-tecolutla-v2.png"
-      alt="Tortuga marina nadando en aguas turquesa de Tecolutla"
-      width="1728"
-      height="960"
-    />
-    <div class="promesa__overlay" aria-hidden="true"></div>
-    <div class="contenedor promesa__interior">
-      <p class="promesa__marca">Tecolutla<span>Travel</span><b aria-hidden="true">.</b></p>
-      <h1>Encuentra tu hospedaje ideal en <span class="promesa__resaltado">Tecolutla</span></h1>
-
-      <div class="promesa__confianza">
-        {
-          SELLOS_CONFIANZA.map((sello) => (
-            <div class="sello-confianza">
-              <span class="sello-confianza__icono" aria-hidden="true">{sello.emoji}</span>
-              <span><b>{sello.fuerte}</b>&nbsp;{sello.resto}</span>
-            </div>
-          ))
-        }
-      </div>
-
-      <div class="buscador-viaje" aria-label="Busca y explora hospedajes">
-        <div class="buscador-pildora buscador-viaje__busqueda">
-          <label for="buscador-home-input" class="sr-only">Buscar un negocio por nombre</label>
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" class="buscador-pildora__icono">
-            <circle cx="8.5" cy="8.5" r="6" />
-            <line x1="13" y1="13" x2="18" y2="18" stroke-linecap="round" />
-          </svg>
-          <input
-            type="search"
-            id="buscador-home-input"
-            class="buscador-pildora__input"
-            placeholder="Busca hospedaje, restaurantes, actividades…"
-            autocomplete="off"
-          />
-          <ul class="buscador__resultados buscador-pildora__resultados" id="buscador-home-resultados" aria-live="polite"></ul>
-          <p class="buscador__sin-resultados buscador-pildora__resultados" id="buscador-home-sin-resultados" hidden>
-            No encontramos negocios con ese nombre.
-          </p>
-        </div>
-        <a class="buscador-viaje__atajo" href="/tips-para-tu-viaje">
-          <span aria-hidden="true">🗺️</span>
-          <span><b>Planea tu visita</b><small>Consejos antes de viajar</small></span>
-        </a>
-        <a class="buscador-viaje__atajo" href="/hospedaje?filtro=grupo-grande">
-          <span aria-hidden="true">👨‍👩‍👧‍👦</span>
-          <span><b>¿Viajan en grupo?</b><small>Opciones para familias</small></span>
-        </a>
-        {
-          totalHospedajes > 0 && (
-            <a class="boton buscador-viaje__boton" href="/hospedaje">
-              Ver los {totalHospedajes} hospedajes <span aria-hidden="true">→</span>
-            </a>
-          )
-        }
-      </div>
-
-      <a class="promesa__enlace-secundario" href="#elige-hospedaje">
-        Quiero buscar por tipo de viaje
-      </a>
-
-    </div>
-  </section>
+  <HeroSubmarino totalHospedajes={totalHospedajes} />
 
   {
     totalHospedajes > 0 && (
-      <section class="filtros-propuesta" id="elige-hospedaje" aria-labelledby="titulo-busqueda-rapida">
-        <div class="contenedor filtros-propuesta__interior">
-          <p id="titulo-busqueda-rapida" class="filtros-propuesta__titulo">Elige cómo quieres hospedarte:</p>
-          <div class="filtros-rapidos" aria-label="Filtros rápidos de hospedaje">
-          {
-            filtrosRapidos.map((filtro) => (
-              <a href={filtro.href} class="filtro-rapido">
-                <span aria-hidden="true">{filtro.icono}</span>
-                {filtro.etiqueta}
-              </a>
-            ))
-          }
-          <a href="/mapa" class="filtro-rapido filtro-rapido--mapa">
-            <span aria-hidden="true">🗺️</span>
-            Ver en el mapa
-          </a>
+      <section class="filtros-propuesta filtros-propuesta--solo-ayuda" id="elige-hospedaje" aria-labelledby="titulo-busqueda-rapida">
+        <h2 id="titulo-busqueda-rapida" class="sr-only">Ayuda de iconos de hospedaje</h2>
+        <dialog class="filtros-ayuda" data-ayuda-iconos aria-labelledby="titulo-ayuda-iconos">
+          <div class="filtros-ayuda__cabecera">
+            <h2 id="titulo-ayuda-iconos">Cómo leer las fichas</h2>
+            <button type="button" class="filtros-ayuda__cerrar" data-cerrar-ayuda aria-label="Cerrar ayuda">×</button>
           </div>
-          <a class="filtros-propuesta__ver-todos" href="/hospedaje">
-            Ver todos los {totalHospedajes} hospedajes <span aria-hidden="true">→</span>
-          </a>
-        </div>
+          <div class="filtros-ayuda__lista">
+            <span><Icono nombre="alberca" /><b>Alberca</b><small>Cuenta con piscina.</small></span>
+            <span><Icono nombre="olas" /><b>Frente al mar</b><small>Está frente a la playa o cerca de ella.</small></span>
+            <span><Icono nombre="usuarios" /><b>Máx. X personas</b><small>Capacidad máxima del alojamiento.</small></span>
+            <span><Icono nombre="wifi" /><b>Wifi</b><small>Conexión inalámbrica disponible.</small></span>
+            <span><Icono nombre="aire" /><b>Aire acondicionado</b><small>Cuenta con aire acondicionado.</small></span>
+            <span><Icono nombre="estacionamiento" /><b>Estacionamiento</b><small>Ofrece espacio para estacionar.</small></span>
+            <span><Icono nombre="mascota" /><b>Pet friendly</b><small>Acepta mascotas según sus condiciones.</small></span>
+            <span><Icono nombre="ubicacion" /><b>A X m de la playa</b><small>Distancia aproximada a la playa.</small></span>
+            <span><Icono nombre="whatsapp" /><b>WhatsApp</b><small>Contacto directo con el hospedaje.</small></span>
+            <span><Icono nombre="corazon" /><b>Favorito</b><small>Guarda la ficha para verla después.</small></span>
+            <span><Icono nombre="comparar" /><b>Comparar</b><small>Permite comparar este hospedaje con otros.</small></span>
+            <span><Icono nombre="escudo" /><b>Verificado</b><small>El negocio confirmó sus datos con TecolutlaTravel.</small></span>
+          </div>
+        </dialog>
       </section>
     )
   }
 
   {
-    destacados.length > 0 && (
+    destacadosEnPortada.length > 0 && (
       <section class="banda-destacados destacados-propuesta">
         <div class="contenedor banda-destacados__encabezado">
           <div>
             <h2 class="titulo-seccion">Hospedajes destacados</h2>
             {
-              totalHospedajes > destacados.length && (
+              totalHospedajes > destacadosEnPortada.length && (
                 <p class="banda-destacados__subtitulo">
-                  Verificados y bien calificados por viajeros como tú.
+                  Una selección para empezar. Hay muchas más opciones en el directorio.
                 </p>
               )
             }
           </div>
-          <a class="banda-destacados__enlace-todos" href="/hospedaje">
-            Ver todos los hospedajes <span aria-hidden="true">→</span>
+          <a class="banda-destacados__enlace-todos" href="/hospedaje" aria-label="Ver todos los hospedajes disponibles">
+            <span class="cta-texto-completo">Ver todos los hospedajes</span>
+            <span class="cta-texto-corto" aria-hidden="true">Ver todos</span>
+            <span aria-hidden="true">→</span>
           </a>
         </div>
         <div class="carrusel-destacados" id="carrusel-destacados-home">
-          {destacados.map((negocio, i) => (
+          {destacadosEnPortada.map((negocio, i) => (
             <NegocioCard negocio={negocio} esPrimera={i === 0} />
           ))}
-          <a class="tarjeta-ver-mas" href="/hospedaje" data-tarjeta-ver-mas>
-            <span>Ver los {totalHospedajes} hospedajes</span>
-            <span aria-hidden="true">→</span>
-          </a>
         </div>
       </section>
     )
   }
 
   {
-    totalHospedajes > destacados.length && (
+    totalHospedajes > destacadosEnPortada.length && (
       <section class="seccion seccion--catalogo-completo">
         <div class="contenedor">
           <div class="puente-catalogo">
             <div class="puente-catalogo__texto">
-              <p class="eyebrow eyebrow--claro">El directorio completo</p>
-              <h2>No son solo estos {destacados.length} hospedajes.</h2>
-              <p>
-                En TecolutlaTravel hay <strong>{totalHospedajes} opciones de hospedaje</strong> para conocer. Puedes verlas
-                todas, usar filtros y entrar a cada ficha antes de escribir por WhatsApp.
-              </p>
+              <p class="eyebrow eyebrow--claro">¿Quieres ver más opciones?</p>
+              <h2>Explora todos los hospedajes disponibles en Tecolutla.</h2>
             </div>
             <div class="puente-catalogo__acciones">
               <a class="boton boton--claro puente-catalogo__boton-principal" href="/hospedaje">
-                Ver todos los hospedajes →
-              </a>
-              <a class="puente-catalogo__enlace" href="/hospedaje?filtro=alberca">
-                Buscar hospedajes con alberca
-              </a>
-              <a class="puente-catalogo__enlace" href="/hospedaje?filtro=playa">
-                Buscar cerca de la playa
-              </a>
-              <a class="puente-catalogo__enlace" href="/mapa">
-                Ver hospedajes en el mapa
+                Ver todos los hospedajes
               </a>
             </div>
           </div>
@@ -276,6 +190,7 @@ const esquemaOrganization = {
           <h2 class="titulo-seccion">Explora por categoría</h2>
           <p class="subtitulo">Todo lo que necesitas para disfrutar Tecolutla.</p>
         </div>
+        <a class="enlace-seccion" href="/descubre-tecolutla">Ver todas las categorías <span aria-hidden="true">→</span></a>
       </div>
       <div class="rejilla-categorias">
         {
@@ -289,7 +204,7 @@ const esquemaOrganization = {
                 )
               }
               <span class="tile-categoria__velo" aria-hidden="true"></span>
-              <span class="tile-categoria__icono">{cat.icono}</span>
+              <span class="tile-categoria__icono"><Icono nombre={cat.icono} /></span>
               <span class="tile-categoria__texto">
                 <span class="tile-categoria__titulo">{cat.titulo}</span>
                 <span class="tile-categoria__descripcion">{cat.descripcion}</span>
@@ -313,38 +228,51 @@ const esquemaOrganization = {
         </div>
         <div class="zonas-tecolutla__contenido">
           <nav class="zonas-tecolutla__lista" aria-label="Zonas para explorar">
-            <a href="/mapa"><span aria-hidden="true">📍</span><span><b>Centro de Tecolutla</b><small>Hospedaje y restaurantes</small></span></a>
-            <a href="/hospedaje?filtro=playa"><span aria-hidden="true">🌊</span><span><b>Cerca de la playa</b><small>Opciones frente al mar</small></span></a>
-            <a href="/actividades"><span aria-hidden="true">🛶</span><span><b>Río y manglares</b><small>Naturaleza y recorridos</small></span></a>
-            <a href="/descubre-tecolutla"><span aria-hidden="true">🧭</span><span><b>Alrededores</b><small>Descubre qué más visitar</small></span></a>
+            <a href="/mapa"><Icono nombre="ubicacion" /><span><b>Centro de Tecolutla</b><small>Hospedaje y restaurantes</small></span></a>
+            <a href="/hospedaje?filtro=playa"><Icono nombre="olas" /><span><b>Cerca de la playa</b><small>Opciones frente al mar</small></span></a>
+            <a href="/actividades"><Icono nombre="actividad" /><span><b>Río y manglares</b><small>Naturaleza y recorridos</small></span></a>
+            <a href="/descubre-tecolutla"><Icono nombre="brujula" /><span><b>Alrededores</b><small>Descubre qué más visitar</small></span></a>
           </nav>
-          <iframe
-            class="zonas-tecolutla__mapa"
-            title="Mapa de hospedajes en Tecolutla"
-            src={mapaHome}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+          <div class="zonas-tecolutla__mapa-wrap">
+            <iframe
+              class="zonas-tecolutla__mapa"
+              title="Mapa de hospedajes en Tecolutla"
+              src={mapaHome}
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+            <div class="zonas-tecolutla__pins" aria-label="Hospedajes ubicados en el mapa">
+              <a class="mapa-pin mapa-pin--uno" href="/hospedaje/casa-xanath" title="Casa Xanath"><span>Casa Xanath</span></a>
+              <a class="mapa-pin mapa-pin--dos" href="/hospedaje/casa-mandala" title="Casa Mandala"><span>Casa Mandala</span></a>
+              <a class="mapa-pin mapa-pin--tres" href="/hospedaje/casa-coronel" title="Casa Coronel"><span>Casa Coronel</span></a>
+              <a class="mapa-pin mapa-pin--cuatro" href="/hospedaje/casa-ceci" title="Casa Ceci"><span>Casa Ceci</span></a>
+            </div>
+          </div>
         </div>
       </article>
 
-      <aside class="anuncio-gratis">
-        <p class="eyebrow">Para negocios locales</p>
-        <h2>¿Tienes un negocio en Tecolutla?</h2>
-        <p class="anuncio-gratis__destacado">Anúnciate gratis en esta etapa.</p>
-        <p>Te ayudamos a crear tu ficha con fotos, ubicación y WhatsApp directo. Sin costo y sin comisiones.</p>
-        <ul>
-          <li>✓ Tu negocio visible para nuevos visitantes</li>
-          <li>✓ Contacto directo por WhatsApp</li>
-          <li>✓ Ubicación y datos claros en el mapa</li>
+      <aside class="anuncio-gratis" aria-labelledby="titulo-anuncio-gratis">
+        <div class="anuncio-gratis__encabezado">
+          <span class="anuncio-gratis__icono" aria-hidden="true"><Icono nombre="brujula" /></span>
+          <div>
+            <p class="eyebrow">Para negocios locales</p>
+            <h2 id="titulo-anuncio-gratis">Publica tu negocio gratis</h2>
+          </div>
+        </div>
+        <p class="anuncio-gratis__destacado">Haz que más viajeros encuentren tu negocio en Tecolutla.</p>
+        <ul class="anuncio-gratis__beneficios">
+          <li><Icono nombre="escudo" /> Ficha de negocio con información clara</li>
+          <li><Icono nombre="ubicacion" /> Fotos, ubicación y amenidades</li>
+          <li><Icono nombre="whatsapp" /> Enlace directo a tu WhatsApp</li>
+          <li><Icono nombre="etiqueta" /> Presencia en el directorio turístico</li>
         </ul>
-        <a class="boton anuncio-gratis__boton" href="/anunciate">Quiero anunciarme gratis</a>
-        <small>El registro gratuito estará disponible durante esta etapa de crecimiento.</small>
+        <a class="boton anuncio-gratis__boton" href="/anunciate">Publicar mi negocio gratis <span aria-hidden="true">→</span></a>
+        <small>Estamos haciendo crecer el directorio con negocios locales de Tecolutla.</small>
       </aside>
     </div>
   </section>
 
-  <section class="seccion contenedor guia-local" aria-labelledby="titulo-guia-local">
+  <section class="seccion contenedor guia-local guia-local--home" aria-labelledby="titulo-guia-local">
     <div class="seccion__encabezado">
       <div>
         <p class="eyebrow">Planea tu viaje completo</p>
@@ -354,16 +282,16 @@ const esquemaOrganization = {
       <a class="boton boton--secundario" href="/descubre-tecolutla">Ver guía local</a>
     </div>
     <div class="guia-local__enlaces">
-      <a href="/gastronomia"><span aria-hidden="true">🍤</span> Dónde comer</a>
-      <a href="/actividades"><span aria-hidden="true">🛶</span> Actividades</a>
-      <a href="/tips-para-tu-viaje"><span aria-hidden="true">💡</span> Tips para tu viaje</a>
-      <a href="/descubre-tecolutla"><span aria-hidden="true">🗺️</span> Explora Tecolutla</a>
+      <a href="/gastronomia"><Icono nombre="cubiertos" /> Dónde comer</a>
+      <a href="/actividades"><Icono nombre="actividad" /> Actividades</a>
+      <a href="/tips-para-tu-viaje"><Icono nombre="idea" /> Tips para tu viaje</a>
+      <a href="/descubre-tecolutla"><Icono nombre="brujula" /> Explora Tecolutla</a>
     </div>
   </section>
 
   {
     tambienEnTecolutla.length > 0 && (
-      <section class="seccion contenedor">
+      <section class="seccion contenedor tambien-home">
         <div class="seccion__encabezado">
           <div>
             <h2 class="titulo-seccion">También en Tecolutla</h2>
@@ -378,6 +306,13 @@ const esquemaOrganization = {
       </section>
     )
   }
+
+  <section class="boletin-local" aria-label="Suscripción a ofertas y tips">
+    <div class="contenedor boletin-local__interior">
+      <div><Icono nombre="avion" /><span><b>Recibe ofertas y tips para tu viaje a Tecolutla</b><small>Promociones exclusivas y recomendaciones locales.</small></span></div>
+      <form><label class="sr-only" for="correo-boletin">Tu correo electrónico</label><input id="correo-boletin" type="email" placeholder="Tu correo electrónico" /><button type="button">Suscribirme</button></form>
+    </div>
+  </section>
 
 </BaseLayout>
 
@@ -524,6 +459,13 @@ const esquemaOrganization = {
 
   rotarYLimitarDestacadosHome();
   activarBuscadorHome();
+
+  const ayudaIconos = document.querySelector<HTMLDialogElement>('[data-ayuda-iconos]');
+  document.querySelector('[data-abrir-ayuda]')?.addEventListener('click', () => ayudaIconos?.showModal());
+  document.querySelector('[data-cerrar-ayuda]')?.addEventListener('click', () => ayudaIconos?.close());
+  ayudaIconos?.addEventListener('click', (evento) => {
+    if (evento.target === ayudaIconos) ayudaIconos.close();
+  });
 
   const iniciarAnimacionBotonDestacados = configurarAnimacionBotonDestacados();
   iniciarAnimacionBotonDestacados?.();

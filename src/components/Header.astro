@@ -1,12 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import { filtrarListables } from '../utils/negociosPublicados';
+import Icono from './Icono.astro';
+import MarcaTecolutlaTravel from './MarcaTecolutlaTravel.astro';
 
 interface Props {
   rutaActual: string;
+  sobreHero?: boolean;
 }
 
-const { rutaActual } = Astro.props;
+const { rutaActual, sobreHero = false } = Astro.props;
 
 // Índice ligero (nombre + categoría + slug) para el buscador de negocios —
 // se resuelve en build time y se manda como JSON al cliente, que filtra ahí
@@ -17,6 +20,7 @@ const enlaces = [
   { href: '/hospedaje', texto: 'Hospedaje' },
   { href: '/gastronomia', texto: 'Gastronomía' },
   { href: '/actividades', texto: 'Actividades' },
+  { href: '/reportajes-y-noticias', texto: 'Reportajes y noticias' },
   { href: '/tips-para-tu-viaje', texto: 'Tips' },
 ];
 
@@ -30,26 +34,15 @@ const indiceBuscador = negocios.map((negocio) => ({
 }));
 ---
 
-<header class="encabezado">
+<header class:list={['encabezado', { 'encabezado--sobre-hero': sobreHero }]}>
   <div class="encabezado__barra">
     <a href="/" class="encabezado__marca">
-      <svg class="encabezado__marca-icono" viewBox="0 0 68 58" aria-hidden="true">
-        <path d="M5 40c8-7 16-7 24 0s16 7 24 0" fill="none" stroke="#11a8b8" stroke-width="4" stroke-linecap="round" />
-        <path d="M5 49c8-7 16-7 24 0s16 7 24 0" fill="none" stroke="#0b6f7a" stroke-width="4" stroke-linecap="round" />
-        <ellipse cx="31" cy="25" rx="15" ry="11" fill="#0b8fa0" transform="rotate(-22 31 25)" />
-        <path d="M20 19l-10-7 6 12M30 15l2-10 5 9M40 28l10 5-8-10M25 34l-3 9 9-6" fill="#0b8fa0" stroke="#0b8fa0" stroke-linejoin="round" />
-        <circle cx="39" cy="20" r="1.7" fill="#fff" />
-        <path d="M22 25c5-6 13-8 19-4M20 29c6-5 14-6 22-1" fill="none" stroke="#74d6dc" stroke-width="1.6" stroke-linecap="round" />
-      </svg>
-      <span class="encabezado__marca-texto">
-        <span class="encabezado__marca-nombre">Tecolutla<span>Travel</span><b aria-hidden="true">.</b></span>
-        <small>Directorio turístico de Tecolutla</small>
-      </span>
+      <MarcaTecolutlaTravel />
     </a>
     <nav class="encabezado__nav" id="menu-principal" aria-label="Navegación principal">
       {
         enlaces.map((enlace) => (
-          <a href={enlace.href} aria-current={esActiva(enlace.href) ? 'page' : undefined}>
+          <a href={enlace.href} aria-current={esActiva(enlace.href) ? 'page' : undefined} data-nueva={enlace.nueva ? 'true' : undefined}>
             {enlace.texto}
           </a>
         ))
@@ -57,7 +50,7 @@ const indiceBuscador = negocios.map((negocio) => ({
     </nav>
     <div class="encabezado__derecha">
       <a class="encabezado__favoritos" href="/favoritos" title="Ver hospedajes guardados en favoritos">
-        <span class="encabezado__favoritos-icono" aria-hidden="true">♡</span>
+        <Icono nombre="corazon" class="encabezado__favoritos-icono" />
         <span>Favoritos</span>
       </a>
       <a href="/anunciate" class="encabezado__anunciate">Anúnciate</a>
@@ -68,7 +61,7 @@ const indiceBuscador = negocios.map((negocio) => ({
         aria-controls="menu-principal"
         aria-label="Abrir menú de navegación"
       >
-        ☰
+        <Icono nombre="menu" />
       </button>
     </div>
   </div>

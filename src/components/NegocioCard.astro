@@ -1,8 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalogoDistancias';
+import { formatearDistancia } from '../utils/catalogoDistancias';
 import { amenidadesClaveMovil } from '../utils/amenidadesClave';
+import Icono from './Icono.astro';
 
 interface Props {
   negocio: CollectionEntry<'negocios'>;
@@ -31,11 +32,14 @@ const {
   verificado,
   servicios,
   telefono,
+  direccion,
   numeroHabitaciones,
   capacidadMaxima,
   capacidadGrupoCompleto,
   insigniasExtra,
   petFriendly,
+  alberca,
+  wifi,
   distancias,
   tipo,
   subtipo,
@@ -75,7 +79,7 @@ const distanciaTarjeta = distanciasVendibles?.[0];
 // sola unidad, por ser el gancho más fuerte.
 const capacidadGancho = capacidadGrupoCompleto ?? capacidadMaxima;
 const insigniaAlterna =
-  !distanciaTarjeta && capacidadGancho !== undefined ? `👥 Hasta ${capacidadGancho} personas` : undefined;
+  !distanciaTarjeta && capacidadGancho !== undefined ? `Hasta ${capacidadGancho} personas` : undefined;
 // Todas las distancias vendibles del negocio (no solo la primera) rotan
 // solas en el mismo espacio — un negocio con playa Y río no necesita
 // escribir la segunda a mano en insigniasExtra, ya sale de "distancias".
@@ -83,12 +87,17 @@ const insigniaAlterna =
 // política de mascotas, etc. — ver content.config.ts). El script al
 // final del componente hace la rotación cuando hay más de un dato; con
 // uno solo (el caso normal) se muestra fijo, sin JS de por medio.
-const distanciasFormateadas = (distanciasVendibles ?? []).map(
-  (d) => `${CATALOGO_DISTANCIAS[d.a].icono} ${formatearDistanciaCompacta(d)}`,
-);
+const distanciaTexto = distanciaTarjeta ? formatearDistancia(distanciaTarjeta) : undefined;
+const iconoDistancia: Record<string, string> = {
+  playa: 'olas',
+  rio: 'olas',
+  centro: 'ubicacion',
+  embarcadero: 'ubicacion',
+};
+const textoSinEmojiInicial = (texto: string) => texto.replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '');
 const insigniasRotativas = [
-  ...(distanciasFormateadas.length > 0 ? distanciasFormateadas : [insigniaAlterna]),
-  ...(insigniasExtra ?? []),
+  ...(!distanciaTarjeta ? [insigniaAlterna] : []),
+  ...(insigniasExtra ?? []).map(textoSinEmojiInicial),
 ].filter((texto): texto is string => Boolean(texto));
 // La rotación en sí (el movimiento) es un plus del plan de pago — un
 // negocio gratuito con varios datos solo muestra el primero, fijo, para
@@ -99,17 +108,32 @@ const insigniasRotativas = [
 const rotarInsignia = plan === 'pago' && insigniasRotativas.length > 1;
 const enlace = `/${categoria}/${negocio.id}`;
 const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
-const amenidadesVisibles = servicios.slice(0, 3);
+const amenidadesCalculadas: Array<{ icono: string; texto: string }> = [];
+const agregarAmenidad = (icono: string, texto: string) => {
+  if (!amenidadesCalculadas.some((amenidad) => amenidad.icono === icono)) {
+    amenidadesCalculadas.push({ icono, texto });
+  }
+};
+if (alberca) agregarAmenidad('alberca', 'Alberca');
+if (wifi) agregarAmenidad('wifi', 'Wifi');
+for (const servicio of servicios) agregarAmenidad(iconoAmenidad(servicio), servicio);
+if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
+const amenidadesVisibles = amenidadesCalculadas.slice(0, 5);
 
-const datosExtra: string[] = [];
-if (capacidadMaxima !== undefined) {
-  datosExtra.push(`👥 Hasta ${capacidadMaxima} personas`);
-} else if (numeroHabitaciones !== undefined) {
-  datosExtra.push(
-    `🛏️ ${numeroHabitaciones} ${numeroHabitaciones === 1 ? 'habitación' : 'habitaciones'}`,
-  );
+// La capacidad y Pet friendly ya tienen una fila informativa propia.
+// No se repiten como chips de amenidades.
+const datosExtra: Array<{ icono: string; texto: string }> = [];
+
+function iconoAmenidad(servicio: string) {
+  const texto = servicio.toLocaleLowerCase('es-MX');
+  if (texto.includes('alberca')) return 'alberca';
+  if (texto.includes('wifi') || texto.includes('internet')) return 'wifi';
+  if (texto.includes('aire')) return 'aire';
+  if (texto.includes('estacionamiento')) return 'estacionamiento';
+  if (texto.includes('mascota') || texto.includes('pet')) return 'mascota';
+  if (texto.includes('playa') || texto.includes('mar')) return 'olas';
+  return 'etiqueta';
 }
-if (petFriendly) datosExtra.push('🐾 Pet friendly');
 
 // En móvil la tarjeta oculta .tarjeta__descripcion y .tarjeta__amenidades
 // por espacio (ver global.css, media max-width:640px) — sin esto la
@@ -124,8 +148,20 @@ if (petFriendly) datosExtra.push('🐾 Pet friendly');
 // (capacidad + 2 amenidades) el texto largo los empuja a una segunda
 // línea; el chip grande de la tarjeta (arriba, sobre la foto) sí dice
 // "Hasta N personas" completo, aquí no hace falta.
-const capacidadMovil = capacidadMaxima !== undefined ? `👥 ${capacidadMaxima} personas` : undefined;
+const capacidadMovil = capacidadMaxima !== undefined ? `${capacidadMaxima} personas` : undefined;
 const chipsAmenidadesMovil = amenidadesClaveMovil(negocio);
+
+// En Actividades se priorizan los datos que realmente ayudan a elegir entre
+// operadores: punto de salida y detalles propios del servicio. No se
+// muestran precios ni reseñas hasta que estén confirmados en el catálogo.
+const capitanActividad = categoria === 'actividades'
+  ? (descripcionCorta.match(/capitán\s+([^,.]+)/i)?.[1]?.trim() ?? undefined)
+  : undefined;
+// Estos datos son comunes a los recorridos y ayudan a comparar operadores
+// sin hacer que cada ficha compita por la ruta que visita.
+const distintivosActividad = categoria === 'actividades'
+  ? ['Paseos privados para tu grupo', 'Horarios flexibles']
+  : [];
 
 const telefonoDigitos = telefono.replace(/[^\d]/g, '');
 // wa.me exige "52 1" antes del número móvil mexicano de 10 dígitos,
@@ -144,7 +180,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
 ---
 
 <article
-  class="tarjeta"
+  class={`tarjeta tarjeta--${categoria}`}
   data-slug={negocio.id}
   data-destacado={destacado ? 'true' : 'false'}
   data-tipo={tipo ?? ''}
@@ -191,25 +227,46 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
     {etiquetaCategoria && <span class="tarjeta__categoria">{etiquetaCategoria}</span>}
     <h3 class="tarjeta__titulo"><a href={enlace}>{nombre}</a></h3>
     {
+      categoria === 'actividades' && (
+        <div class="tarjeta__actividad-datos">
+          {capitanActividad && <p><Icono nombre="timon" /><span><b>Capitán</b>{capitanActividad}</span></p>}
+          <p><Icono nombre="ubicacion" /><span><b>Sale de</b>{direccion}</span></p>
+          {distintivosActividad.map((distintivo) => (
+            <p>
+              <Icono nombre={distintivo.startsWith('Paseos privados') ? 'grupos' : 'reloj'} />
+              <span>{distintivo}</span>
+            </p>
+          ))}
+        </div>
+      )
+    }
+    {
       (capacidadMovil || chipsAmenidadesMovil.length > 0) && (
         <div class="tarjeta__info-movil">
-          {capacidadMovil && <span class="chip-amenidad">{capacidadMovil}</span>}
+          {capacidadMovil && <span class="chip-amenidad"><Icono nombre="usuarios" /> {capacidadMovil}</span>}
           {chipsAmenidadesMovil.map((amenidad) => (
-            <span class="chip-amenidad">{amenidad}</span>
+            <span class="chip-amenidad"><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}
         </div>
       )
     }
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
+    {distanciaTexto && (
+      <p class="tarjeta__distancia">
+        <Icono nombre={iconoDistancia[distanciaTarjeta?.a ?? 'playa'] ?? 'ubicacion'} />
+        {distanciaTexto}
+      </p>
+    )}
+
     {
       (datosExtra.length > 0 || amenidadesVisibles.length > 0) && (
         <div class="tarjeta__amenidades">
-          {datosExtra.map((dato) => (
-            <span class="chip-amenidad">{dato}</span>
+          {datosExtra.filter((dato) => dato.icono !== 'etiqueta').map((dato) => (
+            <span class="chip-amenidad"><Icono nombre={dato.icono} /> {dato.texto}</span>
           ))}
-          {amenidadesVisibles.map((servicio) => (
-            <span class="chip-amenidad">{servicio}</span>
+          {amenidadesVisibles.filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi').map((amenidad) => (
+            <span class="chip-amenidad"><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}
         </div>
       )
@@ -217,7 +274,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
 
     {
       confirmadoFecha && (
-        <p class="tarjeta__confirmado">📞 Confirmado con el dueño · {confirmadoFecha}</p>
+        <p class="tarjeta__confirmado"><Icono nombre="whatsapp" /> Confirmado con el dueño · {confirmadoFecha}</p>
       )
     }
 
@@ -229,14 +286,20 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       categoria === 'hospedaje' && (
         <div class="tarjeta__seleccion" aria-label={`Opciones para ${nombre}`}>
           <button type="button" class="tarjeta__seleccion-boton" data-favorito-hospedaje data-slug={negocio.id} aria-pressed="false">
-            ♡ Guardar
+            <Icono nombre="corazon" /> Guardar en favoritos
           </button>
           <button type="button" class="tarjeta__seleccion-boton" data-comparar-hospedaje data-slug={negocio.id} aria-pressed="false">
-            ↔ Comparar
+            <Icono nombre="comparar" /> Comparar
           </button>
         </div>
       )
     }
+    {categoria === 'hospedaje' && <span class="tarjeta__corazon-foto"><Icono nombre="corazon" /></span>}
+    {categoria === 'actividades' && (
+      <button type="button" class="tarjeta__corazon-foto tarjeta__corazon-foto--actividad" data-favorito-actividad data-slug={negocio.id} aria-label={`Guardar ${nombre} en favoritos`} aria-pressed="false">
+        <Icono nombre="corazon" />
+      </button>
+    )}
   </div>
 </article>
 
@@ -264,4 +327,24 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       }, 2600);
     });
   }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-favorito-actividad]').forEach((boton) => {
+    const clave = 'tecolutlatravel-favoritos-actividades';
+    const leer = (): string[] => JSON.parse(localStorage.getItem(clave) ?? '[]');
+    const actualizar = () => {
+      const activo = leer().includes(boton.dataset.slug ?? '');
+      boton.classList.toggle('esta-guardado', activo);
+      boton.setAttribute('aria-pressed', String(activo));
+    };
+    actualizar();
+    boton.addEventListener('click', () => {
+      const slug = boton.dataset.slug ?? '';
+      const favoritos = leer();
+      const indice = favoritos.indexOf(slug);
+      if (indice >= 0) favoritos.splice(indice, 1);
+      else favoritos.push(slug);
+      localStorage.setItem(clave, JSON.stringify(favoritos));
+      actualizar();
+    });
+  });
 </script>
