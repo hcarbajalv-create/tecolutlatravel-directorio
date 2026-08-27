@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { filtrarListables } from '../utils/negociosPublicados';
-import { CATALOGO_DISTANCIAS, formatearDistanciaCompacta } from '../utils/catalogoDistancias';
+import { formatearDistanciaCompacta } from '../utils/catalogoDistancias';
 
 const hospedajes = filtrarListables(await getCollection('negocios'))
   .filter((negocio) => negocio.data.categoria === 'hospedaje')
@@ -20,7 +20,7 @@ const hospedajes = filtrarListables(await getCollection('negocios'))
       amenidades: negocio.data.servicios.slice(0, 6),
       mascotas: negocio.data.petFriendly === true,
       distancias: (negocio.data.distancias ?? []).slice(0, 2).map(
-        (distancia) => `${CATALOGO_DISTANCIAS[distancia.a].icono} ${formatearDistanciaCompacta(distancia)}`,
+        (distancia) => formatearDistanciaCompacta(distancia),
       ),
       url: `/hospedaje/${negocio.id}`,
       whatsapp: `https://wa.me/${telefonoWhatsapp}?text=${encodeURIComponent(
