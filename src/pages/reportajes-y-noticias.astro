@@ -34,6 +34,15 @@ const filtros = [
       <a class="reportajes-hero__cta" href="#colabora">Quiero ser colaborador <b>→</b></a>
     </div>
   </section>
+  <nav class="navegacion-categorias" aria-label="Explora otras categorías">
+    <div class="contenedor navegacion-categorias__scroll">
+      <a href="/hospedaje" class="navegacion-categorias__enlace">⌂ Hospedaje</a>
+      <a href="/gastronomia" class="navegacion-categorias__enlace">🍴 Gastronomía</a>
+      <a href="/actividades" class="navegacion-categorias__enlace">🏃 Actividades</a>
+      <a href="/reportajes-y-noticias" class="navegacion-categorias__enlace navegacion-categorias__enlace--activo">▤ Reportajes y noticias</a>
+      <a href="/tips-para-tu-viaje" class="navegacion-categorias__enlace">💡 Tips para tu viaje</a>
+    </div>
+  </nav>
   <section class="seccion-reportajes seccion--arena">
     <div class="contenedor">
       <div class="reportajes-encabezado"><div><h2 class="titulo-pagina">Reportajes y noticias</h2>
@@ -51,7 +60,7 @@ const filtros = [
         />
         <div class="perfil-anfitriona__info">
           <p class="perfil-anfitriona__nombre">
-            Paloma <span class="insignia insignia--anfitriona">Anfitriona</span>
+            Paloma <span class="insignia insignia--anfitriona">Colaboradora</span>
           </p>
           <p class="perfil-anfitriona__descripcion">
             Tu guía en cámara: visita hospedajes y restaurantes del directorio, cubre eventos del
@@ -69,13 +78,6 @@ const filtros = [
           </div>
         </div>
       </div>
-
-      <section class="comunicadores-seccion" aria-labelledby="titulo-comunicadores">
-        <div class="comunicadores-seccion__encabezado"><div><span>VOCES LOCALES</span><h2 id="titulo-comunicadores">Conoce a nuestros comunicadores</h2></div><a href="#colabora">Ver cómo participar →</a></div>
-        <div class="comunicadores-grid comunicadores-grid--uno">
-          <article class="comunicador-card"><Image src={placeholderPaloma} alt="Perfil de Paloma" width={88} height={88} class="comunicador-card__foto" /><div><h3>Paloma</h3><p>Turismo y recomendaciones locales</p><span class="comunicador-card__sello">✓ Comunicadora local</span></div></article>
-        </div>
-      </section>
 
       <div class="reportajes-recientes-encabezado"><h2>Reportajes recientes</h2><div class="filtros-categoria" role="group" aria-label="Filtrar por categoría">
         {

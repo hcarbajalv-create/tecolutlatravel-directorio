@@ -136,16 +136,19 @@ const esquemaItemList =
       </section>
     )
   }
-  <section class={`cabecera-categoria ${claseColor}`}>
-    <div class="contenedor">
-      <div class="cabecera-categoria__titulo">
-        <span class="cabecera-categoria__icono">{icono}</span>
-        <h1>{tituloVisible}</h1>
-      </div>
-      <p>{introduccion}</p>
-    </div>
-  </section>
-
+  {
+    (esGastronomia || esActividades) && (
+      <nav class="navegacion-categorias" aria-label="Explora otras categorías">
+        <div class="contenedor navegacion-categorias__scroll">
+          <a href="/hospedaje" class="navegacion-categorias__enlace">⌂ Hospedaje</a>
+          <a href="/gastronomia" class:list={['navegacion-categorias__enlace', { 'navegacion-categorias__enlace--activo': esGastronomia }]}>🍴 Gastronomía</a>
+          <a href="/actividades" class:list={['navegacion-categorias__enlace', { 'navegacion-categorias__enlace--activo': esActividades }]}>🏃 Actividades</a>
+          <a href="/reportajes-y-noticias" class="navegacion-categorias__enlace">▤ Reportajes y noticias</a>
+          <a href="/tips-para-tu-viaje" class="navegacion-categorias__enlace">💡 Tips para tu viaje</a>
+        </div>
+      </nav>
+    )
+  }
   <section class={`seccion contenedor categoria-catalogo ${esGastronomia ? 'categoria-catalogo--gastronomia destacados-propuesta' : ''} ${esActividades ? 'categoria-catalogo--actividades' : ''}`}>
     <div class="categoria-catalogo__encabezado">
       <div>
