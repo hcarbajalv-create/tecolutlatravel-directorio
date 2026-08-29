@@ -2,18 +2,23 @@ import { getStore } from '@netlify/blobs';
 import { validarSesion } from './_compartido/sesiones.mjs';
 
 const TERMINO_DE_PRUEBA = 'prueba-deploy-conversion-busquedas';
+const MARCA_LIMPIEZA_PRUEBA = 'limpiezaPruebaDeployV1';
 
 function eliminarTerminoDePrueba(registro) {
-  let seModifico = false;
+  if (registro.mantenimiento?.[MARCA_LIMPIEZA_PRUEBA]) return false;
+
   for (const datosMes of Object.values(registro.porMes || {})) {
     for (const campo of ['terminos', 'sinResultado']) {
       if (datosMes[campo] && Object.hasOwn(datosMes[campo], TERMINO_DE_PRUEBA)) {
         delete datosMes[campo][TERMINO_DE_PRUEBA];
-        seModifico = true;
       }
     }
   }
-  return seModifico;
+  if (!registro.mantenimiento) registro.mantenimiento = {};
+  // La marca vuelve esta migración de una sola vez: después de limpiar el
+  // dato conocido no se vuelve a escribir el store al abrir el dashboard.
+  registro.mantenimiento[MARCA_LIMPIEZA_PRUEBA] = true;
+  return true;
 }
 
 // Lectura del store 'busquedas' (ver registrar-busqueda.mjs) para la
@@ -41,10 +46,11 @@ export default async (request) => {
   }
 
   try {
-    const store = getStore('busquedas');
+    const store = getStore({ name: 'busquedas', consistency: 'strong' });
     const registro = (await store.get('registro', { type: 'json' })) || { porMes: {} };
-    // El término se creó durante una prueba controlada de despliegue. Al abrir
-    // el dashboard se elimina del store, sin alterar los términos reales.
+    // El término se creó durante una prueba controlada de despliegue. Esta
+    // migración se ejecuta una sola vez y usa lectura fuerte para no reescribir
+    // una versión vieja que pudiera borrar búsquedas reales.
     if (eliminarTerminoDePrueba(registro)) await store.setJSON('registro', registro);
 
     return new Response(JSON.stringify({ ok: true, porMes: registro.porMes }), { status: 200 });

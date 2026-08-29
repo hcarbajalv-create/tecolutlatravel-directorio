@@ -123,11 +123,16 @@ export default async (request, context) => {
       }
       actual.porMes[mes].canales[canalSeguro][tipo === 'vista' ? 'vistas' : 'clics'] += 1;
     }
-    actual.porMes[mes].dispositivos[dispositivoSeguro] += 1;
+    // Estas gráficas ya tienen historial de vistas y WhatsApp. Mantenerlas
+    // limitadas a esos dos eventos hace que los meses anteriores y los
+    // posteriores a las métricas nuevas sigan siendo comparables.
+    if (tipo === 'vista' || tipo === 'clic') {
+      actual.porMes[mes].dispositivos[dispositivoSeguro] += 1;
 
-    const { dia, hora } = diaYHoraLocal();
-    actual.porMes[mes].diaSemana[dia] = (actual.porMes[mes].diaSemana[dia] || 0) + 1;
-    actual.porMes[mes].hora[hora] = (actual.porMes[mes].hora[hora] || 0) + 1;
+      const { dia, hora } = diaYHoraLocal();
+      actual.porMes[mes].diaSemana[dia] = (actual.porMes[mes].diaSemana[dia] || 0) + 1;
+      actual.porMes[mes].hora[hora] = (actual.porMes[mes].hora[hora] || 0) + 1;
+    }
 
     await store.setJSON(slug, actual);
 
