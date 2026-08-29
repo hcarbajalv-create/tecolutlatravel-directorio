@@ -12,18 +12,27 @@ export function soloDigitos(telefono) {
 
 export async function githubFetch(path, opciones = {}) {
   const token = process.env.GITHUB_TOKEN;
-  const respuesta = await fetch(`${GITHUB_API}${path}`, {
+  const hacerPeticion = (usarToken) => fetch(`${GITHUB_API}${path}`, {
     ...opciones,
     headers: {
       // La lectura del directorio puede funcionar con el repositorio público.
       // No enviar "Bearer undefined": GitHub lo interpreta como una
       // autorización inválida y rechaza incluso esas consultas públicas.
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(usarToken && token ? { Authorization: `Bearer ${token}` } : {}),
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       ...opciones.headers,
     },
   });
+
+  let respuesta = await hacerPeticion(Boolean(token));
+  const esLectura = !opciones.method || opciones.method.toUpperCase() === 'GET';
+  // En producción puede existir un token antiguo o inválido. Como este
+  // directorio es público, las consultas de lectura se reintentan sin él.
+  // Las escrituras nunca usan esta alternativa y continúan requiriendo token.
+  if (esLectura && token && (respuesta.status === 401 || respuesta.status === 403)) {
+    respuesta = await hacerPeticion(false);
+  }
   if (!respuesta.ok) {
     const texto = await respuesta.text();
     throw new Error(`GitHub API ${respuesta.status}: ${texto}`);
