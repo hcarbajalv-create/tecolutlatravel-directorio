@@ -3,6 +3,12 @@ import { calcularPuntaje, generarRecomendaciones } from '../../src/utils/puntaje
 import { obtenerTodosLosNegocios } from './_compartido/github.mjs';
 import { validarSesion } from './_compartido/sesiones.mjs';
 
+const ESTADISTICAS_VACIAS = {
+  vistasTotal: 0,
+  clicsTotal: 0,
+  porMes: {},
+};
+
 // Protección real de los datos: valida un token de sesión de corta duración
 // (emitido por dashboard-auth al hacer login), no la contraseña en texto
 // plano — así el navegador no reenvía DASHBOARD_SECRET en cada petición.
@@ -33,15 +39,25 @@ export default async (request) => {
 
   try {
     const negocios = await obtenerTodosLosNegocios();
-    const store = getStore('estadisticas-negocios');
+    let store = null;
+    try {
+      store = getStore('estadisticas-negocios');
+    } catch (error) {
+      // Las estadísticas complementan al panel, pero no deben impedir que
+      // se muestren los negocios si el servicio de métricas no responde.
+      console.warn('No se pudo conectar el almacén de estadísticas:', error);
+    }
 
     const resultado = await Promise.all(
       negocios.map(async ({ slug, datos }) => {
-        const stats = (await store.get(slug, { type: 'json' })) || {
-          vistasTotal: 0,
-          clicsTotal: 0,
-          porMes: {},
-        };
+        let stats = ESTADISTICAS_VACIAS;
+        if (store) {
+          try {
+            stats = (await store.get(slug, { type: 'json' })) || ESTADISTICAS_VACIAS;
+          } catch (error) {
+            console.warn(`No se pudieron leer las estadísticas de ${slug}:`, error);
+          }
+        }
         return {
           slug,
           nombre: datos.nombre,
