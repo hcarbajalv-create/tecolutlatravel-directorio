@@ -38,6 +38,7 @@ const {
   formasPago,
   tipoCocina,
   numeroHabitaciones,
+  descripcionHabitaciones,
   capacidadMaxima,
   unidadesEnConjunto,
   capacidadGrupoCompleto,
@@ -385,8 +386,8 @@ const esquemaBreadcrumb = {
         </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {unidadesEnConjunto !== undefined && <p>Conjunto de {unidadesEnConjunto} departamentos</p>}
-        {numeroHabitaciones && (
-          <p>Habitaciones: {numeroHabitaciones}{unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
+        {(numeroHabitaciones || descripcionHabitaciones) && (
+          <p>Habitaciones: {descripcionHabitaciones ?? numeroHabitaciones}{!descripcionHabitaciones && unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
         )}
         {capacidadMaxima !== undefined && (
           <p>
@@ -490,7 +491,7 @@ const esquemaBreadcrumb = {
           )}
 
           <p>
-            <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp" target="_blank" rel="noopener noreferrer">
+            <a class="boton boton--whatsapp" href={enlaceWhatsapp} id="enlace-whatsapp" target="_blank" rel="noopener noreferrer" {...(categoria === 'hospedaje' ? { 'data-consulta-hospedaje': '', 'data-consulta-nombre': nombre, 'data-consulta-whatsapp': telefonoWhatsapp } : {})}>
               Escribir por WhatsApp
             </a>
           </p>
@@ -745,7 +746,7 @@ const esquemaBreadcrumb = {
 
   // El botón de WhatsApp exige elegir fechas y número de huéspedes antes de
   // dejar pasar el clic — sin esto, se podía escribir sin completar nada.
-  if (enlaceWhatsappEl && avisoFechas) {
+  if (enlaceWhatsappEl && avisoFechas && !enlaceWhatsappEl.hasAttribute('data-consulta-hospedaje')) {
     enlaceWhatsappEl.addEventListener('click', (evento) => {
       if (!datosCompletos()) {
         evento.preventDefault();

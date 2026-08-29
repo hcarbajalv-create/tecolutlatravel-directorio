@@ -23,6 +23,7 @@ const hospedajes = filtrarListables(await getCollection('negocios'))
         (distancia) => formatearDistanciaCompacta(distancia),
       ),
       url: `/hospedaje/${negocio.id}`,
+      telefonoWhatsapp,
       whatsapp: `https://wa.me/${telefonoWhatsapp}?text=${encodeURIComponent(
         `Hola, vi ${negocio.data.nombre} en TecolutlaTravel y me gustaría más información.`,
       )}`,
@@ -65,6 +66,7 @@ const hospedajes = filtrarListables(await getCollection('negocios'))
     distancias: string[];
     url: string;
     whatsapp: string;
+    telefonoWhatsapp: string;
   }
 
   const datos = JSON.parse(document.getElementById('datos-comparador')?.textContent ?? '[]') as HospedajeComparable[];
@@ -119,7 +121,7 @@ const hospedajes = filtrarListables(await getCollection('negocios'))
         ${fila('Amenidades', (hospedaje) => hospedaje.amenidades.length ? `<ul>${hospedaje.amenidades.map((amenidad) => `<li>${escaparHtml(amenidad)}</li>`).join('')}</ul>` : valor(null))}
         ${fila('Mascotas', (hospedaje) => hospedaje.mascotas ? 'Sí, pet friendly' : 'No se indica')}
         ${fila('Ubicación', (hospedaje) => hospedaje.distancias.length ? hospedaje.distancias.map(escaparHtml).join('<br>') : valor(null))}
-        ${fila('Contacto', (hospedaje) => `<a class="boton boton--whatsapp boton--chico" href="${hospedaje.whatsapp}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`)}
+        ${fila('Contacto', (hospedaje) => `<a class="boton boton--whatsapp boton--chico" href="${hospedaje.whatsapp}" target="_blank" rel="noopener noreferrer" data-consulta-hospedaje data-consulta-nombre="${escaparHtml(hospedaje.nombre)}" data-consulta-whatsapp="${escaparHtml(hospedaje.telefonoWhatsapp)}">WhatsApp</a>`)}
       </div>`;
   }
 

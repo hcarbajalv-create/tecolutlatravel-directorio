@@ -526,17 +526,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  async function obtenerNegocios(token: string): Promise<DatosNegocio[] | null> {
+  type ResultadoNegocios =
+    | { ok: true; negocios: DatosNegocio[] }
+    | { ok: false; sesionInvalida: boolean };
+
+  async function obtenerNegocios(token: string): Promise<ResultadoNegocios> {
     try {
       const respuesta = await fetch('/.netlify/functions/dashboard-datos', {
         method: 'POST',
         headers: { 'x-session-token': token },
       });
-      if (!respuesta.ok) return null;
-      const datos = await respuesta.json();
-      return datos.ok ? datos.negocios : null;
+      const datos = await respuesta.json().catch(() => ({}));
+      if (!respuesta.ok || !datos.ok) {
+        return { ok: false, sesionInvalida: respuesta.status === 401 };
+      }
+      return { ok: true, negocios: datos.negocios };
     } catch {
-      return null;
+      return { ok: false, sesionInvalida: false };
     }
   }
 
@@ -558,21 +564,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   async function entrarConToken(token: string, opciones: { silencioso?: boolean } = {}) {
-    const [negocios, busquedas] = await Promise.all([
+    const [resultadoNegocios, busquedas] = await Promise.all([
       obtenerNegocios(token),
       obtenerBusquedas(token),
     ]);
-    if (!negocios) {
-      sessionStorage.removeItem(TOKEN_SESSION);
+    if (!resultadoNegocios.ok) {
+      if (resultadoNegocios.sesionInvalida) sessionStorage.removeItem(TOKEN_SESSION);
       if (!opciones.silencioso) {
-        el.loginError.textContent = 'Tu sesión venció. Vuelve a entrar con la contraseña.';
+        el.loginError.textContent = resultadoNegocios.sesionInvalida
+          ? 'Tu sesión venció. Vuelve a entrar con la contraseña.'
+          : 'No se pudieron cargar los datos del panel. Intenta de nuevo.';
         el.loginError.hidden = false;
       }
       return;
     }
 
     sessionStorage.setItem(TOKEN_SESSION, token);
-    negociosData = negocios;
+    negociosData = resultadoNegocios.negocios;
     busquedasPorMes = busquedas || {};
     el.login.hidden = true;
     el.dashboard.hidden = false;

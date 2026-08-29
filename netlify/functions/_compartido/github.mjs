@@ -11,10 +11,14 @@ export function soloDigitos(telefono) {
 }
 
 export async function githubFetch(path, opciones = {}) {
+  const token = process.env.GITHUB_TOKEN;
   const respuesta = await fetch(`${GITHUB_API}${path}`, {
     ...opciones,
     headers: {
-      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      // La lectura del directorio puede funcionar con el repositorio público.
+      // No enviar "Bearer undefined": GitHub lo interpreta como una
+      // autorización inválida y rechaza incluso esas consultas públicas.
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       ...opciones.headers,

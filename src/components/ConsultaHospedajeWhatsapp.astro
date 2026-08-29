@@ -1,0 +1,136 @@
+---
+import MarcaTecolutlaTravel from './MarcaTecolutlaTravel.astro';
+---
+
+<div class="consulta-whatsapp" data-consulta-modal hidden>
+  <div class="consulta-whatsapp__fondo" data-consulta-cerrar aria-hidden="true"></div>
+  <section class="consulta-whatsapp__dialogo" role="dialog" aria-modal="true" aria-labelledby="consulta-whatsapp-titulo">
+    <button type="button" class="consulta-whatsapp__cerrar" data-consulta-cerrar aria-label="Cerrar consulta">×</button>
+    <div class="consulta-whatsapp__marca">
+      <MarcaTecolutlaTravel />
+    </div>
+    <p class="consulta-whatsapp__eyebrow">CONSULTA TU HOSPEDAJE</p>
+    <h2 id="consulta-whatsapp-titulo">¿Cuándo quieres hospedarte?</h2>
+    <p class="consulta-whatsapp__texto">Comparte estos datos con el alojamiento para recibir una respuesta más rápida.</p>
+
+    <form data-consulta-formulario novalidate>
+      <div class="consulta-whatsapp__fechas">
+        <div>
+          <label for="consulta-fecha-entrada">Entrada</label>
+          <input type="date" id="consulta-fecha-entrada" required />
+        </div>
+        <div>
+          <label for="consulta-fecha-salida">Salida</label>
+          <input type="date" id="consulta-fecha-salida" required />
+        </div>
+      </div>
+      <label for="consulta-personas">¿Cuántas personas viajan?</label>
+      <div class="consulta-whatsapp__contador">
+        <button type="button" data-consulta-restar aria-label="Restar una persona">−</button>
+        <input type="number" id="consulta-personas" min="1" max="50" value="2" inputmode="numeric" required />
+        <button type="button" data-consulta-sumar aria-label="Sumar una persona">+</button>
+      </div>
+      <p class="consulta-whatsapp__aviso" data-consulta-aviso role="alert" hidden>Elige la entrada, la salida y el número de personas.</p>
+      <button type="submit" class="consulta-whatsapp__enviar">Consultar por WhatsApp</button>
+    </form>
+    <p class="consulta-whatsapp__nota">Puedes cerrar esta ventana si prefieres no enviar una consulta.</p>
+  </section>
+</div>
+
+<script>
+  const modal = document.querySelector<HTMLElement>('[data-consulta-modal]');
+  const formulario = document.querySelector<HTMLFormElement>('[data-consulta-formulario]');
+  const entrada = document.getElementById('consulta-fecha-entrada') as HTMLInputElement | null;
+  const salida = document.getElementById('consulta-fecha-salida') as HTMLInputElement | null;
+  const personas = document.getElementById('consulta-personas') as HTMLInputElement | null;
+  const aviso = document.querySelector<HTMLElement>('[data-consulta-aviso]');
+  let disparadorActivo: HTMLElement | null = null;
+
+  function hoyIso() {
+    const fecha = new Date();
+    const desfase = fecha.getTimezoneOffset() * 60_000;
+    return new Date(fecha.getTime() - desfase).toISOString().slice(0, 10);
+  }
+
+  function formatearFecha(valor: string) {
+    const [anio, mes, dia] = valor.split('-').map(Number);
+    return new Intl.DateTimeFormat('es-MX', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(new Date(anio, mes - 1, dia));
+  }
+
+  function cerrarConsulta() {
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    disparadorActivo?.focus();
+    disparadorActivo = null;
+  }
+
+  function abrirConsulta(disparador: HTMLElement) {
+    if (!modal || !entrada || !salida) return;
+    disparadorActivo = disparador;
+    const hoy = hoyIso();
+    entrada.min = hoy;
+    salida.min = entrada.value || hoy;
+    aviso && (aviso.hidden = true);
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => entrada.focus(), 0);
+  }
+
+  function fechasValidas() {
+    return Boolean(entrada?.value && salida?.value && salida.value > entrada.value);
+  }
+
+  entrada?.addEventListener('change', () => {
+    if (salida) salida.min = entrada.value || hoyIso();
+    if (salida?.value && salida.value <= entrada.value) salida.value = '';
+    if (fechasValidas() && Number(personas?.value) >= 1) aviso && (aviso.hidden = true);
+  });
+  salida?.addEventListener('change', () => {
+    if (fechasValidas() && Number(personas?.value) >= 1) aviso && (aviso.hidden = true);
+  });
+  personas?.addEventListener('input', () => {
+    if (fechasValidas() && Number(personas.value) >= 1) aviso && (aviso.hidden = true);
+  });
+  document.querySelector('[data-consulta-sumar]')?.addEventListener('click', () => {
+    if (personas) personas.value = String(Math.min(50, (Number(personas.value) || 0) + 1));
+  });
+  document.querySelector('[data-consulta-restar]')?.addEventListener('click', () => {
+    if (personas) personas.value = String(Math.max(1, (Number(personas.value) || 1) - 1));
+  });
+
+  document.addEventListener('click', (evento) => {
+    const objetivo = evento.target;
+    if (!(objetivo instanceof Element)) return;
+    const disparador = objetivo.closest<HTMLElement>('[data-consulta-hospedaje]');
+    if (!disparador) return;
+    evento.preventDefault();
+    abrirConsulta(disparador);
+  });
+  document.querySelectorAll<HTMLElement>('[data-consulta-cerrar]').forEach((boton) => boton.addEventListener('click', cerrarConsulta));
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && modal && !modal.hidden) cerrarConsulta();
+  });
+
+  formulario?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const totalPersonas = Number(personas?.value);
+    if (!fechasValidas() || !totalPersonas || totalPersonas > 50 || !disparadorActivo) {
+      if (aviso) aviso.hidden = false;
+      return;
+    }
+    const nombre = disparadorActivo.dataset.consultaNombre ?? 'su hospedaje';
+    const numero = disparadorActivo.dataset.consultaWhatsapp;
+    if (!numero || !entrada || !salida) return;
+    const etiquetaPersonas = `${totalPersonas} ${totalPersonas === 1 ? 'persona' : 'personas'}`;
+    const mensaje = `¡Buenas tardes, *${nombre}*! Los encontré gracias a la *Plataforma Turística Tecolutla Travel* [https://tecolutlatravel.mx].\n\n` +
+      `Me interesa consultar la disponibilidad de su hospedaje y el costo para las siguientes fechas:\n\n` +
+      `*Fecha de entrada*: ${formatearFecha(entrada.value)}\n` +
+      `*Fecha de salida*: ${formatearFecha(salida.value)}\n` +
+      `*Número de personas*: ${etiquetaPersonas}`;
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener,noreferrer');
+    cerrarConsulta();
+  });
+</script>

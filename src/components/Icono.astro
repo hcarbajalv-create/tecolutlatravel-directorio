@@ -27,6 +27,7 @@ const { nombre, class: clase, titulo } = Astro.props;
   {nombre === 'etiqueta' && <><path d="M20 12 12 20 3 11V4h7l10 8Z" /><circle cx="7.5" cy="7.5" r=".8" /></>}
   {nombre === 'ubicacion' && <><path d="M20 10c0 5.3-8 11-8 11S4 15.3 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.4" /></>}
   {nombre === 'calendario' && <><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M7.5 3v4M16.5 3v4M3.5 9h17" /></>}
+  {nombre === 'documento' && <><path d="M6 3.5h8l4 4V20.5H6Z" /><path d="M14 3.5v4h4M9 12h6M9 16h6" /></>}
   {nombre === 'reloj' && <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5v5l3.2 2" /></>}
   {nombre === 'timon' && <><circle cx="12" cy="12" r="3.2" /><circle cx="12" cy="12" r="8.5" /><path d="M12 3.5v5.3M12 15.2v5.3M3.5 12h5.3M15.2 12h5.3M6 6l3.8 3.8M14.2 14.2 18 18M18 6l-3.8 3.8M9.8 14.2 6 18" /></>}
   {nombre === 'usuarios' && <><circle cx="9" cy="8" r="3" /><path d="M3.8 20v-1.6a5.2 5.2 0 0 1 10.4 0V20" /><path d="M16 5.4a3 3 0 0 1 0 5.2M18.4 20v-1.6a5.2 5.2 0 0 0-2.5-4.5" /></>}
