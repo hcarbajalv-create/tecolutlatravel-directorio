@@ -2673,6 +2673,18 @@ p.buscador-pildora__resultados {
     font-size: 1.5rem;
   }
 
+  /* En las fichas que tienen logotipo propio, el ajuste vertical que lo
+     integra junto al título en escritorio lo hacía invadir el texto en
+     celular. Aquí cada elemento conserva su propio renglón. */
+  .cabecera-categoria__titulo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cabecera-categoria__logo {
+    transform: none;
+  }
+
   .insignia {
     font-size: 0.62rem;
     padding: 0.18rem 0.45rem;

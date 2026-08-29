@@ -38,6 +38,7 @@ const {
   formasPago,
   tipoCocina,
   numeroHabitaciones,
+  descripcionHabitaciones,
   capacidadMaxima,
   unidadesEnConjunto,
   capacidadGrupoCompleto,
@@ -385,8 +386,8 @@ const esquemaBreadcrumb = {
         </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {unidadesEnConjunto !== undefined && <p>Conjunto de {unidadesEnConjunto} departamentos</p>}
-        {numeroHabitaciones && (
-          <p>Habitaciones: {numeroHabitaciones}{unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
+        {(numeroHabitaciones || descripcionHabitaciones) && (
+          <p>Habitaciones: {descripcionHabitaciones ?? numeroHabitaciones}{!descripcionHabitaciones && unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
         )}
         {capacidadMaxima !== undefined && (
           <p>

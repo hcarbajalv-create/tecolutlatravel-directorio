@@ -103,6 +103,9 @@ const negocios = defineCollection({
         .enum(['Casa vacacional', 'Departamentos', 'Hotel', 'Habitaciones', 'Posada', 'Bungalows'])
         .optional(),
       numeroHabitaciones: z.number().optional(),
+      // Complemento opcional para explicar la distribución de los cuartos
+      // cuando el dato numérico por sí solo no basta (ej. dobles y capacidad).
+      descripcionHabitaciones: z.string().optional(),
       // "capacidadMaxima" siempre describe UNA unidad reservable normal
       // (para que signifique lo mismo en todos los negocios). Cuando el
       // negocio en realidad son varias unidades independientes en un
