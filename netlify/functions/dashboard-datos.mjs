@@ -57,6 +57,7 @@ export default async (request) => {
 
     return new Response(JSON.stringify({ ok: true, negocios: resultado }), { status: 200 });
   } catch (error) {
+    console.error('No se pudieron cargar los datos del panel:', error);
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {
       status: 500,
     });
