@@ -8,6 +8,8 @@ function estadoVacio() {
   return {
     vistasTotal: 0,
     clicsTotal: 0,
+    comoLlegarTotal: 0,
+    compartirTotal: 0,
     porMes: {},
   };
 }
@@ -16,6 +18,8 @@ function mesVacio() {
   return {
     vistas: 0,
     clics: 0,
+    comoLlegar: 0,
+    compartir: 0,
     canales: {},
     dispositivos: { movil: 0, escritorio: 0 },
     estados: {},
@@ -40,8 +44,8 @@ function diaYHoraLocal() {
   return { dia, hora: String(horaCruda % 24) };
 }
 
-// Conteo simple de eventos (vista de ficha / clic a WhatsApp), sin cookies
-// ni datos personales — solo fecha, negocio, canal de origen (referrer),
+// Conteo simple de eventos (vista de ficha, clic a WhatsApp, cómo llegar y
+// compartir), sin cookies ni datos personales — solo fecha, negocio, canal de origen (referrer),
 // tipo de dispositivo, estado/ciudad aproximados (geolocalización nativa
 // de Netlify por IP, no un servicio externo) y día/hora locales. Es "best
 // effort": si Blobs falla, no bloquea al visitante porque se llama desde
@@ -61,7 +65,8 @@ export default async (request, context) => {
   }
 
   const { slug, tipo, canal, dispositivo } = cuerpo;
-  if (typeof slug !== 'string' || !slug || (tipo !== 'vista' && tipo !== 'clic')) {
+  const tiposPermitidos = ['vista', 'clic', 'como-llegar', 'compartir'];
+  if (typeof slug !== 'string' || !slug || !tiposPermitidos.includes(tipo)) {
     return new Response(JSON.stringify({ ok: false, error: 'Datos incompletos' }), {
       status: 400,
     });
@@ -77,6 +82,10 @@ export default async (request, context) => {
     if (!actual.porMes[mes].estados) actual.porMes[mes].estados = {};
     if (!actual.porMes[mes].diaSemana) actual.porMes[mes].diaSemana = {};
     if (!actual.porMes[mes].hora) actual.porMes[mes].hora = {};
+    if (typeof actual.comoLlegarTotal !== 'number') actual.comoLlegarTotal = 0;
+    if (typeof actual.compartirTotal !== 'number') actual.compartirTotal = 0;
+    if (typeof actual.porMes[mes].comoLlegar !== 'number') actual.porMes[mes].comoLlegar = 0;
+    if (typeof actual.porMes[mes].compartir !== 'number') actual.porMes[mes].compartir = 0;
 
     const canalSeguro = typeof canal === 'string' && canal ? canal : 'otro';
     const dispositivoSeguro = dispositivo === 'movil' ? 'movil' : 'escritorio';
@@ -91,17 +100,29 @@ export default async (request, context) => {
       const estadoGeo = context.geo?.subdivision?.name;
       const ubicacion = [ciudad, estadoGeo].filter(Boolean).join(', ') || 'Desconocido';
       actual.porMes[mes].estados[ubicacion] = (actual.porMes[mes].estados[ubicacion] || 0) + 1;
-    } else {
+    } else if (tipo === 'clic') {
       actual.clicsTotal += 1;
       actual.porMes[mes].clics += 1;
     }
 
+    if (tipo === 'como-llegar') {
+      actual.comoLlegarTotal += 1;
+      actual.porMes[mes].comoLlegar += 1;
+    }
+
+    if (tipo === 'compartir') {
+      actual.compartirTotal += 1;
+      actual.porMes[mes].compartir += 1;
+    }
+
     // Por canal se cuentan vistas y clics por separado (no un solo número)
     // para poder calcular la tasa de conversión (clics ÷ vistas) por canal.
-    if (!actual.porMes[mes].canales[canalSeguro]) {
-      actual.porMes[mes].canales[canalSeguro] = { vistas: 0, clics: 0 };
+    if (tipo === 'vista' || tipo === 'clic') {
+      if (!actual.porMes[mes].canales[canalSeguro]) {
+        actual.porMes[mes].canales[canalSeguro] = { vistas: 0, clics: 0 };
+      }
+      actual.porMes[mes].canales[canalSeguro][tipo === 'vista' ? 'vistas' : 'clics'] += 1;
     }
-    actual.porMes[mes].canales[canalSeguro][tipo === 'vista' ? 'vistas' : 'clics'] += 1;
     actual.porMes[mes].dispositivos[dispositivoSeguro] += 1;
 
     const { dia, hora } = diaYHoraLocal();

@@ -486,6 +486,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     stats: {
       vistasTotal: number;
       clicsTotal: number;
+      comoLlegarTotal?: number;
+      compartirTotal?: number;
       porMes: Record<string, any>;
     };
   }
@@ -849,6 +851,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="panel__tarjetas">
         ${tarjetaStat('Vistas totales', stats.vistasTotal, '#0B6F7A')}
         ${tarjetaStat('Clics a WhatsApp', stats.clicsTotal, '#FF7A5C')}
+        ${tarjetaStat('Clics en “¿Cómo llegar?”', stats.comoLlegarTotal ?? 0, '#7A5CFF')}
+        ${tarjetaStat('Clics en “Compartir”', stats.compartirTotal ?? 0, '#D29A2D')}
         ${tarjetaStat('Tasa de conversión', conversionGeneral, '#4FD2C8')}
         ${tarjetaStat('Puntaje de completitud', negocio.puntaje + '/100', '#0C2B2E')}
       </div>
