@@ -47,6 +47,9 @@ export default async (request) => {
 
   try {
     const store = obtenerStoreDashboard('busquedas', { lecturaFuerte: true });
+    // Netlify Dev no consulta el historial real: el panel local muestra una
+    // sección vacía, igual que una vista previa recién creada.
+    if (!store) return new Response(JSON.stringify({ ok: true, porMes: {} }), { status: 200 });
     const registro = (await store.get('registro', { type: 'json' })) || { porMes: {} };
     // El término se creó durante una prueba controlada de despliegue. Esta
     // migración se ejecuta una sola vez y usa lectura fuerte para no reescribir

@@ -77,6 +77,10 @@ export default async (request, context) => {
 
   try {
     const store = obtenerStoreDashboard('estadisticas-negocios');
+    // En Netlify Dev no se consultan ni modifican las métricas reales. El
+    // visitante recibe una respuesta correcta para que la interacción local
+    // no se rompa, pero no queda ningún dato persistido.
+    if (!store) return new Response(JSON.stringify({ ok: true, ignorado: true }), { status: 200 });
     const actual = (await store.get(slug, { type: 'json' })) || estadoVacio();
 
     const mes = mesActual();

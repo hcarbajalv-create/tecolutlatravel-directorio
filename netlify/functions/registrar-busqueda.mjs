@@ -53,6 +53,9 @@ export default async (request) => {
 
   try {
     const store = obtenerStoreDashboard('busquedas');
+    // Localmente la búsqueda sigue funcionando para el visitante, pero no
+    // genera datos analíticos ni toca el store real del sitio.
+    if (!store) return new Response(JSON.stringify({ ok: true, ignorado: true }), { status: 200 });
     const mes = mesActual();
     const actual = (await store.get('registro', { type: 'json' })) || { porMes: {} };
     if (!actual.porMes[mes]) actual.porMes[mes] = mesVacio();
