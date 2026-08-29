@@ -454,7 +454,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   const TOKEN_SESSION = 'panel-tt-token';
   const ORDEN_DIAS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
-  const FECHA_INICIO_ACCIONES = '29/ago/2026';
   const NOMBRES_CANAL: Record<string, string> = {
     google: 'Google',
     instagram: 'Instagram',
@@ -506,6 +505,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   let negociosData: DatosNegocio[] = [];
   let busquedasPorMes: Record<string, MesBusquedas> = {};
+  let accionesRegistradasDesde: string | null = null;
 
   // ---------- Autenticación ----------
   // El login (dashboard-auth) valida la contraseña UNA vez y emite un
@@ -536,7 +536,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   type ResultadoNegocios =
-    | { ok: true; negocios: DatosNegocio[] }
+    | { ok: true; negocios: DatosNegocio[]; accionesRegistradasDesde: string | null }
     | { ok: false; sesionInvalida: boolean };
 
   async function obtenerNegocios(token: string): Promise<ResultadoNegocios> {
@@ -549,7 +549,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       if (!respuesta.ok || !datos.ok) {
         return { ok: false, sesionInvalida: respuesta.status === 401 };
       }
-      return { ok: true, negocios: datos.negocios };
+      return {
+        ok: true,
+        negocios: datos.negocios,
+        accionesRegistradasDesde: typeof datos.accionesRegistradasDesde === 'string'
+          ? datos.accionesRegistradasDesde
+          : null,
+      };
     } catch {
       return { ok: false, sesionInvalida: false };
     }
@@ -590,6 +596,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     sessionStorage.setItem(TOKEN_SESSION, token);
     negociosData = resultadoNegocios.negocios;
+    accionesRegistradasDesde = resultadoNegocios.accionesRegistradasDesde;
     busquedasPorMes = busquedas || {};
     el.login.hidden = true;
     el.dashboard.hidden = false;
@@ -634,6 +641,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   function nombreMesCorto(clave: string): string {
     const [anio, mes] = clave.split('-').map(Number);
     return new Date(anio, mes - 1, 1).toLocaleDateString('es-MX', { month: 'short', year: '2-digit' });
+  }
+
+  function fechaAccionesFormateada(): string | null {
+    if (!accionesRegistradasDesde) return null;
+    const fecha = new Date(accionesRegistradasDesde);
+    if (Number.isNaN(fecha.getTime())) return null;
+    return new Intl.DateTimeFormat('es-MX', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'America/Mexico_City',
+    }).format(fecha).replace('.', '');
+  }
+
+  function notaMedicionAcciones(): string {
+    const fecha = fechaAccionesFormateada();
+    return fecha
+      ? `Las acciones se registran desde el <strong>${fecha}</strong>. Antes de esa fecha, la ausencia de datos no significa cero.`
+      : 'Aún no hay acciones registradas; la fecha aparecerá con la primera acción.';
+  }
+
+  function detalleEncabezadoAcciones(): string {
+    const fecha = fechaAccionesFormateada();
+    return fecha ? `desde ${fecha}` : 'sin registros aún';
   }
 
   function combinarCampo(porMes: Record<string, any>, campo: string): Record<string, number> {
@@ -884,7 +915,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="panel__seccion">
         <h3>Acciones de alta intención por mes</h3>
-        <p class="panel__nota-medicion">Se miden desde el <strong>${FECHA_INICIO_ACCIONES}</strong>. Los meses anteriores no representan ceros.</p>
+        <p class="panel__nota-medicion">${notaMedicionAcciones()}</p>
         <div class="panel__leyenda">
           <span><span class="punto" style="background:#7A5CFF"></span>Acciones para llegar</span>
           <span><span class="punto" style="background:#D29A2D"></span>Acciones de compartir</span>
@@ -990,7 +1021,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  type CampoOrdenComparativa = 'nombre' | 'vistas' | 'clics' | 'conversion' | 'puntaje';
+  type CampoOrdenComparativa =
+    | 'nombre'
+    | 'vistas'
+    | 'clics'
+    | 'comoLlegar'
+    | 'compartir'
+    | 'conversion'
+    | 'puntaje';
   // Puntaje descendente por default — es el orden que ya existía antes de
   // agregar la columna de conversión, no lo cambiamos para no sorprender
   // a quien ya está acostumbrado al panel. Clic en cualquier encabezado
@@ -1004,6 +1042,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     nombre: 'Negocio',
     vistas: 'Vistas',
     clics: 'Clics a WhatsApp',
+    comoLlegar: 'Acciones para llegar',
+    compartir: 'Acciones de compartir',
     conversion: 'Conversión',
     puntaje: 'Puntaje',
   };
@@ -1030,6 +1070,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           return (a.vistas - b.vistas) * dir;
         case 'clics':
           return (a.clics - b.clics) * dir;
+        case 'comoLlegar':
+          return (a.accionesLlegar - b.accionesLlegar) * dir;
+        case 'compartir':
+          return (a.accionesCompartir - b.accionesCompartir) * dir;
         case 'conversion':
           return (valorConversion(a.clics, a.vistas) - valorConversion(b.clics, b.vistas)) * dir;
         case 'puntaje':
@@ -1059,17 +1103,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       })
       .join('');
 
-    const encabezadoOrdenable = (campo: CampoOrdenComparativa) => {
+    const encabezadoOrdenable = (campo: CampoOrdenComparativa, detalle = '') => {
       const activo = ordenComparativa.campo === campo;
       const flecha = activo ? (ordenComparativa.direccion === 'asc' ? ' ▲' : ' ▼') : '';
-      return `<th><button type="button" class="panel__th-orden" data-campo="${campo}">${ETIQUETAS_ORDEN_COMPARATIVA[campo]}${flecha}</button></th>`;
+      return `<th><button type="button" class="panel__th-orden" data-campo="${campo}">${ETIQUETAS_ORDEN_COMPARATIVA[campo]}${flecha}${detalle}</button></th>`;
     };
     const encabezados = [
       encabezadoOrdenable('nombre'),
       encabezadoOrdenable('vistas'),
       encabezadoOrdenable('clics'),
-      `<th>Acciones para llegar<br><small>desde ${FECHA_INICIO_ACCIONES}</small></th>`,
-      `<th>Acciones de compartir<br><small>desde ${FECHA_INICIO_ACCIONES}</small></th>`,
+      encabezadoOrdenable('comoLlegar', `<br><small>${detalleEncabezadoAcciones()}</small>`),
+      encabezadoOrdenable('compartir', `<br><small>${detalleEncabezadoAcciones()}</small>`),
       encabezadoOrdenable('conversion'),
       encabezadoOrdenable('puntaje'),
     ].join('');
@@ -1083,7 +1127,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="panel__seccion">
         <h3>Todos los negocios — mes actual</h3>
         ${notaPromedio}
-        <p class="panel__nota-medicion">Las acciones para llegar y de compartir se miden desde el <strong>${FECHA_INICIO_ACCIONES}</strong>. Antes de esa fecha, la ausencia de datos no significa cero.</p>
+        <p class="panel__nota-medicion">${notaMedicionAcciones()}</p>
         <table class="panel__tabla">
           <thead><tr>${encabezados}</tr></thead>
           <tbody>${filas}</tbody>

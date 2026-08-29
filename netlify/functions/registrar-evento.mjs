@@ -1,4 +1,7 @@
-import { getStore } from '@netlify/blobs';
+import {
+  CLAVE_METADATOS_DASHBOARD,
+  obtenerStoreDashboard,
+} from './_compartido/stores-dashboard.mjs';
 
 function mesActual() {
   return new Date().toISOString().slice(0, 7); // "2026-07"
@@ -73,7 +76,7 @@ export default async (request, context) => {
   }
 
   try {
-    const store = getStore('estadisticas-negocios');
+    const store = obtenerStoreDashboard('estadisticas-negocios');
     const actual = (await store.get(slug, { type: 'json' })) || estadoVacio();
 
     const mes = mesActual();
@@ -113,6 +116,17 @@ export default async (request, context) => {
     if (tipo === 'compartir') {
       actual.compartirTotal += 1;
       actual.porMes[mes].compartir += 1;
+    }
+
+    // Marca global, automática y de una sola vez. La fecha representa la
+    // primera acción de estas métricas en el store actual (producción o el
+    // sandbox de este deploy), no una fecha escrita a mano en la interfaz.
+    if (tipo === 'como-llegar' || tipo === 'compartir') {
+      await store.setJSON(
+        CLAVE_METADATOS_DASHBOARD,
+        { accionesRegistradasDesde: new Date().toISOString() },
+        { onlyIfNew: true },
+      );
     }
 
     // Por canal se cuentan vistas y clics por separado (no un solo número)

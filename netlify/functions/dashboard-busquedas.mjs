@@ -1,5 +1,5 @@
-import { getStore } from '@netlify/blobs';
 import { validarSesion } from './_compartido/sesiones.mjs';
+import { obtenerStoreDashboard } from './_compartido/stores-dashboard.mjs';
 
 const TERMINO_DE_PRUEBA = 'prueba-deploy-conversion-busquedas';
 const MARCA_LIMPIEZA_PRUEBA = 'limpiezaPruebaDeployV1';
@@ -46,7 +46,7 @@ export default async (request) => {
   }
 
   try {
-    const store = getStore({ name: 'busquedas', consistency: 'strong' });
+    const store = obtenerStoreDashboard('busquedas', { lecturaFuerte: true });
     const registro = (await store.get('registro', { type: 'json' })) || { porMes: {} };
     // El término se creó durante una prueba controlada de despliegue. Esta
     // migración se ejecuta una sola vez y usa lectura fuerte para no reescribir

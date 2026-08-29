@@ -1,7 +1,10 @@
-import { getStore } from '@netlify/blobs';
 import { calcularPuntaje, generarRecomendaciones } from '../../src/utils/puntajeCompletitud.ts';
 import { obtenerTodosLosNegocios } from './_compartido/github.mjs';
 import { validarSesion } from './_compartido/sesiones.mjs';
+import {
+  CLAVE_METADATOS_DASHBOARD,
+  obtenerStoreDashboard,
+} from './_compartido/stores-dashboard.mjs';
 
 const ESTADISTICAS_VACIAS = {
   vistasTotal: 0,
@@ -41,7 +44,7 @@ export default async (request) => {
     const negocios = await obtenerTodosLosNegocios();
     let store = null;
     try {
-      store = getStore('estadisticas-negocios');
+      store = obtenerStoreDashboard('estadisticas-negocios');
     } catch (error) {
       // Las estadísticas complementan al panel, pero no deben impedir que
       // se muestren los negocios si el servicio de métricas no responde.
@@ -71,7 +74,17 @@ export default async (request) => {
       }),
     );
 
-    return new Response(JSON.stringify({ ok: true, negocios: resultado }), { status: 200 });
+    let accionesRegistradasDesde = null;
+    if (store) {
+      try {
+        const metadatos = await store.get(CLAVE_METADATOS_DASHBOARD, { type: 'json' });
+        accionesRegistradasDesde = metadatos?.accionesRegistradasDesde || null;
+      } catch (error) {
+        console.warn('No se pudieron leer los metadatos de acciones:', error);
+      }
+    }
+
+    return new Response(JSON.stringify({ ok: true, negocios: resultado, accionesRegistradasDesde }), { status: 200 });
   } catch (error) {
     console.error('No se pudieron cargar los datos del panel:', error);
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {

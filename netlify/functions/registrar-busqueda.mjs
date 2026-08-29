@@ -1,4 +1,4 @@
-import { getStore } from '@netlify/blobs';
+import { obtenerStoreDashboard } from './_compartido/stores-dashboard.mjs';
 
 function mesActual() {
   return new Date().toISOString().slice(0, 7); // "2026-08"
@@ -52,7 +52,7 @@ export default async (request) => {
   }
 
   try {
-    const store = getStore('busquedas');
+    const store = obtenerStoreDashboard('busquedas');
     const mes = mesActual();
     const actual = (await store.get('registro', { type: 'json' })) || { porMes: {} };
     if (!actual.porMes[mes]) actual.porMes[mes] = mesVacio();
