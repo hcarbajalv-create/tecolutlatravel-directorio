@@ -60,6 +60,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
           <span>Tecolutla<em>Travel</em> — Panel interno</span>
         </div>
+        <small class="panel__modo-datos" id="modo-datos" hidden></small>
         <button type="button" class="boton boton--secundario boton--chico" id="boton-salir">Salir</button>
       </header>
 
@@ -326,6 +327,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-bottom: 0.75rem;
   }
 
+  .panel__modo-datos { color: var(--color-verde-oscuro); font-weight: 700; font-size: 0.78rem; }
+
   .panel__nota-medicion {
     margin: -0.25rem 0 0.75rem;
     color: var(--color-texto-suave);
@@ -479,6 +482,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     botonPdfIndividual: document.getElementById('boton-pdf-individual') as HTMLButtonElement,
     botonPdfComparativa: document.getElementById('boton-pdf-comparativa') as HTMLButtonElement,
     reportePdf: document.getElementById('reporte-pdf-contenedor') as HTMLElement,
+    modoDatos: document.getElementById('modo-datos') as HTMLElement,
   };
 
   interface DatosNegocio {
@@ -494,6 +498,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       clicsTotal: number;
       comoLlegarTotal?: number;
       compartirTotal?: number;
+      accionesRegistradasDesde?: string;
+      origenEscritura?: { modo?: string; deployId?: string | null };
       porMes: Record<string, any>;
     };
   }
@@ -506,6 +512,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   let negociosData: DatosNegocio[] = [];
   let busquedasPorMes: Record<string, MesBusquedas> = {};
   let accionesRegistradasDesde: string | null = null;
+  let modoDatos = 'produccion';
+  let deployId: string | null = null;
 
   // ---------- Autenticación ----------
   // El login (dashboard-auth) valida la contraseña UNA vez y emite un
@@ -536,7 +544,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   type ResultadoNegocios =
-    | { ok: true; negocios: DatosNegocio[]; accionesRegistradasDesde: string | null }
+    | { ok: true; negocios: DatosNegocio[]; accionesRegistradasDesde: string | null; modoDatos: string; deployId: string | null }
     | { ok: false; sesionInvalida: boolean };
 
   async function obtenerNegocios(token: string): Promise<ResultadoNegocios> {
@@ -555,6 +563,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         accionesRegistradasDesde: typeof datos.accionesRegistradasDesde === 'string'
           ? datos.accionesRegistradasDesde
           : null,
+        modoDatos: typeof datos.modoDatos === 'string' ? datos.modoDatos : 'produccion',
+        deployId: typeof datos.deployId === 'string' ? datos.deployId : null,
       };
     } catch {
       return { ok: false, sesionInvalida: false };
@@ -597,9 +607,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     sessionStorage.setItem(TOKEN_SESSION, token);
     negociosData = resultadoNegocios.negocios;
     accionesRegistradasDesde = resultadoNegocios.accionesRegistradasDesde;
+    modoDatos = resultadoNegocios.modoDatos;
+    deployId = resultadoNegocios.deployId;
     busquedasPorMes = busquedas || {};
     el.login.hidden = true;
     el.dashboard.hidden = false;
+    const escrituraVerificada = negociosData.some(({ stats }) =>
+      modoDatos === 'prueba'
+        ? stats.origenEscritura?.modo === 'prueba' && stats.origenEscritura?.deployId === deployId
+        : stats.origenEscritura?.modo === 'produccion');
+    el.modoDatos.textContent = modoDatos === 'local'
+      ? 'Datos locales — no se guardan'
+      : modoDatos === 'prueba'
+        ? `Datos de prueba de este deploy — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`
+        : `Datos de producción — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`;
+    el.modoDatos.hidden = false;
     poblarSelectorNegocios();
     if (el.selectorNegocio.value) renderizarVistaIndividual(el.selectorNegocio.value);
     renderizarVistaComparativa();

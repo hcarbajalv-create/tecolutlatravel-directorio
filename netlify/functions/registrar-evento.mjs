@@ -1,5 +1,6 @@
 import {
-  CLAVE_METADATOS_DASHBOARD,
+  actualizarJsonConReintentos,
+  ConflictoDeEscrituraError,
   obtenerStoreDashboard,
 } from './_compartido/stores-dashboard.mjs';
 
@@ -76,14 +77,14 @@ export default async (request, context) => {
   }
 
   try {
-    const store = obtenerStoreDashboard('estadisticas-negocios');
+    const { store, modo, deployId } = obtenerStoreDashboard(context, 'estadisticas-negocios');
     // En Netlify Dev no se consultan ni modifican las métricas reales. El
     // visitante recibe una respuesta correcta para que la interacción local
     // no se rompa, pero no queda ningún dato persistido.
     if (!store) return new Response(JSON.stringify({ ok: true, ignorado: true }), { status: 200 });
-    const actual = (await store.get(slug, { type: 'json' })) || estadoVacio();
-
     const mes = mesActual();
+    const momentoEvento = new Date().toISOString();
+    await actualizarJsonConReintentos(store, slug, estadoVacio, (actual) => {
     if (!actual.porMes[mes]) actual.porMes[mes] = mesVacio();
     // Entradas guardadas antes de este cambio no tienen estos campos todavía.
     if (!actual.porMes[mes].estados) actual.porMes[mes].estados = {};
@@ -122,15 +123,10 @@ export default async (request, context) => {
       actual.porMes[mes].compartir += 1;
     }
 
-    // Marca global, automática y de una sola vez. La fecha representa la
-    // primera acción de estas métricas en el store actual (producción o el
-    // sandbox de este deploy), no una fecha escrita a mano en la interfaz.
+    // Es el primer evento de acción real registrado, no la fecha del deploy.
+    // Por ello puede ser posterior al día en que se empezó a medir.
     if (tipo === 'como-llegar' || tipo === 'compartir') {
-      await store.setJSON(
-        CLAVE_METADATOS_DASHBOARD,
-        { accionesRegistradasDesde: new Date().toISOString() },
-        { onlyIfNew: true },
-      );
+      if (!actual.accionesRegistradasDesde) actual.accionesRegistradasDesde = momentoEvento;
     }
 
     // Por canal se cuentan vistas y clics por separado (no un solo número)
@@ -152,10 +148,16 @@ export default async (request, context) => {
       actual.porMes[mes].hora[hora] = (actual.porMes[mes].hora[hora] || 0) + 1;
     }
 
-    await store.setJSON(slug, actual);
+    // Mismo registro y misma escritura condicional: el panel puede comprobar
+    // que lectura y escritura seleccionaron el mismo almacén del servidor.
+    actual.origenEscritura = { modo, deployId, actualizadoEn: momentoEvento };
+    });
 
-    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, modoDatos: modo, deployId }), { status: 200 });
   } catch (error) {
+    if (error instanceof ConflictoDeEscrituraError) {
+      return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 409 });
+    }
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {
       status: 500,
     });

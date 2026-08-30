@@ -1,33 +1,62 @@
 import { getDeployStore, getStore } from '@netlify/blobs';
 
-// Esta decisión responde dos preguntas separadas, en este orden:
-//
-// 1. ¿La función corre en la computadora del desarrollador? Netlify Dev
-//    coloca NETLIFY_DEV=true incluso si se arranca con --context production.
-//    En ese caso no se toca ningún Blob de datos: los registradores hacen
-//    no-op y el dashboard recibe datos vacíos. SITE_ID, DEPLOY_ID y URL no
-//    sirven para distinguirlo porque Netlify Dev puede cargar esos valores.
-//
-// 2. Si corre alojada en Netlify, ¿qué tipo de deploy es? Solo los contextos
-//    que Netlify identifica positivamente como vista previa o rama usan un
-//    store del deploy. Producción y un contexto ausente o desconocido usan
-//    el store persistente: es preferible conservar datos reales a perderlos
-//    silenciosamente por una detección incompleta.
+// Dos preguntas separadas: NETLIFY_DEV=true identifica la computadora local,
+// donde no se toca Blob alguno. Ya en Netlify, context.deploy.context identifica
+// positivamente previews/rama; solo esas usan el sandbox del deploy. Contexto
+// ausente/desconocido conserva producción para no perder datos reales en silencio.
+// context es obligatorio: una ruta olvidada falla visiblemente en revisión.
 const CONTEXTOS_AISLADOS = new Set(['deploy-preview', 'branch-deploy']);
+const MAX_INTENTOS = 6;
+const PRESUPUESTO_MS = 1200;
 
-export const CLAVE_METADATOS_DASHBOARD = '__metadatos_dashboard__';
-
-export function obtenerStoreDashboard(nombre, { lecturaFuerte = false } = {}) {
-  if (process.env.NETLIFY_DEV === 'true') return null;
-
-  if (CONTEXTOS_AISLADOS.has(process.env.CONTEXT)) {
-    // Netlify asocia este store únicamente al deploy actual. Así, una vista
-    // previa puede registrar y consultar sus propias pruebas sin tocar el
-    // store persistente del sitio.
-    return getDeployStore(nombre);
+export class ConflictoDeEscrituraError extends Error {
+  constructor() {
+    super('No se pudo guardar el evento por actividad simultánea.');
+    this.name = 'ConflictoDeEscrituraError';
+    this.status = 409;
   }
+}
 
-  // Producción (y cualquier contexto no reconocido) conserva los stores
-  // persistentes de siempre. La lectura fuerte se solicita solo aquí.
-  return lecturaFuerte ? getStore({ name: nombre, consistency: 'strong' }) : getStore(nombre);
+export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte = false } = {}) {
+  if (!contextoFuncion || typeof contextoFuncion !== 'object') {
+    throw new Error('Se requiere el context de Netlify para elegir el almacén de datos.');
+  }
+  if (process.env.NETLIFY_DEV === 'true') return { store: null, modo: 'local', deployId: null };
+
+  const contextoDeploy = contextoFuncion.deploy?.context;
+  const deployId = typeof contextoFuncion.deploy?.id === 'string' ? contextoFuncion.deploy.id : null;
+  if (CONTEXTOS_AISLADOS.has(contextoDeploy)) {
+    if (!deployId) throw new Error('La vista previa no proporcionó su ID de deploy.');
+    const opciones = { name: nombre, deployID: deployId };
+    return {
+      store: lecturaFuerte ? getDeployStore({ ...opciones, consistency: 'strong' }) : getDeployStore(opciones),
+      modo: 'prueba', deployId,
+    };
+  }
+  return {
+    store: lecturaFuerte ? getStore({ name: nombre, consistency: 'strong' }) : getStore(nombre),
+    modo: 'produccion', deployId,
+  };
+}
+
+const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function actualizarJsonConReintentos(store, clave, crear, cambiar) {
+  const inicio = Date.now();
+  for (let intento = 1; intento <= MAX_INTENTOS; intento += 1) {
+    if (Date.now() - inicio >= PRESUPUESTO_MS) throw new ConflictoDeEscrituraError();
+    const existente = await store.getWithMetadata(clave, { type: 'json', consistency: 'strong' });
+    const siguiente = existente?.data ?? crear();
+    if (cambiar(siguiente) === false) return { data: siguiente, modificado: false };
+    const resultado = existente
+      ? await store.setJSON(clave, siguiente, { onlyIfMatch: existente.etag })
+      : await store.setJSON(clave, siguiente, { onlyIfNew: true });
+    if (resultado.modified) return { data: siguiente, modificado: true };
+    if (intento < MAX_INTENTOS) {
+      const restante = PRESUPUESTO_MS - (Date.now() - inicio);
+      if (restante <= 0) break;
+      await esperar(Math.min(restante, 20 * 2 ** (intento - 1) + Math.floor(Math.random() * 20)));
+    }
+  }
+  throw new ConflictoDeEscrituraError();
 }

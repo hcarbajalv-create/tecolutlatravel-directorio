@@ -1,10 +1,7 @@
 import { calcularPuntaje, generarRecomendaciones } from '../../src/utils/puntajeCompletitud.ts';
 import { obtenerTodosLosNegocios } from './_compartido/github.mjs';
 import { validarSesion } from './_compartido/sesiones.mjs';
-import {
-  CLAVE_METADATOS_DASHBOARD,
-  obtenerStoreDashboard,
-} from './_compartido/stores-dashboard.mjs';
+import { obtenerStoreDashboard } from './_compartido/stores-dashboard.mjs';
 
 const ESTADISTICAS_VACIAS = {
   vistasTotal: 0,
@@ -17,7 +14,7 @@ const ESTADISTICAS_VACIAS = {
 // plano — así el navegador no reenvía DASHBOARD_SECRET en cada petición.
 // Aunque alguien se salte la pantalla de login y llame esta función
 // directo, sin un token de sesión vigente no recibe ningún dato.
-export default async (request) => {
+export default async (request, context) => {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ ok: false, error: 'Método no permitido' }), {
       status: 405,
@@ -43,8 +40,10 @@ export default async (request) => {
   try {
     const negocios = await obtenerTodosLosNegocios();
     let store = null;
+    let modoDatos = 'produccion';
+    let deployId = null;
     try {
-      store = obtenerStoreDashboard('estadisticas-negocios');
+      ({ store, modo: modoDatos, deployId } = obtenerStoreDashboard(context, 'estadisticas-negocios', { lecturaFuerte: true }));
     } catch (error) {
       // Las estadísticas complementan al panel, pero no deben impedir que
       // se muestren los negocios si el servicio de métricas no responde.
@@ -56,7 +55,7 @@ export default async (request) => {
         let stats = ESTADISTICAS_VACIAS;
         if (store) {
           try {
-            stats = (await store.get(slug, { type: 'json' })) || ESTADISTICAS_VACIAS;
+            stats = (await store.get(slug, { type: 'json', consistency: 'strong' })) || ESTADISTICAS_VACIAS;
           } catch (error) {
             console.warn(`No se pudieron leer las estadísticas de ${slug}:`, error);
           }
@@ -74,17 +73,11 @@ export default async (request) => {
       }),
     );
 
-    let accionesRegistradasDesde = null;
-    if (store) {
-      try {
-        const metadatos = await store.get(CLAVE_METADATOS_DASHBOARD, { type: 'json' });
-        accionesRegistradasDesde = metadatos?.accionesRegistradasDesde || null;
-      } catch (error) {
-        console.warn('No se pudieron leer los metadatos de acciones:', error);
-      }
-    }
+    // Es la primera acción registrada, no necesariamente el día del deploy.
+    const fechasAcciones = resultado.map(({ stats }) => stats.accionesRegistradasDesde).filter(Boolean).sort();
+    const accionesRegistradasDesde = fechasAcciones[0] || null;
 
-    return new Response(JSON.stringify({ ok: true, negocios: resultado, accionesRegistradasDesde }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, negocios: resultado, accionesRegistradasDesde, modoDatos, deployId }), { status: 200 });
   } catch (error) {
     console.error('No se pudieron cargar los datos del panel:', error);
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {

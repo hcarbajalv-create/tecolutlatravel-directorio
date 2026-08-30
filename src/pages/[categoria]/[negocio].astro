@@ -829,6 +829,8 @@ const esquemaBreadcrumb = {
         canal: detectarCanal(),
         dispositivo: detectarDispositivo(),
       }),
+    }).then((respuesta) => {
+      if (!respuesta.ok) console.warn('No se pudo registrar la métrica:', respuesta.status);
     }).catch(() => {
       // Sin bloquear al visitante si falla (red caída, función no disponible, etc.).
     });
