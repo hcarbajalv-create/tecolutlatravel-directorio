@@ -51,9 +51,14 @@ export async function actualizarJsonConReintentos(store, clave, crear, cambiar) 
     const existente = await store.getWithMetadata(clave, { type: 'json', consistency: 'strong' });
     const siguiente = existente?.data ?? crear();
     if (cambiar(siguiente) === false) return { data: siguiente, modificado: false, intentos: intento, conflictos };
+    // @netlify/blobs 10.7.9 tiene un defecto en setJSON: desparrama las
+    // conditions en vez de pasarlas como `conditions` al cliente interno,
+    // por lo que no envía If-Match/If-None-Match aunque diga modified:true.
+    // set sí las transmite correctamente. No sustituir por setJSON hasta que
+    // la versión instalada corrija ese comportamiento y se vuelva a verificar.
     const resultado = existente
-      ? await store.setJSON(clave, siguiente, { onlyIfMatch: existente.etag })
-      : await store.setJSON(clave, siguiente, { onlyIfNew: true });
+      ? await store.set(clave, JSON.stringify(siguiente), { onlyIfMatch: existente.etag })
+      : await store.set(clave, JSON.stringify(siguiente), { onlyIfNew: true });
     if (resultado.modified) return { data: siguiente, modificado: true, intentos: intento, conflictos };
     conflictos += 1;
     if (intento < MAX_INTENTOS) {
