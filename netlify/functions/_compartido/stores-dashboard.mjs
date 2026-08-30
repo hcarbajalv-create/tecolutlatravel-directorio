@@ -10,10 +10,12 @@ const MAX_INTENTOS = 6;
 const PRESUPUESTO_MS = 1200;
 
 export class ConflictoDeEscrituraError extends Error {
-  constructor() {
+  constructor(intentos = MAX_INTENTOS, conflictos = 0) {
     super('No se pudo guardar el evento por actividad simultánea.');
     this.name = 'ConflictoDeEscrituraError';
     this.status = 409;
+    this.intentos = intentos;
+    this.conflictos = conflictos;
   }
 }
 
@@ -43,20 +45,22 @@ const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function actualizarJsonConReintentos(store, clave, crear, cambiar) {
   const inicio = Date.now();
+  let conflictos = 0;
   for (let intento = 1; intento <= MAX_INTENTOS; intento += 1) {
-    if (Date.now() - inicio >= PRESUPUESTO_MS) throw new ConflictoDeEscrituraError();
+    if (Date.now() - inicio >= PRESUPUESTO_MS) throw new ConflictoDeEscrituraError(intento - 1, conflictos);
     const existente = await store.getWithMetadata(clave, { type: 'json', consistency: 'strong' });
     const siguiente = existente?.data ?? crear();
-    if (cambiar(siguiente) === false) return { data: siguiente, modificado: false };
+    if (cambiar(siguiente) === false) return { data: siguiente, modificado: false, intentos: intento, conflictos };
     const resultado = existente
       ? await store.setJSON(clave, siguiente, { onlyIfMatch: existente.etag })
       : await store.setJSON(clave, siguiente, { onlyIfNew: true });
-    if (resultado.modified) return { data: siguiente, modificado: true };
+    if (resultado.modified) return { data: siguiente, modificado: true, intentos: intento, conflictos };
+    conflictos += 1;
     if (intento < MAX_INTENTOS) {
       const restante = PRESUPUESTO_MS - (Date.now() - inicio);
       if (restante <= 0) break;
       await esperar(Math.min(restante, 20 * 2 ** (intento - 1) + Math.floor(Math.random() * 20)));
     }
   }
-  throw new ConflictoDeEscrituraError();
+  throw new ConflictoDeEscrituraError(MAX_INTENTOS, conflictos);
 }
