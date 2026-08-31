@@ -19,7 +19,28 @@ export class ConflictoDeEscrituraError extends Error {
   }
 }
 
-export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte = false, fetch } = {}) {
+function tieneCondicionDeEscritura(encabezados) {
+  if (encabezados instanceof Headers) {
+    return encabezados.has('if-match') || encabezados.has('if-none-match');
+  }
+  return Boolean(encabezados?.['if-match'] || encabezados?.['if-none-match']);
+}
+
+async function fetchConConflictoNormalizado(entrada, opciones) {
+  const respuesta = await fetch(entrada, opciones);
+  const esPut = String(opciones?.method).toUpperCase() === 'PUT';
+  if (esPut && respuesta.status === 409 && tieneCondicionDeEscritura(opciones?.headers)) {
+    // @netlify/blobs 10.7.9 solo reconoce 412 como conflicto condicional y
+    // reporta 409 como modified:true. Blobs devuelve 409 para esta misma
+    // colisión; se normaliza para que el cliente reintente honestamente.
+    // Al actualizar la librería, comprobar si ya maneja 409 en set/setJSON:
+    // si lo hace, retirar este envoltorio. No aplica a PUT sin condición.
+    return new Response(respuesta.body, { status: 412, statusText: 'Precondition Failed', headers: respuesta.headers });
+  }
+  return respuesta;
+}
+
+export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte = false } = {}) {
   if (!contextoFuncion || typeof contextoFuncion !== 'object') {
     throw new Error('Se requiere el context de Netlify para elegir el almacén de datos.');
   }
@@ -29,7 +50,7 @@ export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte =
   const deployId = typeof contextoFuncion.deploy?.id === 'string' ? contextoFuncion.deploy.id : null;
   if (CONTEXTOS_AISLADOS.has(contextoDeploy)) {
     if (!deployId) throw new Error('La vista previa no proporcionó su ID de deploy.');
-    const opciones = { name: nombre, deployID: deployId, ...(fetch ? { fetch } : {}) };
+    const opciones = { name: nombre, deployID: deployId, fetch: fetchConConflictoNormalizado };
     return {
       store: lecturaFuerte ? getDeployStore({ ...opciones, consistency: 'strong' }) : getDeployStore(opciones),
       modo: 'prueba', deployId,
@@ -37,8 +58,8 @@ export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte =
   }
   return {
     store: lecturaFuerte
-      ? getStore({ name: nombre, consistency: 'strong', ...(fetch ? { fetch } : {}) })
-      : fetch ? getStore({ name: nombre, fetch }) : getStore(nombre),
+      ? getStore({ name: nombre, consistency: 'strong', fetch: fetchConConflictoNormalizado })
+      : getStore({ name: nombre, fetch: fetchConConflictoNormalizado }),
     modo: 'produccion', deployId,
   };
 }

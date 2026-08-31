@@ -76,16 +76,8 @@ export default async (request, context) => {
     });
   }
 
-  const estadosHttp = [];
   try {
-    // Temporal: el cliente de Blobs permite inyectar fetch. Observamos solo
-    // sus PUT para saber qué estado real queda oculto tras `modified:true`.
-    const fetchDiagnostico = async (entrada, opciones) => {
-      const respuesta = await fetch(entrada, opciones);
-      if (String(opciones?.method).toUpperCase() === 'PUT') estadosHttp.push(respuesta.status);
-      return respuesta;
-    };
-    const { store, modo, deployId } = obtenerStoreDashboard(context, 'estadisticas-negocios', { fetch: fetchDiagnostico });
+    const { store, modo, deployId } = obtenerStoreDashboard(context, 'estadisticas-negocios');
     // En Netlify Dev no se consultan ni modifican las métricas reales. El
     // visitante recibe una respuesta correcta para que la interacción local
     // no se rompa, pero no queda ningún dato persistido.
@@ -163,10 +155,10 @@ export default async (request, context) => {
 
     // Temporal: permite comprobar desde la vista previa que una ráfaga sí
     // está recibiendo conflictos y reintentándolos antes de retirar este dato.
-    return new Response(JSON.stringify({ ok: true, modoDatos: modo, deployId, intentos: diagnostico.intentos, conflictos: diagnostico.conflictos, estadosHttp }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, modoDatos: modo, deployId, intentos: diagnostico.intentos, conflictos: diagnostico.conflictos }), { status: 200 });
   } catch (error) {
     if (error instanceof ConflictoDeEscrituraError) {
-      return new Response(JSON.stringify({ ok: false, error: error.message, intentos: error.intentos, conflictos: error.conflictos, estadosHttp }), { status: 409 });
+      return new Response(JSON.stringify({ ok: false, error: error.message, intentos: error.intentos, conflictos: error.conflictos }), { status: 409 });
     }
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {
       status: 500,
