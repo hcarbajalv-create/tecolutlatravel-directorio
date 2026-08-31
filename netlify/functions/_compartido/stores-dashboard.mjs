@@ -19,7 +19,7 @@ export class ConflictoDeEscrituraError extends Error {
   }
 }
 
-export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte = false } = {}) {
+export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte = false, fetch } = {}) {
   if (!contextoFuncion || typeof contextoFuncion !== 'object') {
     throw new Error('Se requiere el context de Netlify para elegir el almacén de datos.');
   }
@@ -29,14 +29,16 @@ export function obtenerStoreDashboard(contextoFuncion, nombre, { lecturaFuerte =
   const deployId = typeof contextoFuncion.deploy?.id === 'string' ? contextoFuncion.deploy.id : null;
   if (CONTEXTOS_AISLADOS.has(contextoDeploy)) {
     if (!deployId) throw new Error('La vista previa no proporcionó su ID de deploy.');
-    const opciones = { name: nombre, deployID: deployId };
+    const opciones = { name: nombre, deployID: deployId, ...(fetch ? { fetch } : {}) };
     return {
       store: lecturaFuerte ? getDeployStore({ ...opciones, consistency: 'strong' }) : getDeployStore(opciones),
       modo: 'prueba', deployId,
     };
   }
   return {
-    store: lecturaFuerte ? getStore({ name: nombre, consistency: 'strong' }) : getStore(nombre),
+    store: lecturaFuerte
+      ? getStore({ name: nombre, consistency: 'strong', ...(fetch ? { fetch } : {}) })
+      : fetch ? getStore({ name: nombre, fetch }) : getStore(nombre),
     modo: 'produccion', deployId,
   };
 }
