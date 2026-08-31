@@ -10,12 +10,10 @@ const MAX_INTENTOS = 6;
 const PRESUPUESTO_MS = 1200;
 
 export class ConflictoDeEscrituraError extends Error {
-  constructor(intentos = MAX_INTENTOS, conflictos = 0) {
+  constructor() {
     super('No se pudo guardar el evento por actividad simultánea.');
     this.name = 'ConflictoDeEscrituraError';
     this.status = 409;
-    this.intentos = intentos;
-    this.conflictos = conflictos;
   }
 }
 
@@ -68,12 +66,11 @@ const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function actualizarJsonConReintentos(store, clave, crear, cambiar) {
   const inicio = Date.now();
-  let conflictos = 0;
   for (let intento = 1; intento <= MAX_INTENTOS; intento += 1) {
-    if (Date.now() - inicio >= PRESUPUESTO_MS) throw new ConflictoDeEscrituraError(intento - 1, conflictos);
+    if (Date.now() - inicio >= PRESUPUESTO_MS) throw new ConflictoDeEscrituraError();
     const existente = await store.getWithMetadata(clave, { type: 'json', consistency: 'strong' });
     const siguiente = existente?.data ?? crear();
-    if (cambiar(siguiente) === false) return { data: siguiente, modificado: false, intentos: intento, conflictos };
+    if (cambiar(siguiente) === false) return { data: siguiente, modificado: false };
     // @netlify/blobs 10.7.9 tiene un defecto en setJSON: desparrama las
     // conditions en vez de pasarlas como `conditions` al cliente interno,
     // por lo que no envía If-Match/If-None-Match aunque diga modified:true.
@@ -82,13 +79,12 @@ export async function actualizarJsonConReintentos(store, clave, crear, cambiar) 
     const resultado = existente
       ? await store.set(clave, JSON.stringify(siguiente), { onlyIfMatch: existente.etag })
       : await store.set(clave, JSON.stringify(siguiente), { onlyIfNew: true });
-    if (resultado.modified) return { data: siguiente, modificado: true, intentos: intento, conflictos };
-    conflictos += 1;
+    if (resultado.modified) return { data: siguiente, modificado: true };
     if (intento < MAX_INTENTOS) {
       const restante = PRESUPUESTO_MS - (Date.now() - inicio);
       if (restante <= 0) break;
       await esperar(Math.min(restante, 20 * 2 ** (intento - 1) + Math.floor(Math.random() * 20)));
     }
   }
-  throw new ConflictoDeEscrituraError(MAX_INTENTOS, conflictos);
+  throw new ConflictoDeEscrituraError();
 }

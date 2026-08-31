@@ -84,7 +84,7 @@ export default async (request, context) => {
     if (!store) return new Response(JSON.stringify({ ok: true, ignorado: true }), { status: 200 });
     const mes = mesActual();
     const momentoEvento = new Date().toISOString();
-    const diagnostico = await actualizarJsonConReintentos(store, slug, estadoVacio, (actual) => {
+    await actualizarJsonConReintentos(store, slug, estadoVacio, (actual) => {
     if (!actual.porMes[mes]) actual.porMes[mes] = mesVacio();
     // Entradas guardadas antes de este cambio no tienen estos campos todavía.
     if (!actual.porMes[mes].estados) actual.porMes[mes].estados = {};
@@ -153,12 +153,10 @@ export default async (request, context) => {
     actual.origenEscritura = { modo, deployId, actualizadoEn: momentoEvento };
     });
 
-    // Temporal: permite comprobar desde la vista previa que una ráfaga sí
-    // está recibiendo conflictos y reintentándolos antes de retirar este dato.
-    return new Response(JSON.stringify({ ok: true, modoDatos: modo, deployId, intentos: diagnostico.intentos, conflictos: diagnostico.conflictos }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, modoDatos: modo, deployId }), { status: 200 });
   } catch (error) {
     if (error instanceof ConflictoDeEscrituraError) {
-      return new Response(JSON.stringify({ ok: false, error: error.message, intentos: error.intentos, conflictos: error.conflictos }), { status: 409 });
+      return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 409 });
     }
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {
       status: 500,
