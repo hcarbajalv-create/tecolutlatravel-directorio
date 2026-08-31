@@ -82,7 +82,7 @@ export default async (request, context) => {
     // sus PUT para saber qué estado real queda oculto tras `modified:true`.
     const fetchDiagnostico = async (entrada, opciones) => {
       const respuesta = await fetch(entrada, opciones);
-      if (opciones?.method === 'PUT') estadosHttp.push(respuesta.status);
+      if (String(opciones?.method).toUpperCase() === 'PUT') estadosHttp.push(respuesta.status);
       return respuesta;
     };
     const { store, modo, deployId } = obtenerStoreDashboard(context, 'estadisticas-negocios', { fetch: fetchDiagnostico });
