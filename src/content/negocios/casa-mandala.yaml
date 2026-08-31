@@ -13,12 +13,10 @@ facebook: "https://www.facebook.com/profile.php?id=100068829169975"
 tipo: casa
 subtipo: Casa vacacional
 fotos:
-  - src: ../../assets/fotos/casa-mandala/01-entrada.jpg
-    alt: Entrada techada de Casa Mandala
+  - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
+    alt: Patio con sombrilla, mesas y jardin de Casa Mandala en Tecolutla
   - src: ../../assets/fotos/casa-mandala/02-jardin-fuente.jpg
     alt: Jardín de Casa Mandala con fuente y área de mesas
-  - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
-    alt: Patio exterior de Casa Mandala
   - src: ../../assets/fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
     alt: Jardín de Casa Mandala con fuente decorativa tipo pozo
   - src: ../../assets/fotos/casa-mandala/05-recamara-cocineta.jpg
@@ -29,6 +27,8 @@ fotos:
     alt: Área de cocina de Casa Mandala
   - src: ../../assets/fotos/casa-mandala/08-patio-asador.jpg
     alt: Patio de Casa Mandala con asador
+  - src: ../../assets/fotos/casa-mandala/01-entrada.jpg
+    alt: Entrada techada de Casa Mandala
 precioTemporada:
   - temporada: Desde
     precio: 3000
