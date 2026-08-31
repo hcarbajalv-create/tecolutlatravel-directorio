@@ -24,7 +24,7 @@ function tieneCondicionDeEscritura(encabezados) {
   return Boolean(encabezados?.['if-match'] || encabezados?.['if-none-match']);
 }
 
-export async function fetchConConflictoNormalizado(entrada, opciones) {
+async function fetchConConflictoNormalizado(entrada, opciones) {
   const respuesta = await fetch(entrada, opciones);
   const esPut = String(opciones?.method).toUpperCase() === 'PUT';
   if (esPut && respuesta.status === 409 && tieneCondicionDeEscritura(opciones?.headers)) {

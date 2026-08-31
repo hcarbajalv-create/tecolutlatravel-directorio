@@ -61,9 +61,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <span>Tecolutla<em>Travel</em> — Panel interno</span>
         </div>
         <small class="panel__modo-datos" id="modo-datos" hidden></small>
-        <button type="button" class="boton boton--secundario boton--chico" id="boton-limpieza-casa-ceci" hidden>
-          Aplicar limpieza autorizada
-        </button>
         <button type="button" class="boton boton--secundario boton--chico" id="boton-salir">Salir</button>
       </header>
 
@@ -486,7 +483,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     botonPdfComparativa: document.getElementById('boton-pdf-comparativa') as HTMLButtonElement,
     reportePdf: document.getElementById('reporte-pdf-contenedor') as HTMLElement,
     modoDatos: document.getElementById('modo-datos') as HTMLElement,
-    botonLimpiezaCasaCeci: document.getElementById('boton-limpieza-casa-ceci') as HTMLButtonElement,
   };
 
   interface DatosNegocio {
@@ -626,9 +622,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ? `Datos de prueba de este deploy — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`
         : `Datos de producción — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`;
     el.modoDatos.hidden = false;
-    // Botón temporal, solo visible en preview, para ejecutar la limpieza exacta
-    // autorizada de datos de prueba antiguos. Se elimina inmediatamente después.
-    el.botonLimpiezaCasaCeci.hidden = modoDatos !== 'prueba';
     poblarSelectorNegocios();
     if (el.selectorNegocio.value) renderizarVistaIndividual(el.selectorNegocio.value);
     renderizarVistaComparativa();
@@ -656,24 +649,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }).catch(() => {});
     }
     location.reload();
-  });
-
-  el.botonLimpiezaCasaCeci.addEventListener('click', async () => {
-    const token = sessionStorage.getItem(TOKEN_SESSION);
-    if (!token) return;
-    el.botonLimpiezaCasaCeci.disabled = true;
-    try {
-      const respuesta = await fetch('/.netlify/functions/migrar-pruebas-casa-ceci', {
-        method: 'POST',
-        headers: { 'x-session-token': token },
-      });
-      const datos = await respuesta.json().catch(() => ({}));
-      if (!respuesta.ok || !datos.ok) throw new Error(datos.error || 'No se pudo aplicar la limpieza.');
-      location.reload();
-    } catch (error) {
-      el.botonLimpiezaCasaCeci.disabled = false;
-      alert(error instanceof Error ? error.message : 'No se pudo aplicar la limpieza.');
-    }
   });
 
   const tokenGuardado = sessionStorage.getItem(TOKEN_SESSION);
