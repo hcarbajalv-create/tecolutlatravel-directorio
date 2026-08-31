@@ -1,0 +1,596 @@
+---
+// BotTeco.astro — Chat flotante "Teco" de Tecolutla.Travel.
+// Autocontenido: estilos propios (paleta del sitio) + lógica en el <script>.
+// Llama a /.netlify/functions/bot-teco. No usa librerías externas.
+// Se monta una sola vez, desde BaseLayout.astro.
+---
+
+<div id="teco-widget" data-teco>
+  <!-- Lanzador: la mascota Teco en la esquina -->
+  <div id="teco-lanzador" class="teco-lanzador">
+    <div class="teco-controles">
+      <button id="teco-min" class="teco-ctrl" type="button" aria-label="Minimizar a Teco" title="Minimizar">–</button>
+      <button id="teco-cerrar-todo" class="teco-ctrl" type="button" aria-label="Cerrar a Teco" title="Cerrar">✕</button>
+    </div>
+    <button id="teco-abrir" class="teco-mascota" type="button" aria-label="Abrir el chat de Teco" aria-expanded="false">
+      <img class="teco-mascota__img" src="/bot/teco-mascota.webp" alt="Teco, tu guía de Tecolutla" width="180" height="320" />
+    </button>
+  </div>
+
+  <!-- Minimizado: círculo con la carita -->
+  <div id="teco-circulo" class="teco-circulo" hidden>
+    <button id="teco-reabrir" class="teco-reabrir" type="button" aria-label="Abrir el chat de Teco">
+      <img src="/bot/teco-cara.webp" alt="" aria-hidden="true" width="120" height="120" />
+    </button>
+    <button id="teco-cerrar-circulo" class="teco-ctrl teco-ctrl--sobre" type="button" aria-label="Cerrar a Teco" title="Cerrar">✕</button>
+  </div>
+
+  <!-- Globo de diálogo de bienvenida (estilo historieta) -->
+  <div id="teco-burbuja" class="teco-burbuja-intro" role="status" hidden>
+    <span id="teco-burbuja-texto" class="teco-burbuja-intro__texto"></span>
+    <button id="teco-burbuja-x" class="teco-burbuja-intro__x" type="button" aria-label="Cerrar el saludo">✕</button>
+  </div>
+
+  <!-- Panel de chat -->
+  <section id="teco-panel" class="teco-panel" role="dialog" aria-label="Chat con Teco" aria-modal="false" hidden>
+    <header class="teco-panel__cabecera">
+      <div class="teco-panel__titulo">
+        <img class="teco-avatar" src="/bot/teco-cara.webp" alt="" aria-hidden="true" width="120" height="120" />
+        <div>
+          <strong>Teco</strong>
+          <span class="teco-panel__subtitulo">Tu guía de Tecolutla</span>
+        </div>
+      </div>
+      <button id="teco-cerrar" class="teco-panel__cerrar" aria-label="Cerrar el chat">✕</button>
+    </header>
+
+    <div id="teco-mensajes" class="teco-mensajes" aria-live="polite"></div>
+
+    <form id="teco-form" class="teco-form" autocomplete="off">
+      <input
+        id="teco-input"
+        class="teco-input"
+        type="text"
+        name="mensaje"
+        placeholder="¿Qué buscas en Tecolutla?"
+        aria-label="Escribe tu mensaje para Teco"
+        maxlength="500"
+        required
+      />
+      <button type="submit" class="teco-enviar" aria-label="Enviar">➤</button>
+    </form>
+  </section>
+</div>
+
+<style is:global>
+  #teco-widget { --teco-mar: var(--color-turquesa, #0b6f7a); --teco-mar-claro: var(--color-turquesa-claro, #4fd2c8); --teco-arena: var(--color-arena, #f4e9d1); --teco-tinta: var(--color-tinta, #0c2b2e); --teco-blanco: #fff; --teco-borde: var(--color-borde, #e1d7c0); }
+
+  .teco-lanzador { position: fixed; right: 14px; bottom: 0; z-index: 9998; }
+  .teco-mascota { display: block; padding: 0; border: none; background: transparent; cursor: grab; touch-action: none; }
+  .teco-lanzador.teco-arrastrando .teco-mascota { cursor: grabbing; }
+  .teco-mascota__img {
+    height: 155px; width: auto; display: block; pointer-events: none;
+    filter: drop-shadow(0 5px 9px rgba(12,43,46,.32));
+    animation: teco-flotar 3.6s ease-in-out infinite;
+  }
+  .teco-lanzador.teco-arrastrando .teco-mascota__img { animation: none; }
+  .teco-mascota:focus-visible { outline: 3px solid var(--color-foco, #ffb020); outline-offset: 4px; border-radius: 12px; }
+  @keyframes teco-flotar {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-2.8px) rotate(-1deg); }
+    50% { transform: translateY(-5px) rotate(0deg); }
+    75% { transform: translateY(-2.8px) rotate(1deg); }
+  }
+
+  /* Minimizar: la mascota se encoge/enrolla hacia la esquina ("se mete al caparazón") */
+  .teco-lanzador.teco-tuck { animation: teco-tuck .7s cubic-bezier(.5,.05,.5,1) forwards; transform-origin: 80% 90%; }
+  .teco-lanzador.teco-tuck .teco-mascota__img { animation: none; }
+  @keyframes teco-tuck {
+    0% { transform: scale(1,1) translateY(0) rotate(0deg); opacity: 1; }
+    28% { transform: scale(1.08,.86) translateY(6px) rotate(0deg); }
+    55% { transform: scale(.7,.66) translateY(26px) rotate(10deg); opacity: .9; }
+    100% { transform: scale(.26,.26) translateY(60px) translateX(6px) rotate(0deg); opacity: 0; }
+  }
+  .teco-circulo.teco-pop { animation: teco-pop .45s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes teco-pop { 0% { transform: scale(0); } 70% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+  .teco-controles { position: absolute; top: 2px; right: -2px; z-index: 2; display: flex; flex-direction: column; gap: 5px; }
+  .teco-ctrl {
+    width: 23px; height: 23px; padding: 0; display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--teco-borde); border-radius: 50%; font-family: inherit;
+    background: rgba(255,255,255,.94); color: #55636a; font-size: .82rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(12,43,46,.2);
+  }
+  .teco-ctrl:hover { background: #fff; color: var(--teco-tinta); }
+  .teco-ctrl:focus-visible { outline: 2px solid var(--color-foco, #ffb020); outline-offset: 1px; }
+  .teco-ctrl--sobre { position: absolute; top: -4px; right: -4px; z-index: 2; width: 21px; height: 21px; font-size: .74rem; }
+
+  .teco-circulo { position: fixed; right: 16px; bottom: 16px; z-index: 9998; }
+  .teco-reabrir {
+    display: block; width: 58px; height: 58px; padding: 0; overflow: hidden; cursor: pointer;
+    border: 2px solid #fff; border-radius: 50%; background: var(--teco-mar);
+    box-shadow: 0 6px 18px rgba(12,43,46,.3);
+  }
+  .teco-reabrir img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .teco-reabrir:focus-visible { outline: 3px solid var(--color-foco, #ffb020); outline-offset: 2px; }
+
+  .teco-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; flex: 0 0 auto; border: 2px solid rgba(255,255,255,.6); }
+
+  .teco-burbuja-intro {
+    position: fixed; right: 16px; bottom: 92px; z-index: 9998; max-width: 232px;
+    background: var(--teco-blanco); color: var(--teco-tinta);
+    border: 2px solid var(--teco-mar); border-radius: 16px; border-bottom-right-radius: 5px;
+    padding: .7rem 1.6rem .7rem .85rem; font-size: .9rem; line-height: 1.4;
+    box-shadow: 0 6px 18px rgba(12,43,46,.26);
+    transform-origin: 85% 100%; animation: teco-burbuja-pop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  .teco-burbuja-intro__x {
+    position: absolute; top: 5px; right: 6px; width: 20px; height: 20px; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent; color: #8a969b; font-size: .78rem; line-height: 1; cursor: pointer;
+  }
+  .teco-burbuja-intro__x:hover { color: var(--teco-tinta); }
+  /* Piquito del globo de diálogo, apuntando a la tortuga (estilo historieta) */
+  .teco-burbuja-intro::after {
+    content: ''; position: absolute; right: 26px; bottom: -12px;
+    border: 8px solid transparent; border-top-color: var(--teco-mar); border-bottom: 0;
+  }
+  .teco-burbuja-intro::before {
+    content: ''; position: absolute; right: 28px; bottom: -8px; z-index: 1;
+    border: 6px solid transparent; border-top-color: var(--teco-blanco); border-bottom: 0;
+  }
+  @keyframes teco-burbuja-pop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  /* IMPORTANTE: que el atributo "hidden" gane a los display de las clases (si no, el panel sale siempre abierto) */
+  #teco-widget [hidden] { display: none !important; }
+
+  .teco-panel {
+    position: fixed; right: 18px; bottom: 18px; z-index: 9999;
+    width: min(380px, calc(100vw - 24px)); height: min(560px, calc(100vh - 36px));
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--teco-blanco); border: 1px solid var(--teco-borde);
+    border-radius: 18px; box-shadow: 0 18px 48px rgba(12,43,46,.32);
+  }
+
+  .teco-panel__cabecera {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .8rem 1rem; background: var(--teco-mar); color: var(--teco-blanco);
+  }
+  .teco-panel__titulo { display: flex; align-items: center; gap: .6rem; }
+  .teco-panel__avatar { font-size: 1.6rem; line-height: 1; }
+  .teco-panel__titulo strong { display: block; font-size: 1.05rem; }
+  .teco-panel__subtitulo { display: block; font-size: .78rem; opacity: .9; }
+  .teco-panel__cerrar {
+    background: transparent; border: none; color: var(--teco-blanco);
+    font-size: 1.1rem; cursor: pointer; padding: .3rem; border-radius: 8px;
+  }
+  .teco-panel__cerrar:hover { background: rgba(255,255,255,.16); }
+
+  .teco-mensajes {
+    flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: .7rem;
+    background: var(--teco-blanco);
+  }
+  .teco-msg { max-width: 85%; padding: .6rem .8rem; border-radius: 14px; font-size: .92rem; line-height: 1.45; word-wrap: break-word; }
+  /* Bot: izquierda, gris clarito. Usuario: derecha, turquesa. */
+  .teco-msg--bot { align-self: flex-start; background: #eef1f2; color: var(--teco-tinta); border-bottom-left-radius: 4px; }
+  .teco-msg--user { align-self: flex-end; background: var(--teco-mar); color: var(--teco-blanco); border-bottom-right-radius: 4px; }
+  .teco-msg a { color: var(--teco-mar); font-weight: 700; text-decoration: underline; }
+  .teco-msg--user a { color: var(--teco-blanco); }
+  .teco-msg p { margin: 0 0 .4rem; } .teco-msg p:last-child { margin-bottom: 0; }
+
+  .teco-typing { align-self: flex-start; display: inline-flex; gap: 4px; padding: .7rem .9rem; background: var(--teco-blanco); border: 1px solid var(--teco-borde); border-radius: 14px; }
+  .teco-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--teco-mar-claro); animation: teco-bounce 1.2s infinite; }
+  .teco-typing span:nth-child(2) { animation-delay: .2s; } .teco-typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes teco-bounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+  .teco-form { display: flex; gap: .5rem; padding: .7rem; border-top: 1px solid var(--teco-borde); background: var(--teco-blanco); }
+  .teco-input { flex: 1; padding: .6rem .8rem; border: 1px solid var(--teco-borde); border-radius: 999px; font-family: inherit; font-size: .95rem; }
+  .teco-input:focus-visible { outline: 2px solid var(--teco-mar); outline-offset: 0; }
+  .teco-enviar { flex: 0 0 auto; width: 42px; border: none; border-radius: 50%; background: var(--teco-mar); color: #fff; font-size: 1rem; cursor: pointer; }
+  .teco-enviar:disabled { opacity: .5; cursor: default; }
+
+  @media (max-width: 480px) {
+    /* Ancla el chat a la pantalla REAL (arriba+abajo) para que el encabezado con la ✕ siempre se vea */
+    .teco-panel { top: 8px; right: 8px; bottom: 8px; left: 8px; width: auto; height: auto; border-radius: 14px; }
+    .teco-mascota__img { height: 108px; }
+    .teco-burbuja-intro { max-width: 180px; font-size: .82rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .teco-mascota__img, .teco-typing span { animation: none; }
+  }
+
+  /* Tarjetas de negocio recomendado — CARRUSEL HORIZONTAL (se corre con el dedo hacia la derecha) */
+  .teco-tarjetas {
+    align-self: stretch; display: flex; flex-direction: row; gap: .5rem;
+    overflow-x: auto; overflow-y: hidden; padding: 2px 0 8px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
+  .teco-tarjetas::-webkit-scrollbar { height: 6px; }
+  .teco-tarjetas::-webkit-scrollbar-thumb { background: var(--teco-mar-claro); border-radius: 999px; }
+  .teco-tarjeta {
+    flex: 0 0 150px; width: 150px; scroll-snap-align: start;
+    text-decoration: none; color: inherit; overflow: hidden;
+    background: var(--teco-blanco); border: 1px solid var(--teco-borde); border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(12,43,46,.10); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .teco-tarjeta:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(12,43,46,.18); }
+  .teco-tarjeta__foto { width: 100%; height: 100px; object-fit: cover; display: block; background: var(--teco-arena); }
+  .teco-tarjeta__cuerpo { padding: .45rem .55rem .6rem; }
+  .teco-tarjeta__cat { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--teco-mar); }
+  .teco-tarjeta__nombre { font-size: .9rem; font-weight: 700; color: var(--teco-tinta); margin: .1rem 0 .3rem; line-height: 1.2; }
+  .teco-tarjeta__chips { display: flex; flex-wrap: wrap; gap: .25rem; margin-bottom: 0; }
+  .teco-chip { font-size: .68rem; background: var(--teco-arena); color: var(--teco-tinta); border-radius: 999px; padding: .1rem .4rem; }
+  .teco-tarjeta__cta { display: inline-block; font-size: .78rem; font-weight: 700; color: var(--teco-mar); }
+  @media (prefers-reduced-motion: reduce) { .teco-tarjeta { transition: none; } }
+
+  .teco-vermas { align-self: flex-start; max-width: 92%; font-size: .82rem; color: var(--teco-texto-suave, #4a5a60); }
+  .teco-vermas a { color: var(--teco-mar); font-weight: 700; text-decoration: underline; }
+</style>
+
+<script>
+  (() => {
+    const widget = document.getElementById('teco-widget');
+    if (!widget) return;
+    const lanzador = document.getElementById('teco-lanzador');
+    const btnAbrir = document.getElementById('teco-abrir');
+    const btnMin = document.getElementById('teco-min');
+    const btnCerrarTodo = document.getElementById('teco-cerrar-todo');
+    const circulo = document.getElementById('teco-circulo');
+    const burbuja = document.getElementById('teco-burbuja');
+    const burbujaTexto = document.getElementById('teco-burbuja-texto');
+    const burbujaX = document.getElementById('teco-burbuja-x');
+    const btnReabrir = document.getElementById('teco-reabrir');
+    const btnCerrarCirculo = document.getElementById('teco-cerrar-circulo');
+    const btnCerrar = document.getElementById('teco-cerrar');
+    const panel = document.getElementById('teco-panel');
+    const cajaMsgs = document.getElementById('teco-mensajes');
+    const form = document.getElementById('teco-form');
+    const input = document.getElementById('teco-input');
+    const btnEnviar = form.querySelector('.teco-enviar');
+
+    // ── visitorId persistente (memoria del bot) ──
+    let visitorId = '';
+    try {
+      visitorId = localStorage.getItem('teco_visitor_id') || '';
+      if (!visitorId) {
+        const uuid = (crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : String(Date.now()) + Math.random().toString(16).slice(2);
+        visitorId = 'web:' + uuid;
+        localStorage.setItem('teco_visitor_id', visitorId);
+      }
+    } catch { visitorId = 'web:' + String(Date.now()); }
+
+    let saludado = false;
+    let enviando = false;
+
+    // "Pase" temporal (token) que prueba que se cargó la página. Se pide al servidor.
+    let tokenTeco = null;
+    async function obtenerToken() {
+      try {
+        const r = await fetch('/.netlify/functions/bot-teco-token');
+        if (r.ok) { const d = await r.json(); tokenTeco = d.token || null; }
+      } catch { tokenTeco = null; }
+    }
+
+    // ── Historial visible: recuerda y REPINTA la conversación entre páginas ──
+    let historial = [];
+    try {
+      const h = JSON.parse(localStorage.getItem('teco_hist') || '[]');
+      if (Array.isArray(h)) historial = h;
+    } catch { historial = []; }
+    function guardarHist() {
+      try { localStorage.setItem('teco_hist', JSON.stringify(historial.slice(-40))); } catch {}
+    }
+
+    // ── Render de markdown MÍNIMO y SEGURO (escapa HTML primero) ──
+    function escapar(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function markdown(txt) {
+      let t = escapar(txt);
+      // Enlaces [texto](url) — solo rutas internas (/...) o https, nada de javascript:
+      t = t.replace(/\[([^\]]+)\]\((\/[^\s)]*|https?:\/\/[^\s)]*)\)/g, (m, texto, url) => {
+        const externo = /^https?:/.test(url);
+        const rel = externo ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${url}"${rel}>${texto}</a>`;
+      });
+      // **negrita**
+      t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      // Párrafos por doble salto / saltos simples
+      return t.split(/\n{2,}/).map((p) => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+    }
+
+    function agregarMensaje(texto, quien) {
+      const div = document.createElement('div');
+      div.className = 'teco-msg teco-msg--' + quien;
+      div.innerHTML = quien === 'bot' ? markdown(texto) : escapar(texto);
+      cajaMsgs.appendChild(div);
+      cajaMsgs.scrollTop = cajaMsgs.scrollHeight;
+      return div;
+    }
+
+    // Pinta las tarjetas de negocio (foto + nombre + chips + enlace a la ficha)
+    function agregarTarjetas(tarjetas) {
+      if (!Array.isArray(tarjetas) || !tarjetas.length) return;
+      const cont = document.createElement('div');
+      cont.className = 'teco-tarjetas';
+      for (const t of tarjetas) {
+        if (!t || typeof t.url !== 'string' || !/^\//.test(t.url)) continue;
+        const a = document.createElement('a');
+        a.className = 'teco-tarjeta';
+        a.href = t.url;
+        let html = '';
+        if (t.foto && /^\/[\w\-./]+\.(webp|jpg|jpeg|png)$/i.test(t.foto)) {
+          html += `<img class="teco-tarjeta__foto" src="${t.foto}" alt="" loading="lazy">`;
+        }
+        html += '<div class="teco-tarjeta__cuerpo">';
+        if (t.categoria) html += `<div class="teco-tarjeta__cat">${escapar(String(t.categoria))}</div>`;
+        html += `<div class="teco-tarjeta__nombre">${escapar(String(t.nombre || ''))}</div>`;
+        if (Array.isArray(t.chips) && t.chips.length) {
+          html += '<div class="teco-tarjeta__chips">' +
+            t.chips.slice(0, 2).map((c) => `<span class="teco-chip">${escapar(String(c))}</span>`).join('') +
+            '</div>';
+        }
+        html += '</div>';
+        a.innerHTML = html;
+        cont.appendChild(a);
+      }
+      if (cont.children.length) {
+        cajaMsgs.appendChild(cont);
+        cajaMsgs.scrollTop = cajaMsgs.scrollHeight;
+      }
+    }
+
+    // Línea "ver más" con enlace a la sección correcta (hospedaje / gastronomía / actividades)
+    function agregarVerMas(verMas) {
+      if (!Array.isArray(verMas) || !verMas.length) return;
+      for (const s of verMas) {
+        if (!s || typeof s.url !== 'string' || !/^\//.test(s.url)) continue;
+        const div = document.createElement('div');
+        div.className = 'teco-vermas';
+        div.innerHTML = `Para ver más ${escapar(String(s.plural || ''))}, ve a la sección de ` +
+          `<a href="${s.url}">${escapar(String(s.label || ''))}</a>.`;
+        cajaMsgs.appendChild(div);
+      }
+      cajaMsgs.scrollTop = cajaMsgs.scrollHeight;
+    }
+
+    function mostrarTyping() {
+      const div = document.createElement('div');
+      div.className = 'teco-typing';
+      div.id = 'teco-typing';
+      div.innerHTML = '<span></span><span></span><span></span>';
+      cajaMsgs.appendChild(div);
+      cajaMsgs.scrollTop = cajaMsgs.scrollHeight;
+    }
+    function quitarTyping() {
+      const t = document.getElementById('teco-typing');
+      if (t) t.remove();
+    }
+
+    // Forma del lanzador que se recuerda entre páginas: 'mascota' o 'circulo'.
+    // null = todavía no han decidido (visitante nuevo).
+    let estado = null;
+    try { const e = localStorage.getItem('teco_estado'); if (e === 'mascota' || e === 'circulo') estado = e; } catch {}
+    function guardarEstado(e) { estado = e; try { localStorage.setItem('teco_estado', e); } catch {} }
+
+    function mostrarLanzador() { lanzador.style.display = ''; circulo.hidden = true; }
+    function mostrarCirculo() { lanzador.style.display = 'none'; circulo.hidden = false; }
+    function ocultarTodo() { lanzador.style.display = 'none'; circulo.hidden = true; }
+    function mostrarSegunEstado() { if (estado === 'circulo') mostrarCirculo(); else mostrarLanzador(); }
+
+    // Burbujita de presentación: se coloca justo arriba de lo que esté visible (mascota o círculo)
+    function mostrarBurbuja(texto, ms) {
+      if (!burbuja) return;
+      if (burbujaTexto) burbujaTexto.textContent = texto;
+      burbuja.hidden = false;
+      const ref = (!circulo.hidden) ? circulo : lanzador;
+      try {
+        const r = ref.getBoundingClientRect();
+        burbuja.style.bottom = Math.max(16, window.innerHeight - r.top + 8) + 'px';
+      } catch {}
+      clearTimeout(mostrarBurbuja._t);
+      if (ms) mostrarBurbuja._t = setTimeout(() => { burbuja.hidden = true; }, ms);
+    }
+    function ocultarBurbuja() { if (burbuja) burbuja.hidden = true; }
+    if (burbujaX) burbujaX.addEventListener('click', (e) => { e.stopPropagation(); ocultarBurbuja(); });
+
+    function abrir(foco) {
+      ocultarBurbuja();
+      panel.hidden = false;
+      lanzador.style.display = 'none';
+      circulo.hidden = true;
+      btnAbrir.setAttribute('aria-expanded', 'true');
+      if (foco !== false) input.focus();
+      if (!saludado) {
+        saludado = true;
+        if (historial.length) {
+          // Repinta la conversación previa (no la vuelve a guardar)
+          for (const it of historial) {
+            if (it.r === 'u') agregarMensaje(it.t, 'user');
+            else if (it.r === 'b') agregarMensaje(it.t, 'bot');
+            else if (it.r === 'c') agregarTarjetas(it.d);
+            else if (it.r === 'v') agregarVerMas(it.d);
+          }
+        } else {
+          agregarMensaje('¡Hola! Soy **Teco** 🐢 Te ayudo a encontrar dónde dormir, dónde comer y qué hacer en Tecolutla, cuéntame un poco de lo que buscas:', 'bot');
+        }
+      }
+    }
+    // Cerrar el chat: queda el lanzador (mascota, o círculo si estaba minimizado)
+    function cerrarChat() {
+      panel.hidden = true;
+      btnAbrir.setAttribute('aria-expanded', 'false');
+      if (estado !== 'circulo') guardarEstado('mascota');
+      mostrarSegunEstado();
+      (estado === 'circulo' ? btnReabrir : btnAbrir).focus();
+    }
+    // Minimizar: la mascota se "mete al caparazón" (se encoge) y aparece el círculo.
+    function minimizar() {
+      panel.hidden = true;
+      guardarEstado('circulo');
+      let reduce = false;
+      try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch {}
+      if (!reduce && lanzador.style.display !== 'none') {
+        lanzador.classList.add('teco-tuck');
+        lanzador.addEventListener('animationend', function fin() {
+          lanzador.removeEventListener('animationend', fin);
+          lanzador.classList.remove('teco-tuck');
+          lanzador.style.display = 'none';
+          circulo.hidden = false;
+          circulo.classList.add('teco-pop');
+          circulo.addEventListener('animationend', () => circulo.classList.remove('teco-pop'), { once: true });
+          btnReabrir.focus();
+        }, { once: true });
+      } else {
+        mostrarCirculo();
+        btnReabrir.focus();
+      }
+    }
+    // Cerrar por completo: desaparece por ahora (reaparece en la siguiente página)
+    function cerrarTodo() {
+      ocultarBurbuja();
+      panel.hidden = true;
+      ocultarTodo();
+    }
+
+    // Estado inicial: muestra el lanzador tal como lo dejaron…
+    mostrarSegunEstado();
+    // …y el chat abre SOLO la primera vez que llegan al sitio (una vez por sesión del navegador),
+    // y solo si el visitante aún no ha decidido esconderlo.
+    if (estado === null) {
+      let primeraVez = false;
+      try { primeraVez = !sessionStorage.getItem('teco_sesion'); } catch {}
+      if (primeraVez) {
+        try { sessionStorage.setItem('teco_sesion', '1'); } catch {}
+        const esMovil = window.matchMedia('(max-width: 480px)').matches;
+        if (esMovil) {
+          // Móvil: la mascota aparece, se presenta, y a los segundos se hace chiquita (círculo),
+          // sin tapar la pantalla. Solo si el visitante no interactúa mientras tanto.
+          mostrarBurbuja('¡Hola! Soy Teco 🐢 Te ayudo a buscar dónde dormir, comer y qué hacer en Tecolutla.', 4500);
+          setTimeout(() => {
+            const mascotaVisible = panel.hidden && circulo.hidden && lanzador.style.display !== 'none';
+            if (mascotaVisible) {
+              minimizar();
+              mostrarBurbuja('Aquí estaré si me necesitas 👋', 2800);
+            }
+          }, 4500);
+        } else {
+          // Computadora: la tortuga aparece en cuerpo y "habla" con un globo de bienvenida (historieta).
+          mostrarBurbuja('¡Hola! Soy Teco 🐢 ¡Bienvenido a Tecolutla! ¿Te ayudo a encontrar dónde dormir, comer o qué hacer? Tócame 👇', 10000);
+        }
+      }
+    }
+
+    // ── Arrastrar la mascota a donde el visitante quiera (y recordarlo) ──
+    let arrastrando = false, movido = false, sx = 0, sy = 0, offX = 0, offY = 0;
+
+    function colocar(x, y) {
+      const w = lanzador.offsetWidth, h = lanzador.offsetHeight;
+      x = Math.max(4, Math.min(x, window.innerWidth - w - 4));
+      y = Math.max(4, Math.min(y, window.innerHeight - h - 4));
+      lanzador.style.left = x + 'px';
+      lanzador.style.top = y + 'px';
+      lanzador.style.right = 'auto';
+      lanzador.style.bottom = 'auto';
+    }
+    try {
+      const p = JSON.parse(localStorage.getItem('teco_pos') || 'null');
+      if (p && typeof p.x === 'number') requestAnimationFrame(() => colocar(p.x, p.y));
+    } catch {}
+
+    btnAbrir.addEventListener('pointerdown', (e) => {
+      if (e.button != null && e.button !== 0) return;
+      arrastrando = true; movido = false;
+      const r = lanzador.getBoundingClientRect();
+      offX = e.clientX - r.left; offY = e.clientY - r.top;
+      sx = e.clientX; sy = e.clientY;
+      lanzador.classList.add('teco-arrastrando');
+      try { btnAbrir.setPointerCapture(e.pointerId); } catch {}
+    });
+    btnAbrir.addEventListener('pointermove', (e) => {
+      if (!arrastrando) return;
+      if (!movido && (Math.abs(e.clientX - sx) > 5 || Math.abs(e.clientY - sy) > 5)) movido = true;
+      if (movido) { colocar(e.clientX - offX, e.clientY - offY); }
+    });
+    function finArrastre(e) {
+      if (!arrastrando) return;
+      arrastrando = false;
+      lanzador.classList.remove('teco-arrastrando');
+      try { btnAbrir.releasePointerCapture(e.pointerId); } catch {}
+      if (movido) {
+        const r = lanzador.getBoundingClientRect();
+        try { localStorage.setItem('teco_pos', JSON.stringify({ x: r.left, y: r.top })); } catch {}
+      }
+    }
+    btnAbrir.addEventListener('pointerup', finArrastre);
+    btnAbrir.addEventListener('pointercancel', finArrastre);
+    // Reencuadra si la ventana cambia de tamaño y la mascota quedó fuera
+    window.addEventListener('resize', () => {
+      if (lanzador.style.left) colocar(parseFloat(lanzador.style.left), parseFloat(lanzador.style.top));
+    });
+
+    // Abrir con clic SOLO si no se arrastró (mantiene accesible el teclado)
+    btnAbrir.addEventListener('click', () => { if (movido) { movido = false; return; } abrir(); });
+    btnMin.addEventListener('click', (e) => { e.stopPropagation(); minimizar(); });
+    btnCerrarTodo.addEventListener('click', (e) => { e.stopPropagation(); cerrarTodo(); });
+    btnReabrir.addEventListener('click', abrir);
+    btnCerrarCirculo.addEventListener('click', (e) => { e.stopPropagation(); cerrarTodo(); });
+    btnCerrar.addEventListener('click', cerrarChat);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) cerrarChat(); });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const texto = input.value.trim();
+      if (!texto || enviando) return;
+
+      agregarMensaje(texto, 'user');
+      historial.push({ r: 'u', t: texto }); guardarHist();
+      input.value = '';
+      enviando = true; btnEnviar.disabled = true;
+      mostrarTyping();
+
+      function pedir() {
+        return fetch('/.netlify/functions/bot-teco', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ visitorId, text: texto, pagePath: location.pathname, token: tokenTeco }),
+        });
+      }
+
+      try {
+        if (!tokenTeco) await obtenerToken();
+        let resp = await pedir();
+        // Si el pase venció, renuévalo y reintenta una sola vez
+        if (resp.status === 401) { await obtenerToken(); resp = await pedir(); }
+        quitarTyping();
+        if (resp.ok) {
+          const data = await resp.json();
+          const reply = data.reply || 'Perdona, no te entendí bien. ¿Me lo dices de otra forma?';
+          agregarMensaje(reply, 'bot');
+          historial.push({ r: 'b', t: reply });
+          if (Array.isArray(data.tarjetas) && data.tarjetas.length) {
+            agregarTarjetas(data.tarjetas);
+            historial.push({ r: 'c', d: data.tarjetas });
+          }
+          if (Array.isArray(data.verMas) && data.verMas.length) {
+            agregarVerMas(data.verMas);
+            historial.push({ r: 'v', d: data.verMas });
+          }
+          guardarHist();
+        } else if (resp.status === 503) {
+          agregarMensaje('Teco todavía se está preparando 🐢 Vuelve en un ratito, o escríbenos directo por WhatsApp.', 'bot');
+        } else if (resp.status === 429) {
+          agregarMensaje('Vas muy rápido 🐢 Dame un momentito y lo intentamos de nuevo.', 'bot');
+        } else {
+          agregarMensaje('Uy, se me trabó la red 🐢 Inténtalo de nuevo en un momento.', 'bot');
+        }
+      } catch {
+        quitarTyping();
+        agregarMensaje('Uy, se me trabó la red 🐢 Inténtalo de nuevo en un momento.', 'bot');
+      } finally {
+        enviando = false; btnEnviar.disabled = false; input.focus();
+      }
+    });
+  })();
+</script>
