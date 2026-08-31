@@ -1,0 +1,757 @@
+{
+  "generado": "2026-08-31T17:33:37.217Z",
+  "totalNegocios": 22,
+  "negocios": [
+    {
+      "slug": "casa-ceci",
+      "nombre": "Casa Ceci",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Posada",
+      "url": "/hospedaje/casa-ceci",
+      "foto": "/bot/casa-ceci.webp",
+      "chips": [
+        "👥 12",
+        "🏊 Alberca",
+        "📍 playa: 308 m"
+      ],
+      "descripcion": "Somos una posada segura a una cuadra de la playa, esperamos que disfruten sus vacaciones con nosotros.",
+      "capacidadMaxima": 12,
+      "numeroHabitaciones": 3,
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "A una cuadra del mar",
+        "A 5 minutos del centro",
+        "Cocina totalmente equipada",
+        "Aire acondicionado",
+        "Sala comedor antecomedor",
+        "Tres baños",
+        "Zona de camping/jardín con asador",
+        "Estacionamiento para tres carros",
+        "Alberca montable (opcional)",
+        "Wifi",
+        "Cable"
+      ],
+      "distancias": [
+        "playa: 308 m"
+      ],
+      "telefono": "+52 766 189 6443",
+      "destacado": true,
+      "plan": "pago"
+    },
+    {
+      "slug": "casa-coronel",
+      "nombre": "Casa Coronel",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/casa-coronel",
+      "foto": "/bot/casa-coronel.webp",
+      "chips": [
+        "👥 12",
+        "📍 playa: 478 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Hospedaje de casa céntrico cerca de la playa y el río",
+      "capacidadMaxima": 12,
+      "numeroHabitaciones": 3,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "A 1 cuadra del río y de la playa",
+        "A 1 cuadra del centro de Tecolutla",
+        "Estudio con sofá cama matrimonial",
+        "Ventiladores de techo",
+        "3 baños completos",
+        "Sala, comedor y antecomedor",
+        "Cocina totalmente equipada",
+        "Terraza con vista al río",
+        "Televisión",
+        "Wifi",
+        "Agua caliente",
+        "Estacionamiento"
+      ],
+      "distancias": [
+        "playa: 478 m"
+      ],
+      "telefono": "+52 766 189 6443",
+      "destacado": true,
+      "plan": "pago"
+    },
+    {
+      "slug": "casa-mandala",
+      "nombre": "Casa Mandala",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/casa-mandala",
+      "foto": "/bot/casa-mandala.webp",
+      "chips": [
+        "👥 15",
+        "🏊 Alberca",
+        "🐾 Mascotas"
+      ],
+      "descripcion": "Casa de descanso con decoración rústica y jardín amplio, a 247 metros de la playa de Tecolutla.",
+      "capacidadMaxima": 15,
+      "numeroHabitaciones": 3,
+      "alberca": true,
+      "petFriendly": true,
+      "wifi": true,
+      "servicios": [
+        "Wifi",
+        "Alberca y chapoteadero",
+        "Áreas verdes",
+        "Asador",
+        "Cocina equipada"
+      ],
+      "distancias": [
+        "playa: 247 m"
+      ],
+      "telefono": "+52 55 7805 7546",
+      "destacado": true,
+      "plan": "pago"
+    },
+    {
+      "slug": "casa-xanath",
+      "nombre": "Casa Xanath",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/casa-xanath",
+      "foto": "/bot/casa-xanath.webp",
+      "chips": [
+        "👥 16",
+        "🏊 Alberca",
+        "🐾 Mascotas"
+      ],
+      "descripcion": "Casa de hospedaje a 1.5 cuadras de la playa y del centro de Tecolutla, con alberca y terraza techada, ideal para familias y grupos que buscan tranquilidad.",
+      "capacidadMaxima": 16,
+      "numeroHabitaciones": 4,
+      "alberca": true,
+      "petFriendly": true,
+      "wifi": true,
+      "servicios": [
+        "Alberca privada",
+        "Chapoteadero",
+        "Estacionamiento dentro de las instalaciones",
+        "Aire acondicionado",
+        "Cocina equipada",
+        "Asador",
+        "Wifi de alta velocidad",
+        "Comedor para 10 personas"
+      ],
+      "distancias": [
+        "playa: 318 m"
+      ],
+      "telefono": "+52 56 2437 7116",
+      "destacado": true,
+      "plan": "pago"
+    },
+    {
+      "slug": "lancha-mi-angel-ir",
+      "nombre": "Lancha \"Mi Ángel IR\"",
+      "categoria": "actividades",
+      "categoriaEtiqueta": "Actividades ecoturísticas",
+      "url": "/actividades/lancha-mi-angel-ir",
+      "foto": "/bot/lancha-mi-angel-ir.webp",
+      "chips": [
+        "🚤 Paseo en lancha",
+        "👥 10"
+      ],
+      "descripcion": "Recorridos en lancha por los manglares y esteros de Tecolutla, con capacidad para 10 personas, atendidos directamente por el capitán Jorge Luis Pérez Trinidad.",
+      "capacidadMaxima": 10,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Recorrido al Santuario de las Aves",
+        "Recorrido a la Cueva de la Mojarra",
+        "Recorrido a la Cueva del Pirata",
+        "Recorrido al Manglar del Silencio",
+        "Paseos privados para tu grupo",
+        "Horarios flexibles",
+        "Chalecos salvavidas y medidas de seguridad",
+        "Reserva fácil, sin complicaciones"
+      ],
+      "telefono": "+52 766 112 7453",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "lancha-santy",
+      "nombre": "Lancha Santy",
+      "categoria": "actividades",
+      "categoriaEtiqueta": "Actividades ecoturísticas",
+      "url": "/actividades/lancha-santy",
+      "foto": "/bot/lancha-santy.webp",
+      "chips": [
+        "🚤 Paseo en lancha",
+        "👥 10"
+      ],
+      "descripcion": "Recorridos en lancha por los esteros y manglares del río Tecolutla, con capacidad para 10 personas.",
+      "capacidadMaxima": 10,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Recorrido al Santuario de las Aves",
+        "Recorrido a la Cueva de la Mojarra",
+        "Recorrido a la Cueva del Pirata",
+        "Recorrido al Manglar del Silencio",
+        "Paseos privados para tu grupo",
+        "Horarios flexibles",
+        "Chalecos salvavidas y medidas de seguridad",
+        "Reserva fácil, sin complicaciones"
+      ],
+      "telefono": "+1 (863) 373-9729",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "paseos-lancha-el-osito",
+      "nombre": "Paseos en Lancha \"El Osito\" (lanchas \"Evelin\" y \"Los Compadres\")",
+      "categoria": "actividades",
+      "categoriaEtiqueta": "Actividades ecoturísticas",
+      "url": "/actividades/paseos-lancha-el-osito",
+      "foto": "/bot/paseos-lancha-el-osito.webp",
+      "chips": [
+        "🚤 Paseo en lancha",
+        "👥 10"
+      ],
+      "descripcion": "Paseos en lancha por los manglares de Tecolutla con las embarcaciones \"Evelin\" y \"Los Compadres\", a cargo del capitán Ignacio Jacinto, con capacidad para 10 personas por lancha.",
+      "capacidadMaxima": 10,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Recorrido por los manglares de Tecolutla",
+        "Dos lanchas disponibles (\"Evelin\" y \"Los Compadres\")",
+        "Chalecos salvavidas obligatorios",
+        "Botiquín y extintor a bordo"
+      ],
+      "telefono": "+52 766 102 3516",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "restaurant-el-caracol",
+      "nombre": "Restaurant El Caracol",
+      "categoria": "gastronomia",
+      "categoriaEtiqueta": "Gastronomía",
+      "url": "/gastronomia/restaurant-el-caracol",
+      "foto": "/bot/restaurant-el-caracol.webp",
+      "chips": [
+        "🍤 Mariscos",
+        "📍 A pie de río"
+      ],
+      "descripcion": "Restaurante de mariscos junto al embarcadero de Tecolutla, con vista al río desde la terraza. Su especialidad es la comida exótica afrodisiaca — caldo rompecatre, receta original de la casa, langosta entera y piña rellena de mariscos.",
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Traslado gratuito ida y vuelta"
+      ],
+      "especialidades": [
+        "Caldo afrodisiaco rompecatre, receta original de la casa",
+        "Langosta entera (para 4 personas)",
+        "Langostinos al gusto",
+        "Piña rellena de mariscos o de camarón"
+      ],
+      "tipoCocina": [
+        "Mariscos"
+      ],
+      "distancias": [
+        "A pie de río",
+        "centro: 350 m",
+        "playa: 527 m"
+      ],
+      "telefono": "+52 766 105 0321",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "restaurant-el-manglar",
+      "nombre": "Restaurant El Manglar",
+      "categoria": "gastronomia",
+      "categoriaEtiqueta": "Gastronomía",
+      "url": "/gastronomia/restaurant-el-manglar",
+      "foto": "/bot/restaurant-el-manglar.webp",
+      "chips": [
+        "🍤 Mariscos",
+        "📍 centro: 170 m"
+      ],
+      "descripcion": "Restaurante de mariscos, antojitos y desayunos en pleno centro de Tecolutla, a 170 metros del zócalo sobre calle Hidalgo. Ambiente familiar, ideal para comer sin alejarte a pie del centro.",
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "especialidades": [
+        "Mojarra frita o al mojo de ajo",
+        "Coctel de camarón o pulpo con filete de pescado empanizado",
+        "Tostadas de camarón o de mariscos",
+        "Ceviche de cangrejo"
+      ],
+      "tipoCocina": [
+        "Mariscos",
+        "Antojitos mexicanos"
+      ],
+      "distancias": [
+        "centro: 170 m",
+        "playa: 1600 m"
+      ],
+      "telefono": "+52 766 102 2956",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "restaurant-panchita",
+      "nombre": "Restaurant Panchita",
+      "categoria": "gastronomia",
+      "categoriaEtiqueta": "Gastronomía",
+      "url": "/gastronomia/restaurant-panchita",
+      "foto": "/bot/restaurant-panchita.webp",
+      "chips": [
+        "🍤 Mariscos",
+        "📍 A pie de río"
+      ],
+      "descripcion": "Restaurante de mariscos a orillas del río Tecolutla, frente al Palo Volador. Camarones, langosta y pescado frito en terraza de dos niveles junto al embarcadero.",
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Terraza techada de dos niveles con vista al río",
+        "Junto al embarcadero de lanchas turísticas"
+      ],
+      "especialidades": [
+        "Camarones en salsa rosa, empanizados o en salsa verde",
+        "Langosta a la plancha o en salsa de adobo",
+        "Jaiba en salsa de adobo",
+        "Pescado entero frito con ajo"
+      ],
+      "tipoCocina": [
+        "Mariscos"
+      ],
+      "distancias": [
+        "A pie de río",
+        "playa: 527 m"
+      ],
+      "telefono": "+52 766 100 0970",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "casa-de-huespedes-microhotel",
+      "nombre": "Casa de Huéspedes Microhotel",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/casa-de-huespedes-microhotel",
+      "foto": "/bot/casa-de-huespedes-microhotel.webp",
+      "chips": [
+        "👥 35",
+        "📍 playa: 263 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Casa de huéspedes con habitaciones equipadas, a una cuadra de la playa y junto a la central de camiones ADO, ideal para grupos grandes.",
+      "capacidadMaxima": 35,
+      "numeroHabitaciones": 12,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Wifi",
+        "Agua caliente",
+        "Ventilador",
+        "TV con Netflix y YouTube",
+        "Refrigerador",
+        "Microondas",
+        "Cafetera",
+        "Hieleras",
+        "Plancha",
+        "Espacio para desayunar y descansar"
+      ],
+      "distancias": [
+        "playa: 263 m"
+      ],
+      "telefono": "+52 766 103 5904",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "casa-llanos",
+      "nombre": "Casa Llanos",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/casa-llanos",
+      "foto": "/bot/casa-llanos.webp",
+      "chips": [
+        "👥 20",
+        "📍 playa: 850 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Hotel en el centro de Tecolutla, a unos pasos del palacio municipal, con 5 habitaciones dobles para hasta 4 personas cada una (4 con dos camas matrimoniales y 1 con cama king size), baño privado y clóset. Aire acondicionado, ventilador de techo, agua caliente y wifi en todas.",
+      "capacidadMaxima": 20,
+      "numeroHabitaciones": 5,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Aire acondicionado",
+        "Ventilador de techo",
+        "Agua caliente",
+        "TV Smart",
+        "Wifi",
+        "Baño privado",
+        "Clóset con ganchos",
+        "Pasillos interiores con jardineras"
+      ],
+      "distancias": [
+        "playa: 850 m"
+      ],
+      "telefono": "+52 766 213 6666",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "casa-vacacional-orquideas",
+      "nombre": "Casa Vacacional Orquídeas",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/casa-vacacional-orquideas",
+      "foto": "/bot/casa-vacacional-orquideas.webp",
+      "chips": [
+        "👥 15",
+        "🏊 Alberca",
+        "📍 playa: 211 m"
+      ],
+      "descripcion": "Casa vacacional a 211 m del mar en Tecolutla. Alberca, jardín, fogata, asador y estacionamiento para 3 autos; hasta 15 personas en 3 habitaciones.",
+      "capacidadMaxima": 15,
+      "numeroHabitaciones": 3,
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Alberca",
+        "Estacionamiento para 3 vehículos",
+        "Wifi",
+        "Asador",
+        "Área de fogata",
+        "Jardín amplio"
+      ],
+      "distancias": [
+        "playa: 211 m"
+      ],
+      "telefono": "+52 766 112 4813",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "casa-via-mar",
+      "nombre": "Casa Vía Mar",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/casa-via-mar",
+      "foto": "/bot/casa-via-mar.webp",
+      "chips": [
+        "👥 14",
+        "🏊 Alberca",
+        "🐾 Mascotas"
+      ],
+      "descripcion": "Casa vacacional con alberca privada para 14 personas en Tecolutla, a 5 minutos caminando de la playa. 3 habitaciones climatizadas y pet friendly.",
+      "capacidadMaxima": 14,
+      "numeroHabitaciones": 3,
+      "alberca": true,
+      "petFriendly": true,
+      "wifi": true,
+      "servicios": [
+        "Alberca privada",
+        "3 habitaciones con aire acondicionado y ventilador de techo",
+        "Smart TV en habitaciones y sala",
+        "Cocina totalmente equipada",
+        "Área de asador",
+        "Estacionamiento",
+        "Bocina para música",
+        "Acepta mascotas (pet friendly)",
+        "Wifi"
+      ],
+      "distancias": [
+        "5 min caminando a la playa",
+        "8-10 min al centro"
+      ],
+      "telefono": "+52 766 115 1203",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "habitacion-piedras-altas",
+      "nombre": "Habitación Piedras Altas",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Habitaciones",
+      "url": "/hospedaje/habitacion-piedras-altas",
+      "foto": "/bot/habitacion-piedras-altas.webp",
+      "chips": [
+        "📍 playa: 310 m"
+      ],
+      "descripcion": "Habitación cómoda para pareja o familia pequeña, a una cuadra del centro y a unos pasos del río.",
+      "numeroHabitaciones": 1,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Baño privado",
+        "Agua caliente",
+        "Aire acondicionado",
+        "Ventilador",
+        "Smart TV",
+        "Dos camas matrimoniales",
+        "Acepta pago con tarjeta",
+        "Precio especial en paseo por los manglares"
+      ],
+      "distancias": [
+        "playa: 310 m"
+      ],
+      "telefono": "+52 766 102 5595",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "habitaciones-mary",
+      "nombre": "Habitaciones Mary",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Habitaciones",
+      "url": "/hospedaje/habitaciones-mary",
+      "foto": "/bot/habitaciones-mary.webp",
+      "chips": [
+        "📍 playa: 310 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Habitaciones independientes arriba de casa, a unos pasos del centro y a 2 minutos de la playa.",
+      "numeroHabitaciones": 4,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "A unos pasos del centro",
+        "A 2 minutos de la playa",
+        "Aire acondicionado",
+        "Baño propio",
+        "Agua caliente",
+        "Internet",
+        "TV Roku"
+      ],
+      "distancias": [
+        "playa: 310 m"
+      ],
+      "telefono": "+52 766 103 1723",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-el-pariente",
+      "nombre": "Hotel El Pariente",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-el-pariente",
+      "foto": "/bot/hotel-el-pariente.webp",
+      "chips": [
+        "👥 45",
+        "🏊 Alberca",
+        "📍 playa: 538 m"
+      ],
+      "descripcion": "Hotel con 12 habitaciones de distintos tamaños (sencillas, dobles y familiares) para hasta 45 personas, con alberca, chapoteadero y aire acondicionado.",
+      "capacidadMaxima": 45,
+      "numeroHabitaciones": 12,
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Agua caliente",
+        "Ventilador de techo",
+        "Internet",
+        "Televisión",
+        "Aire acondicionado",
+        "Alberca y chapoteadero"
+      ],
+      "distancias": [
+        "playa: 538 m"
+      ],
+      "telefono": "+52 766 103 2965",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-luna",
+      "nombre": "Hotel Luna",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-luna",
+      "foto": "/bot/hotel-luna.webp",
+      "chips": [
+        "🏊 Alberca",
+        "📍 playa: 434 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Hotel pequeño y familiar a una cuadra del centro de Tecolutla, con alberca y 8 habitaciones — a un paso de la playa por las calles vecinas.",
+      "numeroHabitaciones": 8,
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Alberca",
+        "Estacionamiento",
+        "Wifi",
+        "TV",
+        "Internet",
+        "Agua caliente"
+      ],
+      "distancias": [
+        "playa: 434 m"
+      ],
+      "telefono": "+52 55 1186 4421",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-nautilus",
+      "nombre": "Hotel Nautilus",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-nautilus",
+      "foto": "/bot/hotel-nautilus.webp",
+      "chips": [
+        "👥 62",
+        "📍 centro: 140 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Hotel con habitaciones temáticas pintadas a mano (faro, palmera, mar) en el centro de Tecolutla, a pasos del Parque Miguel Hidalgo. Aire acondicionado, wifi, agua caliente y terraza.",
+      "capacidadMaxima": 62,
+      "numeroHabitaciones": 16,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "14 habitaciones dobles (hasta 4 personas) y 2 King (hasta 2 adultos y un niño)",
+        "Aire acondicionado",
+        "Ventilador de techo",
+        "Agua caliente",
+        "TV Smart",
+        "Terraza",
+        "Wifi"
+      ],
+      "distancias": [
+        "centro: 140 m",
+        "playa: 850 m"
+      ],
+      "telefono": "+52 766 121 2683",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-valeria",
+      "nombre": "Hotel Valeria",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-valeria",
+      "foto": "/bot/hotel-valeria.webp",
+      "chips": [
+        "👥 45",
+        "🏊 Alberca",
+        "📍 playa: 375 m"
+      ],
+      "descripcion": "Hotel con alberca y 13 habitaciones (dobles, triples y sencilla), en la colonia Benito Juárez, frente a la telesecundaria.",
+      "capacidadMaxima": 45,
+      "numeroHabitaciones": 13,
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Alberca",
+        "Asador",
+        "Aire acondicionado"
+      ],
+      "distancias": [
+        "playa: 375 m"
+      ],
+      "telefono": "+52 782 243 9629",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "casa-raysemar",
+      "nombre": "Raysemar",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Departamentos",
+      "url": "/hospedaje/casa-raysemar",
+      "foto": "/bot/casa-raysemar.webp",
+      "chips": [
+        "👥 8",
+        "📶 Wifi"
+      ],
+      "descripcion": "Raysemar son 4 departamentos independientes en un mismo lote, cada uno hasta para 8 personas, con aire acondicionado, ventilador de techo, agua caliente, wifi, cocina equipada, sala y comedor. También se pueden rentar los 4 juntos para grupos grandes, hasta 32 personas en total. No se aceptan mascotas.",
+      "capacidadMaxima": 8,
+      "numeroHabitaciones": 2,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "2 camas matrimoniales por recámara",
+        "Aire acondicionado",
+        "Ventilador de techo",
+        "Agua caliente",
+        "Cocina equipada",
+        "Sala con TV",
+        "Comedor",
+        "Wifi"
+      ],
+      "telefono": "+52 766 113 5264",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "villas-conchita-de-mar",
+      "nombre": "Villas Conchita De Mar",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Casa vacacional",
+      "url": "/hospedaje/villas-conchita-de-mar",
+      "foto": "/bot/villas-conchita-de-mar.webp",
+      "chips": [
+        "🏊 Alberca",
+        "📍 playa: 274 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Dos villas a una cuadra del mar con todas las comodidades para que pase unas vacaciones cómodamente.",
+      "alberca": true,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Estacionamiento",
+        "Alberca",
+        "Chapoteadero",
+        "Palapa",
+        "Asador",
+        "Wifi",
+        "Agua caliente",
+        "Cocina totalmente equipada"
+      ],
+      "distancias": [
+        "playa: 274 m"
+      ],
+      "telefono": "+52 766 125 8590",
+      "destacado": false,
+      "plan": "gratuito"
+    }
+  ]
+}
