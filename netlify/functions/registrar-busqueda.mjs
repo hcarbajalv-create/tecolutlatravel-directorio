@@ -1,4 +1,4 @@
-import { getStore } from '@netlify/blobs';
+import { actualizarJsonConReintentos, ConflictoDeEscrituraError, obtenerStoreDashboard } from './_compartido/stores-dashboard.mjs';
 
 function mesActual() {
   return new Date().toISOString().slice(0, 7); // "2026-08"
@@ -23,7 +23,7 @@ function mesVacio() {
 // término, sin negocio asociado. Best effort igual que registrar-evento:
 // sin cookies ni datos personales, y si Blobs falla no bloquea al
 // visitante (se llama con keepalive y .catch vacío desde el front).
-export default async (request) => {
+export default async (request, context) => {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ ok: false, error: 'Método no permitido' }), {
       status: 405,
@@ -52,9 +52,12 @@ export default async (request) => {
   }
 
   try {
-    const store = getStore('busquedas');
+    const { store } = obtenerStoreDashboard(context, 'busquedas');
+    // Localmente la búsqueda sigue funcionando para el visitante, pero no
+    // genera datos analíticos ni toca el store real del sitio.
+    if (!store) return new Response(JSON.stringify({ ok: true, ignorado: true }), { status: 200 });
     const mes = mesActual();
-    const actual = (await store.get('registro', { type: 'json' })) || { porMes: {} };
+    await actualizarJsonConReintentos(store, 'registro', () => ({ porMes: {} }), (actual) => {
     if (!actual.porMes[mes]) actual.porMes[mes] = mesVacio();
 
     actual.porMes[mes].terminos[normalizado] = (actual.porMes[mes].terminos[normalizado] || 0) + 1;
@@ -63,10 +66,13 @@ export default async (request) => {
         (actual.porMes[mes].sinResultado[normalizado] || 0) + 1;
     }
 
-    await store.setJSON('registro', actual);
+    });
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (error) {
+    if (error instanceof ConflictoDeEscrituraError) {
+      return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 409 });
+    }
     return new Response(JSON.stringify({ ok: false, error: String(error.message || error) }), {
       status: 500,
     });

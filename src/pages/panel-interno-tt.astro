@@ -60,6 +60,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
           <span>Tecolutla<em>Travel</em> — Panel interno</span>
         </div>
+        <small class="panel__modo-datos" id="modo-datos" hidden></small>
         <button type="button" class="boton boton--secundario boton--chico" id="boton-salir">Salir</button>
       </header>
 
@@ -326,6 +327,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-bottom: 0.75rem;
   }
 
+  .panel__modo-datos { color: var(--color-verde-oscuro); font-weight: 700; font-size: 0.78rem; }
+
+  .panel__nota-medicion {
+    margin: -0.25rem 0 0.75rem;
+    color: var(--color-texto-suave);
+    font-size: 0.82rem;
+  }
+
   .panel__leyenda .punto {
     display: inline-block;
     width: 10px;
@@ -473,6 +482,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     botonPdfIndividual: document.getElementById('boton-pdf-individual') as HTMLButtonElement,
     botonPdfComparativa: document.getElementById('boton-pdf-comparativa') as HTMLButtonElement,
     reportePdf: document.getElementById('reporte-pdf-contenedor') as HTMLElement,
+    modoDatos: document.getElementById('modo-datos') as HTMLElement,
   };
 
   interface DatosNegocio {
@@ -486,6 +496,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     stats: {
       vistasTotal: number;
       clicsTotal: number;
+      comoLlegarTotal?: number;
+      compartirTotal?: number;
+      accionesRegistradasDesde?: string;
+      origenEscritura?: { modo?: string; deployId?: string | null };
       porMes: Record<string, any>;
     };
   }
@@ -497,6 +511,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   let negociosData: DatosNegocio[] = [];
   let busquedasPorMes: Record<string, MesBusquedas> = {};
+  let accionesRegistradasDesde: string | null = null;
+  let modoDatos = 'produccion';
+  let deployId: string | null = null;
 
   // ---------- Autenticación ----------
   // El login (dashboard-auth) valida la contraseña UNA vez y emite un
@@ -527,7 +544,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   type ResultadoNegocios =
-    | { ok: true; negocios: DatosNegocio[] }
+    | { ok: true; negocios: DatosNegocio[]; accionesRegistradasDesde: string | null; modoDatos: string; deployId: string | null }
     | { ok: false; sesionInvalida: boolean };
 
   async function obtenerNegocios(token: string): Promise<ResultadoNegocios> {
@@ -540,7 +557,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       if (!respuesta.ok || !datos.ok) {
         return { ok: false, sesionInvalida: respuesta.status === 401 };
       }
-      return { ok: true, negocios: datos.negocios };
+      return {
+        ok: true,
+        negocios: datos.negocios,
+        accionesRegistradasDesde: typeof datos.accionesRegistradasDesde === 'string'
+          ? datos.accionesRegistradasDesde
+          : null,
+        modoDatos: typeof datos.modoDatos === 'string' ? datos.modoDatos : 'produccion',
+        deployId: typeof datos.deployId === 'string' ? datos.deployId : null,
+      };
     } catch {
       return { ok: false, sesionInvalida: false };
     }
@@ -581,9 +606,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     sessionStorage.setItem(TOKEN_SESSION, token);
     negociosData = resultadoNegocios.negocios;
+    accionesRegistradasDesde = resultadoNegocios.accionesRegistradasDesde;
+    modoDatos = resultadoNegocios.modoDatos;
+    deployId = resultadoNegocios.deployId;
     busquedasPorMes = busquedas || {};
     el.login.hidden = true;
     el.dashboard.hidden = false;
+    const escrituraVerificada = negociosData.some(({ stats }) =>
+      modoDatos === 'prueba'
+        ? stats.origenEscritura?.modo === 'prueba' && stats.origenEscritura?.deployId === deployId
+        : stats.origenEscritura?.modo === 'produccion');
+    el.modoDatos.textContent = modoDatos === 'local'
+      ? 'Datos locales — no se guardan'
+      : modoDatos === 'prueba'
+        ? `Datos de prueba de este deploy — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`
+        : `Datos de producción — escritura ${escrituraVerificada ? 'verificada' : 'no verificada'}`;
+    el.modoDatos.hidden = false;
     poblarSelectorNegocios();
     if (el.selectorNegocio.value) renderizarVistaIndividual(el.selectorNegocio.value);
     renderizarVistaComparativa();
@@ -625,6 +663,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   function nombreMesCorto(clave: string): string {
     const [anio, mes] = clave.split('-').map(Number);
     return new Date(anio, mes - 1, 1).toLocaleDateString('es-MX', { month: 'short', year: '2-digit' });
+  }
+
+  function fechaAccionesFormateada(): string | null {
+    if (!accionesRegistradasDesde) return null;
+    const fecha = new Date(accionesRegistradasDesde);
+    if (Number.isNaN(fecha.getTime())) return null;
+    return new Intl.DateTimeFormat('es-MX', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'America/Mexico_City',
+    }).format(fecha).replace('.', '');
+  }
+
+  function notaMedicionAcciones(): string {
+    const fecha = fechaAccionesFormateada();
+    return fecha
+      ? `Las acciones se registran desde el <strong>${fecha}</strong>. Antes de esa fecha, la ausencia de datos no significa cero.`
+      : 'Aún no hay acciones registradas; la fecha aparecerá con la primera acción.';
+  }
+
+  function detalleEncabezadoAcciones(): string {
+    const fecha = fechaAccionesFormateada();
+    return fecha ? `desde ${fecha}` : 'sin registros aún';
   }
 
   function combinarCampo(porMes: Record<string, any>, campo: string): Record<string, number> {
@@ -791,6 +853,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       { color: '#0B6F7A', colorSecundario: '#FF7A5C' },
     );
 
+    const graficaAccionesMensual = graficaBarras(
+      meses.map((clave) => ({
+        etiqueta: nombreMesCorto(clave),
+        valor: stats.porMes[clave].comoLlegar || 0,
+        valorSecundario: stats.porMes[clave].compartir || 0,
+      })),
+      { color: '#7A5CFF', colorSecundario: '#D29A2D' },
+    );
+
     const horaCombinada = combinarCampo(stats.porMes, 'hora');
     const graficaHora = graficaBarras(
       Array.from({ length: 24 }, (_, h) => ({
@@ -849,6 +920,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="panel__tarjetas">
         ${tarjetaStat('Vistas totales', stats.vistasTotal, '#0B6F7A')}
         ${tarjetaStat('Clics a WhatsApp', stats.clicsTotal, '#FF7A5C')}
+        ${tarjetaStat('Acciones para llegar', stats.comoLlegarTotal ?? 0, '#7A5CFF')}
+        ${tarjetaStat('Acciones de compartir', stats.compartirTotal ?? 0, '#D29A2D')}
         ${tarjetaStat('Tasa de conversión', conversionGeneral, '#4FD2C8')}
         ${tarjetaStat('Puntaje de completitud', negocio.puntaje + '/100', '#0C2B2E')}
       </div>
@@ -860,6 +933,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <span><span class="punto" style="background:#FF7A5C"></span>Clics</span>
         </div>
         ${graficaMensual}
+      </div>
+
+      <div class="panel__seccion">
+        <h3>Acciones de alta intención por mes</h3>
+        <p class="panel__nota-medicion">${notaMedicionAcciones()}</p>
+        <div class="panel__leyenda">
+          <span><span class="punto" style="background:#7A5CFF"></span>Acciones para llegar</span>
+          <span><span class="punto" style="background:#D29A2D"></span>Acciones de compartir</span>
+        </div>
+        ${graficaAccionesMensual}
       </div>
 
       <div class="panel__fila-2">
@@ -960,7 +1043,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  type CampoOrdenComparativa = 'nombre' | 'vistas' | 'clics' | 'conversion' | 'puntaje';
+  type CampoOrdenComparativa =
+    | 'nombre'
+    | 'vistas'
+    | 'clics'
+    | 'comoLlegar'
+    | 'compartir'
+    | 'conversion'
+    | 'puntaje';
   // Puntaje descendente por default — es el orden que ya existía antes de
   // agregar la columna de conversión, no lo cambiamos para no sorprender
   // a quien ya está acostumbrado al panel. Clic en cualquier encabezado
@@ -973,7 +1063,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   const ETIQUETAS_ORDEN_COMPARATIVA: Record<CampoOrdenComparativa, string> = {
     nombre: 'Negocio',
     vistas: 'Vistas',
-    clics: 'Clics',
+    clics: 'Clics a WhatsApp',
+    comoLlegar: 'Acciones para llegar',
+    compartir: 'Acciones de compartir',
     conversion: 'Conversión',
     puntaje: 'Puntaje',
   };
@@ -984,7 +1076,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const datosMes = n.stats.porMes[mesClave] || { vistas: 0, clics: 0 };
       const vistas = datosMes.vistas || 0;
       const clics = datosMes.clics || 0;
-      return { negocio: n, vistas, clics };
+      const accionesLlegar = datosMes.comoLlegar || 0;
+      const accionesCompartir = datosMes.compartir || 0;
+      return { negocio: n, vistas, clics, accionesLlegar, accionesCompartir };
     });
 
     const promedio = promedioConversionConfiable(filasBase);
@@ -998,6 +1092,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           return (a.vistas - b.vistas) * dir;
         case 'clics':
           return (a.clics - b.clics) * dir;
+        case 'comoLlegar':
+          return (a.accionesLlegar - b.accionesLlegar) * dir;
+        case 'compartir':
+          return (a.accionesCompartir - b.accionesCompartir) * dir;
         case 'conversion':
           return (valorConversion(a.clics, a.vistas) - valorConversion(b.clics, b.vistas)) * dir;
         case 'puntaje':
@@ -1007,7 +1105,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     });
 
     const filas = filasOrdenadas
-      .map(({ negocio: n, vistas, clics }) => {
+      .map(({ negocio: n, vistas, clics, accionesLlegar, accionesCompartir }) => {
         const semaforo = semaforoConversion(clics, vistas, promedio);
         const conv = formatearConversion(clics, vistas);
         const notaPocasVistas = vistas < MINIMO_VISTAS_CONFIABLE && vistas > 0 ? ' <small>(pocas vistas)</small>' : '';
@@ -1016,6 +1114,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <td>${n.nombre}${n.destacado ? '<span class="panel__mini-badge">Destacado</span>' : ''}</td>
             <td>${vistas}</td>
             <td>${clics}</td>
+            <td>${accionesLlegar}</td>
+            <td>${accionesCompartir}</td>
             <td>
               <span class="panel__semaforo ${semaforo.clase}" title="${semaforo.titulo}"></span>${conv}${notaPocasVistas}
             </td>
@@ -1025,13 +1125,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       })
       .join('');
 
-    const encabezados = (['nombre', 'vistas', 'clics', 'conversion', 'puntaje'] as CampoOrdenComparativa[])
-      .map((campo) => {
-        const activo = ordenComparativa.campo === campo;
-        const flecha = activo ? (ordenComparativa.direccion === 'asc' ? ' ▲' : ' ▼') : '';
-        return `<th><button type="button" class="panel__th-orden" data-campo="${campo}">${ETIQUETAS_ORDEN_COMPARATIVA[campo]}${flecha}</button></th>`;
-      })
-      .join('');
+    const encabezadoOrdenable = (campo: CampoOrdenComparativa, detalle = '') => {
+      const activo = ordenComparativa.campo === campo;
+      const flecha = activo ? (ordenComparativa.direccion === 'asc' ? ' ▲' : ' ▼') : '';
+      return `<th><button type="button" class="panel__th-orden" data-campo="${campo}">${ETIQUETAS_ORDEN_COMPARATIVA[campo]}${flecha}${detalle}</button></th>`;
+    };
+    const encabezados = [
+      encabezadoOrdenable('nombre'),
+      encabezadoOrdenable('vistas'),
+      encabezadoOrdenable('clics'),
+      encabezadoOrdenable('comoLlegar', `<br><small>${detalleEncabezadoAcciones()}</small>`),
+      encabezadoOrdenable('compartir', `<br><small>${detalleEncabezadoAcciones()}</small>`),
+      encabezadoOrdenable('conversion'),
+      encabezadoOrdenable('puntaje'),
+    ].join('');
 
     const notaPromedio =
       promedio === null
@@ -1042,6 +1149,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="panel__seccion">
         <h3>Todos los negocios — mes actual</h3>
         ${notaPromedio}
+        <p class="panel__nota-medicion">${notaMedicionAcciones()}</p>
         <table class="panel__tabla">
           <thead><tr>${encabezados}</tr></thead>
           <tbody>${filas}</tbody>

@@ -407,7 +407,7 @@ const esquemaBreadcrumb = {
           </p>
         ))}
         {tipoCocina && tipoCocina.length > 0 && <p>Tipo de cocina: {tipoCocina.join(', ')}</p>}
-        <p><a class="boton boton--secundario" href={enlaceComoLlegar}>¿Cómo llegar?</a></p>
+        <p><a class="boton boton--secundario" href={enlaceComoLlegar} data-registrar-como-llegar>¿Cómo llegar?</a></p>
       </div>
 
       <div class="ficha__columna-precio-servicios">
@@ -521,7 +521,7 @@ const esquemaBreadcrumb = {
         title={`Mapa de ubicación de ${nombre}`}
       />
       <p class="ficha__mapa-boton">
-        <a class="boton boton--secundario" href={enlaceComoLlegar} target="_blank" rel="noopener noreferrer">
+        <a class="boton boton--secundario" href={enlaceComoLlegar} target="_blank" rel="noopener noreferrer" data-registrar-como-llegar>
           Abrir en Google Maps
         </a>
       </p>
@@ -829,6 +829,8 @@ const esquemaBreadcrumb = {
         canal: detectarCanal(),
         dispositivo: detectarDispositivo(),
       }),
+    }).then((respuesta) => {
+      if (!respuesta.ok) console.warn('No se pudo registrar la métrica:', respuesta.status);
     }).catch(() => {
       // Sin bloquear al visitante si falla (red caída, función no disponible, etc.).
     });
@@ -836,4 +838,8 @@ const esquemaBreadcrumb = {
 
   registrarEvento('vista');
   document.querySelector('.boton--whatsapp')?.addEventListener('click', () => registrarEvento('clic'));
+  document.querySelectorAll('[data-registrar-como-llegar]').forEach((enlace) => {
+    enlace.addEventListener('click', () => registrarEvento('como-llegar'));
+  });
+  document.getElementById('boton-compartir')?.addEventListener('click', () => registrarEvento('compartir'));
 </script>
