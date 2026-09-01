@@ -2439,6 +2439,8 @@ p.buscador-pildora__resultados {
 
 .mapa-carga__contenido,
 .mapa-carga__estado {
+  position: relative;
+  z-index: 0;
   text-align: center;
 }
 
@@ -2459,18 +2461,6 @@ p.buscador-pildora__resultados {
   margin: 0;
   color: var(--color-texto);
   font-weight: 600;
-}
-
-.mapa-carga__ver {
-  border: 0;
-  border-radius: 999px;
-  background: #0b6f7a;
-  color: #fff;
-}
-
-.mapa-carga__ver:hover,
-.mapa-carga__ver:focus-visible {
-  background: #075963;
 }
 
 .mapa-carga__estado {
@@ -2494,6 +2484,12 @@ p.buscador-pildora__resultados {
 
 .ficha__mapa-boton {
   margin: 1rem 0 0;
+}
+
+.ficha__mapa-boton .boton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
 }
 
 /* ---------- Footer ---------- */
