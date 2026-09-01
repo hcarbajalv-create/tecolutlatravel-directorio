@@ -2425,6 +2425,73 @@ p.buscador-pildora__resultados {
   height: 320px;
 }
 
+.mapa-carga {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border: 1px solid #e1d7c0;
+  border-radius: 16px;
+  background: #f4e9d1;
+}
+
+.mapa-carga__contenido,
+.mapa-carga__estado {
+  text-align: center;
+}
+
+.mapa-carga__contenido {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  max-width: 28rem;
+  padding: 1.5rem;
+}
+
+.mapa-carga__pin {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.mapa-carga__direccion {
+  margin: 0;
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.mapa-carga__ver {
+  border: 0;
+  border-radius: 999px;
+  background: #0b6f7a;
+  color: #fff;
+}
+
+.mapa-carga__ver:hover,
+.mapa-carga__ver:focus-visible {
+  background: #075963;
+}
+
+.mapa-carga__estado {
+  margin: 0;
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.mapa-carga .mapa-embed {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.mapa-carga .mapa-embed--listo {
+  opacity: 1;
+}
+
 .ficha__mapa-boton {
   margin: 1rem 0 0;
 }

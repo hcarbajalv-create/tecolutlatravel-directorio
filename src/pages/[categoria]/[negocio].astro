@@ -514,12 +514,21 @@ const esquemaBreadcrumb = {
 
     <div class="ficha__bloque ficha__bloque--mapa">
       <h2>Ubicación en el mapa</h2>
-      <iframe
-        class="mapa-embed"
-        src={mapaEmbed}
-        loading="lazy"
-        title={`Mapa de ubicación de ${nombre}`}
-      />
+      <div
+        class="mapa-carga"
+        data-mapa-carga
+        data-mapa-src={mapaEmbed}
+        data-mapa-titulo={`Mapa de ubicación de ${nombre}`}
+      >
+        <div class="mapa-carga__contenido" data-mapa-contenido>
+          <span class="mapa-carga__pin" aria-hidden="true">📍</span>
+          <p class="mapa-carga__direccion">{direccion}</p>
+          <button class="boton mapa-carga__ver" type="button" data-cargar-mapa>
+            Ver mapa
+          </button>
+        </div>
+        <p class="mapa-carga__estado" data-mapa-estado aria-live="polite" hidden>Cargando mapa…</p>
+      </div>
       <p class="ficha__mapa-boton">
         <a class="boton boton--secundario" href={enlaceComoLlegar} target="_blank" rel="noopener noreferrer" data-registrar-como-llegar>
           Abrir en Google Maps
@@ -620,6 +629,34 @@ const esquemaBreadcrumb = {
 
   document.addEventListener('keydown', (evento) => {
     if (evento.key === 'Escape' && lightbox && !lightbox.hidden) cerrarLightbox();
+  });
+
+  // El iframe de Google Maps es pesado y puede tardar varios segundos en
+  // pintar. Solo se crea cuando el visitante lo pide, para que la ficha no
+  // parezca rota mientras carga y para no gastar datos innecesariamente.
+  document.querySelectorAll<HTMLElement>('[data-mapa-carga]').forEach((contenedor) => {
+    const boton = contenedor.querySelector<HTMLButtonElement>('[data-cargar-mapa]');
+    const contenido = contenedor.querySelector<HTMLElement>('[data-mapa-contenido]');
+    const estado = contenedor.querySelector<HTMLElement>('[data-mapa-estado]');
+    const src = contenedor.dataset.mapaSrc;
+    const titulo = contenedor.dataset.mapaTitulo;
+
+    boton?.addEventListener('click', () => {
+      if (!src || contenedor.querySelector('iframe')) return;
+
+      contenido?.setAttribute('hidden', '');
+      if (estado) estado.hidden = false;
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'mapa-embed mapa-embed--cargando';
+      iframe.src = src;
+      iframe.title = titulo ?? 'Mapa de ubicación';
+      iframe.addEventListener('load', () => {
+        iframe.classList.add('mapa-embed--listo');
+        if (estado) estado.hidden = true;
+      });
+      contenedor.appendChild(iframe);
+    });
   });
 </script>
 
