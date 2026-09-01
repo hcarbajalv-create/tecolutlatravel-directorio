@@ -1,5 +1,5 @@
 {
-  "generado": "2026-09-01T00:47:56.826Z",
+  "generado": "2026-09-01T02:22:44.677Z",
   "totalNegocios": 23,
   "negocios": [
     {
@@ -696,10 +696,12 @@
       "url": "/hospedaje/quinta-rubens",
       "foto": "/bot/quinta-rubens.webp",
       "chips": [
+        "👥 6",
         "📍 playa: 362 m",
         "📶 Wifi"
       ],
-      "descripcion": "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles y una triple, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas.",
+      "descripcion": "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas.",
+      "capacidadMaxima": 6,
       "numeroHabitaciones": 3,
       "alberca": false,
       "petFriendly": false,

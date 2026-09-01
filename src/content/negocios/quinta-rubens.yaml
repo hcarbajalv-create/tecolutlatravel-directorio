@@ -18,8 +18,13 @@
 #   distancia" de Google Maps desde el pin del negocio hasta la orilla del mar
 #   (1 sep 2026). OJO: el volante del negocio dice "1 cuadra del mar", lo cual
 #   no corresponde; se publica el dato medido, no el del volante.
-# PRECIO / HORARIO / CAPACIDAD EXACTA: no confirmados por el negocio → fuera.
-#   (numeroHabitaciones: 3 sí está confirmado; capacidadMaxima no.)
+# CAPACIDAD: confirmada el 1 sep 2026 — las camas son matrimoniales, así que cada
+#   habitación doble (2 camas) recibe 4 personas y la triple (3 camas) recibe 6.
+#   Total del lugar 14. Como las habitaciones se rentan por separado, va
+#   capacidadMaxima: 6 (la unidad reservable más grande) + unidadesEnConjunto: 3 +
+#   capacidadGrupoCompleto: 14. La tarjeta del listado muestra 6, no 14, para no
+#   dar a entender que es una casa completa.
+# PRECIO Y HORARIO: no confirmados por el negocio → fuera.
 # DUPLICADOS: revisado. Quinta Ruben's NO aparece en tecolutlaveracruz.mx (251
 #   fichas revisadas, slug /hospedaje/quinta-rubens da 404) ni en Facebook
 #   indexado. Riesgo de duplicado BAJO. La descripción se escribió desde cero y
@@ -34,7 +39,7 @@
 
 nombre: Quinta Ruben's
 categoria: hospedaje
-descripcionCorta: "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles y una triple, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas."
+descripcionCorta: "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas."
 direccion: Rosas 189, Fracc. Arcadia, 93570 Tecolutla, Ver.
 coordenadas: { lat: 20.4886031, lng: -97.0212403 }
 telefono: "+52 56 5290 3633"
@@ -55,6 +60,9 @@ disponible: true
 tipo: cuarto
 subtipo: Habitaciones
 numeroHabitaciones: 3
+capacidadMaxima: 6
+unidadesEnConjunto: 3
+capacidadGrupoCompleto: 14
 wifi: true
 petFriendly: false
 insigniasExtra: ["No se aceptan mascotas"]
