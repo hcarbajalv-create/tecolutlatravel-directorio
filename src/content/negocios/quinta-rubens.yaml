@@ -1,0 +1,77 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# BITÁCORA DE ALTA — Quinta Ruben's (1 sep 2026)
+#
+# NOMBRE: el volante del negocio dice "QUINTA RUBE'S"; Google Maps lo registra
+#   como "Quinta Ruben'$". Se publica como "Quinta Ruben's" (sin el signo $, que
+#   en web se lee como spam). PENDIENTE: confirmar con el dueño la grafía oficial.
+# DATOS CONFIRMADOS por Paloma vía WhatsApp (31 ago 2026) y por el volante del
+#   propio negocio: 2 habitaciones dobles + 1 triple, baño privado en cada una,
+#   wifi, ventilador, no se aceptan mascotas, agua caliente SOLO en el baño de
+#   visitas de la planta baja (se documenta tal cual, sin maquillarlo).
+# TELÉFONO: 5652903633, confirmado por Hector y coincide con el volante del
+#   negocio. El volante trae un segundo número (5665862437) que NO se publica
+#   hasta saber si es de otra persona o para otro uso.
+# DIRECCIÓN Y COORDENADAS: tomadas del pin real del negocio en Google Maps
+#   (place id 0x85dbb58c18b412b1:0x1c3ecb1c04ac8eda) → "Rosas 189, Fracc. Arcadia,
+#   93570 Tecolutla, Ver.", lat 20.4886031 / lng -97.0212403, plus code FXQH+CG.
+# DISTANCIA A LA PLAYA: 362 m, medida por Hector con la herramienta "Medir
+#   distancia" de Google Maps desde el pin del negocio hasta la orilla del mar
+#   (1 sep 2026). OJO: el volante del negocio dice "1 cuadra del mar", lo cual
+#   no corresponde; se publica el dato medido, no el del volante.
+# CAPACIDAD: confirmada el 1 sep 2026 — las camas son matrimoniales, así que cada
+#   habitación doble (2 camas) recibe 4 personas y la triple (3 camas) recibe 6.
+#   Total del lugar 14. Como las habitaciones se rentan por separado, va
+#   capacidadMaxima: 6 (la unidad reservable más grande) + unidadesEnConjunto: 3 +
+#   capacidadGrupoCompleto: 14. La tarjeta del listado muestra 6, no 14, para no
+#   dar a entender que es una casa completa.
+# PRECIO Y HORARIO: no confirmados por el negocio → fuera.
+# DUPLICADOS: revisado. Quinta Ruben's NO aparece en tecolutlaveracruz.mx (251
+#   fichas revisadas, slug /hospedaje/quinta-rubens da 404) ni en Facebook
+#   indexado. Riesgo de duplicado BAJO. La descripción se escribió desde cero y
+#   evita las muletillas de plantilla del competidor.
+# FOTOS: 13 imágenes recibidas. Se descartaron: los 2 volantes con texto (por
+#   instrucción de Hector, solo sirvieron para extraer datos) y 1 foto movida de
+#   la habitación con colchas rosas. Quedan 10 (plan gratuito, tope 12).
+#   Orden: cuarto triple → doble → baño → fachada → segunda doble (las 5 primeras
+#   son las que deciden la reserva).
+# VERIFICADO: false. Nadie del equipo ha estado en sitio todavía.
+# ─────────────────────────────────────────────────────────────────────────────
+
+nombre: Quinta Ruben's
+categoria: hospedaje
+descripcionCorta: "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis —hasta 14 en total si se rentan las tres—, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas."
+direccion: Rosas 189, Fracc. Arcadia, 93570 Tecolutla, Ver.
+coordenadas: { lat: 20.4886031, lng: -97.0212403 }
+telefono: "+52 56 5290 3633"
+plan: gratuito
+fotos:
+  - { src: ../../assets/fotos/quinta-rubens/01-habitacion-triple.jpg, alt: "Habitación triple con tres camas y cortinas floreadas en Quinta Ruben's, Tecolutla" }
+  - { src: ../../assets/fotos/quinta-rubens/02-habitacion-doble.jpg, alt: "Habitación doble con dos camas matrimoniales y cabeceras grises en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/03-bano-privado.jpg, alt: "Baño privado con regadera tipo lluvia y muros de mármol en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/04-fachada-jardin.jpg, alt: "Fachada de Quinta Ruben's con jardín amplio en el fraccionamiento Arcadia, Tecolutla" }
+  - { src: ../../assets/fotos/quinta-rubens/05-habitacion-doble-piso-madera.jpg, alt: "Habitación doble con dos camas y piso de madera en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/06-entrada-principal.jpg, alt: "Entrada principal de Quinta Ruben's con escalones de mosaico" }
+  - { src: ../../assets/fotos/quinta-rubens/07-habitacion-ventana-jardin.jpg, alt: "Habitación con dos camas y ventana hacia el jardín en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/08-habitacion-cortinas-rojas.jpg, alt: "Habitación doble vista desde la puerta, con cortinas rojas, en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/09-escaleras-interiores.jpg, alt: "Escaleras interiores hacia las habitaciones de la planta alta en Quinta Ruben's" }
+  - { src: ../../assets/fotos/quinta-rubens/10-cama-ventilador.jpg, alt: "Cama matrimonial con ventilador de pared en Quinta Ruben's, Tecolutla" }
+fechaActualizacion: 2026-09-01
+disponible: true
+tipo: cuarto
+subtipo: Habitaciones
+numeroHabitaciones: 3
+capacidadMaxima: 6
+wifi: true
+petFriendly: false
+insigniasExtra: ["No se aceptan mascotas"]
+servicios:
+  - Wifi
+  - Ventilador en cada habitación
+  - Baño privado en cada habitación
+  - Agua caliente en el baño de la planta baja
+distancias:
+  - { a: playa, metros: 362 }
+verificado: false
+resenas: []
+destacado: false
+confirmadoFecha: "ago 2026"

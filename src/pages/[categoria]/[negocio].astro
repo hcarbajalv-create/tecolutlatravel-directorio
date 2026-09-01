@@ -514,12 +514,19 @@ const esquemaBreadcrumb = {
 
     <div class="ficha__bloque ficha__bloque--mapa">
       <h2>Ubicación en el mapa</h2>
-      <iframe
-        class="mapa-embed"
-        src={mapaEmbed}
-        loading="lazy"
-        title={`Mapa de ubicación de ${nombre}`}
-      />
+      <div class="mapa-carga">
+        <div class="mapa-carga__contenido">
+          <span class="mapa-carga__pin" aria-hidden="true">📍</span>
+          <p class="mapa-carga__direccion">{direccion}</p>
+        </div>
+        <p class="mapa-carga__estado" data-mapa-estado aria-live="polite">Cargando mapa…</p>
+        <iframe
+          class="mapa-embed"
+          src={mapaEmbed}
+          loading="lazy"
+          title={`Mapa de ubicación de ${nombre}`}
+        />
+      </div>
       <p class="ficha__mapa-boton">
         <a class="boton boton--secundario" href={enlaceComoLlegar} target="_blank" rel="noopener noreferrer" data-registrar-como-llegar>
           Abrir en Google Maps
@@ -620,6 +627,17 @@ const esquemaBreadcrumb = {
 
   document.addEventListener('keydown', (evento) => {
     if (evento.key === 'Escape' && lightbox && !lightbox.hidden) cerrarLightbox();
+  });
+
+  // El mapa empieza a cargar de inmediato, pero el iframe queda invisible
+  // hasta que Google responde. Así el fondo con dirección cubre la espera
+  // en vez del rectángulo gris que muestra el navegador.
+  document.querySelectorAll<HTMLIFrameElement>('.mapa-carga .mapa-embed').forEach((iframe) => {
+    const estado = iframe.parentElement?.querySelector<HTMLElement>('[data-mapa-estado]');
+    iframe.addEventListener('load', () => {
+      iframe.classList.add('mapa-embed--listo');
+      if (estado) estado.hidden = true;
+    });
   });
 </script>
 

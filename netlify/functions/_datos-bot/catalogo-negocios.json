@@ -1,6 +1,6 @@
 {
-  "generado": "2026-08-31T19:35:49.582Z",
-  "totalNegocios": 22,
+  "generado": "2026-09-01T02:41:39.072Z",
+  "totalNegocios": 23,
   "negocios": [
     {
       "slug": "casa-ceci",
@@ -684,6 +684,38 @@
         "playa: 375 m"
       ],
       "telefono": "+52 782 243 9629",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "quinta-rubens",
+      "nombre": "Quinta Ruben's",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Habitaciones",
+      "url": "/hospedaje/quinta-rubens",
+      "foto": "/bot/quinta-rubens.webp",
+      "chips": [
+        "👥 6",
+        "📍 playa: 362 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis —hasta 14 en total si se rentan las tres—, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas.",
+      "capacidadMaxima": 6,
+      "numeroHabitaciones": 3,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Wifi",
+        "Ventilador en cada habitación",
+        "Baño privado en cada habitación",
+        "Agua caliente en el baño de la planta baja"
+      ],
+      "distancias": [
+        "playa: 362 m"
+      ],
+      "telefono": "+52 56 5290 3633",
       "destacado": false,
       "plan": "gratuito"
     },
