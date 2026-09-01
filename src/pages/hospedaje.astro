@@ -215,9 +215,15 @@ const esquemaItemList =
             <Icono nombre={ICONOS_CHIP.todo} /> Todo
           </button>
           {chips.map((c) => (
-            <button type="button" class="filtro-rapido" data-chip={c.valor}>
-              <Icono nombre={ICONOS_CHIP[c.valor] ?? 'etiqueta'} /> {c.etiqueta}
-            </button>
+            c.valor === 'alberca' ? (
+              <a class="filtro-rapido" href="/hospedaje/con-alberca">
+                <Icono nombre={ICONOS_CHIP[c.valor] ?? 'etiqueta'} /> {c.etiqueta}
+              </a>
+            ) : (
+              <button type="button" class="filtro-rapido" data-chip={c.valor}>
+                <Icono nombre={ICONOS_CHIP[c.valor] ?? 'etiqueta'} /> {c.etiqueta}
+              </button>
+            )
           ))}
         </div>
       )

@@ -1,0 +1,123 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NegocioCard from '../../components/NegocioCard.astro';
+import TarjetaCompacta from '../../components/TarjetaCompacta.astro';
+import Icono from '../../components/Icono.astro';
+import { compararDentroDeGrupo } from '../../utils/puntajeCompletitud';
+import { filtrarListables } from '../../utils/negociosPublicados';
+import { AMENIDADES_CLAVE } from '../../utils/amenidadesClave';
+
+// Debe mantenerse igual que /hospedaje mientras el catálogo sea pequeño.
+const USAR_TARJETA_COMPACTA = false;
+const UMBRAL_PLAYA_METROS = 300;
+const UMBRAL_GRUPO_GRANDE = 15;
+type Negocio = CollectionEntry<'negocios'>;
+
+const todos = filtrarListables(await getCollection('negocios'));
+const hospedajes = todos.filter((n) => n.data.categoria === 'hospedaje');
+
+// Mismo orden de /hospedaje: destacados primero; el resto por puntaje.
+const destacados = hospedajes
+  .filter((n) => n.data.destacado)
+  .sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
+const gratuitos = hospedajes.filter((n) => !n.data.destacado).sort(compararDentroDeGrupo);
+const todosOrdenados = [...destacados, ...gratuitos];
+const conAlberca = todosOrdenados.filter((n) => n.data.alberca === true);
+
+function normalizar(texto: string): string {
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function amenidadClave(valor: (typeof AMENIDADES_CLAVE)[number]['valor']) {
+  return AMENIDADES_CLAVE.find((a) => a.valor === valor)!;
+}
+
+const CHIPS: { valor: string; etiqueta: string; icono: string; href: string }[] = [
+  { valor: 'todo', etiqueta: 'Todo', icono: 'brujula', href: '/hospedaje' },
+  { valor: 'casa', etiqueta: 'Casas vacacionales', icono: 'cama', href: '/hospedaje?filtro=casa' },
+  { valor: 'hotel', etiqueta: 'Hoteles', icono: 'cama', href: '/hospedaje?filtro=hotel' },
+  { valor: 'alberca', etiqueta: amenidadClave('alberca').etiqueta, icono: 'alberca', href: '/hospedaje/con-alberca' },
+  { valor: 'playa', etiqueta: 'A pasos de la playa', icono: 'olas', href: '/hospedaje?filtro=playa' },
+  { valor: 'grupo-grande', etiqueta: 'Para grupos grandes', icono: 'grupos', href: '/hospedaje?filtro=grupo-grande' },
+  { valor: 'pet-friendly', etiqueta: amenidadClave('pet-friendly').etiqueta, icono: 'mascota', href: '/hospedaje?filtro=pet-friendly' },
+  { valor: 'tarjeta', etiqueta: 'Acepta tarjeta', icono: 'etiqueta', href: '/hospedaje?filtro=tarjeta' },
+];
+
+const chips = CHIPS.filter((chip) => {
+  if (chip.valor === 'todo' || chip.valor === 'alberca') return true;
+  if (chip.valor === 'casa') return todosOrdenados.some((n) => n.data.tipo === 'casa');
+  if (chip.valor === 'hotel') return todosOrdenados.some((n) => n.data.tipo === 'hotel');
+  if (chip.valor === 'playa') return todosOrdenados.some((n) => (n.data.distancias ?? []).some((d) => d.a === 'playa' && (d.metros ?? Infinity) <= UMBRAL_PLAYA_METROS));
+  if (chip.valor === 'grupo-grande') return todosOrdenados.some((n) => Math.max(n.data.capacidadMaxima ?? 0, n.data.capacidadGrupoCompleto ?? 0) >= UMBRAL_GRUPO_GRANDE);
+  if (chip.valor === 'pet-friendly') return todosOrdenados.some((n) => n.data.petFriendly === true);
+  return todosOrdenados.some((n) => (n.data.formasPago ?? []).some((forma) => normalizar(forma).includes('tarjeta')));
+});
+
+const esquemaItemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: conAlberca.map((n, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `https://tecolutlatravel.mx/hospedaje/${n.id}`,
+    name: n.data.nombre,
+  })),
+};
+---
+
+<BaseLayout
+  titulo="Casas con alberca en Tecolutla, Veracruz"
+  descripcion="Casas de hospedaje con alberca en Tecolutla, Veracruz: capacidad, distancia a la playa en metros y contacto directo por WhatsApp con cada casa."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaItemList)} />
+
+  <nav class="navegacion-categorias" aria-label="Explora otras categorías">
+    <div class="contenedor navegacion-categorias__scroll">
+      <a href="/hospedaje" class="navegacion-categorias__enlace navegacion-categorias__enlace--activo">⌂ Hospedaje</a>
+      <a href="/gastronomia" class="navegacion-categorias__enlace">🍴 Gastronomía</a>
+      <a href="/actividades" class="navegacion-categorias__enlace">🏃 Actividades</a>
+      <a href="/reportajes-y-noticias" class="navegacion-categorias__enlace"><Icono nombre="periodico" /> Reportajes y noticias</a>
+      <a href="/tips-para-tu-viaje" class="navegacion-categorias__enlace">💡 Tips para tu viaje</a>
+    </div>
+  </nav>
+
+  <section class="seccion contenedor hospedaje-catalogo destacados-propuesta">
+    <h1 class="titulo-seccion">Casas con alberca en Tecolutla</h1>
+    <div class="texto-editorial-alberca">
+      <p>En Tecolutla el calor no es broma, y para las familias que viajan con niños la alberca es lo que convierte una casa en la casa. La combinación clásica del viaje: mañana de playa y tarde de alberca, sin sacar el coche ni cruzar la calle.</p>
+      <p>Antes de apartar, vale la pena preguntar por WhatsApp tres cosas: si la alberca tiene zona baja o chapoteadero para los niños, si es de uso exclusivo de la casa o se comparte con otros huéspedes, y si tiene horario. Cada casa de esta lista tiene el botón directo para preguntarlo sin rodeos.</p>
+      <p>Todas las casas de esta página están verificadas: la información se confirmó directamente con cada negocio, la distancia a la playa está medida en metros reales y el contacto es directo con quien renta, sin intermediarios.</p>
+    </div>
+
+    <div class="fila-chips filtros-hospedaje" aria-label="Filtros de hospedaje" style="margin-top:1.25rem;">
+      {chips.map((chip) => (
+        <a class:list={['filtro-rapido', { 'filtro-rapido--activo': chip.valor === 'alberca' }]} href={chip.href}>
+          <Icono nombre={chip.icono} /> {chip.etiqueta}
+        </a>
+      ))}
+    </div>
+
+    <div class={USAR_TARJETA_COMPACTA ? 'rejilla-compacta' : 'rejilla-negocios'} style="margin-top:1.25rem;">
+      {conAlberca.map((negocio, i) =>
+        USAR_TARJETA_COMPACTA ? (
+          <TarjetaCompacta negocio={negocio} esPrimera={i === 0} />
+        ) : (
+          <NegocioCard negocio={negocio} esPrimera={i === 0} />
+        ),
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .texto-editorial-alberca {
+    max-width: 780px;
+    color: var(--color-tinta);
+    line-height: 1.65;
+  }
+
+  .texto-editorial-alberca p + p {
+    margin-top: 0.9rem;
+  }
+</style>
