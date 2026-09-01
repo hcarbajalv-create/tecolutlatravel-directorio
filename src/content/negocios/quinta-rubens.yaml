@@ -39,7 +39,7 @@
 
 nombre: Quinta Ruben's
 categoria: hospedaje
-descripcionCorta: "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas."
+descripcionCorta: "Tres habitaciones de descanso en una casa familiar con jardín del fraccionamiento Arcadia: dos dobles para cuatro personas y una triple para seis —hasta 14 en total si se rentan las tres—, cada una con su baño privado, ventilador y wifi. El agua caliente está en el baño de la planta baja, que queda a disposición de los huéspedes. No se aceptan mascotas."
 direccion: Rosas 189, Fracc. Arcadia, 93570 Tecolutla, Ver.
 coordenadas: { lat: 20.4886031, lng: -97.0212403 }
 telefono: "+52 56 5290 3633"
@@ -61,8 +61,6 @@ tipo: cuarto
 subtipo: Habitaciones
 numeroHabitaciones: 3
 capacidadMaxima: 6
-unidadesEnConjunto: 3
-capacidadGrupoCompleto: 14
 wifi: true
 petFriendly: false
 insigniasExtra: ["No se aceptan mascotas"]
