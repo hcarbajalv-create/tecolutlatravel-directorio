@@ -1203,17 +1203,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     `;
   }
 
+  // Elige qué mes mostrar. Mostrar siempre el mes actual dejaba la sección en
+  // blanco cada día 1, aunque hubiera historial: a esa hora el mes nuevo
+  // todavía no tiene búsquedas y el anterior queda escondido. Cuando el mes en
+  // curso viene vacío se cae al último mes que sí tuvo movimiento, y el título
+  // dice cuál es para que no se confunda con datos de hoy.
+  function mesDeBusquedasAMostrar(): { clave: string; esMesActual: boolean } | null {
+    const actual = claveMesActual();
+    const tieneAlgo = (clave: string) => {
+      const mes = busquedasPorMes[clave];
+      if (!mes) return false;
+      return (
+        Object.keys(mes.terminos || {}).length > 0 ||
+        Object.keys(mes.sinResultado || {}).length > 0
+      );
+    };
+
+    if (tieneAlgo(actual)) return { clave: actual, esMesActual: true };
+    const anteriores = Object.keys(busquedasPorMes).filter((m) => m < actual && tieneAlgo(m)).sort();
+    const ultimo = anteriores[anteriores.length - 1];
+    return ultimo ? { clave: ultimo, esMesActual: false } : null;
+  }
+
   function htmlSeccionBusquedas(): string {
-    const mesClave = claveMesActual();
-    const datosMes = busquedasPorMes[mesClave] || { terminos: {}, sinResultado: {} };
+    const elegido = mesDeBusquedasAMostrar();
+    // Sin nada en ningún mes: se muestra el mes actual vacío, con el texto
+    // normal de "todavía no hay búsquedas".
+    const clave = elegido?.clave ?? claveMesActual();
+    const datosMes = busquedasPorMes[clave] || { terminos: {}, sinResultado: {} };
+    const etiquetaPeriodo =
+      elegido && !elegido.esMesActual ? `${nombreMesCorto(clave)} (último mes con datos)` : 'mes actual';
+    const avisoMesViejo =
+      elegido && !elegido.esMesActual
+        ? `<p class="panel__vacio">En ${nombreMesCorto(claveMesActual())} todavía no se ha buscado nada; se muestra el mes anterior.</p>`
+        : '';
+
     return `
       <div class="panel__fila-2">
         <div class="panel__seccion">
-          <h3>Qué busca la gente — mes actual</h3>
+          <h3>Qué busca la gente — ${etiquetaPeriodo}</h3>
+          ${avisoMesViejo}
           ${listaTerminosHtml(datosMes.terminos)}
         </div>
         <div class="panel__seccion">
-          <h3>Búsquedas sin resultado</h3>
+          <h3>Búsquedas sin resultado — ${etiquetaPeriodo}</h3>
           <p style="font-size:0.82rem;color:var(--color-texto-suave);margin:-0.25rem 0 0.75rem;">
             Lo que la gente busca y no encuentra — pistas de qué negocio dar de alta.
           </p>
