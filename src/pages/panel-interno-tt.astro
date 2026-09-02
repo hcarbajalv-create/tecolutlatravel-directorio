@@ -329,6 +329,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .panel__modo-datos { color: var(--color-verde-oscuro); font-weight: 700; font-size: 0.78rem; }
 
+  .panel__tendencia {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .panel__tendencia--sube {
+    color: #2e9e5b;
+  }
+
+  .panel__tendencia--baja {
+    color: #d3453f;
+  }
+
+  .panel__tendencia--neutra {
+    color: var(--color-texto-suave);
+    font-weight: 400;
+  }
+
   .panel__nota-medicion {
     margin: -0.25rem 0 0.75rem;
     color: var(--color-texto-suave);
@@ -707,6 +725,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     return new Date().toISOString().slice(0, 7);
   }
 
+  // ---------- Tendencia mes contra mes ----------
+  // Compara SOLO meses ya cerrados. El mes en curso lleva unos días contra
+  // los 30 completos del anterior, así que incluirlo daría siempre una
+  // "caída" falsa — el error clásico de este tipo de tablero. El mes en
+  // curso se informa aparte, etiquetado como parcial.
+  interface Tendencia {
+    mesPrevio: string;
+    mesUltimo: string;
+    previo: number;
+    ultimo: number;
+    // null cuando el mes previo fue 0: no existe el porcentaje de cambio
+    // desde cero (sería infinito), así que se muestra como "nuevo".
+    cambioPct: number | null;
+  }
+
+  function calcularTendencia(
+    porMes: Record<string, any>,
+    campo: string,
+  ): Tendencia | null {
+    const cerrados = mesesOrdenados(porMes).filter((m) => m !== claveMesActual());
+    if (cerrados.length < 2) return null;
+    const mesPrevio = cerrados[cerrados.length - 2];
+    const mesUltimo = cerrados[cerrados.length - 1];
+    const previo = porMes[mesPrevio]?.[campo] || 0;
+    const ultimo = porMes[mesUltimo]?.[campo] || 0;
+    return {
+      mesPrevio,
+      mesUltimo,
+      previo,
+      ultimo,
+      cambioPct: previo === 0 ? null : ((ultimo - previo) / previo) * 100,
+    };
+  }
+
+  function htmlFlechaTendencia(t: Tendencia | null): string {
+    if (!t) return '<span class="panel__tendencia panel__tendencia--neutra">Sin dos meses cerrados todavía</span>';
+    if (t.cambioPct === null) {
+      return t.ultimo > 0
+        ? `<span class="panel__tendencia panel__tendencia--sube">nuevo (${t.ultimo})</span>`
+        : '<span class="panel__tendencia panel__tendencia--neutra">sin actividad</span>';
+    }
+    const redondeado = Math.round(t.cambioPct);
+    if (redondeado === 0) return '<span class="panel__tendencia panel__tendencia--neutra">= igual</span>';
+    const clase = redondeado > 0 ? 'sube' : 'baja';
+    const flecha = redondeado > 0 ? '↑' : '↓';
+    return `<span class="panel__tendencia panel__tendencia--${clase}">${flecha} ${Math.abs(redondeado)}%</span>`;
+  }
+
   // ---------- Tasa de conversión ----------
   // "—" en vez de "0%" cuando no hay vistas — dividir 0/0 daría NaN, y
   // mostrar "0%" se leería como "convierte pésimo" cuando en realidad es
@@ -829,6 +895,121 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     `;
   }
 
+  // Bloque "cómo le fue el último mes cerrado contra el anterior" — es el
+  // argumento de venta para el plan de pago ("subiste 40%") y la forma de
+  // ver si una campaña movió la aguja.
+  function htmlTendenciaMensual(stats: DatosNegocio['stats']): string {
+    const campos: { campo: string; etiqueta: string }[] = [
+      { campo: 'vistas', etiqueta: 'Vistas' },
+      { campo: 'clics', etiqueta: 'Clics a WhatsApp' },
+      { campo: 'comoLlegar', etiqueta: 'Acciones para llegar' },
+      { campo: 'compartir', etiqueta: 'Acciones de compartir' },
+    ];
+
+    const referencia = calcularTendencia(stats.porMes, 'vistas');
+    if (!referencia) {
+      return `
+        <div class="panel__seccion">
+          <h3>Tendencia mes contra mes</h3>
+          <p class="panel__vacio">
+            Hacen falta al menos dos meses ya terminados para comparar. El mes
+            en curso no se compara: llevaría pocos días contra un mes completo
+            y siempre parecería una caída.
+          </p>
+        </div>
+      `;
+    }
+
+    const filas = campos
+      .map(({ campo, etiqueta }) => {
+        const t = calcularTendencia(stats.porMes, campo);
+        if (!t) return '';
+        return `
+          <tr>
+            <td>${etiqueta}</td>
+            <td>${t.previo}</td>
+            <td>${t.ultimo}</td>
+            <td>${htmlFlechaTendencia(t)}</td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    const mesEnCurso = stats.porMes[claveMesActual()];
+    const plural = (n: number, singular: string, plural: string) =>
+      `${n} ${n === 1 ? singular : plural}`;
+    const notaEnCurso = mesEnCurso
+      ? `<p class="panel__vacio">Mes en curso (${nombreMesCorto(claveMesActual())}), todavía sin cerrar:
+         ${plural(mesEnCurso.vistas || 0, 'vista', 'vistas')} y
+         ${plural(mesEnCurso.clics || 0, 'clic', 'clics')} hasta hoy.</p>`
+      : '';
+
+    return `
+      <div class="panel__seccion">
+        <h3>Tendencia mes contra mes</h3>
+        <table class="panel__tabla">
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>${nombreMesCorto(referencia.mesPrevio)}</th>
+              <th>${nombreMesCorto(referencia.mesUltimo)}</th>
+              <th>Cambio</th>
+            </tr>
+          </thead>
+          <tbody>${filas}</tbody>
+        </table>
+        ${notaEnCurso}
+      </div>
+    `;
+  }
+
+  // Qué anuncio o creador trajo el tráfico, y cuánto de ese tráfico terminó
+  // escribiendo por WhatsApp. La conversión por campaña es el dato que decide
+  // dónde meter presupuesto: 50 visitas que no escriben valen menos que 10
+  // que sí. Se llena con la etiqueta ?ref= o ?utm_* del enlace del anuncio.
+  function htmlCampanas(datosMes: any): string {
+    const campanas = datosMes.campanas || {};
+    const entradas = Object.entries(campanas) as [string, { vistas: number; clics: number }][];
+
+    if (entradas.length === 0) {
+      return `
+        <div class="panel__seccion">
+          <h3>Campañas y creadores (mes actual)</h3>
+          <p class="panel__vacio">
+            Todavía no llega tráfico con etiqueta de campaña. Para medir un
+            anuncio o a un creador, comparte el enlace con una etiqueta al
+            final, por ejemplo:
+            <code>tecolutlatravel.mx/hospedaje/casa-xanath?ref=paloma</code>
+          </p>
+        </div>
+      `;
+    }
+
+    const filas = entradas
+      .sort((a, b) => b[1].clics - a[1].clics || b[1].vistas - a[1].vistas)
+      .map(
+        ([etiqueta, v]) => `
+          <tr>
+            <td>${escaparHtml(etiqueta)}</td>
+            <td>${v.vistas}</td>
+            <td>${v.clics}</td>
+            <td>${formatearConversion(v.clics, v.vistas)}</td>
+          </tr>
+        `,
+      )
+      .join('');
+
+    return `
+      <div class="panel__seccion">
+        <h3>Campañas y creadores (mes actual)</h3>
+        <table class="panel__tabla">
+          <thead><tr><th>Etiqueta</th><th>Vistas</th><th>Clics</th><th>Conversión</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
   function renderizarVistaIndividual(slug: string) {
     const negocio = obtenerNegocio(slug);
     if (!negocio) return;
@@ -926,6 +1107,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ${tarjetaStat('Puntaje de completitud', negocio.puntaje + '/100', '#0C2B2E')}
       </div>
 
+      ${htmlTendenciaMensual(stats)}
+
       <div class="panel__seccion">
         <h3>Vistas y clics por mes</h3>
         <div class="panel__leyenda">
@@ -975,6 +1158,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </table>
         </div>
       </div>
+
+      ${htmlCampanas(datosMesActual)}
 
       <div class="panel__seccion">
         <h3>Cómo subir el puntaje</h3>

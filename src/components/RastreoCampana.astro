@@ -1,0 +1,65 @@
+---
+// Guarda de qué campaña llegó el visitante, para poder decir después "el
+// anuncio X trajo N contactos" (punto 4 de la sección 11-bis del documento
+// maestro) y "el creador Paloma trajo N contactos" (punto 7, es el mismo
+// mecanismo con la etiqueta ?ref=).
+//
+// Va en TODAS las páginas (se incluye desde BaseLayout) porque el anuncio
+// puede apuntar a la home o a una categoría, no solo a una ficha: si solo se
+// capturara en la ficha, se perdería el recorrido "anuncio → home → ficha →
+// WhatsApp", que es el más común.
+//
+// POR QUÉ ESTÁ EN EL <head> Y ES is:inline — no es un capricho de estilo:
+// la ficha registra la vista con un <script> clásico que corre en cuanto el
+// navegador lo parsea. Si esta captura fuera un módulo (lo normal en Astro),
+// el navegador la diferiría hasta terminar de parsear la página y correría
+// DESPUÉS de ese registro: una visita que entra directo a la ficha con
+// ?ref=... se guardaría sin campaña, justo el caso que más importa medir.
+// is:inline en el <head> la vuelve un script clásico que corre antes que
+// cualquier cosa del body. Ojo: is:inline significa que Astro NO procesa
+// este script, así que aquí no se puede usar TypeScript ni imports.
+//
+// Sin cookies: usa sessionStorage, que se borra al cerrar la pestaña y no se
+// comparte entre sitios. No guarda nada que identifique a la persona, solo la
+// etiqueta de la campaña que venía en el enlace.
+---
+
+<script is:inline>
+  (function () {
+    // Se guarda la PRIMERA campaña de la sesión y no se sobrescribe: si
+    // alguien llega por el anuncio de Facebook y luego navega a otra página
+    // del sitio que también trae etiqueta, el contacto se le sigue
+    // acreditando al anuncio que de verdad lo trajo.
+    var CLAVE = 'tt-campana';
+    var LARGO_MAXIMO = 60;
+
+    // Debe dar el MISMO resultado que limpiarCampana() de
+    // netlify/functions/registrar-evento.mjs (el servidor no confía en el
+    // navegador y vuelve a limpiar). Si se cambia una, cambiar la otra.
+    function limpiarEtiqueta(valor) {
+      return valor
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9._-]/g, '')
+        .slice(0, LARGO_MAXIMO);
+    }
+
+    try {
+      if (sessionStorage.getItem(CLAVE)) return; // ya hay una, no se pisa
+
+      var params = new URLSearchParams(window.location.search);
+      // ?ref= es el atajo para creadores de contenido (ej. ?ref=paloma).
+      // utm_campaign/utm_source son el estándar de anuncios pagados.
+      var cruda =
+        params.get('ref') || params.get('utm_campaign') || params.get('utm_source') || '';
+      var etiqueta = limpiarEtiqueta(cruda);
+      if (etiqueta) sessionStorage.setItem(CLAVE, etiqueta);
+    } catch (e) {
+      // Navegador con almacenamiento bloqueado: se sigue sin rastreo, no se
+      // rompe nada para el visitante.
+    }
+  })();
+</script>
