@@ -527,6 +527,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   interface BotUso {
     id: string;
     nombre: string;
+    // false = la lectura del store falló, no que el bot no tenga datos.
+    consultado: boolean;
     reportando: boolean;
     porMes: Record<string, Record<string, UsoModelo>>;
   }
@@ -641,7 +643,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   // responde, el resto del panel sigue funcionando.
   async function obtenerDatosBot(
     token: string,
-  ): Promise<{ bots: BotUso[]; eventos: EventoAlerta[] } | null> {
+  ): Promise<{ bots: BotUso[]; eventos: EventoAlerta[]; alertasConsultadas: boolean } | null> {
     try {
       const respuesta = await fetch('/.netlify/functions/dashboard-bot', {
         method: 'POST',
@@ -653,6 +655,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       return {
         bots: Array.isArray(datos.bots) ? datos.bots : [],
         eventos: Array.isArray(datos.eventos) ? datos.eventos : [],
+        // Solo se da por consultado cuando el servidor lo afirma. Si la
+        // bandera no viene (versión vieja de la función), se asume que NO se
+        // pudo consultar: es el lado seguro en una sección de seguridad.
+        alertasConsultadas: datos.alertasConsultadas === true,
       };
     } catch {
       return null;
@@ -702,7 +708,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     busquedasPorMes = busquedas || {};
     botsUso = datosBot?.bots || [];
     eventosBot = datosBot?.eventos || [];
-    botConsultado = datosBot !== null;
+    // No basta con que la función haya respondido: puede responder 200 y aun
+    // así haber fallado la lectura de Blobs por dentro. La bandera viene del
+    // servidor, que es quien sabe si la consulta funcionó.
+    botConsultado = datosBot?.alertasConsultadas === true;
     el.login.hidden = true;
     el.dashboard.hidden = false;
     const escrituraVerificada = negociosData.some(({ stats }) =>
@@ -1346,10 +1355,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   function htmlUsoDeBot(bot: BotUso): string {
     if (!bot.reportando) {
+      // Distinguir las dos causas: "no hay datos" es informativo, "no se pudo
+      // leer" es un problema que hay que ver — decir lo primero cuando pasa lo
+      // segundo esconde una falla.
+      const motivo =
+        bot.consultado === false
+          ? 'No se pudo leer su consumo — esto NO significa que no haya gastado.'
+          : 'Todavía no reporta consumo.';
       return `
         <div class="panel__seccion">
           <h3>${escaparHtml(bot.nombre)}</h3>
-          <p class="panel__vacio">Todavía no reporta consumo.</p>
+          <p class="panel__vacio">${motivo}</p>
         </div>
       `;
     }
