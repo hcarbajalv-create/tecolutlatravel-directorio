@@ -71,6 +71,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <button type="button" class="panel__tab" data-vista="comparativa" aria-pressed="false">
           Comparativa
         </button>
+        <button type="button" class="panel__tab" data-vista="bot" aria-pressed="false">
+          Bot
+        </button>
       </nav>
 
       <div class="panel__vista" id="vista-individual">
@@ -90,6 +93,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </button>
         </div>
         <div id="contenido-comparativa"></div>
+      </div>
+
+      <div class="panel__vista" id="vista-bot" hidden>
+        <div id="contenido-bot"></div>
       </div>
     </div>
   </section>
@@ -476,6 +483,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     tabs: document.querySelectorAll<HTMLButtonElement>('.panel__tab'),
     vistaIndividual: document.getElementById('vista-individual') as HTMLElement,
     vistaComparativa: document.getElementById('vista-comparativa') as HTMLElement,
+    vistaBot: document.getElementById('vista-bot') as HTMLElement,
+    contenidoBot: document.getElementById('contenido-bot') as HTMLElement,
     selectorNegocio: document.getElementById('selector-negocio') as HTMLSelectElement,
     contenidoIndividual: document.getElementById('contenido-individual') as HTMLElement,
     contenidoComparativa: document.getElementById('contenido-comparativa') as HTMLElement,
@@ -509,8 +518,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     sinResultado: Record<string, number>;
   }
 
+  interface UsoModelo {
+    entrada: number;
+    salida: number;
+    mensajes: number;
+  }
+
+  interface BotUso {
+    id: string;
+    nombre: string;
+    reportando: boolean;
+    porMes: Record<string, Record<string, UsoModelo>>;
+  }
+
+  interface EventoAlerta {
+    ts: string;
+    motivo: string;
+    ip: string;
+    extra: string;
+  }
+
   let negociosData: DatosNegocio[] = [];
   let busquedasPorMes: Record<string, MesBusquedas> = {};
+  let botsUso: BotUso[] = [];
+  let eventosBot: EventoAlerta[] = [];
+  // Distingue "consultamos y no hay eventos" de "no pudimos consultar". En una
+  // sección de seguridad importa: decir "sin ataques" cuando en realidad no se
+  // sabe es peor que admitir que la consulta falló.
+  let botConsultado = false;
   let accionesRegistradasDesde: string | null = null;
   let modoDatos = 'produccion';
   let deployId: string | null = null;
@@ -588,10 +623,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  // Mismo criterio "falla silencioso" que obtenerBusquedas: si el bot no
+  // responde, el resto del panel sigue funcionando.
+  async function obtenerDatosBot(
+    token: string,
+  ): Promise<{ bots: BotUso[]; eventos: EventoAlerta[] } | null> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-bot', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      });
+      if (!respuesta.ok) return null;
+      const datos = await respuesta.json();
+      if (!datos.ok) return null;
+      return {
+        bots: Array.isArray(datos.bots) ? datos.bots : [],
+        eventos: Array.isArray(datos.eventos) ? datos.eventos : [],
+      };
+    } catch {
+      return null;
+    }
+  }
+
   async function entrarConToken(token: string, opciones: { silencioso?: boolean } = {}) {
-    const [resultadoNegocios, busquedas] = await Promise.all([
+    const [resultadoNegocios, busquedas, datosBot] = await Promise.all([
       obtenerNegocios(token),
       obtenerBusquedas(token),
+      obtenerDatosBot(token),
     ]);
     if (!resultadoNegocios.ok) {
       if (resultadoNegocios.sesionInvalida) sessionStorage.removeItem(TOKEN_SESSION);
@@ -610,6 +668,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     modoDatos = resultadoNegocios.modoDatos;
     deployId = resultadoNegocios.deployId;
     busquedasPorMes = busquedas || {};
+    botsUso = datosBot?.bots || [];
+    eventosBot = datosBot?.eventos || [];
+    botConsultado = datosBot !== null;
     el.login.hidden = true;
     el.dashboard.hidden = false;
     const escrituraVerificada = negociosData.some(({ stats }) =>
@@ -625,6 +686,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     poblarSelectorNegocios();
     if (el.selectorNegocio.value) renderizarVistaIndividual(el.selectorNegocio.value);
     renderizarVistaComparativa();
+    renderizarVistaBot();
   }
 
   el.formLogin.addEventListener('submit', async (evento) => {
@@ -1223,6 +1285,163 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     `;
   }
 
+  // ---------- Bot: gasto/tokens y alertas ----------
+
+  // Precio por millón de tokens, en dólares. VERIFICAR contra
+  // console.anthropic.com antes de fiarse del total: Anthropic puede cambiar
+  // precios y estos números se quedarían viejos sin avisar. Por eso el panel
+  // muestra los TOKENS como dato duro (esos sí los reporta la API) y el costo
+  // siempre etiquetado como estimado. Un modelo que no esté en esta tabla se
+  // muestra con sus tokens y con el costo en "—", nunca con un cero engañoso.
+  const PRECIO_POR_MILLON: Record<string, { entrada: number; salida: number }> = {
+    'claude-sonnet-5': { entrada: 3, salida: 15 },
+    'claude-haiku-4-5-20251001': { entrada: 1, salida: 5 },
+  };
+
+  function costoEstimado(modelo: string, uso: UsoModelo): number | null {
+    const precio = PRECIO_POR_MILLON[modelo];
+    if (!precio) return null;
+    return (uso.entrada / 1_000_000) * precio.entrada + (uso.salida / 1_000_000) * precio.salida;
+  }
+
+  function formatearDolares(valor: number): string {
+    return `$${valor.toFixed(2)} USD`;
+  }
+
+  function formatearNumero(valor: number): string {
+    return valor.toLocaleString('es-MX');
+  }
+
+  function htmlUsoDeBot(bot: BotUso): string {
+    if (!bot.reportando) {
+      return `
+        <div class="panel__seccion">
+          <h3>${escaparHtml(bot.nombre)}</h3>
+          <p class="panel__vacio">Todavía no reporta consumo.</p>
+        </div>
+      `;
+    }
+
+    const meses = Object.keys(bot.porMes).sort().reverse();
+    let totalEstimado = 0;
+    let hayModeloSinPrecio = false;
+
+    const filas = meses
+      .flatMap((mes) => {
+        const porModelo = bot.porMes[mes] || {};
+        return Object.entries(porModelo).map(([modelo, uso]) => {
+          const costo = costoEstimado(modelo, uso);
+          if (costo === null) hayModeloSinPrecio = true;
+          else totalEstimado += costo;
+          return `
+            <tr>
+              <td>${nombreMesCorto(mes)}</td>
+              <td>${escaparHtml(modelo)}</td>
+              <td>${formatearNumero(uso.mensajes || 0)}</td>
+              <td>${formatearNumero(uso.entrada || 0)}</td>
+              <td>${formatearNumero(uso.salida || 0)}</td>
+              <td>${costo === null ? '—' : formatearDolares(costo)}</td>
+            </tr>
+          `;
+        });
+      })
+      .join('');
+
+    const avisoSinPrecio = hayModeloSinPrecio
+      ? '<p class="panel__vacio">Hay un modelo sin precio en la tabla del código — su costo aparece como “—”.</p>'
+      : '';
+
+    return `
+      <div class="panel__seccion">
+        <h3>${escaparHtml(bot.nombre)}</h3>
+        <p class="panel__nota-promedio">
+          Costo estimado acumulado: <strong>${formatearDolares(totalEstimado)}</strong>
+          — los tokens son dato real de la API; el costo es un cálculo con los
+          precios guardados en el código, verifícalo en tu consola de Anthropic.
+        </p>
+        <table class="panel__tabla">
+          <thead>
+            <tr>
+              <th>Mes</th><th>Modelo</th><th>Mensajes</th>
+              <th>Tokens entrada</th><th>Tokens salida</th><th>Costo estimado</th>
+            </tr>
+          </thead>
+          <tbody>${filas}</tbody>
+        </table>
+        ${avisoSinPrecio}
+      </div>
+    `;
+  }
+
+  // Un pico de eventos desde una misma IP es la señal de abuso que importa:
+  // un visitante normal no dispara el registro de sospechosos repetidas veces.
+  const EVENTOS_PARA_SOSPECHA = 3;
+
+  function htmlAlertasBot(): string {
+    if (eventosBot.length === 0) {
+      const mensaje = botConsultado
+        ? 'Sin eventos sospechosos registrados.'
+        : 'No se pudo consultar el registro de alertas — esto NO significa que no haya habido intentos.';
+      return `
+        <div class="panel__seccion">
+          <h3>Alertas de tráfico del bot</h3>
+          <p class="panel__vacio">${mensaje}</p>
+        </div>
+      `;
+    }
+
+    const porIp = new Map<string, number>();
+    eventosBot.forEach((e) => porIp.set(e.ip, (porIp.get(e.ip) || 0) + 1));
+    const sospechosas = [...porIp.entries()]
+      .filter(([, veces]) => veces >= EVENTOS_PARA_SOSPECHA)
+      .sort((a, b) => b[1] - a[1]);
+
+    const resumen = sospechosas.length
+      ? `
+        <p class="panel__nota-promedio">
+          <strong>${sospechosas.length}</strong> IP(s) con ${EVENTOS_PARA_SOSPECHA} o más eventos:
+          ${sospechosas.map(([ip, veces]) => `${escaparHtml(ip)} (${veces})`).join(' · ')}
+        </p>
+      `
+      : '<p class="panel__nota-promedio">Ninguna IP acumula suficientes eventos para considerarse un pico.</p>';
+
+    // El bot solo conserva los últimos 50 eventos (ver bot-teco.mjs), así que
+    // esta lista es un vistazo reciente, no un historial completo.
+    const filas = eventosBot
+      .slice()
+      .reverse()
+      .map(
+        (e) => `
+          <tr>
+            <td>${escaparHtml(e.ts || '')}</td>
+            <td>${escaparHtml(e.motivo || '')}</td>
+            <td>${escaparHtml(e.ip || '')}</td>
+            <td>${escaparHtml(e.extra || '')}</td>
+          </tr>
+        `,
+      )
+      .join('');
+
+    return `
+      <div class="panel__seccion">
+        <h3>Alertas de tráfico del bot</h3>
+        ${resumen}
+        <table class="panel__tabla">
+          <thead><tr><th>Cuándo</th><th>Motivo</th><th>IP</th><th>Detalle</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+        <p class="panel__vacio">Se guardan los últimos 50 eventos.</p>
+      </div>
+    `;
+  }
+
+  function renderizarVistaBot() {
+    const usos = botsUso.length
+      ? botsUso.map(htmlUsoDeBot).join('')
+      : '<div class="panel__seccion"><p class="panel__vacio">No se pudieron cargar los datos del bot.</p></div>';
+    el.contenidoBot.innerHTML = `${usos}${htmlAlertasBot()}`;
+  }
+
   // ---------- Tabs ----------
 
   el.tabs.forEach((tab) => {
@@ -1232,6 +1451,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const vista = tab.dataset.vista;
       el.vistaIndividual.hidden = vista !== 'individual';
       el.vistaComparativa.hidden = vista !== 'comparativa';
+      el.vistaBot.hidden = vista !== 'bot';
     });
   });
 
