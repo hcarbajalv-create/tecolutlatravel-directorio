@@ -70,9 +70,10 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={urlCanonica} />
     <meta name="theme-color" content="#0b6f7a" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <!-- Chrome conserva los favicons ICO/PNG por dominio durante mucho tiempo.
+         Usamos el SVG con URL versionada para que tome el isotipo nítido; los
+         navegadores antiguos aún pueden resolver /favicon.ico como respaldo. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260902" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
