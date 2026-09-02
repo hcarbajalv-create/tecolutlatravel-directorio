@@ -181,10 +181,17 @@ export default async (request) => {
           ? nombrePorLlave.get(item.api_key_id) || item.api_key_id
           : 'Consola / playground';
         if (!porLlave[id]) porLlave[id] = { nombre, entrada: 0, salida: 0 };
+        // Los tokens de creación de caché NO vienen en un campo plano: la
+        // Usage API los entrega dentro del objeto "cache_creation", separados
+        // por duración de la caché (5 minutos y 1 hora). Buscarlos como
+        // "cache_creation_input_tokens" —el nombre que usa la Messages API—
+        // devolvía undefined y esos tokens no se contaban.
+        const cacheCreacion = item.cache_creation || {};
         porLlave[id].entrada +=
           (item.uncached_input_tokens || 0) +
           (item.cache_read_input_tokens || 0) +
-          (item.cache_creation_input_tokens || 0);
+          (cacheCreacion.ephemeral_5m_input_tokens || 0) +
+          (cacheCreacion.ephemeral_1h_input_tokens || 0);
         porLlave[id].salida += item.output_tokens || 0;
       }
     }
