@@ -963,6 +963,53 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     `;
   }
 
+  // Qué anuncio o creador trajo el tráfico, y cuánto de ese tráfico terminó
+  // escribiendo por WhatsApp. La conversión por campaña es el dato que decide
+  // dónde meter presupuesto: 50 visitas que no escriben valen menos que 10
+  // que sí. Se llena con la etiqueta ?ref= o ?utm_* del enlace del anuncio.
+  function htmlCampanas(datosMes: any): string {
+    const campanas = datosMes.campanas || {};
+    const entradas = Object.entries(campanas) as [string, { vistas: number; clics: number }][];
+
+    if (entradas.length === 0) {
+      return `
+        <div class="panel__seccion">
+          <h3>Campañas y creadores (mes actual)</h3>
+          <p class="panel__vacio">
+            Todavía no llega tráfico con etiqueta de campaña. Para medir un
+            anuncio o a un creador, comparte el enlace con una etiqueta al
+            final, por ejemplo:
+            <code>tecolutlatravel.mx/hospedaje/casa-xanath?ref=paloma</code>
+          </p>
+        </div>
+      `;
+    }
+
+    const filas = entradas
+      .sort((a, b) => b[1].clics - a[1].clics || b[1].vistas - a[1].vistas)
+      .map(
+        ([etiqueta, v]) => `
+          <tr>
+            <td>${escaparHtml(etiqueta)}</td>
+            <td>${v.vistas}</td>
+            <td>${v.clics}</td>
+            <td>${formatearConversion(v.clics, v.vistas)}</td>
+          </tr>
+        `,
+      )
+      .join('');
+
+    return `
+      <div class="panel__seccion">
+        <h3>Campañas y creadores (mes actual)</h3>
+        <table class="panel__tabla">
+          <thead><tr><th>Etiqueta</th><th>Vistas</th><th>Clics</th><th>Conversión</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
   function renderizarVistaIndividual(slug: string) {
     const negocio = obtenerNegocio(slug);
     if (!negocio) return;
@@ -1111,6 +1158,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </table>
         </div>
       </div>
+
+      ${htmlCampanas(datosMesActual)}
 
       <div class="panel__seccion">
         <h3>Cómo subir el puntaje</h3>

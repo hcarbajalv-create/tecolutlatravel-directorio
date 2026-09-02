@@ -25,11 +25,38 @@ function mesVacio() {
     comoLlegar: 0,
     compartir: 0,
     canales: {},
+    campanas: {},
     dispositivos: { movil: 0, escritorio: 0 },
     estados: {},
     diaSemana: {},
     hora: {},
   };
+}
+
+// La etiqueta de campaña viaja en la URL (?ref= o ?utm_*), así que la escribe
+// quien quiera: se vuelve a limpiar aquí aunque el navegador ya lo haya hecho.
+const LARGO_MAXIMO_CAMPANA = 60;
+// Tope de campañas distintas guardadas por mes. Sin esto, alguien podría
+// pedir miles de URLs con etiquetas inventadas y hacer crecer el registro sin
+// límite. Al pasarse, lo demás se agrupa en "otras" y el conteo no se pierde.
+const MAX_CAMPANAS_POR_MES = 50;
+
+// Debe dar el MISMO resultado que limpiarEtiqueta() de
+// src/components/RastreoCampana.astro: si las dos difieren, la etiqueta se
+// guardaría partida en dos filas distintas del panel. Si se cambia una,
+// cambiar la otra.
+const RANGO_DIACRITICOS = new RegExp('[\\u0300-\\u036f]', 'g');
+
+function limpiarCampana(valor) {
+  if (typeof valor !== 'string') return '';
+  return valor
+    .normalize('NFD')
+    .replace(RANGO_DIACRITICOS, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9._-]/g, '')
+    .slice(0, LARGO_MAXIMO_CAMPANA);
 }
 
 // Día de la semana y hora en zona horaria de México, no UTC del servidor —
@@ -68,7 +95,7 @@ export default async (request, context) => {
     return new Response(JSON.stringify({ ok: false, error: 'JSON inválido' }), { status: 400 });
   }
 
-  const { slug, tipo, canal, dispositivo } = cuerpo;
+  const { slug, tipo, canal, dispositivo, campana } = cuerpo;
   const tiposPermitidos = ['vista', 'clic', 'como-llegar', 'compartir'];
   if (typeof slug !== 'string' || !slug || !tiposPermitidos.includes(tipo)) {
     return new Response(JSON.stringify({ ok: false, error: 'Datos incompletos' }), {
@@ -90,6 +117,7 @@ export default async (request, context) => {
     if (!actual.porMes[mes].estados) actual.porMes[mes].estados = {};
     if (!actual.porMes[mes].diaSemana) actual.porMes[mes].diaSemana = {};
     if (!actual.porMes[mes].hora) actual.porMes[mes].hora = {};
+    if (!actual.porMes[mes].campanas) actual.porMes[mes].campanas = {};
     if (typeof actual.comoLlegarTotal !== 'number') actual.comoLlegarTotal = 0;
     if (typeof actual.compartirTotal !== 'number') actual.compartirTotal = 0;
     if (typeof actual.porMes[mes].comoLlegar !== 'number') actual.porMes[mes].comoLlegar = 0;
@@ -136,6 +164,23 @@ export default async (request, context) => {
         actual.porMes[mes].canales[canalSeguro] = { vistas: 0, clics: 0 };
       }
       actual.porMes[mes].canales[canalSeguro][tipo === 'vista' ? 'vistas' : 'clics'] += 1;
+    }
+
+    // Por campaña se cuenta igual que por canal (vistas y clics separados),
+    // porque lo que se quiere saber de un anuncio no es cuánta gente trajo,
+    // sino cuántos de los que trajo terminaron escribiendo por WhatsApp.
+    // Solo se registran las visitas que SÍ traían etiqueta: las demás no
+    // vienen de campaña y meterlas como "sin campaña" solo ensuciaría.
+    const campanaSegura = limpiarCampana(campana);
+    if (campanaSegura && (tipo === 'vista' || tipo === 'clic')) {
+      const campanas = actual.porMes[mes].campanas;
+      const yaRegistrada = Object.hasOwn(campanas, campanaSegura);
+      const clave =
+        yaRegistrada || Object.keys(campanas).length < MAX_CAMPANAS_POR_MES
+          ? campanaSegura
+          : 'otras';
+      if (!campanas[clave]) campanas[clave] = { vistas: 0, clics: 0 };
+      campanas[clave][tipo === 'vista' ? 'vistas' : 'clics'] += 1;
     }
     // Estas gráficas ya tienen historial de vistas y WhatsApp. Mantenerlas
     // limitadas a esos dos eventos hace que los meses anteriores y los

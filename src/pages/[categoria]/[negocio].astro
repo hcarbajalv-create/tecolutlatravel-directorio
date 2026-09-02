@@ -836,6 +836,17 @@ const esquemaBreadcrumb = {
     return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'movil' : 'escritorio';
   }
 
+  // La etiqueta de campaña la guardó RastreoCampana.astro al entrar al sitio
+  // (puede haber sido en otra página, ej. la home). Aquí solo se lee para
+  // acreditarle a esa campaña la vista y, sobre todo, el clic a WhatsApp.
+  function detectarCampana() {
+    try {
+      return sessionStorage.getItem('tt-campana') || '';
+    } catch {
+      return '';
+    }
+  }
+
   function registrarEvento(tipo) {
     fetch('/.netlify/functions/registrar-evento', {
       method: 'POST',
@@ -846,6 +857,7 @@ const esquemaBreadcrumb = {
         tipo,
         canal: detectarCanal(),
         dispositivo: detectarDispositivo(),
+        campana: detectarCampana(),
       }),
     }).then((respuesta) => {
       if (!respuesta.ok) console.warn('No se pudo registrar la métrica:', respuesta.status);

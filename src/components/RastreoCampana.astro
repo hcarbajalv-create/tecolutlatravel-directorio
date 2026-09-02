@@ -1,0 +1,61 @@
+---
+// Guarda de qué campaña llegó el visitante, para poder decir después "el
+// anuncio X trajo N contactos" (punto 4 de la sección 11-bis del documento
+// maestro) y "el creador Paloma trajo N contactos" (punto 7, es el mismo
+// mecanismo con la etiqueta ?ref=).
+//
+// Va en TODAS las páginas (se incluye desde BaseLayout) porque el anuncio
+// puede apuntar a la home o a una categoría, no solo a una ficha: si solo se
+// capturara en la ficha, se perdería el recorrido "anuncio → home → ficha →
+// WhatsApp", que es el más común.
+//
+// Sin cookies: usa sessionStorage, que se borra al cerrar la pestaña y no se
+// comparte entre sitios. No guarda nada que identifique a la persona, solo la
+// etiqueta de la campaña que venía en el enlace.
+---
+
+<script>
+  // Se guarda la PRIMERA campaña de la sesión y no se sobrescribe: si alguien
+  // llega por el anuncio de Facebook y luego navega a otra página del sitio
+  // que también trae etiqueta, el contacto se le sigue acreditando al anuncio
+  // que de verdad lo trajo.
+  const CLAVE_CAMPANA = 'tt-campana';
+  const LARGO_MAXIMO = 60;
+
+  // La etiqueta viaja en la URL, así que cualquiera puede escribir lo que
+  // quiera ahí: se filtra a letras, números, guiones y puntos. Antes se
+  // quitan acentos y los espacios pasan a guiones, para que "Campaña Verano
+  // 2026" quede legible como "campana-verano-2026" en el panel y no como un
+  // amasijo de letras pegadas.
+  // OJO: esta misma limpieza está repetida en netlify/functions/registrar-evento.mjs
+  // (el servidor no confía en el navegador). Si se cambia aquí, cambiarla allá.
+  function limpiarEtiqueta(valor: string): string {
+    return valor
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9._-]/g, '')
+      .slice(0, LARGO_MAXIMO);
+  }
+
+  function capturarCampana() {
+    try {
+      if (sessionStorage.getItem(CLAVE_CAMPANA)) return; // ya hay una, no se pisa
+
+      const params = new URLSearchParams(window.location.search);
+      // ?ref= es el atajo para creadores de contenido (ej. ?ref=paloma).
+      // utm_campaign/utm_source son el estándar de anuncios pagados.
+      const cruda =
+        params.get('ref') || params.get('utm_campaign') || params.get('utm_source') || '';
+      const etiqueta = limpiarEtiqueta(cruda);
+      if (etiqueta) sessionStorage.setItem(CLAVE_CAMPANA, etiqueta);
+    } catch {
+      // Navegador con almacenamiento bloqueado: se sigue sin rastreo, no se
+      // rompe nada para el visitante.
+    }
+  }
+
+  capturarCampana();
+</script>
