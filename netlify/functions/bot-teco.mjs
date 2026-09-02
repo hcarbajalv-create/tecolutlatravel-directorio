@@ -186,6 +186,7 @@ export default async (request) => {
 
   // ── Llamada a la API de Claude ─────────────────────────────────────────
   let reply;
+  let usoTokens = null; // { input_tokens, output_tokens } — viene en la misma respuesta
   try {
     const respuesta = await fetch(API_URL, {
       method: 'POST',
@@ -209,6 +210,7 @@ export default async (request) => {
     }
 
     const datos = await respuesta.json();
+    usoTokens = datos.usage || null;
     reply = (datos.content || [])
       .filter((b) => b.type === 'text')
       .map((b) => b.text)
@@ -229,6 +231,26 @@ export default async (request) => {
     await store.setJSON(visitorId, { mensajes: nuevos, actualizado: new Date().toISOString() });
   } catch (error) {
     console.error('bot-teco: no se pudo guardar memoria', String(error && error.message ? error.message : error));
+  }
+
+  // ── Registrar uso de tokens por mes y por modelo (para ver el gasto y comparar
+  //    Sonnet vs Haiku). Best effort: si falla, no afecta al visitante. ─────────
+  if (usoTokens) {
+    try {
+      const usoStore = getStore({ name: 'bot-teco-uso', consistency: 'strong' });
+      const mes = new Date().toISOString().slice(0, 7); // "2026-09"
+      const prev = (await usoStore.get('uso', { type: 'json' })) || { porMes: {} };
+      const mesObj = prev.porMes[mes] || {};
+      const m = mesObj[MODEL] || { entrada: 0, salida: 0, mensajes: 0 };
+      m.entrada += usoTokens.input_tokens || 0;
+      m.salida += usoTokens.output_tokens || 0;
+      m.mensajes += 1;
+      mesObj[MODEL] = m;
+      prev.porMes[mes] = mesObj;
+      await usoStore.setJSON('uso', prev);
+    } catch {
+      /* best effort */
+    }
   }
 
   const tarjetas = extraerTarjetas(reply, catalogo.negocios);
