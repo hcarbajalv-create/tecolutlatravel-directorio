@@ -546,6 +546,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   // sección de seguridad importa: decir "sin ataques" cuando en realidad no se
   // sabe es peor que admitir que la consulta falló.
   let botConsultado = false;
+
+  interface GastoReal {
+    ok: boolean;
+    configurado: boolean;
+    desdeCache?: boolean;
+    completo?: boolean;
+    desde?: string;
+    totalUsd?: number;
+    porConcepto?: Record<string, number>;
+    porLlave?: { nombre: string; entrada: number; salida: number }[];
+    error?: string;
+  }
+
+  let gastoReal: GastoReal | null = null;
   let accionesRegistradasDesde: string | null = null;
   let modoDatos = 'produccion';
   let deployId: string | null = null;
@@ -645,12 +659,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  // Consulta la Admin API de Anthropic (gasto facturado real). Puede tardar
+  // más que las demás porque sale a un servicio externo; igual que las otras,
+  // si falla no impide entrar al panel.
+  async function obtenerGastoReal(token: string): Promise<GastoReal | null> {
+    try {
+      const respuesta = await fetch('/.netlify/functions/dashboard-gasto-real', {
+        method: 'POST',
+        headers: { 'x-session-token': token },
+      });
+      const datos = await respuesta.json().catch(() => null);
+      return datos && typeof datos === 'object' ? (datos as GastoReal) : null;
+    } catch {
+      return null;
+    }
+  }
+
   async function entrarConToken(token: string, opciones: { silencioso?: boolean } = {}) {
-    const [resultadoNegocios, busquedas, datosBot] = await Promise.all([
+    const [resultadoNegocios, busquedas, datosBot, gasto] = await Promise.all([
       obtenerNegocios(token),
       obtenerBusquedas(token),
       obtenerDatosBot(token),
+      obtenerGastoReal(token),
     ]);
+    gastoReal = gasto;
     if (!resultadoNegocios.ok) {
       if (resultadoNegocios.sesionInvalida) sessionStorage.removeItem(TOKEN_SESSION);
       if (!opciones.silencioso) {
@@ -1435,11 +1467,107 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     `;
   }
 
+  // ---------- Gasto real (Admin API de Anthropic) ----------
+  // Va ARRIBA del uso estimado a propósito: este es el número que Anthropic
+  // factura de verdad. El de abajo es un cálculo con precios escritos a mano
+  // y sirve para ver el detalle por mensaje, no para saber cuánto se paga.
+  function htmlGastoReal(): string {
+    if (!gastoReal) {
+      return `
+        <div class="panel__seccion">
+          <h3>Gasto real en Anthropic</h3>
+          <p class="panel__vacio">No se pudo consultar el gasto en este momento.</p>
+        </div>
+      `;
+    }
+
+    if (gastoReal.ok && gastoReal.configurado === false) {
+      return `
+        <div class="panel__seccion">
+          <h3>Gasto real en Anthropic</h3>
+          <p class="panel__vacio">
+            Falta configurar la llave de administración. En Anthropic
+            (Console → Settings → Admin keys) se genera una llave de tipo
+            <code>sk-ant-admin...</code> y se guarda en Netlify como variable
+            de entorno <code>ANTHROPIC_ADMIN_KEY</code>. Es distinta de la
+            llave del bot y da acceso a los datos de facturación de toda la
+            cuenta, así que solo se ve desde aquí.
+          </p>
+        </div>
+      `;
+    }
+
+    if (!gastoReal.ok) {
+      const mensaje =
+        gastoReal.error === 'llave-admin-invalida'
+          ? 'La llave de administración no es válida o fue revocada. Hay que generar una nueva en Anthropic y actualizarla en Netlify.'
+          : 'No se pudo consultar el gasto en Anthropic.';
+      return `
+        <div class="panel__seccion">
+          <h3>Gasto real en Anthropic</h3>
+          <p class="panel__vacio">${mensaje}</p>
+        </div>
+      `;
+    }
+
+    const conceptos = Object.entries(gastoReal.porConcepto || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(
+        ([concepto, usd]) =>
+          `<tr><td>${escaparHtml(concepto)}</td><td>${formatearDolares(usd)}</td></tr>`,
+      )
+      .join('');
+
+    const llaves = (gastoReal.porLlave || [])
+      .map(
+        (k) => `
+          <tr>
+            <td>${escaparHtml(k.nombre)}</td>
+            <td>${formatearNumero(k.entrada)}</td>
+            <td>${formatearNumero(k.salida)}</td>
+          </tr>
+        `,
+      )
+      .join('');
+
+    const avisoIncompleto =
+      gastoReal.completo === false
+        ? '<p class="panel__vacio">El periodo trae más datos de los que caben en una consulta: el total mostrado puede quedarse corto.</p>'
+        : '';
+
+    return `
+      <div class="panel__seccion">
+        <h3>Gasto real en Anthropic — mes en curso</h3>
+        <p class="panel__nota-promedio">
+          Total facturado: <strong>${formatearDolares(gastoReal.totalUsd || 0)}</strong>
+          — este sí es el dato de Anthropic, no un estimado.
+        </p>
+        <table class="panel__tabla">
+          <thead><tr><th>Concepto</th><th>Costo</th></tr></thead>
+          <tbody>${conceptos || '<tr><td colspan="2">Sin consumo este mes.</td></tr>'}</tbody>
+        </table>
+        ${avisoIncompleto}
+      </div>
+
+      <div class="panel__seccion">
+        <h3>Consumo por llave (cada bot usa la suya)</h3>
+        <table class="panel__tabla">
+          <thead><tr><th>Llave</th><th>Tokens entrada</th><th>Tokens salida</th></tr></thead>
+          <tbody>${llaves || '<tr><td colspan="3">Sin consumo este mes.</td></tr>'}</tbody>
+        </table>
+        <p class="panel__vacio">
+          Aquí aparece también el bot de Xanath, aunque viva fuera de este sitio:
+          basta con que use su propia llave de la misma cuenta de Anthropic.
+        </p>
+      </div>
+    `;
+  }
+
   function renderizarVistaBot() {
     const usos = botsUso.length
       ? botsUso.map(htmlUsoDeBot).join('')
       : '<div class="panel__seccion"><p class="panel__vacio">No se pudieron cargar los datos del bot.</p></div>';
-    el.contenidoBot.innerHTML = `${usos}${htmlAlertasBot()}`;
+    el.contenidoBot.innerHTML = `${htmlGastoReal()}${usos}${htmlAlertasBot()}`;
   }
 
   // ---------- Tabs ----------
