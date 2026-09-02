@@ -93,6 +93,10 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <meta name="twitter:description" content={descripcion} />
     <meta name="twitter:image" content={imagenFinal} />
     <slot name="head-extra" />
+    {/* En el <head> a propósito: tiene que correr ANTES de que la ficha
+        registre la vista, o una visita que entra directo con ?ref=... se
+        guardaría sin campaña. Ver el comentario del componente. */}
+    <RastreoCampana />
     {
       gaMeasurementId && (
         <>
@@ -119,7 +123,6 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <PlanificadorHospedajes />
     <Footer />
     <BotTeco />
-    <RastreoCampana />
   </body>
 </html>
 
