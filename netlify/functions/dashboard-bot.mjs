@@ -27,10 +27,23 @@ const ALERTAS = { store: 'bot-teco-alertas', clave: 'log' };
 // aislado, una vista previa mostraría siempre cero aunque el bot esté
 // trabajando. Leer es seguro: esta función no escribe nada, así que una
 // vista previa no puede ensuciar los datos reales.
-function leerJson(nombreStore, clave) {
-  return getStore({ name: nombreStore, consistency: 'strong' })
-    .get(clave, { type: 'json' })
-    .catch(() => null);
+// Devuelve { consultado, valor } en vez de solo el valor. La diferencia
+// importa: si Blobs falla y se devolviera null a secas, el panel no podría
+// distinguir "consulté y no hay nada" de "no pude consultar", y acabaría
+// diciendo "sin eventos sospechosos" cuando en realidad no sabe. En una
+// sección de seguridad esa afirmación falsa es peor que no mostrar nada.
+async function leerJson(nombreStore, clave) {
+  try {
+    const valor = await getStore({ name: nombreStore, consistency: 'strong' }).get(clave, {
+      type: 'json',
+    });
+    // valor null aquí sí significa "la clave todavía no existe", que es un
+    // resultado legítimo: la consulta funcionó.
+    return { consultado: true, valor };
+  } catch (error) {
+    console.error('dashboard-bot: no se pudo leer', nombreStore, String(error?.message || error));
+    return { consultado: false, valor: null };
+  }
 }
 
 export default async (request) => {
@@ -58,15 +71,18 @@ export default async (request) => {
   try {
     const bots = await Promise.all(
       BOTS.map(async ({ id, nombre, store, clave }) => {
-        const datos = await leerJson(store, clave);
+        const { consultado, valor } = await leerJson(store, clave);
         return {
           id,
           nombre,
+          // Mismo cuidado que con las alertas: si la lectura falló, el panel
+          // no debe decir "todavía no reporta consumo" — no lo sabe.
+          consultado,
           // "reportando: false" distingue un bot que todavía no manda datos
           // (store vacío) de uno que sí manda pero no tuvo actividad — para
           // no mostrar "0 pesos" como si fuera un dato medido.
-          reportando: Boolean(datos && datos.porMes && Object.keys(datos.porMes).length > 0),
-          porMes: datos?.porMes || {},
+          reportando: Boolean(valor && valor.porMes && Object.keys(valor.porMes).length > 0),
+          porMes: valor?.porMes || {},
         };
       }),
     );
@@ -74,7 +90,15 @@ export default async (request) => {
     const alertas = await leerJson(ALERTAS.store, ALERTAS.clave);
 
     return new Response(
-      JSON.stringify({ ok: true, bots, eventos: alertas?.eventos || [] }),
+      JSON.stringify({
+        ok: true,
+        bots,
+        // Bandera explícita: una lista vacía de eventos puede significar "no
+        // hubo intentos" o "no se pudo leer el registro", y el panel necesita
+        // saber cuál de las dos para no afirmar lo que no sabe.
+        alertasConsultadas: alertas.consultado,
+        eventos: alertas.valor?.eventos || [],
+      }),
       { status: 200 },
     );
   } catch (error) {
