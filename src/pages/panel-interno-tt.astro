@@ -1235,7 +1235,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       elegido && !elegido.esMesActual ? `${nombreMesCorto(clave)} (último mes con datos)` : 'mes actual';
     const avisoMesViejo =
       elegido && !elegido.esMesActual
-        ? `<p class="panel__vacio">En ${nombreMesCorto(claveMesActual())} todavía no se ha buscado nada; se muestra el mes anterior.</p>`
+        ? `<p class="panel__vacio">En ${nombreMesCorto(claveMesActual())} todavía no se ha buscado nada; se muestra el último mes con datos.</p>`
         : '';
 
     return `
