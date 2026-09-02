@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Página directa en /pages para conservar una URL permanente e independiente
+// de la colección de reportajes. La imagen destacada queda pendiente de una
+// foto real de carretera o de la entrada a Tecolutla; no se usa una de banco.
+const frontmatter = {
+  title: 'Cómo llegar a Tecolutla en carro y autobús',
+  titulo_h1: 'Cómo llegar a Tecolutla: rutas, tiempos y costos desde el centro del país',
+  description:
+    '¿Vas a Tecolutla? Cómo llegar en carro y en autobús desde el Estado de México, CDMX, Pachuca y Puebla: rutas, tiempos, costos y dónde estacionarte.',
+  slug: 'como-llegar-a-tecolutla',
+  categoria: 'tip',
+  fecha: '2026-09-02',
+} as const;
+
+const esquemaBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://tecolutlatravel.mx/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: frontmatter.title,
+      item: 'https://tecolutlatravel.mx/como-llegar-a-tecolutla',
+    },
+  ],
+};
+---
+
+<BaseLayout titulo={frontmatter.title} descripcion={frontmatter.description}>
+  <script type="application/ld+json" set:html={JSON.stringify(esquemaBreadcrumb)} />
+
+  <article class="articulo-ruta contenedor">
+    <p class="migaja"><a href="/">Inicio</a> → Cómo llegar a Tecolutla</p>
+    <!-- Espacio reservado para una futura foto real de carretera o entrada a Tecolutla. -->
+    <header class="articulo-ruta__encabezado">
+      <p class="eyebrow">Guía para tu viaje</p>
+      <h1>{frontmatter.titulo_h1}</h1>
+    </header>
+
+    <div class="articulo-ruta__contenido">
+      <p>Tecolutla es de las playas más queridas del Golfo: mar, río y manglar en el mismo lugar, y perfecta para venir en familia. Lo mejor es que llegar es más fácil de lo que crees, sobre todo si vienes del centro del país. Aquí te decimos, sin rodeos, <strong>cómo llegar a Tecolutla en carro y en autobús</strong> desde las principales ciudades: cuánto tarda, cuánto cuesta, de qué terminal sale el camión y dónde dejar el coche cuando llegues.</p>
+
+      <h2>¿Cuánto tarda del Estado de México a Tecolutla?</h2>
+      <p>La mayoría de quienes visitan Tecolutla vienen del <strong>Estado de México</strong>, así que empecemos por ahí. Desde municipios del norte y oriente (Ecatepec, Tecámac, Naucalpan, Cuautitlán, Tlalnepantla), en <strong>carro</strong> son alrededor de <strong>4 a 5 horas</strong>, porque te queda muy a la mano la autopista rumbo a Tuxpan. Desde Toluca calcula un poco más, unas <strong>5 a 6 horas</strong>. Es un viaje muy cómodo para hacer en un día y llegar con luz.</p>
+
+      <h2>¿Cuánto tarda de CDMX a Tecolutla?</h2>
+      <p>En <strong>carro</strong> son alrededor de <strong>320 km</strong> y el viaje toma más o menos <strong>4 a 5 horas</strong>, según el tráfico y de qué punto de la ciudad salgas. En <strong>autobús</strong> el trayecto ronda las <strong>5 a 6 horas</strong>.</p>
+
+      <h2>¿Por dónde se va en carro desde el centro del país?</h2>
+      <p>La ruta más directa es tomar la <strong>autopista México–Tuxpan (132D)</strong>, luego incorporarte a la <strong>carretera 130</strong> y finalmente a la <strong>180</strong> rumbo a Tecolutla. Es carretera de cuota en buena parte, así que ten a la mano efectivo o tarjeta para las <strong>casetas</strong> (calcula alrededor de $400 a $500 por trayecto; los montos cambian seguido, verifícalos antes de salir).</p>
+      <p><strong>Tip:</strong> sal temprano para llegar con luz y aprovechar el primer día. Una buena parada para estirar las piernas y cargar gasolina es la zona de Poza Rica, que ya está cerquita.</p>
+
+      <h2>¿Dónde me estaciono en Tecolutla?</h2>
+      <p>Si vienes en carro con la familia, esto importa más de lo que parece: en temporada alta el centro y las calles cerca de la playa se llenan, y andar buscando lugar con los niños en el coche no es plan. La solución más cómoda es quedarte en un lugar que ya tenga <strong>estacionamiento propio</strong>, para dejar el coche y no volver a moverlo en todo el fin de semana.</p>
+      <p>En cada ficha de nuestro directorio verás si el hospedaje tiene estacionamiento, cuántas personas caben y <strong>a cuántos metros exactos está de la playa</strong> — nosotros los medimos, no los calculamos a ojo.</p>
+      <p>👉 Mira las <a href="/hospedaje">casas y hoteles en Tecolutla</a> y filtra por lo que necesites.</p>
+
+      <h2>¿De qué terminal sale el autobús y cuánto cuesta?</h2>
+      <p>Desde la Ciudad de México, <strong>ADO</strong> te lleva a Tecolutla en unas <strong>5 a 6 horas</strong>. Hay salidas desde la <strong>TAPO (Terminal de Autobuses de Pasajeros de Oriente)</strong> y desde la <strong>Terminal Central del Norte</strong>, así que conviene revisar cuál te queda mejor según de dónde salgas.</p>
+      <p>Los precios varían bastante según la fecha, la hora y qué tan cerca de la salida compres: en temporada alta y fines de semana largos suben, y comprar con anticipación casi siempre sale mejor. Consulta la tarifa vigente en el sitio de ADO antes de viajar.</p>
+      <p>Si vienes en autobús desde otras ciudades, es común hacer conexión o llegar primero a <strong>Gutiérrez Zamora</strong>, que está a pocos minutos de Tecolutla, y de ahí tomar un transporte corto al pueblo.</p>
+
+      <h2>¿Cómo llegar desde Pachuca o Tulancingo?</h2>
+      <p>Si vienes de <strong>Hidalgo</strong>, tienes ventaja: estás <strong>más cerca</strong>. Desde <strong>Pachuca</strong> son aproximadamente <strong>3.5 a 4 horas</strong> en carro, y desde <strong>Tulancingo</strong> un poco menos, porque ya vas encaminado hacia la sierra rumbo a la costa. Es una escapada de fin de semana muy accesible.</p>
+
+      <h2>¿Cómo llegar desde Poza Rica?</h2>
+      <p>Poza Rica es el <strong>punto más cercano</strong> a Tecolutla: estás a solo <strong>40 a 50 minutos</strong> en carro. Si vives en la región (Poza Rica, Papantla, Coatzintla, Cazones), Tecolutla es la escapada de playa perfecta de fin de semana, con salidas frecuentes de autobús y combi.</p>
+
+      <h2>¿Cómo llegar desde Puebla?</h2>
+      <p>En <strong>autobús</strong> desde Puebla el trayecto es de alrededor de <strong>8 horas</strong>, normalmente con conexión. En <strong>carro</strong> conviene ir rumbo a Poza Rica y de ahí a Tecolutla: calcula unas <strong>5 a 6 horas</strong> según la ruta que tomes.</p>
+
+      <h2>¿Y desde Xalapa o el puerto de Veracruz?</h2>
+      <p>Desde <strong>Xalapa</strong> son aproximadamente <strong>3.5 a 4 horas</strong> en carro; desde el <strong>puerto de Veracruz</strong>, unas <strong>4 a 5 horas</strong> por la costa. Es un destino muy cómodo para quienes ya andan por el estado.</p>
+
+      <h2>Ya llegué a Tecolutla, ¿ahora qué?</h2>
+      <p>Aquí es donde empieza lo bueno. En <strong>TecolutlaTravel</strong> te conectamos directo con cada negocio por WhatsApp, sin intermediarios y sin comisiones:</p>
+      <ul>
+        <li>🏠 <strong>¿Dónde te quedas?</strong> Mira las <a href="/hospedaje">casas y hoteles en Tecolutla</a>, o ve directo a las <a href="/hospedaje/con-alberca">casas con alberca</a> — las favoritas para venir en familia.</li>
+        <li>🍤 <strong>¿Dónde comes?</strong> Los mejores <a href="/gastronomia">mariscos a orilla del río</a>.</li>
+        <li>🚤 <strong>¿Qué haces?</strong> <a href="/actividades">Paseos en lancha</a> por los manglares y el Santuario de las Aves.</li>
+      </ul>
+      <p>Y si tienes dudas, <strong>pregúntale a Teco</strong> 🐢, nuestro asistente: te ayuda a encontrar justo lo que buscas y te pasa el contacto directo del anfitrión.</p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .articulo-ruta {
+    max-width: 860px;
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+  }
+
+  .articulo-ruta__encabezado {
+    margin: 1.25rem 0 2rem;
+  }
+
+  .articulo-ruta__encabezado h1 {
+    max-width: 780px;
+    margin: 0;
+    color: var(--color-tinta);
+    font-family: var(--fuente-titulos);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.08;
+  }
+
+  .articulo-ruta__contenido {
+    color: var(--color-tinta);
+    font-size: 1.05rem;
+    line-height: 1.72;
+  }
+
+  .articulo-ruta__contenido h2 {
+    margin: 2.4rem 0 0.75rem;
+    color: var(--color-turquesa);
+    font-family: var(--fuente-titulos);
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .articulo-ruta__contenido p,
+  .articulo-ruta__contenido ul {
+    margin: 0 0 1.15rem;
+  }
+
+  .articulo-ruta__contenido ul {
+    padding-left: 1.3rem;
+  }
+
+  .articulo-ruta__contenido li + li {
+    margin-top: 0.65rem;
+  }
+</style>
