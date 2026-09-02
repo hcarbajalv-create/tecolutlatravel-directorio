@@ -3982,6 +3982,18 @@ p.buscador-pildora__resultados {
   white-space: nowrap;
 }
 
+/* Con el enlace "Cómo llegar", el menú conserva una sola línea en los
+   escritorios compactos sin ocultar ninguna ruta. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .encabezado__nav {
+    gap: 0.45rem;
+  }
+
+  .encabezado__nav a {
+    font-size: 0.8rem;
+  }
+}
+
 .encabezado__derecha {
   flex-shrink: 0;
   gap: 0.65rem;
