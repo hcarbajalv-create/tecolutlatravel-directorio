@@ -32,7 +32,6 @@ const hospedajes = todos.filter((negocio) => negocio.data.categoria === 'hospeda
 const destacados = hospedajes.filter((negocio) => negocio.data.destacado).sort((a, b) => (a.data.ordenManual ?? Infinity) - (b.data.ordenManual ?? Infinity));
 const resto = hospedajes.filter((negocio) => !negocio.data.destacado).sort(compararDentroDeGrupo);
 const hospedajesOrdenados = [...destacados, ...resto];
-const tarjetasEstacionamiento = hospedajesOrdenados.filter((negocio) => negocio.data.servicios.some((servicio) => servicio.toLocaleLowerCase('es-MX').includes('estacionamiento'))).slice(0, 3);
 const tarjetasAlberca = hospedajesOrdenados.filter((negocio) => negocio.data.alberca === true).slice(0, 3);
 
 const ESTADOS_MEXICO = ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Ciudad de México', 'Coahuila', 'Colima', 'Durango', 'Estado de México', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'] as const;
@@ -71,7 +70,7 @@ const RUTAS_POR_ESTADO: Record<string, string> = { 'Estado de México': 'desde-e
         <p>Si vienes en carro con la familia, esto importa más de lo que parece: en temporada alta el centro y las calles cerca de la playa se llenan, y andar buscando lugar con los niños en el coche no es plan. La solución más cómoda es quedarte en un lugar que ya tenga <strong>estacionamiento propio</strong>, para dejar el coche y no volver a moverlo en todo el fin de semana.</p>
         <p>En cada ficha de nuestro directorio verás si el hospedaje tiene estacionamiento, cuántas personas caben y <strong>a cuántos metros exactos está de la playa</strong> — nosotros los medimos, no los calculamos a ojo.</p>
         <p>👉 Mira las <a href="/hospedaje">casas y hoteles en Tecolutla</a> y filtra por lo que necesites.</p>
-        <div class="ruta__tarjetas">{tarjetasEstacionamiento.map((negocio, indice) => <NegocioCard negocio={negocio} esPrimera={indice === 0} />)}</div><a class="boton boton--secundario ruta__ver-todas" href="/hospedaje">Ver todo el hospedaje en Tecolutla</a>
+        <a class="boton boton--secundario ruta__ver-todas" href="/hospedaje">Ver todo el hospedaje en Tecolutla</a>
       </section>
       <h2 id="autobus-cdmx">¿De qué terminal sale el autobús y cuánto cuesta?</h2>
       <p>Desde la Ciudad de México, <strong>ADO</strong> te lleva a Tecolutla en unas <strong>5 a 6 horas</strong>. Hay salidas desde la <strong>TAPO (Terminal de Autobuses de Pasajeros de Oriente)</strong> y desde la <strong>Terminal Central del Norte</strong>, así que conviene revisar cuál te queda mejor según de dónde salgas.</p>
