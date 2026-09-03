@@ -121,13 +121,26 @@ const agregarAmenidad = (icono: string, texto: string) => {
     amenidadesCalculadas.push({ icono, texto });
   }
 };
-// El orden importa: los primeros cinco son los que se ven. Frente al mar va
-// primero porque en un destino de playa es el dato que mas vende.
+if (capacidadMaxima !== undefined) agregarAmenidad('usuarios', `Hasta ${capacidadMaxima} personas`);
 if (frenteAlMar) agregarAmenidad('olas', 'Frente al mar');
 if (alberca) agregarAmenidad('alberca', 'Alberca');
 if (wifi) agregarAmenidad('wifi', 'Wifi');
 for (const servicio of servicios) agregarAmenidad(iconoAmenidad(servicio), servicio);
 if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
+
+// Orden de importancia acordado con Hector, pensado en que decide una reserva:
+// primero cuanta gente cabe, luego alberca, aire, mascotas, wifi, frente al mar
+// y asador. Lo que no este en esta lista queda despues, en el orden en que lo
+// escribio el negocio en su .yaml.
+// Antes el orden era accidental: dependia de como estuviera redactada cada
+// ficha, asi que dos negocios con los mismos servicios podian mostrarlos en
+// distinto orden.
+const PRIORIDAD_ICONOS = ['usuarios', 'alberca', 'aire', 'mascota', 'wifi', 'olas', 'asador'];
+const peso = (icono: string) => {
+  const i = PRIORIDAD_ICONOS.indexOf(icono);
+  return i === -1 ? PRIORIDAD_ICONOS.length : i;
+};
+amenidadesCalculadas.sort((a, b) => peso(a.icono) - peso(b.icono));
 // Primero se descartan los que no se dibujan y DESPUES se corta a cinco. Al
 // reves, un negocio con muchos servicios gastaba espacios en iconos invisibles:
 // a Casa Xanath se le iban dos en el generico y el wifi, y por eso su asador y
@@ -141,8 +154,11 @@ if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
 // (.tarjeta__info-movil, ver amenidadesClave.ts) y muestra capacidad mas 2
 // amenidades CON TEXTO, porque la tarjeta mide 180 px y no caben mas.
 const AMENIDADES_VISIBLES_MAX = 9;
+// Solo se descarta el icono generico (un servicio que no tiene dibujo propio).
+// El wifi ANTES tambien se descartaba, pero Hector lo puso en el lugar 5 de la
+// lista de prioridad, asi que ahora si se muestra.
 const amenidadesVisibles = amenidadesCalculadas
-  .filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi')
+  .filter((amenidad) => amenidad.icono !== 'etiqueta')
   .slice(0, AMENIDADES_VISIBLES_MAX);
 
 // La capacidad y Pet friendly ya tienen una fila informativa propia.
