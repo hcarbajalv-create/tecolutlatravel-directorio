@@ -423,18 +423,6 @@ const esquemaBreadcrumb = {
         <p><a class="boton boton--secundario" href={enlaceComoLlegar} data-registrar-como-llegar>¿Cómo llegar?</a></p>
       </div>
 
-      {
-        especialidades.length > 0 && (
-          <div class="ficha__bloque ficha__bloque--especialidades">
-            <h2>Especialidades de la casa</h2>
-            <ul class="ficha__amenidades">
-              {especialidades.map((e) => (
-                <li>{e}</li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
       </div>
 
       <div class="ficha__columna ficha__columna--derecha">
@@ -513,6 +501,24 @@ const esquemaBreadcrumb = {
             </p>
           )}
         </div>
+
+      {/* Especialidades va en ESTA columna, no en la izquierda. Los tres
+          restaurantes casi no tienen servicios (Panchita 2, El Caracol 1,
+          El Manglar ninguno), asi que si las especialidades se van a la
+          izquierda esta columna queda vacia y la tarjeta verde se estira
+          para alcanzarla: en Panchita eran 326 px de verde vacio. */}
+      {
+        especialidades.length > 0 && (
+          <div class="ficha__bloque ficha__bloque--especialidades">
+            <h2>Especialidades de la casa</h2>
+            <ul class="ficha__amenidades">
+              {especialidades.map((e) => (
+                <li>{e}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
 
       {
         servicios.length > 0 && (
