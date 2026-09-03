@@ -20,7 +20,12 @@ export interface Distancia {
 // tal cual, sin agregarle "a <destino>" — ya es una frase completa
 // redactada por quien dio de alta el negocio (ej. "A pie de río").
 export function formatearDistancia(d: Distancia): string {
-  return d.metros !== undefined ? `${d.metros} m a ${CATALOGO_DISTANCIAS[d.a].etiqueta}` : (d.texto ?? '');
+  if (d.metros === undefined) return d.texto ?? '';
+  // "a" + "el centro" da "a el centro". En español se contrae a "al centro".
+  // Pasaba en Restaurant El Manglar ("170 m a el centro") y en Hotel Nautilus.
+  const etiqueta = CATALOGO_DISTANCIAS[d.a].etiqueta;
+  const preposicion = etiqueta.startsWith('el ') ? `al ${etiqueta.slice(3)}` : `a ${etiqueta}`;
+  return `${d.metros} m ${preposicion}`;
 }
 
 // Tarjeta: versión compacta, sin "a <destino>", para caber en la insignia
