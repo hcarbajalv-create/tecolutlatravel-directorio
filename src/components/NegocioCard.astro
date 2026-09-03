@@ -74,13 +74,12 @@ const distanciasVendibles = distancias?.filter(
   (d) => !(d.a === 'playa' && d.metros !== undefined && d.metros > DISTANCIA_PLAYA_MAX_METROS),
 );
 const distanciaTarjeta = distanciasVendibles?.[0];
-// Si no queda ninguna distancia vendible, se usa la capacidad como gancho
-// alterno en su lugar, si existe. Se prefiere la capacidad de todo el
-// conjunto (ej. las 4 casas de Raysemar rentadas juntas) sobre la de una
-// sola unidad, por ser el gancho más fuerte.
-const capacidadGancho = capacidadGrupoCompleto ?? capacidadMaxima;
-const insigniaAlterna =
-  !distanciaTarjeta && capacidadGancho !== undefined ? `Hasta ${capacidadGancho} personas` : undefined;
+// Antes, un negocio sin distancia usaba la capacidad como gancho alterno en la
+// insignia de la foto. Ya no: por decision de Hector, el numero de personas no
+// aparece en NINGUNA presentacion de tarjeta, solo dentro de la ficha. Si no
+// hay distancia, la insignia se queda con lo que traiga insigniasExtra, y si
+// tampoco hay, no se muestra.
+const insigniaAlterna = undefined;
 // Todas las distancias vendibles del negocio (no solo la primera) rotan
 // solas en el mismo espacio — un negocio con playa Y río no necesita
 // escribir la segunda a mano en insigniasExtra, ya sale de "distancias".
@@ -189,20 +188,11 @@ function iconoAmenidad(servicio: string) {
   return 'etiqueta';
 }
 
-// En móvil la tarjeta oculta .tarjeta__descripcion y .tarjeta__amenidades
-// por espacio (ver global.css, media max-width:640px) — sin esto la
-// tarjeta quedaba solo con categoría, nombre y botones, sin ningún dato
-// que ayude a decidir. Quien busca hospedaje en el celular decide por
-// capacidad y amenidades, no por el nombre. Se muestra únicamente la
-// capacidad (dato más buscado) y como máximo 2 amenidades "clave" (ver
-// utils/amenidadesClave.ts, mismo criterio que usan los chips de filtro
-// de /hospedaje) — no la lista completa, para eso está la ficha del
-// negocio.
-// Sin "Hasta" — la fila de chips de móvil es angosta y con 3 chips
-// (capacidad + 2 amenidades) el texto largo los empuja a una segunda
-// línea; el chip grande de la tarjeta (arriba, sobre la foto) sí dice
-// "Hasta N personas" completo, aquí no hace falta.
-const capacidadMovil = capacidadMaxima !== undefined ? `${capacidadMaxima} personas` : undefined;
+// El numero de personas NO va en la tarjeta, ni aqui en movil ni en la fila
+// de iconos de escritorio ni en la insignia de la foto. Solo dentro de la
+// ficha. Decision de Hector: en un hotel el numero confunde ("Hasta 62
+// personas" no significa que renten el hotel entero) y dejarlo dentro da un
+// motivo para abrir la ficha, que es donde esta el boton de WhatsApp.
 const chipsAmenidadesMovil = amenidadesClaveMovil(negocio);
 
 // En Actividades se priorizan los datos que realmente ayudan a elegir entre
@@ -295,9 +285,8 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       )
     }
     {
-      (capacidadMovil || chipsAmenidadesMovil.length > 0) && (
+      chipsAmenidadesMovil.length > 0 && (
         <div class="tarjeta__info-movil">
-          {capacidadMovil && <span class="chip-amenidad"><Icono nombre="usuarios" /> {capacidadMovil}</span>}
           {chipsAmenidadesMovil.map((amenidad) => (
             <span class="chip-amenidad"><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}

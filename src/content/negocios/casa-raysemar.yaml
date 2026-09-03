@@ -89,7 +89,8 @@ capacidadGrupoCompleto: 32
 # El primero ("Hasta 32") sale solo de capacidadGrupoCompleto; estos dos
 # son el resto de la rotación.
 insigniasExtra:
-  - "👥 8 personas c/u"
+  # Se quito "👥 8 personas c/u": el numero de personas ya no aparece en las
+  # tarjetas, solo dentro de la ficha (decision del 3 de septiembre de 2026).
   - "🚫 No se aceptan mascotas"
 wifi: true
 petFriendly: false

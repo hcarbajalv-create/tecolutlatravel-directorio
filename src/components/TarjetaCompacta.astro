@@ -51,14 +51,16 @@ const NOMBRE_CATEGORIA: Record<string, string> = {
 // no se muestra nada ahí (sin dejar hueco).
 const etiquetaCategoria = categoria === 'hospedaje' ? subtipo : NOMBRE_CATEGORIA[categoria];
 
-// Línea de datos: capacidad o habitaciones primero (si existe alguna),
-// si no hay ninguna se usa el dato de distancia como gancho; luego se
-// agrega el primer servicio real del negocio. Cualquier parte ausente
-// se omite sin dejar un hueco ("·" suelto).
+// Línea de datos: habitaciones primero (si existe el dato), si no se usa la
+// distancia como gancho; luego se agrega el primer servicio real del negocio.
+// Cualquier parte ausente se omite sin dejar un hueco ("·" suelto).
+//
+// El NÚMERO DE PERSONAS iba primero y se quitó por decisión de Hector: no
+// aparece en ninguna presentación de tarjeta, solo dentro de la ficha. En un
+// hotel el número confunde ("62 personas" no significa que renten el hotel
+// entero) y dejarlo dentro da un motivo para abrir la ficha.
 const datosLinea: string[] = [];
-if (capacidadMaxima !== undefined) {
-  datosLinea.push(`👥 ${capacidadMaxima}`);
-} else if (numeroHabitaciones !== undefined) {
+if (numeroHabitaciones !== undefined) {
   datosLinea.push(`🛏️ ${numeroHabitaciones}`);
 } else if (distanciaTarjeta) {
   datosLinea.push(
