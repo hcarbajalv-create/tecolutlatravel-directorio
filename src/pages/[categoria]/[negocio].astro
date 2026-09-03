@@ -861,3 +861,17 @@ const esquemaBreadcrumb = {
   });
   document.getElementById('boton-compartir')?.addEventListener('click', () => registrarEvento('compartir'));
 </script>
+
+<style is:global>
+  /* La columna de en medio (especialidades + servicios) es un contenedor
+     dentro de la cuadrícula .ficha__datos. El contenedor sí se estira a lo
+     alto de la fila, pero sus tarjetas se quedaban del alto de su contenido,
+     así que la verde de "Servicios y amenidades" se veía cortada frente a
+     las dos columnas vecinas. Estirando la última tarjeta se emparejan.
+
+     Va aquí y no en global.css a propósito: global.css lo está tocando el
+     rediseño en paralelo y no queremos chocar. */
+  .ficha__columna-precio-servicios > :last-child {
+    flex: 1;
+  }
+</style>
