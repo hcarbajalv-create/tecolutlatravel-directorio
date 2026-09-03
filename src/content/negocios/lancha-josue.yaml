@@ -1,0 +1,57 @@
+# ALTA A MEDIO ARMAR — 3 de septiembre de 2026.
+#
+# borrador: true mientras falten los datos obligatorios. Con esa marca el
+# negocio NO EXISTE para el sitio: no genera página, no sale en listados, ni
+# en el buscador, ni en el sitemap, ni el bot lo recomienda.
+#
+# FALTA UN DATO Y NO SE PUEDE INVENTAR:
+#   telefono — Hector lo va a conseguir. Mientras diga PENDIENTE, la ficha
+#   se queda en borrador.
+#
+# El embarcadero SI esta confirmado por Hector: sale del de la calle Emilio
+# Carranza, el mismo de Lancha Santy, y de ahi se tomaron las coordenadas.
+# Cada lancha del directorio sale de un embarcadero distinto, asi que este
+# dato nunca se copia a ciegas de otra ficha.
+#
+# QUITAR "borrador: true" SOLO cuando el telefono este puesto de verdad.
+#
+# Datos confirmados por Hector: el negocio se llama Lancha Josué, el capitán
+# es Manuel, caben 10 personas y los recorridos son los mismos que ofrecen las
+# demás lanchas del directorio.
+nombre: Lancha Josué
+categoria: actividades
+descripcionCorta: Paseo en lancha por los esteros y manglares de Tecolutla con el
+  capitán Manuel, para ver cocodrilos, garzas y pelícanos de cerca.
+direccion: Embarcadero de la calle Emilio Carranza, Tecolutla, Veracruz
+coordenadas:
+  lat: 20.4745507
+  lng: -97.0086132
+telefono: "PENDIENTE"
+plan: gratuito
+borrador: true
+fotos:
+  - src: ../../assets/fotos/lancha-josue/01-lancha-en-el-manglar.jpg
+    alt: Lancha Josué navegando entre las raíces del manglar en Tecolutla
+  - src: ../../assets/fotos/lancha-josue/02-pelicanos-en-el-rio.jpg
+    alt: Pelícanos posados sobre un tronco en el río Tecolutla, con una lancha al fondo
+  - src: ../../assets/fotos/lancha-josue/03-lanchas-con-pasajeros.jpg
+    alt: Lanchas con pasajeros y chalecos salvavidas listas para salir del embarcadero
+  - src: ../../assets/fotos/lancha-josue/04-fauna-del-manglar.jpg
+    alt: "Fauna del recorrido: cocodrilo, garza, cangrejo rojo y aves del manglar"
+  - src: ../../assets/fotos/lancha-josue/05-recorrido-por-el-manglar.jpg
+    alt: Vistas del recorrido por los canales y la vegetación del manglar de Tecolutla
+fechaActualizacion: 2026-09-03
+disponible: true
+servicios:
+  - Recorrido al Santuario de las Aves
+  - Recorrido a la Cueva de la Mojarra
+  - Recorrido a la Cueva del Pirata
+  - Recorrido al Manglar del Silencio
+  - Paseos privados para tu grupo
+  - Horarios flexibles
+  - Chalecos salvavidas y medidas de seguridad
+  - Reserva fácil, sin complicaciones
+capacidadMaxima: 10
+verificado: false
+resenas: [] # Sin reseñas reales todavía — no inventar
+destacado: false
