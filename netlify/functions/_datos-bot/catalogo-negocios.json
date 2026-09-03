@@ -1,5 +1,5 @@
 {
-  "generado": "2026-09-03T19:45:34.518Z",
+  "generado": "2026-09-03T19:57:34.449Z",
   "totalNegocios": 25,
   "negocios": [
     {
@@ -309,39 +309,6 @@
       "plan": "gratuito"
     },
     {
-      "slug": "restaurant-el-manglar",
-      "nombre": "Restaurant El Manglar",
-      "categoria": "gastronomia",
-      "categoriaEtiqueta": "Gastronomía",
-      "url": "/gastronomia/restaurant-el-manglar",
-      "foto": "/bot/restaurant-el-manglar.webp",
-      "chips": [
-        "🍤 Mariscos",
-        "📍 centro: 170 m"
-      ],
-      "descripcion": "Restaurante de mariscos, antojitos y desayunos en pleno centro de Tecolutla, a 170 metros del zócalo sobre calle Hidalgo. Ambiente familiar, ideal para comer sin alejarte a pie del centro.",
-      "alberca": false,
-      "petFriendly": false,
-      "wifi": false,
-      "especialidades": [
-        "Mojarra frita o al mojo de ajo",
-        "Coctel de camarón o pulpo con filete de pescado empanizado",
-        "Tostadas de camarón o de mariscos",
-        "Ceviche de cangrejo"
-      ],
-      "tipoCocina": [
-        "Mariscos",
-        "Antojitos mexicanos"
-      ],
-      "distancias": [
-        "centro: 170 m",
-        "playa: 1600 m"
-      ],
-      "telefono": "+52 766 102 2956",
-      "destacado": false,
-      "plan": "gratuito"
-    },
-    {
       "slug": "restaurant-panchita",
       "nombre": "Restaurant Panchita",
       "categoria": "gastronomia",
@@ -374,6 +341,39 @@
         "playa: 527 m"
       ],
       "telefono": "+52 766 100 0970",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "restaurant-el-manglar",
+      "nombre": "Restaurante El Manglar",
+      "categoria": "gastronomia",
+      "categoriaEtiqueta": "Gastronomía",
+      "url": "/gastronomia/restaurant-el-manglar",
+      "foto": "/bot/restaurant-el-manglar.webp",
+      "chips": [
+        "🍤 Mariscos",
+        "📍 centro: 170 m"
+      ],
+      "descripcion": "Restaurante de mariscos, antojitos y desayunos en pleno centro de Tecolutla, a 170 metros del zócalo sobre calle Hidalgo. Ambiente familiar, ideal para comer sin alejarte a pie del centro.",
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "especialidades": [
+        "Mojarra frita o al mojo de ajo",
+        "Coctel de camarón o pulpo con filete de pescado empanizado",
+        "Tostadas de camarón o de mariscos",
+        "Ceviche de cangrejo"
+      ],
+      "tipoCocina": [
+        "Mariscos",
+        "Antojitos mexicanos"
+      ],
+      "distancias": [
+        "centro: 170 m",
+        "playa: 1600 m"
+      ],
+      "telefono": "+52 766 102 2956",
       "destacado": false,
       "plan": "gratuito"
     },
@@ -590,41 +590,6 @@
       "plan": "gratuito"
     },
     {
-      "slug": "hotel-el-manglar",
-      "nombre": "Hotel El Manglar",
-      "categoria": "hospedaje",
-      "categoriaEtiqueta": "Hospedaje",
-      "subtipo": "Hotel",
-      "url": "/hospedaje/hotel-el-manglar",
-      "foto": "/bot/hotel-el-manglar.webp",
-      "chips": [
-        "👥 22",
-        "📍 centro: 170 m",
-        "📶 Wifi"
-      ],
-      "descripcion": "Habitaciones con aire acondicionado y terraza en el centro de Tecolutla, arriba del Restaurant El Manglar, con 10% de descuento para huéspedes en el restaurante.",
-      "capacidadMaxima": 22,
-      "numeroHabitaciones": 5,
-      "alberca": false,
-      "petFriendly": false,
-      "wifi": true,
-      "servicios": [
-        "Aire acondicionado",
-        "Agua caliente",
-        "Pantalla de televisión",
-        "Wifi en las habitaciones",
-        "Terraza",
-        "10% de descuento en el Restaurant El Manglar"
-      ],
-      "distancias": [
-        "centro: 170 m",
-        "playa: 1600 m"
-      ],
-      "telefono": "+52 766 102 2956",
-      "destacado": false,
-      "plan": "gratuito"
-    },
-    {
       "slug": "hotel-el-pariente",
       "nombre": "Hotel El Pariente",
       "categoria": "hospedaje",
@@ -688,6 +653,41 @@
         "playa: 434 m"
       ],
       "telefono": "+52 55 1186 4421",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-el-manglar",
+      "nombre": "Hotel Manglar",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-el-manglar",
+      "foto": "/bot/hotel-el-manglar.webp",
+      "chips": [
+        "👥 22",
+        "📍 centro: 170 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Habitaciones con aire acondicionado y terraza en el centro de Tecolutla, arriba del Restaurante El Manglar, con 10% de descuento para huéspedes en el restaurante.",
+      "capacidadMaxima": 22,
+      "numeroHabitaciones": 5,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Aire acondicionado",
+        "Agua caliente",
+        "Pantalla de televisión",
+        "Wifi en las habitaciones",
+        "Terraza",
+        "10% de descuento en el Restaurante El Manglar"
+      ],
+      "distancias": [
+        "centro: 170 m",
+        "playa: 1600 m"
+      ],
+      "telefono": "+52 766 102 2956",
       "destacado": false,
       "plan": "gratuito"
     },

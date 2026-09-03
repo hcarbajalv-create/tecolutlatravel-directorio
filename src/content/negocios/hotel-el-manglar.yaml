@@ -1,6 +1,6 @@
 # Alta del 3 de septiembre de 2026. Datos dictados por Hector.
 #
-# Las habitaciones están ARRIBA del Restaurant El Manglar, que ya está en el
+# Las habitaciones están ARRIBA del Restaurante El Manglar, que ya está en el
 # directorio. Por eso comparten dirección, coordenadas y teléfono: es el mismo
 # domicilio y el mismo negocio familiar, con dos fichas porque son dos
 # servicios distintos (comer y dormir).
@@ -14,10 +14,10 @@
 #
 # El 10% de descuento en el restaurante lo confirmó Hector y es el gancho que
 # ningún otro hospedaje del directorio tiene.
-nombre: Hotel El Manglar
+nombre: Hotel Manglar
 categoria: hospedaje
 descripcionCorta: Habitaciones con aire acondicionado y terraza en el centro de
-  Tecolutla, arriba del Restaurant El Manglar, con 10% de descuento para
+  Tecolutla, arriba del Restaurante El Manglar, con 10% de descuento para
   huéspedes en el restaurante.
 direccion: C. Hidalgo No. 17, Centro, 93570 Tecolutla, Veracruz
 coordenadas:
@@ -31,21 +31,21 @@ fotos:
   # La fachada va primero por decision de Hector: se lee HOTEL El Manglar
   # arriba y RESTAURANT EL MANGLAR abajo, asi que explica el negocio sola.
   - src: ../../assets/fotos/hotel-el-manglar/04-fachada-sobre-el-restaurante.jpg
-    alt: Fachada del edificio, con las habitaciones arriba del Restaurant El Manglar
+    alt: Fachada del edificio, con las habitaciones arriba del Restaurante El Manglar
   - src: ../../assets/fotos/hotel-el-manglar/01-terraza-de-noche.jpg
-    alt: Terraza del Hotel El Manglar de noche, con luces y mesas al aire libre
+    alt: Terraza del Hotel Manglar de noche, con luces y mesas al aire libre
   - src: ../../assets/fotos/hotel-el-manglar/02-habitacion-dos-camas.jpg
-    alt: Habitación del Hotel El Manglar con dos camas matrimoniales y aire acondicionado
+    alt: Habitación del Hotel Manglar con dos camas matrimoniales y aire acondicionado
   - src: ../../assets/fotos/hotel-el-manglar/03-habitacion-cabeceras-pintadas.jpg
-    alt: Habitación del Hotel El Manglar con cabeceras pintadas a mano y aire acondicionado
+    alt: Habitación del Hotel Manglar con cabeceras pintadas a mano y aire acondicionado
   - src: ../../assets/fotos/hotel-el-manglar/05-habitacion-con-mural.jpg
-    alt: Habitación del Hotel El Manglar con mural en la pared y aire acondicionado
+    alt: Habitación del Hotel Manglar con mural en la pared y aire acondicionado
   - src: ../../assets/fotos/hotel-el-manglar/06-habitacion-con-television.jpg
-    alt: Habitación del Hotel El Manglar con pantalla de televisión y baño propio
+    alt: Habitación del Hotel Manglar con pantalla de televisión y baño propio
   - src: ../../assets/fotos/hotel-el-manglar/07-habitacion-piso-de-mosaico.jpg
-    alt: Habitación del Hotel El Manglar con dos camas y piso de mosaico
+    alt: Habitación del Hotel Manglar con dos camas y piso de mosaico
   - src: ../../assets/fotos/hotel-el-manglar/08-habitacion-con-litera.jpg
-    alt: Habitación del Hotel El Manglar con litera y cama, para grupos
+    alt: Habitación del Hotel Manglar con litera y cama, para grupos
 fechaActualizacion: 2026-09-03
 disponible: true
 servicios:
@@ -54,7 +54,7 @@ servicios:
   - Pantalla de televisión
   - Wifi en las habitaciones
   - Terraza
-  - 10% de descuento en el Restaurant El Manglar
+  - 10% de descuento en el Restaurante El Manglar
 numeroHabitaciones: 5
 descripcionHabitaciones: |
   3 habitaciones para 4 personas.

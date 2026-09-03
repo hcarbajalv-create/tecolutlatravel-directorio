@@ -48,7 +48,7 @@
 #   no verificado para el restaurante.
 # - Confirmar si "Camarones Suspiro de Dragón" es especialidad real de este
 #   El Manglar (hay un tocayo en Chachalacas) — no se incluyó por esa duda.
-nombre: Restaurant El Manglar
+nombre: Restaurante El Manglar
 categoria: gastronomia
 descripcionCorta: Restaurante de mariscos, antojitos y desayunos en pleno
   centro de Tecolutla, a 170 metros del zócalo sobre calle Hidalgo. Ambiente
@@ -61,13 +61,13 @@ telefono: "+52 766 102 2956"
 plan: gratuito
 fotos:
   - src: ../../assets/fotos/restaurant-el-manglar/01-pan-frances-con-frutos-rojos.jpg
-    alt: Pan francés con frutos rojos de Restaurant El Manglar en Tecolutla
+    alt: Pan francés con frutos rojos de Restaurante El Manglar en Tecolutla
   - src: ../../assets/fotos/restaurant-el-manglar/02-fachada-palapa.jpg
-    alt: Fachada con palapa de Restaurant El Manglar en Tecolutla
+    alt: Fachada con palapa de Restaurante El Manglar en Tecolutla
   - src: ../../assets/fotos/restaurant-el-manglar/03-ambiente-terraza.jpg
-    alt: Ambiente en la terraza de Restaurant El Manglar en Tecolutla, Veracruz
+    alt: Ambiente en la terraza de Restaurante El Manglar en Tecolutla, Veracruz
   - src: ../../assets/fotos/restaurant-el-manglar/04-comedor-interior.jpg
-    alt: Interior del comedor de Restaurant El Manglar en Tecolutla, Veracruz
+    alt: Interior del comedor de Restaurante El Manglar en Tecolutla, Veracruz
 fechaActualizacion: 2026-08-24
 disponible: true
 servicios: []
