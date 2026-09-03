@@ -56,7 +56,7 @@ servicios:
   - Wifi de alta velocidad
   - Comedor para 10 personas
 numeroHabitaciones: 4
-descripcionHabitaciones: Cada recámara es doble y recibe hasta 4 personas.
+descripcionHabitaciones: Cada habitación es doble y tiene capacidad hasta para cuatro personas.
 capacidadMaxima: 16
 petFriendly: true
 alberca: true
