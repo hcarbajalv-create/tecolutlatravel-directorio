@@ -132,7 +132,15 @@ if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
 // reves, un negocio con muchos servicios gastaba espacios en iconos invisibles:
 // a Casa Xanath se le iban dos en el generico y el wifi, y por eso su asador y
 // su "pet friendly" no alcanzaban lugar aunque los tuviera.
-const AMENIDADES_VISIBLES_MAX = 5;
+// Tope de 9 (antes 5). Medido en la tarjeta mas angosta, la de escritorio
+// grande, donde caben 4 tarjetas por fila: la fila util mide 243 px, cada
+// icono 17 px y la separacion 8.8, asi que entran 9 en un renglon. Pasando de
+// ahi se brincan al segundo y las tarjetas quedan de distinta altura.
+// Es una regla flexible, acordada con Hector: si alguna ficha no las acomoda,
+// se revisa. En celular NO aplica este numero — ahi la fila es otra
+// (.tarjeta__info-movil, ver amenidadesClave.ts) y muestra capacidad mas 2
+// amenidades CON TEXTO, porque la tarjeta mide 180 px y no caben mas.
+const AMENIDADES_VISIBLES_MAX = 9;
 const amenidadesVisibles = amenidadesCalculadas
   .filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi')
   .slice(0, AMENIDADES_VISIBLES_MAX);
