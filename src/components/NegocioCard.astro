@@ -121,7 +121,11 @@ const agregarAmenidad = (icono: string, texto: string) => {
     amenidadesCalculadas.push({ icono, texto });
   }
 };
-if (capacidadMaxima !== undefined) agregarAmenidad('usuarios', `Hasta ${capacidadMaxima} personas`);
+// La CAPACIDAD no lleva icono en la tarjeta, por decision de Hector. Un hotel
+// de 16 habitaciones decia "Hasta 62 personas" y una familia entendia que le
+// rentaban el hotel entero; explicarlo en un icono no se puede. Ademas, dejar
+// ese dato solo dentro de la ficha da un motivo para entrar a verla.
+// La fila es solo de amenidades: alberca, aire, mascotas, wifi, etc.
 if (frenteAlMar) agregarAmenidad('olas', 'Frente al mar');
 if (alberca) agregarAmenidad('alberca', 'Alberca');
 if (wifi) agregarAmenidad('wifi', 'Wifi');
@@ -129,13 +133,12 @@ for (const servicio of servicios) agregarAmenidad(iconoAmenidad(servicio), servi
 if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
 
 // Orden de importancia acordado con Hector, pensado en que decide una reserva:
-// primero cuanta gente cabe, luego alberca, aire, mascotas, wifi, frente al mar
-// y asador. Lo que no este en esta lista queda despues, en el orden en que lo
-// escribio el negocio en su .yaml.
+// alberca, aire, mascotas, wifi, frente al mar y asador. Lo que no este en esta
+// lista queda despues, en el orden en que lo escribio el negocio en su .yaml.
 // Antes el orden era accidental: dependia de como estuviera redactada cada
 // ficha, asi que dos negocios con los mismos servicios podian mostrarlos en
 // distinto orden.
-const PRIORIDAD_ICONOS = ['usuarios', 'alberca', 'aire', 'mascota', 'wifi', 'olas', 'asador'];
+const PRIORIDAD_ICONOS = ['alberca', 'aire', 'mascota', 'wifi', 'olas', 'asador'];
 const peso = (icono: string) => {
   const i = PRIORIDAD_ICONOS.indexOf(icono);
   return i === -1 ? PRIORIDAD_ICONOS.length : i;
