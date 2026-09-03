@@ -439,7 +439,10 @@ const esquemaBreadcrumb = {
 
       <div class="ficha__columna ficha__columna--derecha">
       <div class="ficha__bloque ficha__bloque--reserva">
-          <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Contacto'}</h2>
+          {/* En hospedaje sigue diciendo "Reserva" porque ahi la accion es esa.
+              En el resto decia "Contacto", que se repetia con el titulo de la
+              tarjeta de al lado ("Contacto y ubicacion"). */}
+          <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Escríbenos'}</h2>
           {horario && <p class="ficha__dato-contacto">🕒 {horario}</p>}
           {formasPago && formasPago.length > 0 && (
             <p class="ficha__dato-contacto">💳 Formas de pago: {formasPago.join(', ')}</p>
