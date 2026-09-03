@@ -18,6 +18,10 @@ coordenadas:
 telefono: "+52 766 189 6443"
 plan: pago
 fotos:
+  # 05 va primero por decision de Hector: es la sala, y es la foto que mejor
+  # representa la casa. Es la que sale en las tarjetas y en el bot.
+  - src: ../../assets/fotos/casa-coronel/05-foto.jpg
+    alt: Sala de estar de Casa Coronel con tapete y muebles de madera
   - src: ../../assets/fotos/casa-coronel/01-foto.jpg
     alt: Terraza de Casa Coronel con vista al río Tecolutla
   - src: ../../assets/fotos/casa-coronel/02-foto.jpg
@@ -26,8 +30,6 @@ fotos:
     alt: Comedor de Casa Coronel
   - src: ../../assets/fotos/casa-coronel/04-foto.jpg
     alt: Cocina y área de escaleras de Casa Coronel
-  - src: ../../assets/fotos/casa-coronel/05-foto.jpg
-    alt: Sala de estar de Casa Coronel con tapete y muebles de madera
   - src: ../../assets/fotos/casa-coronel/06-foto.jpg
     alt: Baño de Casa Coronel
   - src: ../../assets/fotos/casa-coronel/07-foto.jpg
@@ -37,7 +39,7 @@ fotos:
 precioTemporada:
   - temporada: Desde (precio sube si son más de 12 personas)
     precio: 3000
-fechaActualizacion: 2026-07-28
+fechaActualizacion: 2026-09-02
 disponible: true
 servicios:
   - A 1 cuadra del río y de la playa
