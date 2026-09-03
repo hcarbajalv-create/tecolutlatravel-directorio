@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import { formatearDistancia } from '../utils/catalogoDistancias';
+import { CATALOGO_DISTANCIAS, formatearDistancia } from '../utils/catalogoDistancias';
 import { amenidadesClaveMovil } from '../utils/amenidadesClave';
 import Icono from './Icono.astro';
 
@@ -109,7 +109,15 @@ const rotarInsignia = plan === 'pago' && insigniasRotativas.length > 1;
 const enlace = `/${categoria}/${negocio.id}`;
 const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
 const amenidadesCalculadas: Array<{ icono: string; texto: string }> = [];
+// La linea de distancia ya pinta su propio icono ("olas" para playa y rio).
+// Si un servicio pide ese mismo icono, se omite para no verlo dos veces en la
+// misma tarjeta: pasaba en Casa Coronel, Casa Ceci y Habitaciones Mary, que
+// ademas de la distancia anuncian la playa entre sus servicios.
+const iconoDeLaDistancia = distanciaTarjeta
+  ? (iconoDistancia[distanciaTarjeta.a] ?? 'ubicacion')
+  : undefined;
 const agregarAmenidad = (icono: string, texto: string) => {
+  if (icono === iconoDeLaDistancia) return;
   if (!amenidadesCalculadas.some((amenidad) => amenidad.icono === icono)) {
     amenidadesCalculadas.push({ icono, texto });
   }
@@ -130,8 +138,12 @@ function iconoAmenidad(servicio: string) {
   if (texto.includes('wifi') || texto.includes('internet')) return 'wifi';
   if (texto.includes('aire')) return 'aire';
   if (texto.includes('estacionamiento')) return 'estacionamiento';
-  if (texto.includes('mascota') || texto.includes('pet')) return 'mascota';
-  if (texto.includes('playa') || texto.includes('mar')) return 'olas';
+  // "mar" y "pet" van como palabra completa, no como pedazo de otra palabra.
+  // Buscandolas sueltas, "TV Smart" y "2 camas matrimoniales" se llevaban el
+  // icono de olas, y salia la playa en Casa Llanos, Casa Via Mar y Piedras
+  // Altas, que ni siquiera la anuncian.
+  if (texto.includes('mascota') || /\bpet\b/.test(texto)) return 'mascota';
+  if (texto.includes('playa') || /\bmar\b/.test(texto)) return 'olas';
   return 'etiqueta';
 }
 
@@ -252,8 +264,13 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
     }
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
+    {/* El title de la distancia sale del catalogo, que ya trae el nombre bien
+        escrito y con su articulo ("la playa", "el rio"). */}
     {distanciaTexto && (
-      <p class="tarjeta__distancia">
+      <p
+        class="tarjeta__distancia"
+        title={`Distancia a ${CATALOGO_DISTANCIAS[distanciaTarjeta?.a ?? 'playa'].etiqueta}`}
+      >
         <Icono nombre={iconoDistancia[distanciaTarjeta?.a ?? 'playa'] ?? 'ubicacion'} />
         {distanciaTexto}
       </p>
