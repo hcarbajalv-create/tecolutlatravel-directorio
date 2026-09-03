@@ -59,9 +59,10 @@ servicios:
   - Baño completo en cada habitación
 numeroHabitaciones: 3
 descripcionHabitaciones: |
-  Habitación 1: dos camas matrimoniales, baño completo, aire acondicionado, ventilador, TV por cable, wifi y cocina semi equipada con parrilla de dos quemadores, refrigerador, microondas y utensilios.
-  Habitación 2: tres camas matrimoniales, baño completo, aire acondicionado, ventilador, TV por cable y wifi.
-  Habitación 3: dos camas matrimoniales y una individual, baño completo, aire acondicionado, ventilador, TV por cable y wifi.
+  Habitación 1: dos camas matrimoniales y cocina semi equipada con parrilla de dos quemadores, refrigerador, microondas y utensilios.
+  Habitación 2: tres camas matrimoniales.
+  Habitación 3: dos camas matrimoniales y una individual.
+  Las tres con baño completo, aire acondicionado, ventilador, TV por cable y wifi.
 capacidadMaxima: 15
 petFriendly: true
 alberca: true
