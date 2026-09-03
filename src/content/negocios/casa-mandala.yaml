@@ -16,12 +16,12 @@ fotos:
   # El ORDEN de esta lista es el que se muestra; el número del archivo es solo
   # etiqueta. Abre la alberca porque es el gancho principal y hasta hoy la
   # ficha la anunciaba en servicios sin mostrarla en ninguna foto.
+  - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
+    alt: Patio con sombrilla, mesas y jardin de Casa Mandala en Tecolutla
   - src: ../../assets/fotos/casa-mandala/09-alberca.jpg
     alt: Alberca de Casa Mandala con agua turquesa y plantas alrededor
   - src: ../../assets/fotos/casa-mandala/10-alberca-fachada.jpg
     alt: Alberca de Casa Mandala con la fachada roja de las habitaciones al fondo
-  - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
-    alt: Patio con sombrilla, mesas y jardin de Casa Mandala en Tecolutla
   - src: ../../assets/fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
     alt: Jardín de Casa Mandala con fuente decorativa tipo pozo
   - src: ../../assets/fotos/casa-mandala/02-jardin-fuente.jpg
