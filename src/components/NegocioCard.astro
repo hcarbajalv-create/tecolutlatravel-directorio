@@ -176,6 +176,14 @@ function iconoAmenidad(servicio: string) {
   // Solo "asador", NO "parrilla": la parrilla de dos quemadores de una cocineta
   // no es un asador, y ninguno de los 23 negocios usa "parrilla" para el asador.
   if (texto.includes('asador')) return 'asador';
+  // Las reglas de abajo se escribieron mirando los 90 servicios distintos que
+  // hay hoy en las 23 fichas, no de memoria. El orden importa: gana la primera
+  // que coincide, por eso "3 habitaciones con aire acondicionado y ventilador
+  // de techo" se queda con el icono de aire, que es el dato mas fuerte.
+  if (texto.includes('cocina')) return 'cocina';
+  if (/\btv\b/.test(texto) || texto.includes('televis') || texto.includes('roku')) return 'tv';
+  if (texto.includes('ventilador')) return 'ventilador';
+  if (texto.includes('agua caliente')) return 'agua-caliente';
   // "mar" y "pet" van como palabra completa, no como pedazo de otra palabra.
   // Buscandolas sueltas, "TV Smart" y "2 camas matrimoniales" se llevaban el
   // icono de olas, y salia la playa en Casa Llanos, Casa Via Mar y Piedras
