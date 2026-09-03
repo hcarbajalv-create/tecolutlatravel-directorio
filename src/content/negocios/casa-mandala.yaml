@@ -2,8 +2,8 @@
 # Teléfono real proporcionado directamente por el usuario — 2026-07-15
 nombre: Casa Mandala
 categoria: hospedaje
-descripcionCorta: Casa de descanso con decoración rústica y jardín amplio, a 247
-  metros de la playa de Tecolutla.
+descripcionCorta: Casa de descanso con alberca y jardín amplio, frente a la terminal
+  de ADO y a 247 metros de la playa de Tecolutla.
 direccion: Av. Niños Héroes s/n, Col. Centro, 93570 Tecolutla, Veracruz
 coordenadas:
   lat: 20.47906705
@@ -13,34 +13,56 @@ facebook: "https://www.facebook.com/profile.php?id=100068829169975"
 tipo: casa
 subtipo: Casa vacacional
 fotos:
+  # El ORDEN de esta lista es el que se muestra; el número del archivo es solo
+  # etiqueta. Abre la alberca porque es el gancho principal y hasta hoy la
+  # ficha la anunciaba en servicios sin mostrarla en ninguna foto.
+  - src: ../../assets/fotos/casa-mandala/09-alberca.jpg
+    alt: Alberca de Casa Mandala con agua turquesa y plantas alrededor
+  - src: ../../assets/fotos/casa-mandala/10-alberca-fachada.jpg
+    alt: Alberca de Casa Mandala con la fachada roja de las habitaciones al fondo
   - src: ../../assets/fotos/casa-mandala/03-patio-exterior.jpg
     alt: Patio con sombrilla, mesas y jardin de Casa Mandala en Tecolutla
-  - src: ../../assets/fotos/casa-mandala/02-jardin-fuente.jpg
-    alt: Jardín de Casa Mandala con fuente y área de mesas
   - src: ../../assets/fotos/casa-mandala/04-jardin-pozo-decorativo.jpg
     alt: Jardín de Casa Mandala con fuente decorativa tipo pozo
-  - src: ../../assets/fotos/casa-mandala/05-recamara-cocineta.jpg
-    alt: Recámara de Casa Mandala con cocineta
-  - src: ../../assets/fotos/casa-mandala/06-recamara.jpg
-    alt: Recámara de Casa Mandala
-  - src: ../../assets/fotos/casa-mandala/07-cocina.jpg
-    alt: Área de cocina de Casa Mandala
+  - src: ../../assets/fotos/casa-mandala/02-jardin-fuente.jpg
+    alt: Jardín de Casa Mandala con fuente y área de mesas
   - src: ../../assets/fotos/casa-mandala/08-patio-asador.jpg
     alt: Patio de Casa Mandala con asador
+  - src: ../../assets/fotos/casa-mandala/11-pasillo-alberca.jpg
+    alt: Pasillo de Casa Mandala con vista directa a la alberca
+  - src: ../../assets/fotos/casa-mandala/06-recamara.jpg
+    alt: Recámara de Casa Mandala
+  - src: ../../assets/fotos/casa-mandala/12-recamara-espejo.jpg
+    alt: Recámara de Casa Mandala con dos camas, espejo de cuerpo entero y pared celeste
+  - src: ../../assets/fotos/casa-mandala/05-recamara-cocineta.jpg
+    alt: Recámara de Casa Mandala con cocineta
+  - src: ../../assets/fotos/casa-mandala/07-cocina.jpg
+    alt: Área de cocina de Casa Mandala
   - src: ../../assets/fotos/casa-mandala/01-entrada.jpg
     alt: Entrada techada de Casa Mandala
 precioTemporada:
   - temporada: Desde
     precio: 3000
-fechaActualizacion: 2026-07-27
+fechaActualizacion: 2026-09-02
 disponible: true
 servicios:
-  - Wifi
   - Alberca y chapoteadero
+  - Terraza
+  - Área de convivencia familiar
   - Áreas verdes
   - Asador
-  - Cocina equipada
+  - Cocina semi equipada
+  - Aire acondicionado
+  - Ventilador
+  - TV por cable
+  - Wifi
+  - Baño completo en cada habitación
 numeroHabitaciones: 3
+descripcionHabitaciones: |
+  Habitación 1: dos camas matrimoniales y cocina semi equipada con parrilla de dos quemadores, refrigerador, microondas y utensilios.
+  Habitación 2: tres camas matrimoniales.
+  Habitación 3: dos camas matrimoniales y una individual.
+  Las tres con baño completo, aire acondicionado, ventilador, TV por cable y wifi.
 capacidadMaxima: 15
 petFriendly: true
 alberca: true

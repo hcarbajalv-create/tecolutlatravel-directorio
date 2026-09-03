@@ -336,6 +336,10 @@ const esquemaBreadcrumb = {
     }
 
     <div class="ficha__datos">
+      {/* Dos columnas. Izquierda: los datos del negocio y, en restaurantes,
+          sus especialidades. Derecha: la accion de contacto y las amenidades.
+          La izquierda va mas ancha porque su texto es el largo. */}
+      <div class="ficha__columna ficha__columna--izquierda">
       <div class="ficha__bloque ficha__bloque--contacto">
         <h2>Contacto y ubicación</h2>
         <p>{direccion}</p>
@@ -386,9 +390,18 @@ const esquemaBreadcrumb = {
         </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {unidadesEnConjunto !== undefined && <p>Conjunto de {unidadesEnConjunto} departamentos</p>}
-        {(numeroHabitaciones || descripcionHabitaciones) && (
-          <p>Habitaciones: {descripcionHabitaciones ?? numeroHabitaciones}{!descripcionHabitaciones && unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
+        {numeroHabitaciones !== undefined && (
+          <p>Habitaciones: {numeroHabitaciones}{unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
         )}
+        {/* descripcionHabitaciones se parte por saltos de linea: cada renglon
+            es su propio parrafo. Asi un negocio que describe cuarto por cuarto
+            (Casa Mandala) se lee ordenado en vez de como un bloque corrido, y
+            uno que lo resuelve en una sola frase (Casa Xanath) sigue igual. */}
+        {descripcionHabitaciones
+          ?.split('\n')
+          .map((renglon) => renglon.trim())
+          .filter((renglon) => renglon.length > 0)
+          .map((renglon) => <p class="ficha__habitacion">{renglon}</p>)}
         {capacidadMaxima !== undefined && (
           <p>
             Capacidad máxima: hasta {capacidadMaxima} personas
@@ -410,36 +423,14 @@ const esquemaBreadcrumb = {
         <p><a class="boton boton--secundario" href={enlaceComoLlegar} data-registrar-como-llegar>¿Cómo llegar?</a></p>
       </div>
 
-      <div class="ficha__columna-precio-servicios">
-        {
-          especialidades.length > 0 && (
-            <div class="ficha__bloque ficha__bloque--especialidades">
-              <h2>Especialidades de la casa</h2>
-              <ul class="ficha__amenidades">
-                {especialidades.map((e) => (
-                  <li>{e}</li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-
-        {
-          servicios.length > 0 && (
-            <div class="ficha__bloque ficha__bloque--servicios">
-              <h2>Servicios y amenidades</h2>
-              <ul class="ficha__amenidades">
-                {servicios.map((s) => (
-                  <li>{s}</li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
       </div>
 
+      <div class="ficha__columna ficha__columna--derecha">
       <div class="ficha__bloque ficha__bloque--reserva">
-          <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Contacto'}</h2>
+          {/* En hospedaje sigue diciendo "Reserva" porque ahi la accion es esa.
+              En el resto decia "Contacto", que se repetia con el titulo de la
+              tarjeta de al lado ("Contacto y ubicacion"). */}
+          <h2>{categoria === 'hospedaje' ? 'Reserva' : 'Escríbenos'}</h2>
           {horario && <p class="ficha__dato-contacto">🕒 {horario}</p>}
           {formasPago && formasPago.length > 0 && (
             <p class="ficha__dato-contacto">💳 Formas de pago: {formasPago.join(', ')}</p>
@@ -510,6 +501,38 @@ const esquemaBreadcrumb = {
             </p>
           )}
         </div>
+
+      {/* Especialidades va en ESTA columna, no en la izquierda. Los tres
+          restaurantes casi no tienen servicios (Panchita 2, El Caracol 1,
+          El Manglar ninguno), asi que si las especialidades se van a la
+          izquierda esta columna queda vacia y la tarjeta verde se estira
+          para alcanzarla: en Panchita eran 326 px de verde vacio. */}
+      {
+        especialidades.length > 0 && (
+          <div class="ficha__bloque ficha__bloque--especialidades">
+            <h2>Especialidades de la casa</h2>
+            <ul class="ficha__amenidades">
+              {especialidades.map((e) => (
+                <li>{e}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        servicios.length > 0 && (
+          <div class="ficha__bloque ficha__bloque--servicios">
+            <h2>Servicios y amenidades</h2>
+            <ul class="ficha__amenidades">
+              {servicios.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      </div>
     </div>
 
     <div class="ficha__bloque ficha__bloque--mapa">
@@ -861,3 +884,37 @@ const esquemaBreadcrumb = {
   });
   document.getElementById('boton-compartir')?.addEventListener('click', () => registrarEvento('compartir'));
 </script>
+
+<style is:global>
+  /* La ficha se arma en DOS columnas, no en tres. Antes eran tres angostas y
+     la de en medio (servicios) quedaba con un hueco enorme. Ahora la
+     izquierda lleva los datos del negocio —que es el texto largo— y va más
+     ancha, así baja de altura; la derecha lleva la acción de contacto con
+     las amenidades debajo.
+
+     Todo esto vive aquí y no en global.css a propósito: global.css lo está
+     tocando el rediseño en paralelo y no queremos chocar al integrar. */
+  .ficha__columna {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* La última tarjeta de cada columna se estira para que las dos terminen
+     parejas abajo, aunque una tenga menos contenido que la otra. */
+  .ficha__columna > :last-child {
+    flex: 1;
+  }
+
+  /* Móvil primero: una sola columna, que es como se ve en el celular.
+     760 px es el punto de quiebre que ya usa el resto del sitio. */
+  .ficha__datos {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 761px) {
+    .ficha__datos {
+      grid-template-columns: 1.5fr 1fr;
+    }
+  }
+</style>
