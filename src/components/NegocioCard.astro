@@ -88,12 +88,13 @@ const insigniaAlterna =
 // final del componente hace la rotación cuando hay más de un dato; con
 // uno solo (el caso normal) se muestra fijo, sin JS de por medio.
 const distanciaTexto = distanciaTarjeta ? formatearDistancia(distanciaTarjeta) : undefined;
-const iconoDistancia: Record<string, string> = {
-  playa: 'olas',
-  rio: 'olas',
-  centro: 'ubicacion',
-  embarcadero: 'ubicacion',
-};
+// La linea de distancia SIEMPRE usa el marcador de posicion, sea la playa, el
+// rio, el centro o el embarcadero. Antes playa y rio usaban "olas", y eso
+// contradecia la leyenda de "Como leer las fichas", donde "olas" significa
+// "Frente al mar" y el marcador es el que dice "A X m de la playa". Ademas
+// "olas" para el rio hacia que un negocio a 300 m del rio se viera igual que
+// uno frente al mar. Asi "olas" queda solo para lo que de verdad significa.
+const ICONO_DISTANCIA = 'ubicacion';
 const textoSinEmojiInicial = (texto: string) => texto.replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '');
 const insigniasRotativas = [
   ...(!distanciaTarjeta ? [insigniaAlterna] : []),
@@ -113,9 +114,7 @@ const amenidadesCalculadas: Array<{ icono: string; texto: string }> = [];
 // Si un servicio pide ese mismo icono, se omite para no verlo dos veces en la
 // misma tarjeta: pasaba en Casa Coronel, Casa Ceci y Habitaciones Mary, que
 // ademas de la distancia anuncian la playa entre sus servicios.
-const iconoDeLaDistancia = distanciaTarjeta
-  ? (iconoDistancia[distanciaTarjeta.a] ?? 'ubicacion')
-  : undefined;
+const iconoDeLaDistancia = distanciaTarjeta ? ICONO_DISTANCIA : undefined;
 const agregarAmenidad = (icono: string, texto: string) => {
   if (icono === iconoDeLaDistancia) return;
   if (!amenidadesCalculadas.some((amenidad) => amenidad.icono === icono)) {
@@ -271,7 +270,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
         class="tarjeta__distancia"
         title={`Distancia a ${CATALOGO_DISTANCIAS[distanciaTarjeta?.a ?? 'playa'].etiqueta}`}
       >
-        <Icono nombre={iconoDistancia[distanciaTarjeta?.a ?? 'playa'] ?? 'ubicacion'} />
+        <Icono nombre={ICONO_DISTANCIA} />
         {distanciaTexto}
       </p>
     )}
