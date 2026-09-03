@@ -17,6 +17,8 @@ fotos:
   # El ORDEN de esta lista es el que se muestra; el número del archivo es solo
   # etiqueta (los 01-08 son los originales de jul-2025, los 09-12 se agregaron
   # después). Las primeras 5 son las que deciden la reserva.
+  - src: ../../assets/fotos/casa-xanath/02-alberca-palapa.jpg
+    alt: Área de alberca de Casa Xanath con sombrillas y mesas
   - src: ../../assets/fotos/casa-xanath/09-alberca-vista-aerea.jpg
     alt: Vista aérea de Casa Xanath con alberca, chapoteadero, jardín y comedor techado
   - src: ../../assets/fotos/casa-xanath/10-terraza-comedor.jpg
@@ -25,8 +27,6 @@ fotos:
     alt: Alberca de Casa Xanath iluminada de noche, con mesas y sombrillas en el jardín
   - src: ../../assets/fotos/casa-xanath/12-recamara-ladrillo.jpg
     alt: Recámara de Casa Xanath con dos camas, muro de ladrillo y aire acondicionado
-  - src: ../../assets/fotos/casa-xanath/02-alberca-palapa.jpg
-    alt: Área de alberca de Casa Xanath con sombrillas y mesas
   - src: ../../assets/fotos/casa-xanath/01-alberca-jardin.jpg
     alt: Alberca y jardín de Casa Xanath
   - src: ../../assets/fotos/casa-xanath/04-recamara-acceso-alberca.jpg
