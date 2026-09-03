@@ -259,14 +259,19 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
       </p>
     )}
 
+    {/* El "title" de cada chip hace que al pasar el mouse salga una etiqueta
+        con lo que significa el icono. Hace falta porque en escritorio el texto
+        del chip se esconde con font-size:0 y solo queda el dibujo. En celular
+        no se necesita: ahi se muestra .tarjeta__info-movil, que si trae el
+        texto a la vista, y ademas no hay mouse. */}
     {
       (datosExtra.length > 0 || amenidadesVisibles.length > 0) && (
         <div class="tarjeta__amenidades">
           {datosExtra.filter((dato) => dato.icono !== 'etiqueta').map((dato) => (
-            <span class="chip-amenidad"><Icono nombre={dato.icono} /> {dato.texto}</span>
+            <span class="chip-amenidad" title={dato.texto}><Icono nombre={dato.icono} /> {dato.texto}</span>
           ))}
           {amenidadesVisibles.filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi').map((amenidad) => (
-            <span class="chip-amenidad"><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
+            <span class="chip-amenidad" title={amenidad.texto}><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}
         </div>
       )
