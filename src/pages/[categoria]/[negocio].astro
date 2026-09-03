@@ -386,9 +386,18 @@ const esquemaBreadcrumb = {
         </div>
         <p class="ficha__fecha-actualizacion">Última actualización: {fechaFormateada}</p>
         {unidadesEnConjunto !== undefined && <p>Conjunto de {unidadesEnConjunto} departamentos</p>}
-        {(numeroHabitaciones || descripcionHabitaciones) && (
-          <p>Habitaciones: {descripcionHabitaciones ?? numeroHabitaciones}{!descripcionHabitaciones && unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
+        {numeroHabitaciones !== undefined && (
+          <p>Habitaciones: {numeroHabitaciones}{unidadesEnConjunto !== undefined ? ' por departamento' : ''}</p>
         )}
+        {/* descripcionHabitaciones se parte por saltos de linea: cada renglon
+            es su propio parrafo. Asi un negocio que describe cuarto por cuarto
+            (Casa Mandala) se lee ordenado en vez de como un bloque corrido, y
+            uno que lo resuelve en una sola frase (Casa Xanath) sigue igual. */}
+        {descripcionHabitaciones
+          ?.split('\n')
+          .map((renglon) => renglon.trim())
+          .filter((renglon) => renglon.length > 0)
+          .map((renglon) => <p class="ficha__habitacion">{renglon}</p>)}
         {capacidadMaxima !== undefined && (
           <p>
             Capacidad máxima: hasta {capacidadMaxima} personas
