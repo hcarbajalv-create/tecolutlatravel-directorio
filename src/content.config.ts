@@ -136,6 +136,13 @@ const negocios = defineCollection({
       // tarjetas de negocio.
       alberca: z.boolean().optional(),
       wifi: z.boolean().optional(),
+      // "Frente al mar" NO se deduce de los metros a la playa: es un dato de
+      // ubicación que se marca a mano, negocio por negocio. Lleva el icono de
+      // olas solo quien está sobre la primera calle pegada al mar (de ese lado
+      // de la acera) o dentro del área ganada al mar. Un negocio puede estar a
+      // 300 m y calificar, y otro a 250 m no, si está una cuadra adentro.
+      // Por eso no hay forma de calcularlo desde "distancias".
+      frenteAlMar: z.boolean().optional(),
       // Lista de distancias a puntos de referencia (playa, río, centro,
       // embarcadero...) — catálogo de destinos válidos en
       // utils/catalogoDistancias.ts, agregar uno nuevo es una línea ahí.

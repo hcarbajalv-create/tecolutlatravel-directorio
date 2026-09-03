@@ -40,6 +40,7 @@ const {
   petFriendly,
   alberca,
   wifi,
+  frenteAlMar,
   distancias,
   tipo,
   subtipo,
@@ -110,10 +111,9 @@ const rotarInsignia = plan === 'pago' && insigniasRotativas.length > 1;
 const enlace = `/${categoria}/${negocio.id}`;
 const enlaceAbsoluto = new URL(enlace, Astro.site).toString();
 const amenidadesCalculadas: Array<{ icono: string; texto: string }> = [];
-// La linea de distancia ya pinta su propio icono ("olas" para playa y rio).
+// La linea de distancia ya pinta su propio icono (el marcador de posicion).
 // Si un servicio pide ese mismo icono, se omite para no verlo dos veces en la
-// misma tarjeta: pasaba en Casa Coronel, Casa Ceci y Habitaciones Mary, que
-// ademas de la distancia anuncian la playa entre sus servicios.
+// misma tarjeta.
 const iconoDeLaDistancia = distanciaTarjeta ? ICONO_DISTANCIA : undefined;
 const agregarAmenidad = (icono: string, texto: string) => {
   if (icono === iconoDeLaDistancia) return;
@@ -121,11 +121,21 @@ const agregarAmenidad = (icono: string, texto: string) => {
     amenidadesCalculadas.push({ icono, texto });
   }
 };
+// El orden importa: los primeros cinco son los que se ven. Frente al mar va
+// primero porque en un destino de playa es el dato que mas vende.
+if (frenteAlMar) agregarAmenidad('olas', 'Frente al mar');
 if (alberca) agregarAmenidad('alberca', 'Alberca');
 if (wifi) agregarAmenidad('wifi', 'Wifi');
 for (const servicio of servicios) agregarAmenidad(iconoAmenidad(servicio), servicio);
 if (petFriendly) agregarAmenidad('mascota', 'Pet friendly');
-const amenidadesVisibles = amenidadesCalculadas.slice(0, 5);
+// Primero se descartan los que no se dibujan y DESPUES se corta a cinco. Al
+// reves, un negocio con muchos servicios gastaba espacios en iconos invisibles:
+// a Casa Xanath se le iban dos en el generico y el wifi, y por eso su asador y
+// su "pet friendly" no alcanzaban lugar aunque los tuviera.
+const AMENIDADES_VISIBLES_MAX = 5;
+const amenidadesVisibles = amenidadesCalculadas
+  .filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi')
+  .slice(0, AMENIDADES_VISIBLES_MAX);
 
 // La capacidad y Pet friendly ya tienen una fila informativa propia.
 // No se repiten como chips de amenidades.
@@ -137,12 +147,18 @@ function iconoAmenidad(servicio: string) {
   if (texto.includes('wifi') || texto.includes('internet')) return 'wifi';
   if (texto.includes('aire')) return 'aire';
   if (texto.includes('estacionamiento')) return 'estacionamiento';
+  // Solo "asador", NO "parrilla": la parrilla de dos quemadores de una cocineta
+  // no es un asador, y ninguno de los 23 negocios usa "parrilla" para el asador.
+  if (texto.includes('asador')) return 'asador';
   // "mar" y "pet" van como palabra completa, no como pedazo de otra palabra.
   // Buscandolas sueltas, "TV Smart" y "2 camas matrimoniales" se llevaban el
   // icono de olas, y salia la playa en Casa Llanos, Casa Via Mar y Piedras
   // Altas, que ni siquiera la anuncian.
   if (texto.includes('mascota') || /\bpet\b/.test(texto)) return 'mascota';
-  if (texto.includes('playa') || /\bmar\b/.test(texto)) return 'olas';
+  // Ojo: aqui NO se busca "playa" ni "mar". El icono de olas significa estar
+  // frente al mar, y eso lo decide el campo frenteAlMar del .yaml, no lo que
+  // diga un servicio. Un negocio que escribe "A 2 minutos de la playa" entre
+  // sus servicios esta repitiendo la distancia, no diciendo que esta enfrente.
   return 'etiqueta';
 }
 
@@ -286,7 +302,7 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
           {datosExtra.filter((dato) => dato.icono !== 'etiqueta').map((dato) => (
             <span class="chip-amenidad" title={dato.texto}><Icono nombre={dato.icono} /> {dato.texto}</span>
           ))}
-          {amenidadesVisibles.filter((amenidad) => amenidad.icono !== 'etiqueta' && amenidad.icono !== 'wifi').map((amenidad) => (
+          {amenidadesVisibles.map((amenidad) => (
             <span class="chip-amenidad" title={amenidad.texto}><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}
         </div>
