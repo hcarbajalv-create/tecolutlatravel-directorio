@@ -1,23 +1,11 @@
-# ALTA A MEDIO ARMAR — 3 de septiembre de 2026.
+# Alta del 3 de septiembre de 2026. Datos confirmados por Hector: el negocio
+# se llama Lancha Josué, el capitán es Manuel, caben 10 personas y sale del
+# embarcadero de la calle Emilio Carranza, el mismo de Lancha Santy (de ahí
+# se tomaron las coordenadas). Cada lancha del directorio sale de un
+# embarcadero distinto, así que ese dato nunca se copia a ciegas.
 #
-# borrador: true mientras falten los datos obligatorios. Con esa marca el
-# negocio NO EXISTE para el sitio: no genera página, no sale en listados, ni
-# en el buscador, ni en el sitemap, ni el bot lo recomienda.
-#
-# FALTA UN DATO Y NO SE PUEDE INVENTAR:
-#   telefono — Hector lo va a conseguir. Mientras diga PENDIENTE, la ficha
-#   se queda en borrador.
-#
-# El embarcadero SI esta confirmado por Hector: sale del de la calle Emilio
-# Carranza, el mismo de Lancha Santy, y de ahi se tomaron las coordenadas.
-# Cada lancha del directorio sale de un embarcadero distinto, asi que este
-# dato nunca se copia a ciegas de otra ficha.
-#
-# QUITAR "borrador: true" SOLO cuando el telefono este puesto de verdad.
-#
-# Datos confirmados por Hector: el negocio se llama Lancha Josué, el capitán
-# es Manuel, caben 10 personas y los recorridos son los mismos que ofrecen las
-# demás lanchas del directorio.
+# Los cuatro recorridos son los mismos que ofrecen las demás lanchas.
+# El capitán no lleva campo propio: el sitio lo saca de la descripción corta.
 nombre: Lancha Josué
 categoria: actividades
 descripcionCorta: Paseo en lancha por los esteros y manglares de Tecolutla con el
@@ -26,9 +14,8 @@ direccion: Embarcadero de la calle Emilio Carranza, Tecolutla, Veracruz
 coordenadas:
   lat: 20.4745507
   lng: -97.0086132
-telefono: "PENDIENTE"
+telefono: "+52 766 103 1615"
 plan: gratuito
-borrador: true
 fotos:
   - src: ../../assets/fotos/lancha-josue/01-lancha-en-el-manglar.jpg
     alt: Lancha Josué navegando entre las raíces del manglar en Tecolutla
