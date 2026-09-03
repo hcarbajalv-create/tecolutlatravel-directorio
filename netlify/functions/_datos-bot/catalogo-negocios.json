@@ -1,6 +1,6 @@
 {
-  "generado": "2026-09-01T02:41:39.072Z",
-  "totalNegocios": 23,
+  "generado": "2026-09-03T19:27:39.207Z",
+  "totalNegocios": 24,
   "negocios": [
     {
       "slug": "casa-ceci",
@@ -94,18 +94,24 @@
         "🏊 Alberca",
         "🐾 Mascotas"
       ],
-      "descripcion": "Casa de descanso con decoración rústica y jardín amplio, a 247 metros de la playa de Tecolutla.",
+      "descripcion": "Casa de descanso con alberca y jardín amplio, frente a la terminal de ADO y a 247 metros de la playa de Tecolutla.",
       "capacidadMaxima": 15,
       "numeroHabitaciones": 3,
       "alberca": true,
       "petFriendly": true,
       "wifi": true,
       "servicios": [
-        "Wifi",
         "Alberca y chapoteadero",
+        "Terraza",
+        "Área de convivencia familiar",
         "Áreas verdes",
         "Asador",
-        "Cocina equipada"
+        "Cocina semi equipada",
+        "Aire acondicionado",
+        "Ventilador",
+        "TV por cable",
+        "Wifi",
+        "Baño completo en cada habitación"
       ],
       "distancias": [
         "playa: 247 m"
@@ -177,6 +183,36 @@
         "Reserva fácil, sin complicaciones"
       ],
       "telefono": "+52 766 112 7453",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "lancha-josue",
+      "nombre": "Lancha Josué",
+      "categoria": "actividades",
+      "categoriaEtiqueta": "Actividades ecoturísticas",
+      "url": "/actividades/lancha-josue",
+      "foto": "/bot/lancha-josue.webp",
+      "chips": [
+        "🚤 Paseo en lancha",
+        "👥 10"
+      ],
+      "descripcion": "Paseo en lancha por los esteros y manglares de Tecolutla con el capitán Manuel, para ver cocodrilos, garzas y pelícanos de cerca.",
+      "capacidadMaxima": 10,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": false,
+      "servicios": [
+        "Recorrido al Santuario de las Aves",
+        "Recorrido a la Cueva de la Mojarra",
+        "Recorrido a la Cueva del Pirata",
+        "Recorrido al Manglar del Silencio",
+        "Paseos privados para tu grupo",
+        "Horarios flexibles",
+        "Chalecos salvavidas y medidas de seguridad",
+        "Reserva fácil, sin complicaciones"
+      ],
+      "telefono": "+52 766 103 1615",
       "destacado": false,
       "plan": "gratuito"
     },
