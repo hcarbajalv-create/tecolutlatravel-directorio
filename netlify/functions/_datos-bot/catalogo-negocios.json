@@ -1,6 +1,6 @@
 {
-  "generado": "2026-09-03T19:27:39.207Z",
-  "totalNegocios": 24,
+  "generado": "2026-09-03T19:45:34.518Z",
+  "totalNegocios": 25,
   "negocios": [
     {
       "slug": "casa-ceci",
@@ -586,6 +586,41 @@
         "playa: 310 m"
       ],
       "telefono": "+52 766 103 1723",
+      "destacado": false,
+      "plan": "gratuito"
+    },
+    {
+      "slug": "hotel-el-manglar",
+      "nombre": "Hotel El Manglar",
+      "categoria": "hospedaje",
+      "categoriaEtiqueta": "Hospedaje",
+      "subtipo": "Hotel",
+      "url": "/hospedaje/hotel-el-manglar",
+      "foto": "/bot/hotel-el-manglar.webp",
+      "chips": [
+        "👥 22",
+        "📍 centro: 170 m",
+        "📶 Wifi"
+      ],
+      "descripcion": "Habitaciones con aire acondicionado y terraza en el centro de Tecolutla, arriba del Restaurant El Manglar, con 10% de descuento para huéspedes en el restaurante.",
+      "capacidadMaxima": 22,
+      "numeroHabitaciones": 5,
+      "alberca": false,
+      "petFriendly": false,
+      "wifi": true,
+      "servicios": [
+        "Aire acondicionado",
+        "Agua caliente",
+        "Pantalla de televisión",
+        "Wifi en las habitaciones",
+        "Terraza",
+        "10% de descuento en el Restaurant El Manglar"
+      ],
+      "distancias": [
+        "centro: 170 m",
+        "playa: 1600 m"
+      ],
+      "telefono": "+52 766 102 2956",
       "destacado": false,
       "plan": "gratuito"
     },
