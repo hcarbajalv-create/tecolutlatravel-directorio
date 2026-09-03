@@ -5079,7 +5079,8 @@ body .pie__logo { filter: none; mix-blend-mode: normal; }
 .destacados-propuesta .tarjeta__amenidades { gap: .55rem; min-height: 1.35rem; }
 .destacados-propuesta .tarjeta__amenidades .chip-amenidad { background: transparent; padding: 0; color: #168da5; font-size: 0; }
 .destacados-propuesta .tarjeta__amenidades .chip-amenidad .icono-linea { width: 17px; height: 17px; }
-.destacados-propuesta .tarjeta__info-movil { display: flex; justify-content: space-between; gap: .35rem; }
+.destacados-propuesta .tarjeta__info-movil { justify-content: space-between; gap: .35rem; }
+@media (max-width:640px) { .destacados-propuesta .tarjeta__info-movil { display: flex; } }
 .destacados-propuesta .tarjeta__info-movil .chip-amenidad { background: transparent; padding: 0; font-size: .68rem; color: #556167; white-space: nowrap; }
 .destacados-propuesta .tarjeta__info-movil .icono-linea { color: #168da5; width: 15px; height: 15px; vertical-align: -3px; }
 .destacados-propuesta .tarjeta__acciones { margin-top: .2rem; gap: .45rem; }
