@@ -5299,3 +5299,52 @@ body .pie__logo { filter: none; mix-blend-mode: normal; }
 .consulta-whatsapp__enviar:hover { background: #116f32; }
 .consulta-whatsapp__nota { margin: .8rem .2rem 0; color: #687b80; text-align: center; font-size: .68rem; line-height: 1.35; }
 @media (max-width: 420px) { .consulta-whatsapp { padding: .5rem; align-items: end; } .consulta-whatsapp__dialogo { width: 100%; max-height: 94dvh; border-radius: 22px 22px 16px 16px; padding: .9rem 1.1rem 1.1rem; } .consulta-whatsapp__marca { height: 39px; } .consulta-whatsapp__marca .encabezado__marca-logo { max-height: 25px; } .consulta-whatsapp__eyebrow { margin-top: .8rem; } .consulta-whatsapp__texto { margin-bottom: .9rem; } }
+
+/* ---------- Etiqueta al pasar el mouse sobre los iconos de la tarjeta ----------
+   En escritorio los chips de amenidades se ven solo como dibujo (font-size:0),
+   asi que hace falta decir que significa cada icono. Antes esto se dejaba al
+   atributo "title" del navegador, pero el globito ya no aparecia porque el
+   puntero siempre cae sobre el <svg> del icono. Ahora la etiqueta la dibuja el
+   propio CSS desde data-etiqueta (ver NegocioCard.astro).
+
+   El globo se ancla a la FILA de iconos, no al icono: la tarjeta recorta lo que
+   se sale (overflow:hidden), y colgado del icono se cortaba en cuanto el texto
+   era largo ("Aire acondicionado"). Anclado a la fila siempre empieza en la
+   orilla izquierda del cuerpo de la tarjeta y cabe.
+
+   Solo con mouse real: en celular la fila de iconos se cambia por
+   .tarjeta__info-movil, que ya trae el texto a la vista. */
+@media (hover: hover) {
+  .tarjeta__amenidades,
+  .tarjeta__distancia[data-etiqueta] {
+    position: relative;
+  }
+
+  .tarjeta__amenidades .chip-amenidad[data-etiqueta]::after,
+  .tarjeta__distancia[data-etiqueta]::after {
+    content: attr(data-etiqueta);
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 0;
+    z-index: 20;
+    max-width: 100%;
+    padding: 0.22rem 0.5rem;
+    border-radius: 6px;
+    background: var(--color-tinta, #0c2b2e);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+  }
+
+  .tarjeta__amenidades .chip-amenidad[data-etiqueta]:hover::after,
+  .tarjeta__distancia[data-etiqueta]:hover::after {
+    opacity: 1;
+  }
+}

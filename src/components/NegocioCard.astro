@@ -303,31 +303,34 @@ const enlaceWhatsapp = `https://wa.me/${telefonoWhatsapp}?text=${encodeURICompon
     }
     <p class="tarjeta__descripcion">{descripcionCorta}</p>
 
-    {/* El title de la distancia sale del catalogo, que ya trae el nombre bien
-        escrito y con su articulo ("la playa", "el rio"). */}
+    {/* La etiqueta de la distancia sale del catalogo, que ya trae el nombre
+        bien escrito y con su articulo ("la playa", "el rio"). */}
     {distanciaTexto && (
       <p
         class="tarjeta__distancia"
-        title={`Distancia a ${CATALOGO_DISTANCIAS[distanciaTarjeta?.a ?? 'playa'].etiqueta}`}
+        data-etiqueta={`Distancia a ${CATALOGO_DISTANCIAS[distanciaTarjeta?.a ?? 'playa'].etiqueta}`}
       >
         <Icono nombre={ICONO_DISTANCIA} />
         {distanciaTexto}
       </p>
     )}
 
-    {/* El "title" de cada chip hace que al pasar el mouse salga una etiqueta
-        con lo que significa el icono. Hace falta porque en escritorio el texto
-        del chip se esconde con font-size:0 y solo queda el dibujo. En celular
-        no se necesita: ahi se muestra .tarjeta__info-movil, que si trae el
-        texto a la vista, y ademas no hay mouse. */}
+    {/* El "data-etiqueta" de cada chip hace que al pasar el mouse salga una
+        etiqueta con lo que significa el icono; la dibuja el CSS (ver
+        .chip-amenidad[data-etiqueta]::after en global.css). Hace falta porque
+        en escritorio el texto del chip se esconde con font-size:0 y solo queda
+        el dibujo. Antes esto usaba el atributo "title" del navegador, pero el
+        globito dejo de salir: el puntero siempre cae sobre el <svg> del icono.
+        En celular no se necesita: ahi se muestra .tarjeta__info-movil, que si
+        trae el texto a la vista, y ademas no hay mouse. */}
     {
       (datosExtra.length > 0 || amenidadesVisibles.length > 0) && (
         <div class="tarjeta__amenidades">
           {datosExtra.filter((dato) => dato.icono !== 'etiqueta').map((dato) => (
-            <span class="chip-amenidad" title={dato.texto}><Icono nombre={dato.icono} /> {dato.texto}</span>
+            <span class="chip-amenidad" data-etiqueta={dato.texto}><Icono nombre={dato.icono} /> {dato.texto}</span>
           ))}
           {amenidadesVisibles.map((amenidad) => (
-            <span class="chip-amenidad" title={amenidad.texto}><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
+            <span class="chip-amenidad" data-etiqueta={amenidad.texto}><Icono nombre={amenidad.icono} /> {amenidad.texto}</span>
           ))}
         </div>
       )
