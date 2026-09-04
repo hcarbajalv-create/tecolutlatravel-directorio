@@ -2528,6 +2528,38 @@ p.buscador-pildora__resultados {
   text-decoration: underline;
 }
 
+/* Redes del pie. Hoy solo hay Facebook, asi que el icono va grande y
+   solito en vez de la fila de cuatro circulitos chicos que habia. La
+   otra regla que toca esto (body:has(.hero-referencia)) es la del home,
+   con su propio color de fondo. */
+.pie__redes {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.pie__redes a {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-blanco);
+  transition: background 0.15s ease;
+}
+
+.pie__redes a:hover {
+  background: var(--color-turquesa-claro, #4fd2c8);
+  color: var(--color-tinta, #0c2b2e);
+  text-decoration: none;
+}
+
+.pie__redes svg {
+  width: 22px;
+  height: 22px;
+}
+
 .pie__legal {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding-top: 1rem;
@@ -4477,7 +4509,7 @@ body:has(.hero-referencia) .pie a:hover { color: #007f9b; text-decoration: none;
 body:has(.hero-referencia) .pie__nombre { display: block; color: #087fa3; font-family: var(--fuente-titulos); font-size: 1.35rem; font-weight: 800; letter-spacing: -0.05em; text-decoration: none; }
 body:has(.hero-referencia) .pie__nombre span { color: #11687e; } body:has(.hero-referencia) .pie__nombre b { color: var(--color-coral); }
 body:has(.hero-referencia) .pie__marca p { max-width: 185px; margin: 0.35rem 0 0.55rem; color: #56676c; font-size: 0.61rem; line-height: 1.45; }
-body:has(.hero-referencia) .pie__redes { display: flex; gap: 0.48rem; } body:has(.hero-referencia) .pie__redes a { display: grid; width: 17px; height: 17px; place-items: center; border-radius: 50%; background: #0a8bb0; color: #fff; font-size: 0.57rem; font-weight: 800; line-height: 1; }
+body:has(.hero-referencia) .pie__redes { display: flex; gap: 0.48rem; } body:has(.hero-referencia) .pie__redes a { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #0a8bb0; color: #fff; line-height: 1; }
 body:has(.hero-referencia) .pie__legal { display: flex; justify-content: space-between; margin: 0; padding-top: 0.45rem; border-top-color: #e7edef; color: #718087; font-size: 0.52rem; } body:has(.hero-referencia) .pie__legal span { margin-left: auto; } body:has(.hero-referencia) .pie__legal b { color: var(--color-coral); }
 
 @media (max-width: 760px) { body:has(.hero-referencia) .pie__columnas { grid-template-columns: repeat(2, 1fr); gap: 1rem; } body:has(.hero-referencia) .pie__marca { grid-column: 1 / -1; } body:has(.hero-referencia) .pie__legal { display: block; } body:has(.hero-referencia) .pie__legal span { display: block; margin-top: 0.25rem; } }

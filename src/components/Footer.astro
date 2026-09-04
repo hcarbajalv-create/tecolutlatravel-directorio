@@ -1,5 +1,9 @@
 ---
 const anio = new Date().getFullYear();
+// Pagina oficial del directorio en Facebook (la unica red que se maneja hoy).
+// Todavia es la URL de perfil con numero: Facebook aun no asigna el nombre
+// corto "tecolutlatravel". Cuando lo asigne, se cambia aqui y ya.
+const FACEBOOK = 'https://www.facebook.com/profile.php?id=61594096108144';
 ---
 
 <footer class="pie">
@@ -16,11 +20,15 @@ const anio = new Date().getFullYear();
           />
         </a>
         <p>Tu guía local para descubrir lo mejor de Tecolutla, Veracruz.</p>
-        <div class="pie__redes" aria-label="Redes y contacto">
-          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">f</a>
-          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◎</a>
-          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◉</a>
-          <a href="/contactanos" aria-label="Contacto de TecolutlaTravel">◔</a>
+        {/* Solo las redes que de verdad se manejan. Antes habia cuatro
+            iconos de adorno (simbolos sueltos, sin red detras) que los
+            cuatro llevaban a /contactanos. */}
+        <div class="pie__redes" aria-label="Redes sociales">
+          <a href={FACEBOOK} target="_blank" rel="noopener noreferrer" aria-label="TecolutlaTravel en Facebook">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6A22 22 0 0 0 14.3 3.5c-2.4 0-4 1.45-4 4.13V9.9H7.6V13h2.7v8h3.2Z" />
+            </svg>
+          </a>
         </div>
       </div>
       <div>
