@@ -16,7 +16,8 @@ interface Props {
   imagen?: string;
   // Dimensiones reales de "imagen" — WhatsApp/Facebook las usan para
   // reservar el espacio de la vista previa sin parpadeo. Si no se pasan,
-  // se asume el tamaño del logo por default (public/og-default.jpg, 640x640).
+  // se asume el tamaño de la tarjeta por default (public/og-tecolutlatravel.jpg,
+  // 1200x630 — el logo oficial de la tortuga sobre fondo blanco).
   imagenAncho?: number;
   imagenAlto?: number;
   // Por default, "titulo" es solo la parte descriptiva y aquí se le
@@ -33,8 +34,8 @@ const {
   descripcion,
   noindex = false,
   imagen,
-  imagenAncho = 640,
-  imagenAlto = 640,
+  imagenAncho = 1200,
+  imagenAlto = 630,
   tituloCompleto = false,
   encabezadoSobreHero = false,
 } = Astro.props;
@@ -53,7 +54,7 @@ const urlCanonica =
   rutaCanonica === '/'
     ? Astro.site.toString().replace(/\/$/, '')
     : new URL(rutaCanonica, Astro.site).toString();
-const imagenFinal = imagen ?? new URL('/og-default.jpg', Astro.site).toString();
+const imagenFinal = imagen ?? new URL('/og-tecolutlatravel.jpg', Astro.site).toString();
 
 // GA4 solo se activa cuando existe un ID de medición real (variable de
 // entorno PUBLIC_GA_MEASUREMENT_ID) — evita mandar datos a una propiedad
