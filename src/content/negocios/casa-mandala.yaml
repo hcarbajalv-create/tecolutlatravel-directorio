@@ -43,7 +43,7 @@ fotos:
 precioTemporada:
   - temporada: Desde
     precio: 3000
-fechaActualizacion: 2026-09-02
+fechaActualizacion: 2026-09-04
 disponible: true
 servicios:
   - Alberca y chapoteadero
@@ -53,16 +53,15 @@ servicios:
   - Asador
   - Cocina semi equipada
   - Aire acondicionado
-  - Ventilador
   - TV por cable
   - Wifi
   - Baño completo en cada habitación
 numeroHabitaciones: 3
 descripcionHabitaciones: |
-  Habitación 1: dos camas matrimoniales y cocina semi equipada con parrilla de dos quemadores, refrigerador, microondas y utensilios.
+  Habitación 1: dos camas matrimoniales y cocina semi equipada con parrilla de 4 quemadores, frigobar, licuadora y utensilios.
   Habitación 2: tres camas matrimoniales.
   Habitación 3: dos camas matrimoniales y una individual.
-  Las tres con baño completo, aire acondicionado, ventilador, TV por cable y wifi.
+  Las tres con baño completo, aire acondicionado, TV por cable y wifi.
 capacidadMaxima: 15
 petFriendly: true
 alberca: true
