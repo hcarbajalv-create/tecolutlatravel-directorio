@@ -5241,10 +5241,10 @@ body .pie__logo { filter: none; mix-blend-mode: normal; }
 .hero-explora__filtros .icono-linea { width: 18px; height: 18px; color: #098aa3; }
 .hero-explora__acciones { display: flex; justify-content: center; align-items: center; gap: .65rem; }
 .hero-explora__principal, .hero-explora__secundario { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: .3rem; padding: .45rem .9rem; border-radius: 8px; font-size: .67rem; font-weight: 800; text-decoration: none; }
-.hero-explora__principal { background: #ff735f; color: #fff; }
+.hero-explora__principal { background: #0b8197; color: #fff; }
 .hero-explora__secundario { border: 1px solid #0b8197; color: #087d96; }
-.hero-explora__secundario .icono-linea { width: 15px; height: 15px; }
-@media (max-width:760px) { .hero-explora { padding: .75rem; } .hero-explora__encabezado { align-items: flex-start; flex-direction: column; gap: .35rem; } .hero-explora__filtros { grid-template-columns: repeat(2,1fr); } .hero-explora__acciones { flex-direction: column; } .hero-explora__principal, .hero-explora__secundario { width: 100%; } }
+.hero-explora__principal .icono-linea, .hero-explora__secundario .icono-linea { width: 15px; height: 15px; }
+@media (max-width:760px) { .hero-explora { padding: .75rem; } .hero-explora__encabezado { align-items: flex-start; flex-direction: column; gap: .35rem; } .hero-explora__filtros { grid-template-columns: repeat(2,1fr); } .hero-explora__acciones { flex-direction: column; } .hero-explora__principal, .hero-explora__secundario { width: 100%; min-height: 44px; font-size: .72rem; } }
 @media (max-width:640px) { .comparador__foto { aspect-ratio: 4 / 3; } }
 
 /* Ajuste editorial final para que las tarjetas coincidan con el mockup. */
